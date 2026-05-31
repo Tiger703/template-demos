@@ -1,1 +1,1073 @@
+<!DOCTYPE html>
 
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hard ware store-Home</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google Fonts -->
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<!-- Bootstrap -->
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/mobile.css">
+
+
+
+
+
+</head>
+
+<body>
+
+<div id="spinner"><div class="spinner"></div></div>
+
+<!-- TOPBAR -->
+<div class="topbar py-2 d-none d-lg-block" style="    background:
+        radial-gradient(circle at center, rgba(0,0,0,.35), rgba(0,0,0,.85)),
+        linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.85));">
+<div class="container d-flex justify-content-between">
+<div><i class="fa fa-location-dot me-2"></i>china – china, south | <i class="fa fa-phone me-2"></i>135 734 05505 066605  | <i class="fa fa-envelope-open"></i>username@gmail.com</div>
+<div>
+<i class="fab fa-facebook-f me-3"></i>
+<i class="fab fa-instagram me-3"></i>
+<i class="fab fa-youtube"></i>
+</div>
+</div>
+</div>
+
+
+<nav class="navbar navbar-expand-lg sticky-top">
+<div class="container">
+<a class="navbar-brand" href="#"><i class="fa fa-screwdriver-wrench me-2"></i>Hardware Store</a>
+<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
+<div class="collapse navbar-collapse" id="nav">
+<div class="navbar-nav ms-auto">
+<a class="nav-link active" href="index.html">Home</a>
+<a class="nav-link" href="product.html">Products</a>
+<a class="nav-link" href="service.html">services</a>
+<a class="nav-link" href="about.html">About</a>
+<a class="nav-link" href="testimonial.html">Testimonial</a>
+<a class="nav-link" href="contact.html">Contact</a>
+
+<button class="btn nav-search ms-3" id="openSearch">
+    <i class="fa fa-search"></i>
+</button>
+<button type="button" class="btn nav-footer-btn ms-2" id="openFooter">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
+
+
+<div class="search-overlay" id="searchOverlay">
+    <div class="search-box">
+        <button class="close-search" id="closeSearch">
+            <i class="fa fa-xmark"></i>
+        </button>
+
+        <h2>Search Hardware Products</h2>
+        <p>Paints • Tools • Electrical • Plumbing</p>
+
+        <form>
+            <input type="text" placeholder="Search screws, lights, paint colors..." autofocus>
+            <button type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+
+    </div>
+</div>
+
+
+</div>
+</div>
+</div>
+</nav>
+
+
+<div class="side-footer" id="sideFooter">
+
+    <div class="side-footer-overlay" id="sideFooterOverlay"></div>
+
+    <div class="side-footer-content wow animate__animated animate__slideInRight">
+
+        <button class="side-footer-close" id="closeFooter">&times;</button>
+
+        <footer class="footer-section">
+
+            <div class="footer-inner">
+
+                <!-- BRAND -->
+                <div class="footer-col">
+                    <h3 class="footer-brand">
+                        <i class="fa fa-screwdriver-wrench"></i>Hardware Store
+                    </h3>
+                    <p>
+                        Premium hardware materials trusted by builders,
+                        contractors & professionals.
+                    </p>
+
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <!-- LINKS -->
+                <div class="footer-col">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Products</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                  <div class="footer-col">
+                    <h5>Contact</h5>
+                    <p><i class="fa fa-location-dot"></i>china – china, south</p>
+                    <p><i class="fa fa-phone"></i>135 734 05505 066605 </p>
+                    <p><i class="fa fa-envelope"></i>username@gmail.com</p>
+                </div>
+
+                <!-- PRODUCTS -->
+                <div class="footer-col">
+                    <h5>Products</h5>
+                    <ul>
+                         <li><a href="#">Paints & Coatings</a></li>
+                    <li><a href="#">Marble Sheets</a></li>
+                    <li><a href="#">Wood & Timber</a></li>
+                    <li><a href="#">Gypsum system</a></li>
+                    <li><a href="#">Nation Cement</a></li>
+                    </ul>
+                </div>
+
+                <!-- CONTACT -->
+              
+            </div>
+
+            <div class="footer-bottom">
+                © 2025 <strong>Hardware Store</strong>. All Rights Reserved.
+            </div>
+
+        </footer>
+
+    </div>
+</div>
+
+
+<div class="shop-modal" id="shopModal">
+    <div class="shop-modal-overlay"></div>
+
+    <div class="shop-modal-content wow animate__animated animate__fadeInUp">
+        <button class="close-modal" id="closeShopModal">&times;</button>
+
+        <h2 class="modal-title wow animate__fadeInDown">
+            Explore Our Products
+        </h2>
+
+        <p class="modal-subtitle wow animate__fadeInUp" data-wow-delay=".2s">
+            Premium construction materials for strong & lasting projects
+        </p>
+
+        <!-- FLOATING CATEGORIES (NO BOXES) -->
+<div class="modal-lines">
+
+    <!-- Nation Cement -->
+    <div class="modal-line wow animate__fadeInLeft" data-wow-delay=".3s">
+        <i class="fa-solid fa-industry"></i>
+        <div>
+            <h4>Nation Cement</h4>
+            <span>High-strength cement for structural construction</span>
+        </div>
+    </div>
+
+
+
+    <!-- Gypsum -->
+    <div class="modal-line wow animate__fadeInLeft" data-wow-delay=".5s">
+        <i class="fa-solid fa-layer-group"></i>
+        <div>
+            <h4>Gypsum</h4>
+            <span>Ceilings, partitions & interior finishing materials</span>
+        </div>
+    </div>
+
+    <!-- Steel & Iron -->
+    <div class="modal-line wow animate__fadeInRight" data-wow-delay=".6s">
+        <i class="fa-solid fa-hammer"></i>
+        <div>
+            <h4>Steel & Iron</h4>
+            <span>Rebars, sheets & structural steel products</span>
+        </div>
+    </div>
+
+    <!-- Paints & Coatings -->
+    <div class="modal-line wow animate__fadeInLeft" data-wow-delay=".7s">
+        <i class="fa-solid fa-paint-roller"></i>
+        <div>
+            <h4>Paints & Coatings</h4>
+            <span>Interior & exterior paints, primers and finishes</span>
+        </div>
+    </div>
+
+    <!-- Plumbing Materials -->
+    <div class="modal-line wow animate__fadeInRight" data-wow-delay=".8s">
+        <i class="fa-solid fa-faucet-drip"></i>
+        <div>
+            <h4>Plumbing Materials</h4>
+            <span>Pipes, fittings & water supply solutions</span>
+        </div>
+    </div>
+
+    <!-- Electrical Supplies -->
+    <div class="modal-line wow animate__fadeInLeft" data-wow-delay=".9s">
+        <i class="fa-solid fa-bolt"></i>
+        <div>
+            <h4>Electrical Supplies</h4>
+            <span>Wires, switches, lighting & electrical accessories</span>
+        </div>
+    </div>
+
+    <!-- Tools & Equipment -->
+    <div class="modal-line wow animate__fadeInRight" data-wow-delay="1s">
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        <div>
+            <h4>Tools & Equipment</h4>
+            <span>Hand tools, power tools & safety equipment</span>
+        </div>
+    </div>
+
+</div>
+
+
+        <a href="product.html" class="modal-btn wow animate__pulse animate__infinite">
+            View All Products →
+        </a>
+    </div>
+</div>
+
+
+
+<section class="hero-bg">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-carousel">
+
+        <div class="hero-slide active" data-bg="img/hard.jpeg">
+           <h5 class="wow animate__fadeInDown animate__slow" data-wow-delay=".2s">
+Hardware Store</h5>
+         <h1 class="wow animate__fadeInUp animate__slow" data-wow-delay=".4s">
+                Complete Home<br>
+                <span>Built For Professionals</span>
+            </h1>
+            <div class="hero-buttons wow animate__zoomIn" data-wow-delay=".7s">
+                <a href="javascript:void(0)" class="btn-primary" id="openShopModal">
+    Shop Products
+</a>
+
+                <a href="contact.html" class="btn-outline">Contact Us</a>
+            </div>
+        </div>
+
+        <div class="hero-slide" data-bg="img/hard1.jpeg">
+            <h5 class="wow fadeInDown">Strong • Durable • Reliable</h5>
+            <h1 class="wow fadeInUp">
+                Complete Home <br>
+                <span>Hardware Solutions</span>
+            </h1>
+            <div class="hero-buttons wow fadeInUp">
+                <a href="product.html" class="btn-primary">View Categories</a>
+                <a href="contact.html" class="btn-outline">Contact Sales</a>
+            </div>
+        </div>
+
+        <div class="hero-slide" data-bg="img/hard2.jpeg">
+            <h5 class="wow fadeInDown">Quality You Can Trust</h5>
+            <h1 class="wow fadeInUp">
+                Professional Grade <br>
+                <span>Tools & Materials</span>
+            </h1>
+            <div class="hero-buttons wow fadeInUp">
+                <a href="product.html" class="btn-primary">Explore Products</a>
+                <a href="contact.html" class="btn-outline">Contact Sales</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="hero-controls">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+</section>
+
+
+<section class="intro-section wow animate__zoomIn" data-wow-delay=".2s">
+    <div class="container">
+<div class="row text-center mb-5">
+
+
+    <h2 class="intro-title">
+    <span id="type-title-1" class="text-dark"></span>
+    <span id="type-title-2" class="text-orange"></span>
+</h2>
+
+    <h5 class="intro-sub">
+        <span id="type-sub"></span>
+    </h5>
+
+
+    <p class="intro-text">
+        <span id="type-desc"></span>
+    </p>
+</div>
+
+
+        <div class="row g-4">
+            <div class="col-md-4 wow fadeInUp">
+                <div class="intro-card">
+                    <i class="fa fa-award"></i>
+                    <h4>Premium Quality</h4>
+                    <p>Only trusted brands and durable materials</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 wow fadeInUp" data-wow-delay=".15s">
+                <div class="intro-card">
+                    <i class="fa fa-warehouse"></i>
+                    <h4>Complete Stock</h4>
+                    <p>Paints, tools, electrical & accessories</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 wow fadeInUp" data-wow-delay=".3s">
+                <div class="intro-card">
+                    <i class="fa fa-users"></i>
+                    <h4>Trusted Support</h4>
+                    <p>Serving builders & homeowners for decades</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+<section class="why-different py-5">
+    <div class="container">
+        <div class="row align-items-center">
+
+            <!-- LEFT CONTENT -->
+            <div class="col-lg-5 mb-4 mb-lg-0">
+                <h5 class="section-sub wow animate__fadeInLeft">
+                    WHY CHOOSE US
+                </h5>
+                <h2 class="section-title wow animate__fadeInLeft" data-wow-delay=".2s">
+                    More Than a <span>Hardware Store</span>
+                </h2>
+                <p class="section-desc wow animate__fadeInLeft" data-wow-delay=".4s">
+                    We don’t just sell materials. We help builders, contractors,
+                    and homeowners complete projects with confidence, quality,
+                    and long-term reliability.
+                </p>
+            </div>
+
+            <!-- RIGHT STEPS -->
+            <div class="col-lg-7">
+                <div class="why-step wow animate__fadeInUp">
+                    <span class="step-icon">
+                        <i class="fa fa-industry"></i>
+                    </span>
+                    <div>
+                        <h4>Industry Experience</h4>
+                        <p>
+                            Decades of experience supplying hardware solutions
+                            for residential and commercial projects.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="why-step wow animate__fadeInUp" data-wow-delay=".2s">
+                    <span class="step-icon">
+                        <i class="fa fa-boxes-stacked"></i>
+                    </span>
+                    <div>
+                        <h4>Complete Product Range</h4>
+                        <p>
+                            From paints and tools to electrical accessories —
+                            everything under one trusted roof.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="why-step wow animate__fadeInUp" data-wow-delay=".4s">
+                    <span class="step-icon">
+                        <i class="fa fa-handshake"></i>
+                    </span>
+                    <div>
+                        <h4>Trusted Partnerships</h4>
+                        <p>
+                            Long-term relationships with contractors, builders,
+                            and suppliers built on trust and performance.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="stats-section py-5 wow animate__flipInX" data-wow-delay=".2s">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 wow zoomIn">
+   <div class="stat-box">
+    <h2 data-count="35">0</h2>
+    <p>Years Experience</p>
+</div>
+
+            </div>
+            <div class="col-md-3 wow zoomIn" data-wow-delay=".2s">
+                <div class="stat-box">
+                <h2 data-count="500">0</h2>
+<p>Products</p>
+
+                </div>
+            </div>
+            <div class="col-md-3 wow zoomIn" data-wow-delay=".4s">
+                <div class="stat-box">
+             <h2 data-count="1000">0</h2>
+<p>Happy Clients</p>
+
+                </div>
+            </div>
+            <div class="col-md-3 wow zoomIn" data-wow-delay=".6s">
+                <div class="stat-box">
+                <h2 data-count="24">0</h2>
+<p>Support</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="categories-section py-5 wow animate__fadeInUp" data-wow-delay=".2s">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <h2 class="section-title wow fadeInUp">Our Product Categories</h2>
+            <p class="section-sub wow fadeInUp" data-wow-delay=".2s">
+                Premium construction materials for strong and lasting projects
+            </p>
+        </div>
+
+<div class="row g-4">
+
+    <!-- Nation Cement -->
+    <div class="col-md-4 wow fadeInUp" data-wow-delay=".1s">
+        <div class="product-card">
+            <i class="fa-solid fa-industry"></i>
+            <h4>Nation Cement</h4>
+            <p>
+                High-strength cement ideal for residential, commercial, 
+                and large-scale construction projects.
+            </p>
+        </div>
+    </div>
+
+    <!-- Camel Marble / Marnipelex -->
+    <div class="col-md-4 wow fadeInUp" data-wow-delay=".3s">
+        <div class="product-card">
+            <i class="fa-solid fa-gem"></i>
+            <h4>Camel Marble (Marnipelex)</h4>
+            <p>
+                Premium marble and surface solutions for elegant flooring, 
+                walls, and interior finishes.
+            </p>
+        </div>
+    </div>
+
+    <!-- Gypsum -->
+    <div class="col-md-4 wow fadeInUp" data-wow-delay=".5s">
+        <div class="product-card">
+            <i class="fa-solid fa-layer-group"></i>
+            <h4>Gypsum</h4>
+            <p>
+                Quality gypsum boards and materials for ceilings, 
+                partitions, and modern interior designs.
+            </p>
+        </div>
+    </div>
+
+    <!-- Steel & Iron -->
+    <div class="col-md-4 wow fadeInUp" data-wow-delay=".7s">
+        <div class="product-card">
+            <i class="fa-solid fa-hammer"></i>
+            <h4>Steel & Iron</h4>
+            <p>
+                Durable steel bars, iron rods, and sheets for strong 
+                structural frameworks.
+            </p>
+        </div>
+    </div>
+
+    <!-- Paints & Coatings -->
+    <div class="col-md-4 wow fadeInUp" data-wow-delay=".9s">
+        <div class="product-card">
+            <i class="fa-solid fa-paint-roller"></i>
+            <h4>Paints & Coatings</h4>
+            <p>
+                Interior and exterior paints, primers, and protective 
+                coatings for long-lasting finishes.
+            </p>
+        </div>
+    </div>
+
+    <!-- Plumbing Materials -->
+    <div class="col-md-4 wow fadeInUp" data-wow-delay="1.1s">
+        <div class="product-card">
+            <i class="fa-solid fa-faucet-drip"></i>
+            <h4>Plumbing Materials</h4>
+            <p>
+                Pipes, fittings, valves, and accessories for reliable 
+                water and drainage systems.
+            </p>
+        </div>
+    </div>
+
+    <!-- Electrical Supplies -->
+    <div class="col-md-4 wow fadeInUp" data-wow-delay="1.3s">
+        <div class="product-card">
+            <i class="fa-solid fa-bolt"></i>
+            <h4>Electrical Supplies</h4>
+            <p>
+                Cables, switches, sockets, and lighting solutions 
+                for safe electrical installations.
+            </p>
+        </div>
+    </div>
+
+    <!-- Tools & Equipment -->
+    <div class="col-md-4 wow fadeInUp" data-wow-delay="1.5s">
+        <div class="product-card">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+            <h4>Tools & Equipment</h4>
+            <p>
+                Professional hand tools, power tools, and safety 
+                equipment for every project.
+            </p>
+        </div>
+    </div>
+
+    <!-- Tiles & Flooring -->
+    <div class="col-md-4 wow fadeInUp" data-wow-delay="1.7s">
+        <div class="product-card">
+            <i class="fa-solid fa-border-all"></i>
+            <h4>Tiles & Flooring</h4>
+            <p>
+                Ceramic, porcelain, and floor tiles designed 
+                for durability and aesthetic appeal.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</section>
+
+
+<section class="process-section py-5">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h5 class="section-sub wow animate__fadeInDown">
+                HOW WE WORK
+            </h5>
+            <h2 class="section-title wow animate__fadeInUp">
+                Simple Process, <span>Professional Results</span>
+            </h2>
+            <p class="section-desc wow animate__fadeInUp" data-wow-delay=".2s">
+                From selecting materials to delivering solutions — we make every
+                step smooth, reliable, and efficient.
+            </p>
+        </div>
+
+        <div class="process-wrapper">
+
+            <div class="process-step wow animate__fadeInUp">
+                <div class="process-icon">
+                    <i class="fa fa-search"></i>
+                </div>
+                <h4>Understand Needs</h4>
+                <p>We listen and understand your project requirements.</p>
+            </div>
+
+            <div class="process-line"></div>
+
+            <div class="process-step wow animate__fadeInUp" data-wow-delay=".2s">
+                <div class="process-icon">
+                    <i class="fa fa-layer-group"></i>
+                </div>
+                <h4>Select Materials</h4>
+                <p>Choose from trusted brands and quality products.</p>
+            </div>
+
+            <div class="process-line"></div>
+
+            <div class="process-step wow animate__fadeInUp" data-wow-delay=".4s">
+                <div class="process-icon">
+                    <i class="fa fa-truck-fast"></i>
+                </div>
+                <h4>Fast Supply</h4>
+                <p>Quick availability and reliable delivery support.</p>
+            </div>
+
+            <div class="process-line"></div>
+
+            <div class="process-step wow animate__fadeInUp" data-wow-delay=".6s">
+                <div class="process-icon">
+                    <i class="fa fa-thumbs-up"></i>
+                </div>
+                <h4>Project Success</h4>
+                <p>Helping you complete projects with confidence.</p>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+
+<footer class="footer-section">
+    <div class="container">
+        <div class="row footer-top">
+
+            <!-- BRAND -->
+            <div class="col-lg-4 col-md-6 wow animate__fadeInUp">
+                <h3 class="footer-brand">
+                    <i class="fa fa-screwdriver-wrench"></i> Hardware Store
+                </h3>
+                <p class="footer-text">
+                    Your trusted hardware partner supplying premium-quality
+                    materials for homes, builders, and professionals.
+                </p>
+
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <!-- QUICK LINKS -->
+            <div class="col-lg-2 col-md-6 wow animate__fadeInUp" data-wow-delay=".1s">
+                <h5 class="footer-title">Quick Links</h5>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- PRODUCTS -->
+            <div class="col-lg-3 col-md-6 wow animate__fadeInUp" data-wow-delay=".2s">
+                <h5 class="footer-title">Our Products</h5>
+                <ul class="footer-links">
+                     <li><a href="#">Paints & Coatings</a></li>
+                    <li><a href="#">Marble Sheets</a></li>
+                    <li><a href="#">Wood & Timber</a></li>
+                    <li><a href="#">Gypsum system</a></li>
+                    <li><a href="#">Nation Cement</a></li>
+                </ul>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="col-lg-3 col-md-6 wow animate__fadeInUp" data-wow-delay=".3s">
+                <h5 class="footer-title">Contact Info</h5>
+                <ul class="footer-contact">
+                    <li>
+                        <i class="fa fa-location-dot"></i>
+                      china – china, south 
+                    </li>
+                    <li>
+                        <i class="fa fa-phone"></i>
+                       135 734 05505 066605 
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope"></i>
+                       username@gmail.com
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>
+                ©<strong>Hardware Store</strong>. All Rights Reserved.
+            </p>
+        </div>
+    </div>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>window.onload=()=>document.getElementById('spinner').style.display='none'</script>
+
+<a href="#" class="back-to-top-pro" id="backToTop">
+    <i class="fa fa-angle-up"></i>
+</a>
+
+
+
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+
+    <script>
+const openSearch = document.getElementById('openSearch');
+const closeSearch = document.getElementById('closeSearch');
+const searchOverlay = document.getElementById('searchOverlay');
+
+if(openSearch){
+    openSearch.addEventListener('click', () => {
+        searchOverlay.classList.add('active');
+    });
+}
+
+if(closeSearch){
+    closeSearch.addEventListener('click', () => {
+        searchOverlay.classList.remove('active');
+    });
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        searchOverlay.classList.remove('active');
+    }
+});
+</script>
+
+
+<script>
+const heroBg = document.querySelector(".hero-bg");
+const slides = document.querySelectorAll(".hero-slide");
+const dots = document.querySelectorAll(".dot");
+
+let index = 0;
+const interval = 6000;
+
+function showSlide(i) {
+    slides.forEach(slide => slide.classList.remove("active"));
+    dots.forEach(dot => dot.classList.remove("active"));
+
+    slides[i].classList.add("active");
+    dots[i].classList.add("active");
+
+    const bg = slides[i].getAttribute("data-bg");
+    heroBg.style.backgroundImage = `url(${bg})`;
+}
+
+dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+        index = i;
+        showSlide(index);
+    });
+});
+
+setInterval(() => {
+    index = (index + 1) % slides.length;
+    showSlide(index);
+}, interval);
+
+// Initial background
+showSlide(0);
+</script>
+
+
+<script>
+    const counters = document.querySelectorAll('.stat-box h2');
+let started = false;
+
+function startCount() {
+    if (started) return;
+
+    counters.forEach(counter => {
+        const target = +counter.getAttribute('data-count');
+        let count = 0;
+        const speed = target / 80;
+
+        const updateCount = () => {
+            count += speed;
+            if (count < target) {
+                counter.innerText = Math.floor(count);
+                requestAnimationFrame(updateCount);
+            } else {
+                counter.innerText = target + (target < 100 ? "+" : "+");
+            }
+        };
+
+        updateCount();
+    });
+
+    started = true;
+}
+
+window.addEventListener('scroll', () => {
+    const statsSection = document.querySelector('.stats-section');
+    const sectionTop = statsSection.getBoundingClientRect().top;
+
+    if (sectionTop < window.innerHeight - 150) {
+        startCount();
+    }
+});
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const texts = {
+        sub: "WELCOME TO HARDWARE STORE  WE ARE SELLING WHOLE SALE AND RETAIL",
+        title1: "Your Trusted ",
+        title2: "Hardware Partner",
+        desc: "We supply premium hardware materials for homes, builders, contractors, and professionals — built on quality, reliability, and years of experience."
+    };
+
+    function typeText(el, text, speed, callback) {
+        let i = 0;
+        el.classList.add("typing");
+
+        const interval = setInterval(() => {
+            el.innerHTML += text.charAt(i);
+            i++;
+            if (i === text.length) {
+                clearInterval(interval);
+                el.classList.remove("typing");
+                if (callback) callback();
+            }
+        }, speed);
+    }
+
+    setTimeout(() => {
+        typeText(document.getElementById("type-sub"), texts.sub, 80, () => {
+            typeText(document.getElementById("type-title-1"), texts.title1, 70, () => {
+                typeText(document.getElementById("type-title-2"), texts.title2, 70, () => {
+                    typeText(document.getElementById("type-desc"), texts.desc, 25);
+                });
+            });
+        });
+    }, 500);
+
+});
+</script>
+
+<script>
+    const openBtn = document.getElementById("openShopModal");
+    const closeBtn = document.getElementById("closeShopModal");
+    const modal = document.getElementById("shopModal");
+
+    openBtn.onclick = () => {
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+    };
+
+    closeBtn.onclick = () => {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+
+    modal.querySelector(".shop-modal-overlay").onclick = () => {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+</script>
+
+<script>
+const backToTop = document.getElementById("backToTop");
+
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 350) {
+        backToTop.classList.add("show");
+    } else {
+        backToTop.classList.remove("show");
+    }
+});
+
+backToTop.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openBtn = document.getElementById("openFooter");
+    const closeBtn = document.getElementById("closeFooter");
+    const overlay = document.getElementById("sideFooterOverlay");
+    const footer = document.getElementById("sideFooter");
+
+    openBtn.onclick = () => footer.classList.add("active");
+    closeBtn.onclick = () => footer.classList.remove("active");
+    overlay.onclick = () => footer.classList.remove("active");
+
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector("#searchOverlay form");
+    const input = form.querySelector("input");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const searchValue = input.value.trim();
+
+        if (searchValue !== "") {
+            // Redirect to products page with search text
+            window.location.href = "product.html?search=" + encodeURIComponent(searchValue);
+        }
+    });
+
+});
+</script>
+
+
+
+<script>
+new WOW({
+    boxClass: 'wow',
+    animateClass: 'animate__animated',
+    offset: 120,
+    mobile: false,
+    live: true
+}).init();
+</script>
+
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "Intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+
+</body>
+</html>

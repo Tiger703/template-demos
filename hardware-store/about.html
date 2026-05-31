@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hardware Store-About</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+<!-- Font Awesome -->
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<!-- Bootstrap -->
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+
+
+    <!-- Template Stylesheet -->
+      <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/mobile.css">
+
+
+
+
+</head>
+
+<body>
+
+<div id="spinner"><div class="spinner"></div></div>
+
+<div class="topbar py-2 d-none d-lg-block" style="    background:
+        radial-gradient(circle at center, rgba(0,0,0,.35), rgba(0,0,0,.85)),
+        linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.85));">
+<div class="container d-flex justify-content-between">
+<div><i class="fa fa-location-dot me-2"></i>china – china, south | <i class="fa fa-phone me-2"></i>135 734 05505 066605  | <i class="fa fa-envelope-open"></i>username@gmail.com</div>
+<div>
+<i class="fab fa-facebook-f me-3"></i>
+<i class="fab fa-instagram me-3"></i>
+<i class="fab fa-youtube"></i>
+</div>
+</div>
+</div>
+
+<nav class="navbar navbar-expand-lg sticky-top">
+<div class="container">
+<a class="navbar-brand" href="#"><i class="fa fa-screwdriver-wrench me-2"></i>Hardware Store</a>
+<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
+<div class="collapse navbar-collapse" id="nav">
+<div class="navbar-nav ms-auto">
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="product.html">Products</a>
+<a class="nav-link" href="service.html">services</a>
+<a class="nav-link active" href="about.html">About</a>
+<a class="nav-link" href="testimonial.html">Testimonial</a>
+<a class="nav-link" href="contact.html">Contact</a>
+
+<button class="btn nav-search ms-3" id="openSearch">
+    <i class="fa fa-search"></i>
+</button>
+<button type="button" class="btn nav-footer-btn ms-2" id="openFooter">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
+
+
+<div class="search-overlay" id="searchOverlay">
+    <div class="search-box">
+        <button class="close-search" id="closeSearch">
+            <i class="fa fa-xmark"></i>
+        </button>
+
+        <h2>Search Hardware Products</h2>
+        <p>Paints • Tools • Electrical • Plumbing</p>
+
+        <form>
+            <input type="text" placeholder="Search screws, lights, paint colors..." autofocus>
+            <button type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+
+    </div>
+</div>
+
+
+</div>
+</div>
+</div>
+</nav>
+
+
+
+<div class="side-footer" id="sideFooter">
+
+    <div class="side-footer-overlay" id="sideFooterOverlay"></div>
+
+    <div class="side-footer-content wow animate__animated animate__slideInRight">
+
+        <button class="side-footer-close" id="closeFooter">&times;</button>
+
+        <footer class="footer-section">
+
+            <div class="footer-inner">
+
+                <!-- BRAND -->
+                <div class="footer-col">
+                    <h3 class="footer-brand">
+                        <i class="fa fa-screwdriver-wrench"></i>Hardware Store
+                    </h3>
+                    <p>
+                        Premium hardware materials trusted by builders,
+                        contractors & professionals.
+                    </p>
+
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <!-- LINKS -->
+                <div class="footer-col">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Products</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                  <div class="footer-col">
+                    <h5>Contact</h5>
+                    <p><i class="fa fa-location-dot"></i>china – china, south</p>
+                    <p><i class="fa fa-phone"></i>135 734 05505 066605 </p>
+                    <p><i class="fa fa-envelope"></i>username@gmail.com</p>
+                </div>
+
+                <!-- PRODUCTS -->
+                <div class="footer-col">
+                    <h5>Products</h5>
+                    <ul>
+                         <li><a href="#">Paints & Coatings</a></li>
+                    <li><a href="#">Marble Sheets</a></li>
+                    <li><a href="#">Wood & Timber</a></li>
+                    <li><a href="#">Gypsum system</a></li>
+                    <li><a href="#">Nation Cement</a></li>
+                    </ul>
+                </div>
+
+                <!-- CONTACT -->
+              
+            </div>
+
+            <div class="footer-bottom">
+                © 2025 <strong>Hardware Store</strong>. All Rights Reserved.
+            </div>
+
+        </footer>
+
+    </div>
+</div>
+
+<div class="shop-modal" id="shopModal">
+    <div class="shop-modal-overlay"></div>
+
+    <div class="shop-modal-content wow animate__animated animate__fadeInUp">
+        <button class="close-modal" id="closeShopModal">&times;</button>
+
+        <h2 class="modal-title wow animate__fadeInDown">
+            Explore Our Products
+        </h2>
+
+        <p class="modal-subtitle wow animate__fadeInUp" data-wow-delay=".2s">
+            Premium construction materials for strong & lasting projects
+        </p>
+
+        <!-- FLOATING CATEGORIES (NO BOXES) -->
+<div class="modal-lines">
+
+    <!-- Nation Cement -->
+    <div class="modal-line wow animate__fadeInLeft" data-wow-delay=".3s">
+        <i class="fa-solid fa-industry"></i>
+        <div>
+            <h4>Nation Cement</h4>
+            <span>High-strength cement for structural construction</span>
+        </div>
+    </div>
+
+
+
+    <!-- Gypsum -->
+    <div class="modal-line wow animate__fadeInLeft" data-wow-delay=".5s">
+        <i class="fa-solid fa-layer-group"></i>
+        <div>
+            <h4>Gypsum</h4>
+            <span>Ceilings, partitions & interior finishing materials</span>
+        </div>
+    </div>
+
+    <!-- Steel & Iron -->
+    <div class="modal-line wow animate__fadeInRight" data-wow-delay=".6s">
+        <i class="fa-solid fa-hammer"></i>
+        <div>
+            <h4>Steel & Iron</h4>
+            <span>Rebars, sheets & structural steel products</span>
+        </div>
+    </div>
+
+    <!-- Paints & Coatings -->
+    <div class="modal-line wow animate__fadeInLeft" data-wow-delay=".7s">
+        <i class="fa-solid fa-paint-roller"></i>
+        <div>
+            <h4>Paints & Coatings</h4>
+            <span>Interior & exterior paints, primers and finishes</span>
+        </div>
+    </div>
+
+    <!-- Plumbing Materials -->
+    <div class="modal-line wow animate__fadeInRight" data-wow-delay=".8s">
+        <i class="fa-solid fa-faucet-drip"></i>
+        <div>
+            <h4>Plumbing Materials</h4>
+            <span>Pipes, fittings & water supply solutions</span>
+        </div>
+    </div>
+
+    <!-- Electrical Supplies -->
+    <div class="modal-line wow animate__fadeInLeft" data-wow-delay=".9s">
+        <i class="fa-solid fa-bolt"></i>
+        <div>
+            <h4>Electrical Supplies</h4>
+            <span>Wires, switches, lighting & electrical accessories</span>
+        </div>
+    </div>
+
+    <!-- Tools & Equipment -->
+    <div class="modal-line wow animate__fadeInRight" data-wow-delay="1s">
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        <div>
+            <h4>Tools & Equipment</h4>
+            <span>Hand tools, power tools & safety equipment</span>
+        </div>
+    </div>
+
+</div>
+
+
+        <a href="product.html" class="modal-btn wow animate__pulse animate__infinite">
+            View All Products →
+        </a>
+    </div>
+</div>
+
+
+
+<section class="hero-bg">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-carousel">
+
+        <div class="hero-slide active" data-bg="img/hard.jpeg">
+           <h5 class="wow animate__fadeInDown animate__slow" data-wow-delay=".2s">
+Hardware Store</h5>
+         <h1 class="wow animate__fadeInUp animate__slow" data-wow-delay=".4s">
+                Complete Home<br>
+                <span>Built For Professionals</span>
+            </h1>
+            <div class="hero-buttons wow animate__zoomIn" data-wow-delay=".7s">
+                <a href="javascript:void(0)" class="btn-primary" id="openShopModal">
+    Shop Products
+</a>
+
+                <a href="contact.html" class="btn-outline">Contact Us</a>
+            </div>
+        </div>
+
+        <div class="hero-slide" data-bg="img/hard1.jpeg">
+            <h5 class="wow fadeInDown">Strong • Durable • Reliable</h5>
+            <h1 class="wow fadeInUp">
+                Complete Home <br>
+                <span>Hardware Solutions</span>
+            </h1>
+            <div class="hero-buttons wow fadeInUp">
+                <a href="product.html" class="btn-primary">View Categories</a>
+                <a href="contact.html" class="btn-outline">Contact Sales</a>
+            </div>
+        </div>
+
+        <div class="hero-slide" data-bg="img/hard2.jpeg">
+            <h5 class="wow fadeInDown">Quality You Can Trust</h5>
+            <h1 class="wow fadeInUp">
+                Professional Grade <br>
+                <span>Tools & Materials</span>
+            </h1>
+            <div class="hero-buttons wow fadeInUp">
+                <a href="product.html" class="btn-primary">Explore Products</a>
+                <a href="contact.html" class="btn-outline">Contact Sales</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="hero-controls">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+</section>
+
+
+<section class="about-ultra wow animate__fadeInLeft" data-wow-delay=".2s">
+
+    <!-- LEFT: CONTENT -->
+    <div class="about-ultra-left">
+
+        <span class="about-eyebrow">ABOUT  HARDWARE STORE</span>
+
+        <h1>
+            Supplying the Backbone of<br>
+            <span>Modern Construction</span>
+        </h1>
+
+        <p class="about-lead">
+            <strong>Hardware Store</strong> is a specialized supplier of
+            professional-grade hardware materials and complete gypsum system
+            components,  Cement, Plaster & Wall Putty Solutions, serving residential, commercial, and industrial markets.
+        </p>
+
+        <p>
+            We operate exclusively as a <strong>materials supply partner</strong> —
+            providing builders, contractors, interior specialists, and project
+            managers with reliable products that meet performance, safety,
+            and durability standards.
+        </p>
+
+        <p>
+            Our strength lies in understanding construction requirements at
+            every stage and delivering the right materials — on time,
+            consistently, and without compromise.
+        </p>
+
+        <div class="about-stats">
+            <div>
+                <strong>Multi-Category Supply</strong>
+                <span>Hardware · Gypsum  ·  Nation Cement · tiles</span>
+            </div>
+            <div>
+                <strong>Project-Focused</strong>
+                <span>Residential · Commercial · Industrial</span>
+            </div>
+            <div>
+                <strong>Supply Expertise</strong>
+                <span>Not contracting — only materials</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT: VISUAL / IDENTITY -->
+<div class="about-ultra-right">
+
+    <div class="about-visual">
+        <div class="visual-line"></div>
+
+        <div class="visual-block">
+            <h3>Hardware & Fasteners</h3>
+            <p>High-quality fixing solutions for construction, fabrication, and installation works</p>
+        </div>
+
+        <div class="visual-block">
+            <h3>Gypsum Systems</h3>
+            <p>Complete drywall solutions including boards, ceilings, partitions, and metal framing</p>
+        </div>
+
+        <div class="visual-block" style="padding left: 500px;">
+            <h3>Finishing Materials</h3>
+            <p>Interior and exterior finishes including paints, decorative panels, wood, and surface materials</p>
+        </div>
+
+        <div class="visual-block">
+            <h3>Cement & Wall Putty</h3>
+            <p>Reliable cement and premium wall putty for strong structures and smooth finishes</p>
+        </div>
+
+    </div>
+
+</div>
+
+
+</section>
+
+
+<section class="abt-engine" style="margin-top: 70px;">
+
+    <div class="abt-engine__intro">
+        <h2>Engineered Identity</h2>
+        <p>
+            We are not defined by products alone —  
+            we are defined by systems, decisions, and execution.
+        </p>
+    </div>
+
+    <div class="abt-engine__grid">
+
+        <button class="abt-engine__cell" data-core="load">
+            Load Capacity
+        </button>
+
+        <button class="abt-engine__cell" data-core="accuracy">
+            Technical Accuracy
+        </button>
+
+        <button class="abt-engine__cell" data-core="trust">
+            Operational Trust
+        </button>
+
+        <button class="abt-engine__cell" data-core="flow">
+            Supply Flow
+        </button>
+
+    </div>
+
+    <div class="abt-engine__output">
+        <h3 id="abtEngineTitle">Select a core system</h3>
+        <p id="abtEngineText">
+            Activate a principle to see how our organization is engineered.
+        </p>
+    </div>
+
+</section>
+
+
+
+
+
+
+  <section>
+    <div class="glas">
+      <h2 style="color:#DC2626; font-size:2.2rem;">Who We Are</h2>
+      <p style="margin-top:1.5rem; color:#9ca3af; line-height:1.8;">
+        Ultra Pro Hardware is a next‑generation hardware store combining modern
+        technology with decades of industry expertise. From heavy‑duty construction
+        equipment to precision tools, we deliver reliability without compromise.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Industrial Strength</h3>
+          <p>Every product is tested under extreme conditions to meet professional‑level performance standards.</p>
+        </div>
+        <div class="card">
+          <h3>Expert Support</h3>
+          <p>Our team includes engineers, builders, and technicians ready to guide every project.</p>
+        </div>
+        <div class="card">
+          <h3>Future‑Ready</h3>
+          <p>We integrate smart tools, modern materials, and advanced supply systems.</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span data-count="25">0</span><small>Years Experience</small></div>
+        <div class="stat"><span data-count="12000">0</span><small>Products</small></div>
+        <div class="stat"><span data-count="98">0</span><small>% Client Trust</small></div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+
+<section class="about-system" style="margin-top: 50px;">
+    <canvas id="systemCanvas"></canvas>
+
+    <div class="system-label">
+        <strong>Hardware Store</strong>
+        <span>Built as a complete supply system</span>
+    </div>
+</section>
+
+
+
+<footer class="footer-section">
+    <div class="container">
+        <div class="row footer-top">
+
+            <!-- BRAND -->
+            <div class="col-lg-4 col-md-6 wow animate__fadeInUp">
+                <h3 class="footer-brand">
+                    <i class="fa fa-screwdriver-wrench"></i> Hardware Store
+                </h3>
+                <p class="footer-text">
+                    Your trusted hardware partner supplying premium-quality
+                    materials for homes, builders, and professionals.
+                </p>
+
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <!-- QUICK LINKS -->
+            <div class="col-lg-2 col-md-6 wow animate__fadeInUp" data-wow-delay=".1s">
+                <h5 class="footer-title">Quick Links</h5>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- PRODUCTS -->
+            <div class="col-lg-3 col-md-6 wow animate__fadeInUp" data-wow-delay=".2s">
+                <h5 class="footer-title">Our Products</h5>
+                <ul class="footer-links">
+                     <li><a href="#">Paints & Coatings</a></li>
+                    <li><a href="#">Marble Sheets</a></li>
+                    <li><a href="#">Wood & Timber</a></li>
+                    <li><a href="#">Gypsum system</a></li>
+                    <li><a href="#">Nation Cement</a></li>
+                </ul>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="col-lg-3 col-md-6 wow animate__fadeInUp" data-wow-delay=".3s">
+                <h5 class="footer-title">Contact Info</h5>
+                <ul class="footer-contact">
+                    <li>
+                        <i class="fa fa-location-dot"></i>
+                      china – china, south 
+                    </li>
+                    <li>
+                        <i class="fa fa-phone"></i>
+                       135 734 05505 066605 
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope"></i>
+                       username@gmail.com
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>
+                ©<strong>Hardware Store</strong>. All Rights Reserved.
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>window.onload=()=>document.getElementById('spinner').style.display='none'</script>
+
+<a href="#" class="back-to-top-pro" id="backToTop">
+    <i class="fa fa-angle-up"></i>
+</a>
+
+
+
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+
+  <script>
+    /* COUNTER MAGIC */
+    const counters = document.querySelectorAll('[data-count]');
+    const speed = 200;
+
+    const animateCounters = () => {
+      counters.forEach(counter => {
+        const update = () => {
+          const target = +counter.getAttribute('data-count');
+          const current = +counter.innerText;
+          const inc = Math.ceil(target / speed);
+
+          if (current < target) {
+            counter.innerText = current + inc;
+            requestAnimationFrame(update);
+          } else {
+            counter.innerText = target;
+          }
+        };
+        update();
+      });
+    };
+
+    /* SCROLL TRIGGER */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) animateCounters();
+      });
+    }, { threshold: 0.6 });
+
+    observer.observe(document.querySelector('.stats'));
+
+    /* MOUSE PARALLAX */
+    document.addEventListener('mousemove', e => {
+      document.querySelectorAll('.card').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `translateY(-12px) rotateX(${y * 10}deg) rotateY(${x * 10}deg)`;
+      });
+    });
+  </script>
+    <script>
+const openSearch = document.getElementById('openSearch');
+const closeSearch = document.getElementById('closeSearch');
+const searchOverlay = document.getElementById('searchOverlay');
+
+if(openSearch){
+    openSearch.addEventListener('click', () => {
+        searchOverlay.classList.add('active');
+    });
+}
+
+if(closeSearch){
+    closeSearch.addEventListener('click', () => {
+        searchOverlay.classList.remove('active');
+    });
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        searchOverlay.classList.remove('active');
+    }
+});
+</script>
+
+
+<script>
+const heroBg = document.querySelector(".hero-bg");
+const slides = document.querySelectorAll(".hero-slide");
+const dots = document.querySelectorAll(".dot");
+
+let index = 0;
+const interval = 6000;
+
+function showSlide(i) {
+    slides.forEach(slide => slide.classList.remove("active"));
+    dots.forEach(dot => dot.classList.remove("active"));
+
+    slides[i].classList.add("active");
+    dots[i].classList.add("active");
+
+    const bg = slides[i].getAttribute("data-bg");
+    heroBg.style.backgroundImage = `url(${bg})`;
+}
+
+dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+        index = i;
+        showSlide(index);
+    });
+});
+
+setInterval(() => {
+    index = (index + 1) % slides.length;
+    showSlide(index);
+}, interval);
+
+// Initial background
+showSlide(0);
+</script>
+
+
+
+
+
+
+<script>
+    const openBtn = document.getElementById("openShopModal");
+    const closeBtn = document.getElementById("closeShopModal");
+    const modal = document.getElementById("shopModal");
+
+    openBtn.onclick = () => {
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+    };
+
+    closeBtn.onclick = () => {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+
+    modal.querySelector(".shop-modal-overlay").onclick = () => {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+</script>
+
+<script>
+const backToTop = document.getElementById("backToTop");
+
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 350) {
+        backToTop.classList.add("show");
+    } else {
+        backToTop.classList.remove("show");
+    }
+});
+
+backToTop.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openBtn = document.getElementById("openFooter");
+    const closeBtn = document.getElementById("closeFooter");
+    const overlay = document.getElementById("sideFooterOverlay");
+    const footer = document.getElementById("sideFooter");
+
+    openBtn.onclick = () => footer.classList.add("active");
+    closeBtn.onclick = () => footer.classList.remove("active");
+    overlay.onclick = () => footer.classList.remove("active");
+
+});
+</script>
+
+
+<script>
+const canvas = document.getElementById("systemCanvas");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+const center = { x: canvas.width / 2, y: canvas.height / 2 };
+const radius = 120;
+let angle = 0;
+
+const nodes = [
+    "Supply",
+    "Distribution",
+    "Quality",
+    "Logistics"
+];
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // center core
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, 10, 0, Math.PI * 2);
+    ctx.fillStyle = "#dc2626";
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = "#dc2626";
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    nodes.forEach((_, i) => {
+        const a = angle + (Math.PI * 2 / nodes.length) * i;
+        const x = center.x + Math.cos(a) * radius;
+        const y = center.y + Math.sin(a) * radius;
+
+        // connection line
+        ctx.beginPath();
+        ctx.moveTo(center.x, center.y);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = "rgba(220,38,38,0.35)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // node
+        ctx.beginPath();
+        ctx.arc(x, y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = "#020617";
+        ctx.fill();
+    });
+
+    angle += 0.002;
+    requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+
+
+<script>
+const engineData = {
+    load: {
+        title: "Load Capacity Intelligence",
+        text: "Our material selection supports structural loads, environmental stress, and long-term durability across residential and commercial builds."
+    },
+    accuracy: {
+        title: "Technical Accuracy System",
+        text: "Every supply decision is based on specifications, tolerances, and real construction standards — not assumptions."
+    },
+    trust: {
+        title: "Operational Trust Layer",
+        text: "Reliability is built through consistency — from material quality to transparent service and long-term partnerships."
+    },
+    flow: {
+        title: "Supply Flow Engineering",
+        text: "Our logistics system is designed to eliminate downtime, delays, and uncertainty in project execution."
+    }
+};
+
+const cells = document.querySelectorAll('.abt-engine__cell');
+const title = document.getElementById('abtEngineTitle');
+const text = document.getElementById('abtEngineText');
+
+let activeCore = null;
+
+cells.forEach(cell => {
+    cell.addEventListener('click', () => {
+
+        const core = cell.dataset.core;
+        if (core === activeCore) return;
+
+        activeCore = core;
+
+        cells.forEach(c => c.classList.remove('is-active'));
+        cell.classList.add('is-active');
+
+        title.style.opacity = 0;
+        text.style.opacity = 0;
+
+        setTimeout(() => {
+            title.textContent = engineData[core].title;
+            text.textContent = engineData[core].text;
+
+            title.style.opacity = 1;
+            text.style.opacity = 1;
+        }, 280);
+    });
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector("#searchOverlay form");
+    const input = form.querySelector("input");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const searchValue = input.value.trim();
+
+        if (searchValue !== "") {
+            // Redirect to products page with search text
+            window.location.href = "product.html?search=" + encodeURIComponent(searchValue);
+        }
+    });
+
+});
+</script>
+
+<script>
+new WOW({
+    boxClass: 'wow',
+    animateClass: 'animate__animated',
+    offset: 120,
+    mobile: false,
+    live: true
+}).init();
+</script>
+
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "Intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+
+</body>
+</html>

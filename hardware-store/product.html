@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hardware Store-Product</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<!-- Google Fonts -->
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<!-- Bootstrap -->
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/mobile.css">
+
+</head>
+
+<body>
+
+<div id="spinner"><div class="spinner"></div></div>
+
+<div class="topbar py-2 d-none d-lg-block" style="    background:
+        radial-gradient(circle at center, rgba(0,0,0,.35), rgba(0,0,0,.85)),
+        linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.85));">
+<div class="container d-flex justify-content-between">
+<div><i class="fa fa-location-dot me-2"></i>china – china, south | <i class="fa fa-phone me-2"></i>135 734 05505 066605  | <i class="fa fa-envelope-open"></i>username@gmail.com</div>
+<div>
+<i class="fab fa-facebook-f me-3"></i>
+<i class="fab fa-instagram me-3"></i>
+<i class="fab fa-youtube"></i>
+</div>
+</div>
+</div>
+
+
+
+<nav class="navbar navbar-expand-lg sticky-top">
+<div class="container">
+<a class="navbar-brand" href="#"><i class="fa fa-screwdriver-wrench me-2"></i>Hardware Store</a>
+<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
+<div class="collapse navbar-collapse" id="nav">
+<div class="navbar-nav ms-auto">
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link active" href="product.html">Products</a>
+<a class="nav-link" href="service.html">services</a>
+<a class="nav-link" href="about.html">About</a>
+<a class="nav-link" href="testimonial.html">Testimonial</a>
+<a class="nav-link" href="contact.html">Contact</a>
+
+<button class="btn nav-search ms-3" id="openSearch">
+    <i class="fa fa-search"></i>
+</button>
+<button type="button" class="btn nav-footer-btn ms-2" id="openFooter">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
+
+
+<div class="search-overlay" id="searchOverlay">
+    <div class="search-box">
+        <button class="close-search" id="closeSearch">
+            <i class="fa fa-xmark"></i>
+        </button>
+
+        <h2>Search Hardware Products</h2>
+        <p>Paints • Tools • Electrical • Plumbing</p>
+
+        <form>
+            <input type="text" placeholder="Search screws, lights, paint colors..." autofocus>
+            <button type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+
+    </div>
+</div>
+
+
+</div>
+</div>
+</div>
+</nav>
+
+<div class="side-footer" id="sideFooter">
+
+    <div class="side-footer-overlay" id="sideFooterOverlay"></div>
+
+    <div class="side-footer-content wow animate__animated animate__slideInRight">
+
+        <button class="side-footer-close" id="closeFooter">&times;</button>
+
+        <footer class="footer-section">
+
+            <div class="footer-inner">
+
+                <!-- BRAND -->
+                <div class="footer-col">
+                    <h3 class="footer-brand">
+                        <i class="fa fa-screwdriver-wrench"></i>Hardware Store
+                    </h3>
+                    <p>
+                        Premium hardware materials trusted by builders,
+                        contractors & professionals.
+                    </p>
+
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <!-- LINKS -->
+                <div class="footer-col">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Products</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                  <div class="footer-col">
+                    <h5>Contact</h5>
+                    <p><i class="fa fa-location-dot"></i>china – china, south</p>
+                    <p><i class="fa fa-phone"></i>135 734 05505 066605 </p>
+                    <p><i class="fa fa-envelope"></i>username@gmail.com</p>
+                </div>
+
+                <!-- PRODUCTS -->
+                <div class="footer-col">
+                    <h5>Products</h5>
+                    <ul>
+                         <li><a href="#">Paints & Coatings</a></li>
+                    <li><a href="#">Marble Sheets</a></li>
+                    <li><a href="#">Wood & Timber</a></li>
+                    <li><a href="#">Gypsum system</a></li>
+                    <li><a href="#">Nation Cement</a></li>
+                    </ul>
+                </div>
+
+                <!-- CONTACT -->
+              
+            </div>
+
+            <div class="footer-bottom">
+                © 2025 <strong>Hardware Store</strong>. All Rights Reserved.
+            </div>
+
+        </footer>
+
+    </div>
+</div>
+
+
+<div class="shop-modal" id="shopModal">
+    <div class="shop-modal-overlay"></div>
+
+    <div class="shop-modal-content wow animate__animated animate__fadeInUp">
+        <button class="close-modal" id="closeShopModal">&times;</button>
+
+        <h2 class="modal-title wow animate__fadeInDown">
+            Explore Our Products
+        </h2>
+
+        <p class="modal-subtitle wow animate__fadeInUp" data-wow-delay=".2s">
+            Premium construction materials for strong & lasting projects
+        </p>
+
+        <!-- FLOATING CATEGORIES (NO BOXES) -->
+<div class="modal-lines">
+
+    <!-- Nation Cement -->
+    <div class="modal-line wow animate__fadeInLeft" data-wow-delay=".3s">
+        <i class="fa-solid fa-industry"></i>
+        <div>
+            <h4>Nation Cement</h4>
+            <span>High-strength cement for structural construction</span>
+        </div>
+    </div>
+
+
+
+    <!-- Gypsum -->
+    <div class="modal-line wow animate__fadeInLeft" data-wow-delay=".5s">
+        <i class="fa-solid fa-layer-group"></i>
+        <div>
+            <h4>Gypsum</h4>
+            <span>Ceilings, partitions & interior finishing materials</span>
+        </div>
+    </div>
+
+    <!-- Steel & Iron -->
+    <div class="modal-line wow animate__fadeInRight" data-wow-delay=".6s">
+        <i class="fa-solid fa-hammer"></i>
+        <div>
+            <h4>Steel & Iron</h4>
+            <span>Rebars, sheets & structural steel products</span>
+        </div>
+    </div>
+
+    <!-- Paints & Coatings -->
+    <div class="modal-line wow animate__fadeInLeft" data-wow-delay=".7s">
+        <i class="fa-solid fa-paint-roller"></i>
+        <div>
+            <h4>Paints & Coatings</h4>
+            <span>Interior & exterior paints, primers and finishes</span>
+        </div>
+    </div>
+
+    <!-- Plumbing Materials -->
+    <div class="modal-line wow animate__fadeInRight" data-wow-delay=".8s">
+        <i class="fa-solid fa-faucet-drip"></i>
+        <div>
+            <h4>Plumbing Materials</h4>
+            <span>Pipes, fittings & water supply solutions</span>
+        </div>
+    </div>
+
+    <!-- Electrical Supplies -->
+    <div class="modal-line wow animate__fadeInLeft" data-wow-delay=".9s">
+        <i class="fa-solid fa-bolt"></i>
+        <div>
+            <h4>Electrical Supplies</h4>
+            <span>Wires, switches, lighting & electrical accessories</span>
+        </div>
+    </div>
+
+    <!-- Tools & Equipment -->
+    <div class="modal-line wow animate__fadeInRight" data-wow-delay="1s">
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        <div>
+            <h4>Tools & Equipment</h4>
+            <span>Hand tools, power tools & safety equipment</span>
+        </div>
+    </div>
+
+</div>
+
+
+        <a href="product.html" class="modal-btn wow animate__pulse animate__infinite">
+            View All Products →
+        </a>
+    </div>
+</div>
+
+
+<section class="hero-bg">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-carousel">
+
+        <div class="hero-slide active" data-bg="img/hard.jpeg">
+           <h5 class="wow animate__fadeInDown animate__slow" data-wow-delay=".2s">
+Hardware Store</h5>
+         <h1 class="wow animate__fadeInUp animate__slow" data-wow-delay=".4s">
+                Complete Home<br>
+                <span>Built For Professionals</span>
+            </h1>
+            <div class="hero-buttons wow animate__zoomIn" data-wow-delay=".7s">
+                <a href="javascript:void(0)" class="btn-primary" id="openShopModal">
+    Shop Products
+</a>
+
+                <a href="contact.html" class="btn-outline">Contact Us</a>
+            </div>
+        </div>
+
+        <div class="hero-slide" data-bg="img/hard1.jpeg">
+            <h5 class="wow fadeInDown">Strong • Durable • Reliable</h5>
+            <h1 class="wow fadeInUp">
+                Complete Home <br>
+                <span>Hardware Solutions</span>
+            </h1>
+            <div class="hero-buttons wow fadeInUp">
+                <a href="product.html" class="btn-primary">View Categories</a>
+                <a href="contact.html" class="btn-outline">Contact Sales</a>
+            </div>
+        </div>
+
+        <div class="hero-slide" data-bg="img/hard2.jpeg">
+            <h5 class="wow fadeInDown">Quality You Can Trust</h5>
+            <h1 class="wow fadeInUp">
+                Professional Grade <br>
+                <span>Tools & Materials</span>
+            </h1>
+            <div class="hero-buttons wow fadeInUp">
+                <a href="product.html" class="btn-primary">Explore Products</a>
+                <a href="contact.html" class="btn-outline">Contact Sales</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="hero-controls">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+</section>
+
+
+
+
+<section class="categories-pro py-5">
+    <div class="container">
+
+        <!-- SECTION HEADER -->
+        <div class="row text-center mb-5">
+
+
+           <h5 class="wow animate__animated animate__fadeInDown">OUR PRODUCT RANGE</h5>
+            <h2 class="section-title wow animate__animated animate__fadeInUp">
+                Hardware <span>Categories</span>
+            </h2>
+        </div>
+
+        <!-- CATEGORIES GRID -->
+        <div class="row g-4">
+
+  
+
+
+     <div class="col-lg-12 wow animate__animated animate__fadeInLeft" data-wow-delay=".1s">
+    <div class="category-row">
+
+        <!-- LEFT IMAGE -->
+        <a href="#" class="category-item category-image">
+            <img src="img/paint.png" alt="Paints">
+            <div class="category-caption">
+                <h4>Paints & Coatings</h4>
+                <span>Interior & Exterior</span>
+            </div>
+        </a>
+
+        <!-- RIGHT WORDS -->
+        <div class="category-content">
+            <h3>Paints & Coatings</h3>
+
+            <p>
+                Premium quality paints and coatings designed for residential,
+                commercial, and industrial applications. Our range ensures
+                durability, smooth finish, and lasting color.
+            </p>
+
+            <ul>
+                <li>✔ Interior & exterior paints</li>
+                <li>✔ Waterproof & weather-resistant</li>
+                <li>✔ Multiple colors & finishes</li>
+            </ul>
+
+           <a href="javascript:void(0)" 
+   class="category-link" 
+   id="openPaintModal">
+    View Products →
+</a>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- PAINT MODAL -->
+<div class="paint-modal" id="paintModal">
+    <div class="paint-overlay"></div>
+
+    <div class="paint-modal-content">
+        <button class="paint-close">&times;</button>
+
+        <h2>Paints & Coatings</h2>
+        <p>Interior & Exterior paint solutions in multiple finishes</p>
+
+ <div class="paint-gallery">
+    <img src="img/paint.png">
+    <img src="img/paint1.png">
+    <img src="img/paint2.png">
+</div>
+
+<br>
+
+ <div class="paint-gallery">
+    <img src="img/paint5.png">
+    <img src="img/paint7.png">
+    <img src="img/paint8.png">
+</div>
+
+<br>
+
+ <div class="paint-gallery">
+    <img src="img/paint4.png">
+    <img src="img/paint9.png">
+    <img src="img/paint10.png">
+</div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="col-lg-12 wow animate__animated animate__fadeInLeft" data-wow-delay=".1s">
+    <div class="category-row">
+
+        <!-- LEFT IMAGE -->
+        <a href="#" class="category-item category-image">
+            <img src="img/marble.jpeg" alt="Marble Sheets">
+            <div class="category-caption">
+                <h4>Marble Sheets</h4>
+                <span>Elegant & Durable Surfaces</span>
+            </div>
+        </a>
+
+        <!-- RIGHT WORDS -->
+        <div class="category-content">
+            <h3>Marble Sheets</h3>
+
+            <p>
+                Premium marble sheets designed for modern interiors and exterior
+                applications. Perfect for flooring, wall cladding, countertops,
+                and decorative finishes with long-lasting durability.
+            </p>
+
+            <ul>
+                <li>✔ Natural & engineered marble sheets</li>
+                <li>✔ Multiple colors, textures & patterns</li>
+                <li>✔ Scratch-resistant & easy maintenance</li>
+                <li>✔ Suitable for homes, offices & commercial spaces</li>
+            </ul>
+
+            <a href="javascript:void(0)"
+               class="category-link"
+               id="openMarbleModal">
+               View Products →
+            </a>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="marble-modal" id="marbleModal">
+    <div class="marble-overlay"></div>
+
+    <div class="marble-modal-content">
+        <button class="marble-close">&times;</button>
+
+        <h2>Marble Sheets</h2>
+        <p>Premium marble sheets for flooring, walls, countertops & interiors</p>
+
+        <!-- ROW 1 -->
+        <div class="marble-gallery">
+            <img src="img/marble.jpeg" alt="White Marble Sheet">
+            <img src="img/marble2.jpeg" alt="Grey Marble Sheet">
+            <img src="img/marble.jpeg" alt="Black Marble Sheet">
+        </div>
+
+        <br>
+
+        <!-- ROW 2 -->
+       
+           <video class="marble-video" autoplay muted loop playsinline>
+    <source src="img/marble4.mp4" type="video/mp4">
+</video>
+
+<video class="marble-video" autoplay muted loop playsinline>
+    <source src="img/marble5.mp4" type="video/mp4">
+</video>
+
+    
+
+
+    </div>
+</div>
+
+
+    
+    <div class="col-lg-12 wow animate__animated animate__fadeInLeft" data-wow-delay=".1s">
+    <div class="category-row">
+
+        <!-- LEFT IMAGE -->
+        <a href="#" class="category-item category-image">
+            <img src="img/bin4.png" alt="Wood & Timber">
+            <div class="category-caption">
+                <h4>Wood & Timber</h4>
+                <span>Quality lumber & boards</span>
+            </div>
+        </a>
+
+        <!-- RIGHT WORDS -->
+        <div class="category-content">
+            <h3>Wood & Timber</h3>
+
+            <p>
+                High-quality wood materials for construction, furniture,
+                carpentry, and interior finishing. Carefully selected
+                for durability, strength, and smooth finish.
+            </p>
+
+            <ul>
+                <li>✔ Plywood, MDF & particle boards</li>
+                <li>✔ Hardwood & softwood timber</li>
+                <li>✔ Doors, frames & panels</li>
+                <li>✔ Treated & moisture-resistant wood</li>
+            </ul>
+
+            <a href="javascript:void(0)"
+               class="category-link"
+               id="openWoodModal">
+               View Products →
+            </a>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+<div class="wood-modal" id="woodModal">
+
+    <div class="wood-overlay"></div>
+
+    <div class="wood-modal-content">
+        <button class="wood-close">&times;</button>
+
+        <h2>Wood & Timber</h2>
+        <p>Premium wood materials for construction & carpentry</p>
+
+        <!-- ROW 1 -->
+        <div class="wood-gallery">
+            <img src="img/wood90.png" alt="Plywood Sheets">
+            <img src="img/wood90.png" alt="Plywood Sheets">
+            <img src="img/bin4.png" alt="Hardwood Timber">
+            <img src="img/bin4.png" alt="Hardwood Timber">
+        </div>
+
+  
+
+    </div>
+</div>
+
+
+<div class="col-lg-12 wow animate__animated animate__fadeInLeft" data-wow-delay=".1s">
+    <div class="category-row">
+
+        <!-- LEFT IMAGE -->
+        <a href="#" class="category-item category-image">
+            <img src="img/roof.jpeg" alt="Roofing Systems">
+            <div class="category-caption">
+                <h4>Roofing Systems</h4>
+                <span>Strong • Weatherproof • Long-lasting</span>
+            </div>
+        </a>
+
+        <!-- RIGHT CONTENT -->
+        <div class="category-content">
+            <h3>Roofing Systems</h3>
+
+            <p>
+                Premium roofing solutions designed to protect your building
+                against extreme weather while enhancing architectural beauty.
+                Built for strength, durability, and modern aesthetics.
+            </p>
+
+            <ul>
+                <li>✔ Stone-coated metal roof tiles</li>
+                <li>✔ Interlocking metal roofing sheets</li>
+                <li>✔ Weather & corrosion resistant</li>
+                <li>✔ Modern designs & multiple colors</li>
+            </ul>
+
+            <a href="javascript:void(0)"
+               class="category-link"
+               id="openRoofModal">
+               View Roofing Products →
+            </a>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="roof-modal" id="roofModal">
+
+    <div class="roof-overlay"></div>
+
+    <div class="roof-modal-content">
+        <button class="roof-close">&times;</button>
+
+        <h2>Roofing Systems</h2>
+        <p>
+            Advanced roofing materials engineered for long-lasting performance,
+            superior protection, and elegant finishes.
+        </p>
+
+        <div class="roof-gallery">
+            <img src="img/roof.jpeg" alt="Stone Coated Roof Tiles">
+            <img src="img/roof1.jpeg" alt="Metal Roofing Sheets">
+            <img src="img/roof2.jpeg" alt="Interlocking Roof Panels">
+            <img src="img/roof3.jpeg" alt="Architectural Roofing Design">
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+<section class="gypsum-ultra">
+
+<div class="gypsum-ultra-left">
+    <span class="gypsum-label">ARCHITECTURAL INTERIORS</span>
+
+    <h1>
+        Sculpted <br>
+        Gypsum <span>Design Systems</span>
+    </h1>
+
+    <p>
+        Elevate interiors with next-generation gypsum solutions engineered
+        for modern architecture. From floating ceilings and sculpted forms
+        to seamless partitions, our systems redefine spatial elegance,
+        acoustic comfort, and integrated lighting with precision craftsmanship.
+    </p>
+
+    <p>
+        Designed for durability, flexibility, and flawless finishes,
+        our gypsum systems adapt to residential, commercial, and
+        high-end interior environments with ease.
+    </p>
+
+    <div class="gypsum-points">
+        <div>● False ceilings, bulkheads & layered designs</div>
+        <div>● Acoustic, moisture & fire-rated gypsum boards</div>
+        <div>● Integrated lighting channels & curved structures</div>
+        <div>● Premium solutions for offices, homes & luxury interiors</div>
+    </div>
+
+
+
+        <button id="openGypsumUltra" class="gypsum-btn">
+            Discover Gypsum Systems
+        </button>
+    </div>
+
+<div class="gypsum-ultra-right">
+
+    <div class="gypsum-card glass">
+        <span>01</span>
+        <h4>Gypsum Boards</h4>
+    </div>
+
+    <div class="gypsum-card glass">
+        <span>02</span>
+        <h4>Ceiling Systems</h4>
+    </div>
+
+    <div class="gypsum-card glass">
+        <span>03</span>
+        <h4>Partition Systems</h4>
+    </div>
+
+    <div class="gypsum-card glass">
+        <span>04</span>
+        <h4>Lighting Integration</h4>
+    </div>
+
+    <div class="gypsum-card glass">
+        <span>05</span>
+        <h4>Architectural Features</h4>
+    </div>
+
+    <div class="gypsum-card glass">
+        <span>06</span>
+        <h4>Metal Framing Systems</h4>
+    </div>
+
+    <div class="gypsum-card glass">
+        <span>07</span>
+        <h4>Fasteners & Accessories</h4>
+    </div>
+
+    <div class="gypsum-card glass">
+        <span>08</span>
+        <h4>Acoustic Solutions & Insulation</h4>
+    </div>
+
+</div>
+
+
+    <div class="gypsum-ultra-modal" id="gypsumUltraModal">
+
+    <div class="gypsum-ultra-overlay"></div>
+
+    <div class="gypsum-ultra-panel">
+
+        <button class="gypsum-ultra-close">&times;</button>
+
+        <h2>Gypsum Interior Systems</h2>
+        <p>
+            Precision-engineered gypsum solutions for ceilings, partitions,
+            acoustics, and modern lighting-ready interiors.
+        </p>
+
+        <div class="gypsum-ultra-grid">
+            <img src="img/board1.jpeg">
+            <img src="img/board2.jpeg">
+            <img src="img/board3.jpeg">
+            <img src="img/board5.jpeg">
+
+            <img src="img/board6.jpeg">
+            <img src="img/board7.jpeg">
+            <img src="img/board8.jpeg">
+            <img src="img/board9.jpeg">
+
+             <img src="img/board10.jpeg">
+            <img src="img/board11.jpeg">
+            <img src="img/board12.jpeg">
+            <img src="img/board13.jpeg">
+
+            <img src="img/board14.jpeg">
+            <img src="img/board15.jpeg">
+            <img src="img/board16.jpeg">
+            <img src="img/board17.jpeg">
+
+               <img src="img/board18.jpeg"> 
+            <img src="img/board19.jpeg">
+            <img src="img/board20.jpeg">
+            <img src="img/board21.jpeg">
+
+            <img src="img/board22.jpeg">
+             <img src="img/metal200.jpeg">
+            <img src="img/metal.png">
+            <img src="img/metal4.png">
+
+
+             <img src="img/lighting.jpeg">
+            <img src="img/lighting2.jpeg">
+            <img src="img/lighting3.jpeg">
+            <img src="img/lighting4.jpeg">
+
+
+            <img src="img/fast.png">
+            <img src="img/fast1.png">
+            <img src="img/fast2.png">
+            <img src="img/fast3.png">
+
+              <img src="img/ceilling.png">
+            <img src="img/ceilling2.png">
+            <img src="img/archi34.png">
+            <img src="img/in.png">
+            <img src="img/archi200.png">
+            <img src="img/archi300.png">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section class="cement-ultra">
+    <div class="cement-left">
+        <span class="cement-badge">STRUCTURAL MATERIALS</span>
+
+        <h1>
+            Cement, Plaster & <span>Wall Putty Solutions</span>
+        </h1>
+
+        <p>
+            Premium-quality cement, plaster, and wall putty solutions
+            engineered for strong construction, smooth finishes, and
+            long-lasting performance. Trusted by professionals for
+            residential, commercial, and industrial projects.
+        </p>
+
+        <ul class="cement-points">
+            <li>✔ High-strength cement for structural durability</li>
+            <li>✔ Smooth plaster for superior surface finishing</li>
+            <li>✔ Wall putty for flawless, crack-free walls</li>
+            <li>✔ Reliable quality from trusted national brands</li>
+            <li>✔ Consistent supply for all project sizes</li>
+        </ul>
+
+        <a href="javascript:void(0)" class="cement-btn" id="openCementModal">
+            Explore Cement, Plaster & Putty →
+        </a>
+    </div>
+
+    <div class="cement-right">
+        <div class="cement-stack">
+            <img src="img/hard1.jpeg" alt="Cement Products">
+            <img src="img/hard2.jpeg" alt="Plaster Solutions">
+            <img src="img/hard.jpeg" alt="Wall Putty Products">
+        </div>
+    </div>
+</section>
+
+
+
+<div class="cement-modal" id="cementModal">
+    <div class="cement-overlay"></div>
+
+    <div class="cement-modal-box">
+        <button class="cement-close">&times;</button>
+
+        <div class="cement-modal-content">
+       <h2>Complete Cement, Plaster & Putty Range</h2>
+<p>Reliable building solutions designed for strength, durability, and flawless finishes</p>
+
+        <div class="cement-gallery">
+            <img src="img/alba1.png">
+            <img src="img/alaba2.png">
+            <img src="img/wallput.png">
+            <img src="img/cement2.png">
+            <img src="img/cement3.png">
+            <img src="img/cement4.png">
+            <img src="img/cement5.png">
+            <img src="img/cement6.png">
+            <img src="img/cement7.png">
+        </div>
+    </div>
+    </div>
+</div>
+
+<section class="supreme-products">
+
+    <div class="supreme-title">
+        <h2>Engineered for Absolute Strength</h2>
+        <p>Premium-grade materials crafted for professionals who demand perfection</p>
+    </div>
+
+    <div class="supreme-track">
+
+        <div class="supreme-item" data-title="Steel & Iron">
+            <span class="supreme-bg">STEEL</span>
+            <div class="supreme-content">
+                <h3>Steel & Iron</h3>
+                <p>Rebars, sheets & structural-grade materials</p>
+            </div>
+        </div>
+
+        <div class="supreme-item" data-title="Plumbing">
+            <span class="supreme-bg">PLUMB</span>
+            <div class="supreme-content">
+                <h3>Plumbing Materials</h3>
+                <p>Pipes, fittings & water-flow systems</p>
+            </div>
+        </div>
+
+        <div class="supreme-item" data-title="Paints">
+            <span class="supreme-bg">COAT</span>
+            <div class="supreme-content">
+                <h3>Paints & Coatings</h3>
+                <p>Weather-resistant & luxury finishes</p>
+            </div>
+        </div>
+
+        <div class="supreme-item" data-title="Tools">
+            <span class="supreme-bg">TOOLS</span>
+            <div class="supreme-content">
+                <h3>Tools & Equipment</h3>
+                <p>Professional & industrial-grade tools</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="ultra-products">
+
+    <div class="ultra-header">
+        <span class="ultra-tag">PREMIUM HARDWARE</span>
+        <h2>Built for Power & Performance</h2>
+        <p>High-quality construction materials crafted for strength, durability, and excellence</p>
+    </div>
+
+    <div class="ultra-grid">
+
+        <!-- Card -->
+        <div class="ultra-card">
+            <div class="ultra-icon"><i class="fa-solid fa-hammer"></i></div>
+            <h4>Steel & Iron</h4>
+            <span>Structural Strength</span>
+        </div>
+
+        <div class="ultra-card">
+            <div class="ultra-icon"><i class="fa-solid fa-faucet-drip"></i></div>
+            <h4>Plumbing Materials</h4>
+            <span>Water Flow Systems</span>
+        </div>
+
+        <div class="ultra-card">
+            <div class="ultra-icon"><i class="fa-solid fa-paint-roller"></i></div>
+            <h4>Paints & Coatings</h4>
+            <span>Premium Finishes</span>
+        </div>
+
+        <div class="ultra-card">
+            <div class="ultra-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+            <h4>Tools & Equipment</h4>
+            <span>Professional Grade</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+
+
+    <div class="brand-signoff">
+        <span>Hardware Store</span>
+        <em>Materials engineered for performance. Supplied with trust.</em>
+    </div>
+</section>
+
+
+
+
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+<footer class="footer-section">
+    <div class="container">
+        <div class="row footer-top">
+
+            <!-- BRAND -->
+            <div class="col-lg-4 col-md-6 wow animate__fadeInUp">
+                <h3 class="footer-brand">
+                    <i class="fa fa-screwdriver-wrench"></i> Hardware Store
+                </h3>
+                <p class="footer-text">
+                    Your trusted hardware partner supplying premium-quality
+                    materials for homes, builders, and professionals.
+                </p>
+
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <!-- QUICK LINKS -->
+            <div class="col-lg-2 col-md-6 wow animate__fadeInUp" data-wow-delay=".1s">
+                <h5 class="footer-title">Quick Links</h5>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- PRODUCTS -->
+            <div class="col-lg-3 col-md-6 wow animate__fadeInUp" data-wow-delay=".2s">
+                <h5 class="footer-title">Our Products</h5>
+                <ul class="footer-links">
+                     <li><a href="#">Paints & Coatings</a></li>
+                    <li><a href="#">Marble Sheets</a></li>
+                    <li><a href="#">Wood & Timber</a></li>
+                    <li><a href="#">Gypsum system</a></li>
+                    <li><a href="#">Nation Cement</a></li>
+                </ul>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="col-lg-3 col-md-6 wow animate__fadeInUp" data-wow-delay=".3s">
+                <h5 class="footer-title">Contact Info</h5>
+                <ul class="footer-contact">
+                    <li>
+                        <i class="fa fa-location-dot"></i>
+                      china – china, south 
+                    </li>
+                    <li>
+                        <i class="fa fa-phone"></i>
+                       135 734 05505 066605 
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope"></i>
+                       username@gmail.com
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>
+                ©<strong>Hardware Store</strong>. All Rights Reserved.
+            </p>
+        </div>
+    </div>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>window.onload=()=>document.getElementById('spinner').style.display='none'</script>
+
+<a href="#" class="back-to-top-pro" id="backToTop">
+    <i class="fa fa-angle-up"></i>
+</a>
+
+
+
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+
+<script>
+const heroBg = document.querySelector(".hero-bg");
+const slides = document.querySelectorAll(".hero-slide");
+const dots = document.querySelectorAll(".dot");
+
+let index = 0;
+const interval = 6000;
+
+function showSlide(i) {
+    slides.forEach(slide => slide.classList.remove("active"));
+    dots.forEach(dot => dot.classList.remove("active"));
+
+    slides[i].classList.add("active");
+    dots[i].classList.add("active");
+
+    const bg = slides[i].getAttribute("data-bg");
+    heroBg.style.backgroundImage = `url(${bg})`;
+}
+
+dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+        index = i;
+        showSlide(index);
+    });
+});
+
+setInterval(() => {
+    index = (index + 1) % slides.length;
+    showSlide(index);
+}, interval);
+
+// Initial background
+showSlide(0);
+</script>
+
+
+    <script>
+const openSearch = document.getElementById('openSearch');
+const closeSearch = document.getElementById('closeSearch');
+const searchOverlay = document.getElementById('searchOverlay');
+
+if(openSearch){
+    openSearch.addEventListener('click', () => {
+        searchOverlay.classList.add('active');
+    });
+}
+
+if(closeSearch){
+    closeSearch.addEventListener('click', () => {
+        searchOverlay.classList.remove('active');
+    });
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        searchOverlay.classList.remove('active');
+    }
+});
+</script>
+
+<script>
+document.querySelectorAll('.ultra-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        card.style.transform = `
+            perspective(1000px)
+            rotateX(${-(y - rect.height / 2) / 15}deg)
+            rotateY(${(x - rect.width / 2) / 15}deg)
+            translateY(-20px)
+        `;
+    });
+
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+    });
+});
+</script>
+<script>
+document.querySelectorAll('.supreme-item').forEach(item => {
+
+    item.addEventListener('mousemove', e => {
+        const rect = item.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        item.style.setProperty('--x', `${x}px`);
+        item.style.setProperty('--y', `${y}px`);
+
+        const rotateX = -(y - rect.height / 2) / 20;
+        const rotateY = (x - rect.width / 2) / 20;
+
+        item.style.transform = `
+            perspective(1200px)
+            rotateX(${rotateX}deg)
+            rotateY(${rotateY}deg)
+            scale(1.04)
+        `;
+    });
+
+    item.addEventListener('mouseleave', () => {
+        item.style.transform = '';
+    });
+
+});
+</script>
+
+
+<script>
+    const openBtn = document.getElementById("openShopModal");
+    const closeBtn = document.getElementById("closeShopModal");
+    const modal = document.getElementById("shopModal");
+
+    openBtn.onclick = () => {
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+    };
+
+    closeBtn.onclick = () => {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+
+    modal.querySelector(".shop-modal-overlay").onclick = () => {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+</script>
+
+<script>
+const backToTop = document.getElementById("backToTop");
+
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 350) {
+        backToTop.classList.add("show");
+    } else {
+        backToTop.classList.remove("show");
+    }
+});
+
+backToTop.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openBtn = document.getElementById("openFooter");
+    const closeBtn = document.getElementById("closeFooter");
+    const overlay = document.getElementById("sideFooterOverlay");
+    const footer = document.getElementById("sideFooter");
+
+    openBtn.onclick = () => footer.classList.add("active");
+    closeBtn.onclick = () => footer.classList.remove("active");
+    overlay.onclick = () => footer.classList.remove("active");
+
+});
+</script>
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openBtn = document.getElementById("openPaintModal");
+    const modal = document.getElementById("paintModal");
+    const closeBtn = modal.querySelector(".paint-close");
+    const overlay = modal.querySelector(".paint-overlay");
+
+    if (!openBtn || !modal) return;
+
+    openBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        if (typeof WOW === "function") {
+            WOW.prototype.sync();
+        }
+    });
+
+    function closeModal() {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    }
+
+    closeBtn.addEventListener("click", closeModal);
+    overlay.addEventListener("click", closeModal);
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openBtn = document.getElementById("openElectricalModal");
+    const modal = document.getElementById("electricalModal");
+    const closeBtn = modal.querySelector(".electrical-close");
+    const overlay = modal.querySelector(".electrical-overlay");
+
+    openBtn.addEventListener("click", function () {
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        // 🔥 Re-init WOW for modal content
+        setTimeout(() => {
+            new WOW().init();
+        }, 100);
+    });
+
+    function closeModal() {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    }
+
+    closeBtn.onclick = closeModal;
+    overlay.onclick = closeModal;
+
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openTools = document.getElementById("openToolsModal");
+    const toolsModal = document.getElementById("toolsModal");
+    const closeTools = document.querySelector(".tools-close");
+    const toolsOverlay = document.querySelector(".tools-overlay");
+
+    openTools.addEventListener("click", function (e) {
+        e.preventDefault();
+        toolsModal.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        setTimeout(() => {
+            new WOW().init();
+        }, 100);
+    });
+
+    closeTools.onclick = () => {
+        toolsModal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+
+    toolsOverlay.onclick = () => {
+        toolsModal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openMarble = document.getElementById("openMarbleModal");
+    const marbleModal = document.getElementById("marbleModal");
+    const closeMarble = document.querySelector(".marble-close");
+    const marbleOverlay = document.querySelector(".marble-overlay");
+
+    openMarble.addEventListener("click", function (e) {
+        e.preventDefault();
+        marbleModal.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        setTimeout(() => {
+            new WOW().init();
+        }, 100);
+    });
+
+    closeMarble.onclick = () => {
+        marbleModal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+
+    marbleOverlay.onclick = () => {
+        marbleModal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openWood = document.getElementById("openWoodModal");
+    const woodModal = document.getElementById("woodModal");
+    const closeWood = document.querySelector(".wood-close");
+    const woodOverlay = document.querySelector(".wood-overlay");
+
+    openWood.onclick = (e) => {
+        e.preventDefault();
+        woodModal.classList.add("active");
+        document.body.style.overflow = "hidden";
+    };
+
+    closeWood.onclick = () => {
+        woodModal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+
+    woodOverlay.onclick = closeWood.onclick;
+
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const open = document.getElementById("openGypsumUltra");
+    const modal = document.getElementById("gypsumUltraModal");
+    const close = document.querySelector(".gypsum-ultra-close");
+    const overlay = document.querySelector(".gypsum-ultra-overlay");
+
+    open.onclick = () => {
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+    };
+
+    close.onclick = overlay.onclick = () => {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const open = document.getElementById("openCementModal");
+    const modal = document.getElementById("cementModal");
+    const close = document.querySelector(".cement-close");
+    const overlay = document.querySelector(".cement-overlay");
+
+    open.onclick = () => {
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+    };
+
+    close.onclick = overlay.onclick = () => {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+
+});
+</script>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const search = params.get("search");
+
+console.log("Search keyword:", search);
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector("#searchOverlay form");
+    const input = form.querySelector("input");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const searchValue = input.value.trim();
+
+        if (searchValue !== "") {
+            // Redirect to products page with search text
+            window.location.href = "product.html?search=" + encodeURIComponent(searchValue);
+        }
+    });
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openRoof = document.getElementById("openRoofModal");
+    const roofModal = document.getElementById("roofModal");
+    const closeRoof = document.querySelector(".roof-close");
+    const roofOverlay = document.querySelector(".roof-overlay");
+
+    openRoof.onclick = (e) => {
+        e.preventDefault();
+        roofModal.classList.add("active");
+        document.body.style.overflow = "hidden";
+    };
+
+    closeRoof.onclick = () => {
+        roofModal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+
+    roofOverlay.onclick = closeRoof.onclick;
+
+});
+</script>
+
+
+<script>
+new WOW({
+    boxClass: 'wow',
+    animateClass: 'animate__animated',
+    offset: 120,
+    mobile: false,
+    live: true
+}).init();
+</script>
+
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "Intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+
+
+</body>
+</html>
