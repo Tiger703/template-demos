@@ -1,1 +1,2252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AERA Voyages — Premium Tourism Experience</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --bg: #FDFCF8;
+      --paper: #ffffff;
+      --paper-2: #f5f1e8;
+      --ink: #151515;
+      --ink-light: #4A4A4A;
+      --muted: #8C8C8C;
+      --line: #e8e2d8;
+      --accent: #ff6f4c;
+      --accent-2: #1c8c87;
+      --deep: #0d3b66;
+      --gold: #c7a36a;
+      --shadow: 0 20px 60px rgba(20,20,20,.07);
+      --shadow-lg: 0 30px 90px rgba(20,20,20,.10);
+      --radius: 24px;
+      --radius-sm: 16px;
+      --ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: "Manrope", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1, h2, h3, h4, .serif {
+      font-family: "Fraunces", serif;
+      letter-spacing: -0.03em;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+      border: none;
+      outline: none;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gold);
+      border-radius: 10px;
+    }
+
+    .container {
+      width: min(1200px, 100% - 40px);
+      margin-inline: auto;
+    }
+
+    /* ====== CURSOR ====== */
+    .cursor-dot,
+    .cursor-ring {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      will-change: transform;
+    }
+
+    .cursor-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      mix-blend-mode: difference;
+    }
+
+    .cursor-ring {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--accent);
+      opacity: .5;
+      transition: width .28s var(--ease), height .28s var(--ease), opacity .28s var(--ease);
+      mix-blend-mode: difference;
+    }
+
+    .cursor-ring.active {
+      width: 64px;
+      height: 64px;
+      opacity: 1;
+    }
+
+    @media (pointer: coarse) {
+      .cursor-dot,
+      .cursor-ring {
+        display: none !important;
+      }
+    }
+
+    /* ====== NOISE ====== */
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      pointer-events: none;
+      opacity: .028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px;
+    }
+
+    /* ====== NAV ====== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      transition: all .4s var(--ease);
+    }
+
+    .nav.scrolled {
+      background: rgba(253, 252, 248, .88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 1px 0 var(--line);
+    }
+
+    .nav-inner {
+      width: min(1200px, 100% - 40px);
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 78px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: "Fraunces", serif;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      z-index: 1001;
+    }
+
+    .brand-mark {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 0 5px rgba(255, 111, 76, .08);
+    }
+
+    .nav-center {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav-link {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      position: relative;
+      letter-spacing: .02em;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1.5px;
+      background: var(--accent);
+      transition: width .3s var(--ease);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 22px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease), background .3s;
+    }
+
+    .pill-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(21, 21, 21, .16);
+      background: var(--accent);
+    }
+
+    .ghost-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid var(--line);
+      border-radius: 999px;
+      padding: 12px 22px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .3s var(--ease);
+    }
+
+    .ghost-btn:hover {
+      border-color: var(--ink);
+      transform: translateY(-2px);
+    }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1.5px solid var(--line);
+      background: var(--paper);
+      position: relative;
+      cursor: pointer;
+      z-index: 1001;
+      flex-shrink: 0;
+    }
+
+    .hamburger span {
+      position: absolute;
+      left: 50%;
+      width: 16px;
+      height: 1.5px;
+      background: var(--ink);
+      transform: translateX(-50%);
+      transition: .3s var(--ease);
+    }
+
+    .hamburger span:nth-child(1) { top: 14px; }
+    .hamburger span:nth-child(2) { top: 20px; }
+    .hamburger span:nth-child(3) { top: 26px; }
+
+    .hamburger.open span:nth-child(1) {
+      transform: translateX(-50%) rotate(45deg);
+      top: 20px;
+    }
+
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.open span:nth-child(3) {
+      transform: translateX(-50%) rotate(-45deg);
+      top: 20px;
+    }
+
+    /* mobile menu */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      max-width: 420px;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--paper);
+      z-index: 1000;
+      padding: 100px 28px 40px;
+      transition: right .5s var(--ease);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: -20px 0 60px rgba(0,0,0,.08);
+    }
+
+    .mobile-menu.open {
+      right: 0;
+    }
+
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.3);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .4s, visibility .4s;
+    }
+
+    .mobile-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-link {
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: var(--paper-2);
+      font-weight: 800;
+      font-size: 15px;
+      display: block;
+      transition: background .2s;
+    }
+
+    .mobile-link:hover {
+      background: #eee8da;
+    }
+
+    .mobile-cta {
+      margin-top: auto;
+      padding: 16px;
+      border-radius: 16px;
+      background: var(--ink);
+      color: #fff;
+      text-align: center;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    /* ====== EYEBROW ====== */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 2px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    .section-title {
+      font-size: clamp(32px, 5vw, 64px);
+      line-height: .96;
+      max-width: 720px;
+    }
+
+    .section-text {
+      margin-top: 14px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 600px;
+      font-size: 15px;
+    }
+
+    /* ====== HERO ====== */
+    .hero {
+      padding: 120px 0 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      width: min(1200px, 100% - 40px);
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-title {
+      font-size: clamp(42px, 7vw, 88px);
+      line-height: .92;
+      max-width: 660px;
+    }
+
+    .hero-title em {
+      color: var(--accent);
+      font-style: normal;
+      position: relative;
+    }
+
+    .hero-title em::after {
+      content: "";
+      position: absolute;
+      bottom: 2px;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 111, 76, .15);
+      border-radius: 4px;
+      z-index: -1;
+    }
+
+    .hero-text {
+      margin-top: 20px;
+      max-width: 560px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.85;
+    }
+
+    .hero-actions {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hero-chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 34px;
+    }
+
+    .chip {
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, .7);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-light);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 580px;
+    }
+
+    .hero-card {
+      position: absolute;
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      background: #fff;
+      will-change: transform;
+      transition: transform .2s ease-out;
+    }
+
+    .hero-card img {
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-card.main {
+      width: min(80%, 480px);
+      height: 540px;
+      right: 0;
+      top: 20px;
+      transform: rotate(3deg);
+    }
+
+    .hero-card.second {
+      width: 240px;
+      height: 190px;
+      left: 0;
+      top: 20px;
+      border: 8px solid #fff;
+      transform: rotate(-6deg);
+    }
+
+    .hero-card.third {
+      width: 220px;
+      height: 160px;
+      left: 20px;
+      bottom: 10px;
+      border: 8px solid #fff;
+      transform: rotate(5deg);
+    }
+
+    .hero-badge {
+      position: absolute;
+      right: 24px;
+      bottom: 0;
+      background: rgba(255, 255, 255, .92);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      backdrop-filter: blur(12px);
+      z-index: 4;
+    }
+
+    .badge-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), #ff9c76);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .badge-title {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .badge-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb-1 {
+      width: 160px;
+      height: 160px;
+      background: rgba(255, 111, 76, .1);
+      top: -30px;
+      right: 100px;
+      animation: drift 10s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 120px;
+      height: 120px;
+      background: rgba(28, 140, 135, .12);
+      bottom: 80px;
+      left: -20px;
+      animation: drift 12s ease-in-out infinite reverse;
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-16px, 14px); }
+    }
+
+    /* ====== PLANNER ====== */
+    .planner-section {
+      position: relative;
+      z-index: 5;
+      margin-top: -8px;
+    }
+
+    .planner {
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid rgba(232, 226, 216, .9);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: center;
+      backdrop-filter: blur(14px);
+    }
+
+    .planner-field {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px 16px;
+    }
+
+    .planner-label {
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .planner-input {
+      width: 100%;
+      background: transparent;
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .planner-submit {
+      height: 100%;
+      min-height: 68px;
+      border-radius: 20px;
+      padding: 0 24px;
+      background: linear-gradient(135deg, var(--accent), #ff956d);
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-size: 12px;
+      cursor: pointer;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+    }
+
+    .planner-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(255, 111, 76, .26);
+    }
+
+    /* ====== SECTION SPACING ====== */
+    .section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    /* ====== VALUE SECTION ====== */
+    .value-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .feature-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px 20px;
+      box-shadow: var(--shadow);
+      transition: transform .35s var(--ease), border-color .35s var(--ease);
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: #d8cdbd;
+    }
+
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .f-orange { background: linear-gradient(135deg, var(--accent), #ff9e80); }
+    .f-teal { background: linear-gradient(135deg, var(--accent-2), #64c8c2); }
+    .f-blue { background: linear-gradient(135deg, var(--deep), #4f7db2); }
+
+    .feature-card h3 {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    /* ====== MOOD EXPLORER ====== */
+    .mood-shell {
+      margin-top: 36px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+      background: linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(245, 241, 232, .8));
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      padding: 22px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .mood-media {
+      position: relative;
+      min-height: 480px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .mood-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .8s var(--ease), opacity .3s;
+    }
+
+    .mood-price {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid rgba(255, 255, 255, .8);
+      border-radius: 18px;
+      padding: 14px 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+    }
+
+    .mood-price small {
+      display: block;
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 800;
+    }
+
+    .mood-price strong {
+      font-family: "Fraunces", serif;
+      font-size: 26px;
+      color: var(--accent);
+    }
+
+    .mood-content {
+      padding: 6px 4px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mood-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .mood-tab {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink-light);
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .25s var(--ease);
+    }
+
+    .mood-tab.active,
+    .mood-tab:hover {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    .mood-label {
+      color: var(--accent-2);
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .mood-title {
+      font-size: clamp(26px, 3.5vw, 48px);
+      line-height: .96;
+      margin-bottom: 12px;
+    }
+
+    .mood-text {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .mood-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .mood-tag {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--ink-light);
+    }
+
+    .mood-mini {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .mini-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      transition: transform .3s var(--ease);
+    }
+
+    .mini-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .mini-card img {
+      height: 100px;
+      object-fit: cover;
+    }
+
+    .mini-card div {
+      padding: 10px 12px;
+    }
+
+    .mini-card h4 {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .mini-card p {
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    /* ====== MARQUEE ====== */
+    .marquee {
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .marquee-track {
+      display: inline-block;
+      min-width: 200%;
+      animation: marquee 28s linear infinite;
+      font-family: "Fraunces", serif;
+      font-size: 36px;
+      color: #d8cfc0;
+    }
+
+    .marquee-track span {
+      margin: 0 28px;
+      color: var(--gold);
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ====== JOURNEY STEPS ====== */
+    .steps-board {
+      margin-top: 36px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .step {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px 20px;
+      box-shadow: var(--shadow);
+      transition: transform .35s var(--ease);
+    }
+
+    .step:hover {
+      transform: translateY(-8px);
+    }
+
+    .step-num {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      font-family: "Fraunces", serif;
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+
+    .step h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    /* ====== STATS ====== */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat {
+      background: linear-gradient(180deg, #fff, #faf7f0);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 28px 20px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: "Fraunces", serif;
+      font-size: clamp(34px, 5vw, 56px);
+      color: var(--deep);
+      line-height: 1;
+    }
+
+    .stat-label {
+      margin-top: 10px;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    /* ====== REVIEWS ====== */
+    .review-layout {
+      margin-top: 36px;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+    }
+
+    .review-main {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .review-main::before {
+      content: "\201C";
+      position: absolute;
+      right: 16px;
+      top: -12px;
+      font-family: "Fraunces", serif;
+      font-size: 160px;
+      color: #f4efe5;
+      pointer-events: none;
+    }
+
+    .review-stars {
+      color: var(--gold);
+      font-size: 16px;
+      margin-bottom: 14px;
+      letter-spacing: 2px;
+    }
+
+    .review-quote {
+      font-family: "Fraunces", serif;
+      font-size: clamp(20px, 3vw, 32px);
+      line-height: 1.35;
+      position: relative;
+      z-index: 2;
+      transition: opacity .3s;
+    }
+
+    .review-person {
+      margin-top: 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .review-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    }
+
+    .review-name {
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .review-trip {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .review-dots {
+      margin-top: 22px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .r-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: none;
+      background: #ddd3c4;
+      cursor: pointer;
+      transition: all .25s var(--ease);
+    }
+
+    .r-dot.active {
+      width: 30px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .review-side {
+      display: grid;
+      gap: 14px;
+    }
+
+    .side-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 22px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .side-card h4 {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .side-card p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    /* ====== CTA ====== */
+    .cta-panel {
+      background:
+        radial-gradient(circle at 85% 18%, rgba(255, 255, 255, .1), transparent 30%),
+        linear-gradient(135deg, var(--deep), #114d83 60%, var(--accent-2));
+      color: #fff;
+      border-radius: 32px;
+      padding: 44px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: center;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-title {
+      font-size: clamp(30px, 4.5vw, 58px);
+      line-height: .96;
+    }
+
+    .cta-text {
+      margin-top: 14px;
+      color: rgba(255, 255, 255, .75);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .cta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .cta-badge {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      background: rgba(255, 255, 255, .08);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .lead-form {
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 24px;
+      padding: 18px;
+      backdrop-filter: blur(12px);
+    }
+
+    .lead-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .lead-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .lead-field {
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 16px;
+      padding: 12px 14px;
+    }
+
+    .lead-field label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .6);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .lead-field input,
+    .lead-field select {
+      width: 100%;
+      background: transparent;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .lead-field option {
+      color: #111;
+    }
+
+    .lead-submit {
+      margin-top: 10px;
+      width: 100%;
+      border-radius: 16px;
+      padding: 14px;
+      background: #fff;
+      color: var(--deep);
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-size: 12px;
+      cursor: pointer;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+    }
+
+    .lead-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .16);
+    }
+
+    .form-msg {
+      margin-top: 10px;
+      color: #a6ffc4;
+      font-size: 12px;
+      font-weight: 700;
+      display: none;
+      text-align: center;
+    }
+
+    /* ====== FOOTER ====== */
+    .footer {
+      padding: 70px 0 30px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.3fr .8fr .8fr 1fr;
+      gap: 24px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .footer-brand p {
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 340px;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+
+    .footer-title {
+      font-size: 12px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+
+    .footer-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .footer-list a,
+    .footer-list li {
+      color: var(--muted);
+      font-size: 13px;
+      transition: color .2s;
+    }
+
+    .footer-list a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* ====== REVEAL ====== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .8s var(--ease), transform .8s var(--ease);
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* hero animation */
+    .hero-animate {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+
+    body.loaded .hero-animate {
+      opacity: 1;
+      transform: none;
+    }
+
+    body.loaded .hero-animate.d1 { transition-delay: .05s; }
+    body.loaded .hero-animate.d2 { transition-delay: .12s; }
+    body.loaded .hero-animate.d3 { transition-delay: .2s; }
+    body.loaded .hero-animate.d4 { transition-delay: .28s; }
+    body.loaded .hero-animate.d5 { transition-delay: .36s; }
+    body.loaded .hero-animate.d6 { transition-delay: .44s; }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 1100px) {
+      .nav-center { display: none; }
+      .nav-actions .pill-btn { display: none; }
+      .hamburger { display: block; }
+
+      .hero-grid,
+      .mood-shell,
+      .review-layout,
+      .cta-panel,
+      .value-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        min-height: 480px;
+      }
+
+      .hero-card.main {
+        width: 100%;
+        max-width: 480px;
+        margin: auto;
+        height: 440px;
+        right: 0;
+        left: 0;
+      }
+
+      .hero-card.second {
+        width: 200px;
+        height: 150px;
+        left: 0;
+      }
+
+      .hero-card.third {
+        width: 180px;
+        height: 130px;
+        left: auto;
+        right: 0;
+        bottom: -4px;
+      }
+
+      .planner {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .planner-submit {
+        grid-column: 1 / -1;
+        min-height: 58px;
+      }
+
+      .steps-board,
+      .stats-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .cta-panel {
+        padding: 32px 22px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .hero {
+        padding: 110px 0 40px;
+      }
+
+      .hero-title {
+        font-size: 38px;
+      }
+
+      .hero-visual {
+        min-height: 400px;
+        margin-top: 24px;
+      }
+
+      .hero-card.main {
+        height: 380px;
+        border-radius: 22px;
+      }
+
+      .hero-card.second {
+        width: 160px;
+        height: 120px;
+        border-width: 6px;
+      }
+
+      .hero-card.third {
+        width: 150px;
+        height: 110px;
+        border-width: 6px;
+      }
+
+      .hero-badge {
+        right: 10px;
+        bottom: -6px;
+        padding: 12px 14px;
+      }
+
+      .badge-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        font-size: 14px;
+      }
+
+      .planner {
+        grid-template-columns: 1fr;
+      }
+
+      .section {
+        padding: 60px 0;
+      }
+
+      .mood-shell {
+        padding: 14px;
+        border-radius: 24px;
+      }
+
+      .mood-media {
+        min-height: 320px;
+        border-radius: 20px;
+      }
+
+      .mood-mini {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-board,
+      .stats-row {
+        grid-template-columns: 1fr;
+      }
+
+      .review-main {
+        padding: 24px 18px;
+      }
+
+      .review-quote {
+        font-size: 20px;
+      }
+
+      .cta-panel {
+        padding: 28px 18px;
+        border-radius: 24px;
+      }
+
+      .lead-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .marquee-track {
+        font-size: 28px;
+      }
+
+      .nav-inner {
+        height: 66px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .hero-card.main {
+        height: 320px;
+      }
+
+      .hero-card.second {
+        width: 130px;
+        height: 100px;
+      }
+
+      .hero-card.third {
+        width: 120px;
+        height: 90px;
+      }
+
+      .hero-visual {
+        min-height: 340px;
+      }
+    }
+
+
+
+.mobile-close{
+  position:absolute;
+  top:26px;
+  right:24px;
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:var(--paper-2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  cursor:pointer;
+  color:var(--ink);
+
+  /* animation setup */
+  opacity:0;
+  transform:scale(.6) rotate(-90deg);
+  transition:all .4s cubic-bezier(.2,.7,.2,1);
+}
+
+/* when menu opens */
+.mobile-menu.open .mobile-close{
+  opacity:1;
+  transform:scale(1) rotate(0deg);
+}
+
+/* hover effect */
+.mobile-close:hover{
+  transform:scale(1.1) rotate(90deg);
+}
+
+
+
+
+
+  </style>
+</head>
+<body>
+
+
+    
+
+  <div class="noise"></div>
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+
+  <!-- overlay for mobile menu -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+
+  <!-- NAV -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="brand">
+        <span class="brand-mark"></span>AERA
+      </a>
+
+      <nav class="nav-center">
+        <a class="nav-link" href="explore.html">Explore</a>
+        <a class="nav-link" href="journey.html">Journey</a>
+        <a class="nav-link" href="reviews.html">Reviews</a>
+        <a class="nav-link" href="about.html">About</a>
+        <a class="nav-link" href="service.html">Service</a>
+         <a class="nav-link " href="packages.html">Packages</a>
+        <a class="nav-link" href="contact.html">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="pill-btn" href="plan.html">Plan a Trip</a>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU -->
+  <aside class="mobile-menu" id="mobileMenu">
+    <div class="mobile-close" id="closeMenu">✕</div>
+    <a class="mobile-link" href="explore.html">Explore</a>
+    <a class="mobile-link" href="journey.html">Journey</a>
+    <a class="mobile-link" href="reviews.html">Reviews</a>
+    <a class="mobile-link" href="about.html">About</a>
+    <a class="mobile-link" href="service.html">Service</a>
+    <a class="mobile-link" href="contact.html">Contact</a>
+    <a class="mobile-cta" href="plan.html">Plan a Trip</a>
+  </aside>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow hero-animate d1">Tourism, redesigned beautifully</div>
+
+        <h1 class="hero-title hero-animate d2">
+          Travel as a <em>living postcard</em> — curated &amp; unforgettable.
+        </h1>
+
+        <p class="hero-text hero-animate d3">
+          AERA creates premium tourism experiences for modern travelers who want more than hotels and tours. We design journeys with style, rhythm, local culture, and beautiful detail.
+        </p>
+
+        <div class="hero-actions hero-animate d4">
+          <a href="#explore" class="pill-btn">Discover Destinations</a>
+          <a href="#contact" class="ghost-btn"><i class="fa-solid fa-compass"></i> Build My Trip</a>
+        </div>
+
+        <div class="hero-chips hero-animate d5">
+          <div class="chip"><i class="fa-solid fa-earth-americas"></i> 84 Countries</div>
+          <div class="chip"><i class="fa-solid fa-gem"></i> Luxury &amp; Culture</div>
+          <div class="chip"><i class="fa-solid fa-headset"></i> 24h Concierge</div>
+        </div>
+      </div>
+
+      <div class="hero-visual hero-animate d6">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+
+        <div class="hero-card second tilt">
+          <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=700&q=80" alt="Beach">
+        </div>
+
+        <div class="hero-card main tilt">
+          <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80" alt="Mountains">
+        </div>
+
+        <div class="hero-card third tilt">
+          <img src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=700&q=80" alt="Luxury">
+        </div>
+
+        <div class="hero-badge">
+          <div class="badge-icon">✦</div>
+          <div>
+            <div class="badge-title">Summer 2026 Open</div>
+            <div class="badge-sub">Limited departures</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLANNER BAR -->
+    <div class="container planner-section">
+      <div class="planner reveal">
+        <div class="planner-field">
+          <div class="planner-label">Destination</div>
+          <input class="planner-input" type="text" placeholder="Where to go?">
+        </div>
+        <div class="planner-field">
+          <div class="planner-label">Travel Month</div>
+          <input class="planner-input" type="text" placeholder="Sep 2026">
+        </div>
+        <div class="planner-field">
+          <div class="planner-label">Style</div>
+          <select class="planner-input">
+            <option>Luxury Escape</option>
+            <option>Cultural Journey</option>
+            <option>Adventure Tour</option>
+            <option>Honeymoon</option>
+          </select>
+        </div>
+        <div class="planner-field">
+          <div class="planner-label">Guests</div>
+          <select class="planner-input">
+            <option>2 Travelers</option>
+            <option>4 Travelers</option>
+            <option>6+ Travelers</option>
+          </select>
+        </div>
+        <button class="planner-submit">Search</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUE / ABOUT -->
+  <section class="section" id="about">
+    <div class="container value-grid">
+      <div class="reveal">
+        <div class="eyebrow">Why AERA is different</div>
+        <h2 class="section-title">A premium tourism brand with real soul.</h2>
+        <p class="section-text">
+          We combine editorial design, concierge planning, and local expertise to create tourism experiences that feel polished and personal.
+        </p>
+      </div>
+
+      <div class="feature-cards">
+        <article class="feature-card reveal">
+          <div class="feature-icon f-orange"><i class="fa-solid fa-route"></i></div>
+          <div>
+            <h3>Bespoke Routes</h3>
+            <p>Every route is handcrafted around taste, pace, season, and mood — not just popular spots.</p>
+          </div>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-icon f-teal"><i class="fa-solid fa-key"></i></div>
+          <div>
+            <h3>Local Access</h3>
+            <p>Meet chefs, guides, artists, and hidden hosts that ordinary tourism websites never reveal.</p>
+          </div>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-icon f-blue"><i class="fa-solid fa-bell-concierge"></i></div>
+          <div>
+            <h3>Premium Service</h3>
+            <p>From airport pickup to sunset dinner reservations, everything feels smooth and beautifully managed.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPLORE BY MOOD -->
+  <section class="section" id="explore">
+    <div class="container">
+      <div class="reveal">
+        <div class="eyebrow">Explore by mood</div>
+        <h2 class="section-title">Not just by location — by feeling.</h2>
+        <p class="section-text">Choose the type of experience you want and we shape the destination around it.</p>
+      </div>
+
+      <div class="mood-shell reveal">
+        <div class="mood-media tilt">
+          <img id="moodImg" src="https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?auto=format&fit=crop&w=1200&q=80" alt="Destination">
+          <div class="mood-price">
+            <small>Starting from</small>
+            <strong id="moodPrice">$3,990</strong>
+          </div>
+        </div>
+
+        <div class="mood-content">
+          <div class="mood-tabs">
+            <button class="mood-tab active" data-mood="sea"><i class="fa-solid fa-water"></i> Sea Escape</button>
+            <button class="mood-tab" data-mood="culture"><i class="fa-solid fa-torii-gate"></i> Cultural</button>
+            <button class="mood-tab" data-mood="wild"><i class="fa-solid fa-mountain-sun"></i> Adventure</button>
+          </div>
+
+          <div class="mood-label" id="moodLabel">Mediterranean Mood</div>
+          <h3 class="mood-title" id="moodTitle">Santorini Afterglow</h3>
+          <p class="mood-text" id="moodText">White cliffs, cave suites, private catamarans, and evening dinners suspended above the Aegean.</p>
+
+          <div class="mood-tags" id="moodTags"></div>
+          <div class="mood-mini" id="moodMini"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <section class="marquee">
+    <div class="marquee-track">
+      AERA WORLD <span>✦</span> Kyoto <span>✦</span> Amalfi <span>✦</span> Cappadocia <span>✦</span> Bali <span>✦</span> Patagonia <span>✦</span> Marrakech <span>✦</span> Santorini <span>✦</span> Iceland <span>✦</span>
+      AERA WORLD <span>✦</span> Kyoto <span>✦</span> Amalfi <span>✦</span> Cappadocia <span>✦</span> Bali <span>✦</span> Patagonia <span>✦</span> Marrakech <span>✦</span> Santorini <span>✦</span> Iceland <span>✦</span>
+    </div>
+  </section>
+
+  <!-- JOURNEY STEPS -->
+  <section class="section" id="journey">
+    <div class="container">
+      <div class="reveal">
+        <div class="eyebrow">How it works</div>
+        <h2 class="section-title">A premium journey, organized beautifully.</h2>
+        <p class="section-text">Every step is handled with elegance — so your trip feels exciting before it begins.</p>
+      </div>
+
+      <div class="steps-board">
+        <article class="step reveal">
+          <div class="step-num">1</div>
+          <h3>Discover</h3>
+          <p>Tell us the destination, vibe, season, and pace. We translate inspiration into a real route.</p>
+        </article>
+        <article class="step reveal">
+          <div class="step-num">2</div>
+          <h3>Design</h3>
+          <p>We curate hotels, transfers, activities, and dining into a polished itinerary that feels intentional.</p>
+        </article>
+        <article class="step reveal">
+          <div class="step-num">3</div>
+          <h3>Refine</h3>
+          <p>You approve and customize details — from room types to hidden experiences and local upgrades.</p>
+        </article>
+        <article class="step reveal">
+          <div class="step-num">4</div>
+          <h3>Travel</h3>
+          <p>Receive your elegant travel pack, concierge support, and a seamless experience on the ground.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="section">
+    <div class="container">
+      <div class="stats-row">
+        <div class="stat reveal">
+          <div class="stat-value counter" data-target="84">0</div>
+          <div class="stat-label">Countries</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-value counter" data-target="1200">0</div>
+          <div class="stat-label">Luxury Stays</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-value counter" data-target="98">0</div>
+          <div class="stat-label">Satisfaction %</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-value counter" data-target="24">0</div>
+          <div class="stat-label">Hour Concierge</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="section" id="reviews">
+    <div class="container">
+      <div class="reveal">
+        <div class="eyebrow">Traveler voices</div>
+        <h2 class="section-title">People remember the feeling — that's what we design.</h2>
+      </div>
+
+      <div class="review-layout">
+        <div class="review-main reveal">
+          <div class="review-stars">★★★★★</div>
+          <div class="review-quote" id="rQuote">"AERA felt nothing like a normal tourism site. The itinerary looked like a magazine spread, and the trip itself was even better."</div>
+          <div class="review-person">
+            <img class="review-avatar" id="rAvatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80" alt="">
+            <div>
+              <div class="review-name" id="rName">Sophia Laurent</div>
+              <div class="review-trip" id="rTrip">Santorini Collection</div>
+            </div>
+          </div>
+          <div class="review-dots" id="rDots"></div>
+        </div>
+
+        <div class="review-side reveal">
+          <div class="side-card">
+            <h4><i class="fa-solid fa-palette"></i> Editorial Itineraries</h4>
+            <p>Your plan doesn't look like a spreadsheet. It feels premium, visual, and inspiring from the first click.</p>
+          </div>
+          <div class="side-card">
+            <h4><i class="fa-solid fa-headset"></i> Concierge Support</h4>
+            <p>Quick changes, surprise upgrades, restaurant reservations, and day-of-trip support — already included.</p>
+          </div>
+          <div class="side-card">
+            <h4><i class="fa-solid fa-gem"></i> Curated, Not Crowded</h4>
+            <p>We prefer refined experiences, meaningful pacing, and destinations with beauty and atmosphere.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="cta-panel reveal">
+        <div>
+          <div class="eyebrow" style="color:#ffd8b7">Start your next chapter</div>
+          <h2 class="cta-title">Tell us your dream trip. We'll make it extraordinary.</h2>
+          <p class="cta-text">Share your destination, style, and travel month. Our team will turn it into a premium experience.</p>
+          <div class="cta-badges">
+            <span class="cta-badge"><i class="fa-solid fa-star"></i> Luxury</span>
+            <span class="cta-badge"><i class="fa-solid fa-mosque"></i> Cultural</span>
+            <span class="cta-badge"><i class="fa-solid fa-heart"></i> Honeymoon</span>
+            <span class="cta-badge"><i class="fa-solid fa-binoculars"></i> Adventure</span>
+          </div>
+        </div>
+
+        <form class="lead-form" id="leadForm">
+          <div class="lead-grid">
+            <div class="lead-field">
+              <label>Your Name</label>
+              <input type="text" placeholder="Ava Wilson" required>
+            </div>
+            <div class="lead-field">
+              <label>Email</label>
+              <input type="email" placeholder="you@example.com" required>
+            </div>
+            <div class="lead-field">
+              <label>Destination</label>
+              <input type="text" placeholder="Bali, Japan, Greece...">
+            </div>
+            <div class="lead-field">
+              <label>Travel Style</label>
+              <select>
+                <option>Luxury Escape</option>
+                <option>Cultural Journey</option>
+                <option>Adventure Travel</option>
+                <option>Honeymoon</option>
+              </select>
+            </div>
+            <div class="lead-field full">
+              <label>Message</label>
+              <input type="text" placeholder="We want a romantic 7-day trip...">
+            </div>
+          </div>
+          <button class="lead-submit" type="submit">Request My Custom Trip</button>
+          <div class="form-msg" id="formMsg"><i class="fa-solid fa-circle-check"></i> Thanks — your request has been received beautifully.</div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="brand"><span class="brand-mark"></span>AERA</a>
+          <p>Premium tourism experiences with editorial design, curated routes, luxury stays, and elegant planning.</p>
+        </div>
+        <div>
+          <div class="footer-title">Explore</div>
+          <ul class="footer-list">
+            <li><a href="#">Destinations</a></li>
+            <li><a href="#">Collections</a></li>
+            <li><a href="#">Private Tours</a></li>
+            <li><a href="#">Seasonal Trips</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-title">Company</div>
+          <ul class="footer-list">
+            <li><a href="#">About AERA</a></li>
+            <li><a href="#">Travel Journal</a></li>
+            <li><a href="#">Partnerships</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-title">Contact</div>
+          <ul class="footer-list">
+            <li><i class="fa-solid fa-envelope"></i> hello@aeravoyages.com</li>
+            <li><i class="fa-solid fa-phone"></i> +1 (555) 240-8841</li>
+            <li><i class="fa-solid fa-location-dot"></i> New York • Dubai • Paris</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 AERA Voyages. All rights reserved.</span>
+        <span>Privacy • Terms • Cookies</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    // ====== PAGE LOADED ======
+    window.addEventListener('DOMContentLoaded', () => document.body.classList.add('loaded'));
+
+    // ====== NAV SCROLL ======
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 20), { passive: true });
+
+    // ====== MOBILE MENU ======
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+const overlay = document.getElementById('mobileOverlay');
+const closeBtn = document.getElementById('closeMenu');
+
+function toggleMenu() {
+  const isOpen = mobileMenu.classList.toggle('open');
+  hamburger.classList.toggle('open');
+  overlay.classList.toggle('open');
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+
+hamburger.addEventListener('click', toggleMenu);
+overlay.addEventListener('click', toggleMenu);
+closeBtn.addEventListener('click', toggleMenu);
+
+document.querySelectorAll('.mobile-link, .mobile-cta').forEach(a => 
+  a.addEventListener('click', () => {
+    if (mobileMenu.classList.contains('open')) toggleMenu();
+  })
+);
+
+    // ====== CUSTOM CURSOR ======
+    if (!window.matchMedia('(pointer: coarse)').matches) {
+      const dot = document.querySelector('.cursor-dot');
+      const ring = document.querySelector('.cursor-ring');
+      let mx = 0, my = 0, rx = 0, ry = 0;
+
+      window.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+      });
+
+      (function loop() {
+        rx += (mx - rx) * .16; ry += (my - ry) * .16;
+        ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+        requestAnimationFrame(loop);
+      })();
+
+      document.querySelectorAll('a, button, input, select, .tilt').forEach(el => {
+        el.addEventListener('mouseenter', () => ring.classList.add('active'));
+        el.addEventListener('mouseleave', () => ring.classList.remove('active'));
+      });
+    }
+
+    // ====== SCROLL REVEAL ======
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); revealObs.unobserve(e.target); } });
+    }, { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // ====== 3D TILT ======
+    document.querySelectorAll('.tilt').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - .5;
+        const y = (e.clientY - r.top) / r.height - .5;
+        card.style.transform = `perspective(600px) rotateX(${y * -6}deg) rotateY(${x * 8}deg)`;
+      });
+      card.addEventListener('mouseleave', () => card.style.transform = '');
+    });
+
+    // ====== MOOD EXPLORER ======
+    const moods = {
+      sea: {
+        label: "Mediterranean Mood", title: "Santorini Afterglow", price: "$3,990",
+        text: "White cliffs, cave suites, private catamarans, and evening dinners above the Aegean. Romance, light, and quiet luxury.",
+        image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?auto=format&fit=crop&w=1200&q=80",
+        tags: ["Sunset cruises", "Boutique caves", "Romantic dining", "Private transfers"],
+        mini: [
+          { image: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=600&q=80", title: "Amalfi", text: "Coastal roads and boutique terraces." },
+          { image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80", title: "Maldives", text: "Floating breakfasts, ocean villas." },
+          { image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80", title: "Bali", text: "Jungle calm meets beach luxury." }
+        ]
+      },
+      culture: {
+        label: "Living Heritage", title: "Kyoto Quiet Stories", price: "$4,450",
+        text: "Tea houses, old lanes, temple mornings, seasonal cuisine, and stays that feel calm and deeply rooted in place.",
+        image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=80",
+        tags: ["Private guides", "Temple trails", "Ryokan stays", "Artisan workshops"],
+        mini: [
+          { image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80", title: "Tokyo", text: "Modern energy, hidden tradition." },
+          { image: "https://images.unsplash.com/photo-1523059623039-a9ed027e7fad?auto=format&fit=crop&w=600&q=80", title: "Marrakech", text: "Riads, souks, and colour." },
+          { image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=600&q=80", title: "Istanbul", text: "Layers of empire and design." }
+        ]
+      },
+      wild: {
+        label: "Untamed Collection", title: "Patagonia Horizon", price: "$5,890",
+        text: "A high-design adventure through glaciers, dramatic peaks, and remote lodges — wilderness without sacrificing comfort.",
+        image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80",
+        tags: ["Luxury lodges", "Helicopter views", "Private trekking", "Wild landscapes"],
+        mini: [
+          { image: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=600&q=80", title: "Swiss Alps", text: "Crystal lakes, mountain elegance." },
+          { image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80", title: "Iceland", text: "Volcanoes and Nordic stillness." },
+          { image: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=600&q=80", title: "Sahara", text: "Desert silence, luxury sky." }
+        ]
+      }
+    };
+
+    const mImg = document.getElementById('moodImg');
+    const mLabel = document.getElementById('moodLabel');
+    const mTitle = document.getElementById('moodTitle');
+    const mText = document.getElementById('moodText');
+    const mPrice = document.getElementById('moodPrice');
+    const mTags = document.getElementById('moodTags');
+    const mMini = document.getElementById('moodMini');
+    const mTabs = document.querySelectorAll('.mood-tab');
+
+    function renderMood(key) {
+      const d = moods[key]; if (!d) return;
+      mImg.style.opacity = .3;
+      setTimeout(() => {
+        mImg.src = d.image; mLabel.textContent = d.label; mTitle.textContent = d.title;
+        mText.textContent = d.text; mPrice.textContent = d.price;
+        mTags.innerHTML = d.tags.map(t => `<span class="mood-tag">${t}</span>`).join('');
+        mMini.innerHTML = d.mini.map(m => `<article class="mini-card"><img src="${m.image}" alt="${m.title}"><div><h4>${m.title}</h4><p>${m.text}</p></div></article>`).join('');
+        mImg.style.opacity = 1;
+      }, 200);
+      mTabs.forEach(t => t.classList.toggle('active', t.dataset.mood === key));
+    }
+
+    mTabs.forEach(t => t.addEventListener('click', () => renderMood(t.dataset.mood)));
+    renderMood('sea');
+
+    // ====== COUNTERS ======
+    const cObs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target, target = +el.dataset.target, start = performance.now();
+        (function update(now) {
+          const p = Math.min((now - start) / 1800, 1);
+          el.textContent = Math.floor(target * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) requestAnimationFrame(update);
+        })(start);
+        cObs.unobserve(el);
+      });
+    }, { threshold: .4 });
+    document.querySelectorAll('.counter').forEach(c => cObs.observe(c));
+
+    // ====== REVIEWS ======
+    const reviews = [
+      { quote: "\u201CAERA felt nothing like a normal tourism site. The itinerary looked like a magazine spread, and the trip itself was even better.\u201D", name: "Sophia Laurent", trip: "Santorini Collection", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80" },
+      { quote: "\u201COur Kyoto trip was graceful, calm, and perfectly organized. Every hotel, guide, and restaurant felt chosen with real taste.\u201D", name: "Daniel Mercer", trip: "Kyoto Quiet Stories", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80" },
+      { quote: "\u201CThe Patagonia route gave us raw landscapes with premium comfort. Adventurous but never chaotic \u2014 exactly what we wanted.\u201D", name: "Olivia Hart", trip: "Patagonia Horizon", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=300&q=80" }
+    ];
+
+    const rQ = document.getElementById('rQuote'), rN = document.getElementById('rName'), rT = document.getElementById('rTrip'), rA = document.getElementById('rAvatar'), rD = document.getElementById('rDots');
+    let rIdx = 0, rTimer;
+
+    function showReview(i) {
+      const r = reviews[i]; rQ.style.opacity = 0; rA.style.opacity = 0;
+      setTimeout(() => { rQ.textContent = r.quote; rN.textContent = r.name; rT.textContent = r.trip; rA.src = r.avatar; rQ.style.opacity = 1; rA.style.opacity = 1; }, 200);
+      [...rD.children].forEach((d, j) => d.classList.toggle('active', j === i));
+    }
+
+    reviews.forEach((_, i) => {
+      const d = document.createElement('button'); d.className = 'r-dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', () => { rIdx = i; showReview(i); clearInterval(rTimer); rTimer = setInterval(() => { rIdx = (rIdx + 1) % reviews.length; showReview(rIdx); }, 5000); });
+      rD.appendChild(d);
+    });
+
+    showReview(0);
+    rTimer = setInterval(() => { rIdx = (rIdx + 1) % reviews.length; showReview(rIdx); }, 5000);
+
+    // ====== FORM ======
+    document.getElementById('leadForm').addEventListener('submit', function (e) {
+      e.preventDefault(); const btn = this.querySelector('.lead-submit'); btn.textContent = 'Sending...'; btn.disabled = true;
+      setTimeout(() => { document.getElementById('formMsg').style.display = 'block'; btn.textContent = 'Request My Custom Trip'; btn.disabled = false; this.reset(); }, 1200);
+    });
+  </script>
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>
