@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoyageX — Start Planning</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#050816;
+      --bg2:#081226;
+      --surface:rgba(255,255,255,.06);
+      --surface-strong:rgba(8,14,30,.78);
+      --line:rgba(255,255,255,.12);
+      --text:#eef4ff;
+      --muted:#a9b7d1;
+      --accent:#7c5cff;
+      --accent2:#11d7ff;
+      --accent3:#13ffa8;
+      --shadow:0 30px 80px rgba(0,0,0,.35);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      min-height:100vh;
+      font-family:'Inter',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(124,92,255,.25), transparent 25%),
+        radial-gradient(circle at 80% 10%, rgba(17,215,255,.18), transparent 22%),
+        radial-gradient(circle at 50% 100%, rgba(19,255,168,.12), transparent 28%),
+        linear-gradient(180deg, #050816 0%, #071326 50%, #03060c 100%);
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image: radial-gradient(circle at center, rgba(255,255,255,.08) 0.7px, transparent 0.7px);
+      background-size:24px 24px;
+      opacity:.06;
+      pointer-events:none;
+      z-index:-1;
+    }
+
+    img{max-width:100%;display:block}
+    a{text-decoration:none;color:inherit}
+    button,input,select,textarea{font:inherit}
+    main,header,footer{position:relative;z-index:2}
+    .container{width:min(1180px, calc(100% - 32px));margin:0 auto;}
+
+    /* Background FX */
+    #particles{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.92}
+    .cursor-glow{
+      position:fixed;left:0;top:0;width:420px;height:420px;border-radius:50%;
+      background:radial-gradient(circle, rgba(17,215,255,.18) 0%, rgba(124,92,255,.12) 25%, transparent 65%);
+      filter:blur(18px);transform:translate(-50%, -50%);z-index:0;opacity:.8;
+      pointer-events:none;mix-blend-mode:screen;
+    }
+
+    .progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:50;background:rgba(255,255,255,.04)}
+    .progress span{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));box-shadow:0 0 22px rgba(17,215,255,.7)}
+
+    /* NAVBAR (same as index) */
+    .nav-wrap{position:fixed;top:12px;left:0;right:0;z-index:40}
+    .nav{
+      width:min(1200px, calc(100% - 16px));
+      margin:0 auto;
+      padding:14px 18px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:20px;
+      background:rgba(7,13,28,.56);
+      backdrop-filter:blur(20px);
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      box-shadow:0 14px 40px rgba(0,0,0,.18);
+      position:relative;
+      transition:background .3s ease, transform .3s ease;
+    }
+    .nav-wrap.scrolled .nav{background:rgba(7,13,28,.82)}
+    .brand{
+      display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px;
+      font-size:1.05rem;font-family:'Space Grotesk',sans-serif;white-space:nowrap;
+    }
+    .brand span{
+      width:34px;height:34px;border-radius:12px;display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#fff;box-shadow:0 10px 24px rgba(17,215,255,.3);
+    }
+    .nav__links{display:flex;align-items:center;gap:18px}
+    .nav__links a{color:var(--muted);font-weight:600;transition:.25s;position:relative}
+    .nav__links a::after{
+      content:"";position:absolute;left:0;bottom:-7px;width:100%;height:2px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      transform:scaleX(0);transform-origin:left;transition:.25s;
+    }
+    .nav__links a:hover,.nav__links a.active{color:var(--text)}
+    .nav__links a:hover::after,.nav__links a.active::after{transform:scaleX(1)}
+    .nav__cta{
+      padding:10px 15px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(135deg, rgba(124,92,255,.18), rgba(17,215,255,.14));
+    }
+    .menu-btn{
+      display:none;background:none;border:0;width:42px;height:42px;border-radius:12px;
+      cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;
+      border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);
+    }
+    .menu-btn span{width:18px;height:2px;background:var(--text);display:block;transition:.25s;border-radius:999px}
+    .menu-btn.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .menu-btn.active span:nth-child(2){transform:translateY(-7px) rotate(-45deg)}
+
+    /* Shared UI */
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid rgba(255,255,255,.1);
+      border-radius:999px;background:rgba(255,255,255,.04);color:var(--muted);font-size:.9rem;margin-bottom:18px;
+    }
+    .eyebrow .dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(90deg,var(--accent),var(--accent2));box-shadow:0 0 18px rgba(17,215,255,.7)}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;
+      font-size:.82rem;letter-spacing:.04em;text-transform:uppercase;
+    }
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 20px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);color:var(--text);font-weight:800;
+      transition:transform .25s ease, box-shadow .25s ease, background .25s ease;will-change:transform;cursor:pointer;
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .btn--primary{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 18px 40px rgba(17,215,255,.24)}
+    .btn--secondary{background:rgba(255,255,255,.04);backdrop-filter:blur(14px)}
+    .btn.full{width:100%}
+
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .65s ease, transform .65s ease}
+    .reveal.is-visible{opacity:1;transform:translateY(0)}
+
+    .toast{
+      position:fixed;right:18px;bottom:18px;padding:16px 18px;background:rgba(8,14,30,.88);
+      border:1px solid rgba(255,255,255,.1);border-radius:18px;box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);opacity:0;transform:translateY(14px);transition:.3s;
+      pointer-events:none;z-index:60;max-width:min(92vw, 420px);
+    }
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    .section{padding:92px 0;position:relative}
+    .section[id]{scroll-margin-top:120px}
+    .section::before{
+      content:"";position:absolute;width:300px;height:300px;border-radius:50%;
+      background:radial-gradient(circle, rgba(17,215,255,.08), transparent 65%);
+      filter:blur(12px);top:0;right:-100px;pointer-events:none;
+    }
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}
+    .section-head h2{
+      font-family:'Space Grotesk',sans-serif;
+      font-size:clamp(2rem, 4vw, 3.4rem);
+      line-height:1;letter-spacing:-.05em;margin-top:8px;
+    }
+    .section-sub{max-width:560px;color:var(--muted);line-height:1.8}
+
+    /* HERO: collage (unique) */
+    .hero{
+      min-height:100vh;
+      padding:140px 0 70px;
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:34px;
+      align-items:center;
+      position:relative;
+    }
+    .hero h1{
+      font-family:'Space Grotesk',sans-serif;
+      font-size:clamp(3.1rem, 6.4vw, 5.6rem);
+      line-height:.92;
+      letter-spacing:-.06em;
+      margin-bottom:18px;
+      max-width:16ch;
+    }
+    .hero h1 .g{
+      background:linear-gradient(90deg, #fff, #b8d7ff 45%, #7cf8ff 80%);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .lead{font-size:1.08rem;line-height:1.85;color:var(--muted);max-width:62ch}
+    .hero__actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+
+    .collage-wrap{
+      position:relative;
+      min-height:620px;
+      perspective:1600px;
+      transform-style:preserve-3d;
+    }
+    .collage-bg{
+      position:absolute;inset:-20px;
+      border-radius:34px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(17,215,255,.14), transparent 45%),
+        radial-gradient(circle at 70% 70%, rgba(124,92,255,.16), transparent 45%),
+        linear-gradient(135deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
+      overflow:hidden;
+    }
+    .collage-bg::after{
+      content:"";
+      position:absolute;inset:0;
+      background-image: radial-gradient(circle at center, rgba(255,255,255,.10) 0.7px, transparent 0.7px);
+      background-size:26px 26px;
+      opacity:.10;
+      pointer-events:none;
+    }
+
+    .collage{
+      position:relative;
+      width:100%;
+      height:620px;
+      transform-style:preserve-3d;
+      transition:transform .18s ease;
+      will-change:transform;
+    }
+    .photo{
+      position:absolute;
+      border-radius:28px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      box-shadow:0 26px 80px rgba(0,0,0,.28);
+      transform-style:preserve-3d;
+      will-change:transform;
+    }
+    .photo img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);filter:saturate(1.05) contrast(1.06)}
+    .photo::after{
+      content:"";
+      position:absolute;inset:0;
+      background:linear-gradient(180deg, transparent 50%, rgba(5,8,22,.65) 100%);
+      pointer-events:none;
+    }
+
+    .p1{left:6%;top:8%;width:52%;height:54%;transform:translateZ(40px) rotate(-2deg)}
+    .p2{right:6%;top:10%;width:40%;height:30%;transform:translateZ(65px) rotate(2deg)}
+    .p3{right:10%;bottom:8%;width:46%;height:40%;transform:translateZ(55px) rotate(-1deg)}
+    .p4{left:10%;bottom:6%;width:38%;height:30%;transform:translateZ(80px) rotate(2deg)}
+    .p5{
+      left:50%;top:50%;transform:translate(-50%,-50%) translateZ(100px);
+      width:66%;
+      height:150px;
+      border-radius:30px;
+      background:rgba(8,14,30,.72);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 26px 80px rgba(0,0,0,.35);
+      overflow:hidden;
+    }
+    .p5::after{display:none}
+    .p5 .inner{
+      padding:18px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      height:100%;
+    }
+    .p5 h3{
+      font-family:'Space Grotesk',sans-serif;
+      font-size:1.35rem;
+      letter-spacing:-.03em;
+      margin-bottom:6px;
+    }
+    .p5 p{color:var(--muted);line-height:1.65;font-size:.96rem}
+    .pill{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    /* Package rail */
+    .filters{display:flex;flex-wrap:wrap;gap:10px}
+    .filter-btn{
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+      padding:11px 16px;
+      border-radius:999px;
+      cursor:pointer;
+      transition:.25s;
+      font-weight:800;
+    }
+    .filter-btn.active,
+    .filter-btn:hover{
+      color:#fff;
+      background:linear-gradient(135deg, rgba(124,92,255,.22), rgba(17,215,255,.18));
+      border-color:rgba(17,215,255,.28);
+    }
+
+    .rail{
+      margin-top:18px;
+      display:grid;
+      grid-auto-flow:column;
+      grid-auto-columns:minmax(290px, 1fr);
+      gap:16px;
+      overflow:auto;
+      padding-bottom:10px;
+      scroll-snap-type:x mandatory;
+    }
+    .rail::-webkit-scrollbar{height:10px}
+    .rail::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:999px}
+    .pkg{
+      scroll-snap-align:start;
+      border-radius:26px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      backdrop-filter:blur(16px);
+      box-shadow:var(--shadow);
+      transform-style:preserve-3d;
+      transition:border-color .2s ease, transform .2s ease;
+      cursor:pointer;
+      user-select:none;
+    }
+    .pkg:hover{border-color:rgba(17,215,255,.22)}
+    .pkg.selected{border-color:rgba(19,255,168,.35);box-shadow:0 26px 90px rgba(0,0,0,.35)}
+    .pkg__media{position:relative;height:190px;overflow:hidden}
+    .pkg__media img{width:100%;height:100%;object-fit:cover;transition:transform .7s ease}
+    .pkg:hover .pkg__media img{transform:scale(1.08)}
+    .tag{
+      position:absolute;left:14px;top:14px;
+      padding:8px 12px;border-radius:999px;
+      background:rgba(5,8,22,.65);
+      border:1px solid rgba(255,255,255,.1);
+      font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;
+    }
+    .pkg__body{padding:18px 18px}
+    .pkg__top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:8px}
+    .pkg h3{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;letter-spacing:-.02em}
+    .rating{font-weight:950;color:#fff;white-space:nowrap}
+    .pkg p{color:var(--muted);line-height:1.7;margin-bottom:12px}
+    .pkg__foot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}
+    .price{font-weight:950}
+    .choose{font-weight:950;color:#fff;display:inline-flex;gap:6px;align-items:center}
+    .choose span{transition:transform .25s ease;display:inline-block}
+    .pkg:hover .choose span{transform:translateX(3px)}
+
+    /* Wizard */
+    .wizard{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:18px;
+      align-items:start;
+    }
+    .card{
+      padding:24px;
+      border-radius:28px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
+    }
+    .wizard-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      padding-bottom:16px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      margin-bottom:16px;
+    }
+    .steps{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .step{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+      font-weight:900;
+      font-size:.92rem;
+    }
+    .step b{
+      width:26px;height:26px;border-radius:10px;display:grid;place-items:center;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      color:#fff;
+      font-family:'Space Grotesk',sans-serif;
+    }
+    .step.active{
+      color:#fff;
+      background:linear-gradient(135deg, rgba(124,92,255,.18), rgba(17,215,255,.12));
+      border-color:rgba(17,215,255,.28);
+    }
+    .step.active b{
+      background:linear-gradient(135deg, var(--accent), var(--accent2));
+      border-color:transparent;
+    }
+
+    /* Progress ring */
+    .ringProg{display:grid;place-items:center}
+    .ringProg svg{width:54px;height:54px}
+    .ringProg .label{
+      position:absolute;
+      font-size:.9rem;
+      font-weight:950;
+      color:#fff;
+    }
+
+    .panes{position:relative}
+    .pane{
+      display:none;
+      animation:paneIn .35s ease;
+    }
+    .pane.active{display:block}
+    @keyframes paneIn{
+      from{opacity:0;transform:translateY(10px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:10px;
+    }
+    .field{display:flex;flex-direction:column;gap:8px}
+    .field.full{grid-column:1/-1}
+    .field label{color:#fff;font-weight:800;font-size:.95rem}
+    .field input,.field select,.field textarea{
+      width:100%;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(8,14,30,.6);
+      color:var(--text);
+      outline:none;
+      transition:.25s;
+      resize:none;
+    }
+    .field input:focus,.field select:focus,.field textarea:focus{
+      border-color:rgba(17,215,255,.4);
+      box-shadow:0 0 0 4px rgba(17,215,255,.08);
+    }
+    .inline{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:10px;
+    }
+
+    .addons{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+    .addon{
+      padding:14px 14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      cursor:pointer;
+      user-select:none;
+      transition:border-color .2s ease, transform .2s ease;
+    }
+    .addon:hover{border-color:rgba(17,215,255,.2);transform:translateY(-2px)}
+    .addon input{margin-top:4px}
+    .addon strong{display:block;margin-bottom:4px}
+    .addon span{display:block;color:var(--muted);line-height:1.55;font-size:.92rem}
+
+    .navBtns{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:16px;
+      padding-top:16px;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    /* Summary */
+    .summaryTop{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+      padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:14px;
+    }
+    .summary h3{
+      font-family:'Space Grotesk',sans-serif;
+      font-size:1.55rem;
+      letter-spacing:-.03em;
+    }
+    .bigPrice{
+      font-family:'Space Grotesk',sans-serif;
+      font-size:2.6rem;
+      letter-spacing:-.05em;
+      margin-top:8px;
+      background:linear-gradient(90deg, #fff, #8feeff);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .muted{color:var(--muted);line-height:1.8}
+    .sumList{list-style:none;display:grid;gap:10px;margin-top:12px}
+    .sumList li{
+      display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
+      color:#dfe9ff;
+      padding:10px 0;
+      border-bottom:1px dashed rgba(255,255,255,.10);
+    }
+    .sumList li:last-child{border-bottom:none}
+    .sumList small{color:var(--muted)}
+    .pillRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .pillMini{
+      padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);color:#fff;font-weight:900;font-size:.9rem;
+    }
+    .warn{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(135deg, rgba(124,92,255,.10), rgba(17,215,255,.06));
+      color:var(--muted);
+      line-height:1.7;
+      font-size:.95rem;
+    }
+
+    /* Footer (same as index) */
+    .footer{padding:34px 0 50px;color:var(--muted)}
+    .footer__bar{
+      display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center;
+      padding-top:22px;border-top:1px solid rgba(255,255,255,.08);
+    }
+    .socials{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .socials a{
+      width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      transition:.25s;
+      color:#fff;font-weight:800;font-size:.85rem;
+    }
+    .socials a:hover{transform:translateY(-2px);border-color:rgba(17,215,255,.25);color:#fff}
+
+    /* Responsive */
+    @media (max-width:1100px){
+      .hero{grid-template-columns:1fr;padding-top:120px}
+      .wizard{grid-template-columns:1fr}
+      .collage-wrap{min-height:560px}
+      .collage{height:560px}
+      .p5{width:88%}
+    }
+    @media (max-width:720px){
+      .nav__links{
+        position:absolute;left:8px;right:8px;top:calc(100% + 10px);
+        display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:14px;border-radius:20px;
+        background:rgba(5,8,22,.94);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(18px);
+        opacity:0;pointer-events:none;transform:translateY(-8px);transition:.25s;
+      }
+      .nav__links.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+      .nav__links a,.nav__cta{padding:12px 14px;border-radius:16px}
+      .menu-btn{display:flex}
+      .cursor-glow{display:none}
+      .form-grid{grid-template-columns:1fr}
+      .addons{grid-template-columns:1fr}
+      .collage-wrap{min-height:520px}
+      .collage{height:520px}
+      .p1{left:6%;top:7%;width:88%;height:38%}
+      .p2{display:none}
+      .p3{right:6%;bottom:7%;width:88%;height:34%}
+      .p4{display:none}
+      .p5{height:160px}
+    }
+    @media (max-width:480px){
+      .container{width:min(1180px, calc(100% - 22px))}
+      .nav{padding:12px 14px}
+      .hero{padding-top:108px;gap:22px}
+      .btn{width:100%}
+      .hero__actions{display:grid;grid-template-columns:1fr}
+
+
+            html, body {
+    width: 100%;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
+    
+}
+    }
+    @media (pointer:coarse){.cursor-glow{display:none}}
+    @media (prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto}
+      .progress span{animation:none !important}
+      .reveal{transition:none}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="progress"><span></span></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+  <div class="nav-wrap" id="navWrap">
+    <nav class="nav container" aria-label="Primary navigation">
+      <a class="brand" href="index.html"><span>V</span>oyageX</a>
+
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-controls="navLinks" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+
+      <div class="nav__links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="destinations.html">Destinations</a>
+        <a href="experiences.html">Experience</a>
+        <a href="services.html">Services</a>
+        <a href="packages.html">Packages</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="contact.html">Contact</a>
+        <a href="book.html" class="nav__cta active">Start Planning</a>
+      </div>
+    </nav>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero container" id="top">
+      <div class="reveal">
+        <div class="eyebrow"><span class="dot"></span> Start Planning</div>
+        <h1>Build a trip that feels <span class="g">made for you</span>.</h1>
+        <p class="lead">
+          Choose a tourism package, set dates, add upgrades, and get a live estimate instantly.
+          Clean UX, premium motion, and a booking flow that feels like a high-end product.
+        </p>
+
+        <div class="hero__actions">
+          <a class="btn btn--primary magnetic" href="#planner">Open Planner</a>
+          <a class="btn btn--secondary magnetic" href="#packages">Choose Package</a>
+        </div>
+
+        <div class="inline" style="margin-top:16px">
+          <span class="chip">Live pricing</span>
+          <span class="chip">3-step wizard</span>
+          <span class="chip">Mobile-first</span>
+        </div>
+      </div>
+
+      <div class="collage-wrap reveal" id="collageWrap" aria-label="Tourism collage">
+        <div class="collage-bg"></div>
+
+        <div class="collage" id="collage">
+          <div class="photo p1" data-tilt>
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80" alt="Ocean experience">
+          </div>
+          <div class="photo p2" data-tilt>
+            <img src="https://images.unsplash.com/photo-1500048993953-d23a436266cf?auto=format&fit=crop&w=1200&q=80" alt="Fjord mountain experience">
+          </div>
+          <div class="photo p3" data-tilt>
+            <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1600&q=80" alt="City skyline experience">
+          </div>
+          <div class="photo p4" data-tilt>
+            <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1600&q=80" alt="Desert dunes experience">
+          </div>
+
+          <div class="photo p5" data-tilt>
+            <div class="inner">
+              <div>
+                <span class="chip" id="heroChip">Featured plan</span>
+                <h3 id="heroPkgName">Aurelia Coast</h3>
+                <p id="heroPkgLine">5D / 4N • private sail • sea-view suite</p>
+              </div>
+              <div class="pill" id="heroPrice">From $1,240</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PACKAGES -->
+    <section class="section container reveal" id="packages">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> Packages</div>
+          <h2>Tourism packages with real style.</h2>
+        </div>
+        <p class="section-sub">
+          Tap a package to select it for your planner. (Tip: you can deep-link like <code>?package=nord</code>.)
+        </p>
+      </div>
+
+      <div class="filters" id="pkgFilters" aria-label="Package filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="beach">Beach</button>
+        <button class="filter-btn" data-filter="mountain">Mountain</button>
+        <button class="filter-btn" data-filter="city">City</button>
+        <button class="filter-btn" data-filter="desert">Desert</button>
+        <button class="filter-btn" data-filter="escape">Escape</button>
+      </div>
+
+      <div class="rail" id="pkgRail" aria-label="Packages rail"></div>
+    </section>
+
+    <!-- PLANNER / WIZARD -->
+    <section class="section container reveal" id="planner">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> Booking Wizard</div>
+          <h2>Fast steps. Premium clarity.</h2>
+        </div>
+        <p class="section-sub">
+          The planner updates your summary in real-time. Prices here are demo-ready—connect to a backend whenever you want.
+        </p>
+      </div>
+
+      <div class="wizard">
+        <form class="card" id="planForm">
+          <div class="wizard-head">
+            <div class="steps" aria-label="Wizard steps">
+              <div class="step active" data-step="1"><b>1</b> Package</div>
+              <div class="step" data-step="2"><b>2</b> Dates</div>
+              <div class="step" data-step="3"><b>3</b> Details</div>
+            </div>
+
+            <div class="ringProg" style="position:relative" aria-label="Completion">
+              <svg viewBox="0 0 64 64" aria-hidden="true">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="6"></circle>
+                <circle id="progCircle" cx="32" cy="32" r="26" fill="none"
+                        stroke="url(#grad)" stroke-width="6" stroke-linecap="round"
+                        stroke-dasharray="163.36" stroke-dashoffset="163.36"></circle>
+                <defs>
+                  <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#7c5cff"/>
+                    <stop offset="1" stop-color="#11d7ff"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="label" id="progLabel">0%</div>
+            </div>
+          </div>
+
+          <div class="panes">
+            <!-- Step 1 -->
+            <div class="pane active" data-pane="1">
+              <span class="chip">Selected package</span>
+              <h3 style="font-family:'Space Grotesk',sans-serif;font-size:2rem;letter-spacing:-.04em;margin:12px 0 10px">
+                <span id="selName">Aurelia Coast</span>
+              </h3>
+              <p class="muted" id="selDesc">Sunset sails, hidden coves, and a cliffside villa that feels like a private dream.</p>
+
+              <div class="form-grid" style="margin-top:14px">
+                <div class="field">
+                  <label for="tier">Package tier</label>
+                  <select id="tier" name="tier" required>
+                    <option value="standard">Standard</option>
+                    <option value="premium" selected>Premium</option>
+                    <option value="elite">Elite</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="style">Travel style</label>
+                  <select id="style" name="style" required>
+                    <option value="relaxed" selected>Relaxed</option>
+                    <option value="balanced">Balanced</option>
+                    <option value="fast">Fast-paced</option>
+                  </select>
+                </div>
+
+                <div class="field full">
+                  <label>Add-ons (optional)</label>
+                  <div class="addons">
+                    <label class="addon">
+                      <input type="checkbox" name="addons" value="privateGuide">
+                      <div>
+                        <strong>Private guide</strong>
+                        <span>Local expert + flexible stops.</span>
+                      </div>
+                    </label>
+                    <label class="addon">
+                      <input type="checkbox" name="addons" value="airportVIP">
+                      <div>
+                        <strong>Airport VIP</strong>
+                        <span>Fast-track + lounge access.</span>
+                      </div>
+                    </label>
+                    <label class="addon">
+                      <input type="checkbox" name="addons" value="photoSession">
+                      <div>
+                        <strong>Photo session</strong>
+                        <span>60-min pro shoot on-location.</span>
+                      </div>
+                    </label>
+                    <label class="addon">
+                      <input type="checkbox" name="addons" value="spa">
+                      <div>
+                        <strong>Spa upgrade</strong>
+                        <span>Signature treatment + transfer.</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="navBtns">
+                <span></span>
+                <button type="button" class="btn btn--primary magnetic" id="next1">Next</button>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="pane" data-pane="2">
+              <span class="chip">Schedule</span>
+              <h3 style="font-family:'Space Grotesk',sans-serif;font-size:2rem;letter-spacing:-.04em;margin:12px 0 10px">
+                Set dates & travelers
+              </h3>
+              <p class="muted">We’ll estimate nights automatically and adjust pricing based on season.</p>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label for="startDate">Start date</label>
+                  <input id="startDate" name="startDate" type="date" required>
+                </div>
+                <div class="field">
+                  <label for="endDate">End date</label>
+                  <input id="endDate" name="endDate" type="date" required>
+                </div>
+
+                <div class="field">
+                  <label for="travelers">Travelers</label>
+                  <input id="travelers" name="travelers" type="number" min="1" max="20" value="2" required>
+                </div>
+
+                <div class="field">
+                  <label for="room">Room type</label>
+                  <select id="room" name="room" required>
+                    <option value="double" selected>Double</option>
+                    <option value="twin">Twin</option>
+                    <option value="suite">Suite</option>
+                  </select>
+                </div>
+
+                <div class="field full">
+                  <label for="notes">Must-have moments (optional)</label>
+                  <textarea id="notes" name="notes" rows="4" placeholder="Example: sunrise viewpoint + romantic dinner + calm spa day"></textarea>
+                </div>
+              </div>
+
+              <div class="navBtns">
+                <button type="button" class="btn btn--secondary magnetic" id="back2">Back</button>
+                <button type="button" class="btn btn--primary magnetic" id="next2">Next</button>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="pane" data-pane="3">
+              <span class="chip">Contact</span>
+              <h3 style="font-family:'Space Grotesk',sans-serif;font-size:2rem;letter-spacing:-.04em;margin:12px 0 10px">
+                Confirm details
+              </h3>
+              <p class="muted">Submit to generate a booking request (demo). Hook it to email/API/CRM later.</p>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label for="fullName">Full name</label>
+                  <input id="fullName" name="fullName" placeholder="Your name" required>
+                </div>
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" placeholder="you@example.com" required>
+                </div>
+                <div class="field">
+                  <label for="phone">Phone (optional)</label>
+                  <input id="phone" name="phone" placeholder="+1 555 000 0000">
+                </div>
+                <div class="field">
+                  <label for="contactMethod">Preferred contact</label>
+                  <select id="contactMethod" name="contactMethod" required>
+                    <option value="email" selected>Email</option>
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="phone">Phone call</option>
+                  </select>
+                </div>
+
+                <div class="field full">
+                  <label for="promo">Promo code (optional)</label>
+                  <input id="promo" name="promo" placeholder="VOYAGEX10">
+                </div>
+
+                <button type="submit" class="btn btn--primary full magnetic" id="submitBtn">Submit booking request</button>
+              </div>
+
+              <div class="navBtns">
+                <button type="button" class="btn btn--secondary magnetic" id="back3">Back</button>
+                <a href="#packages" class="btn btn--secondary magnetic">Change package</a>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- SUMMARY -->
+        <aside class="card summary" id="summaryCard" data-tilt>
+          <div class="summaryTop">
+            <div>
+              <span class="chip">Live estimate</span>
+              <h3 style="margin-top:10px">Trip summary</h3>
+            </div>
+            <div class="pill" id="sumNights">— nights</div>
+          </div>
+
+          <div class="bigPrice" id="sumTotal">$0</div>
+          <p class="muted" id="sumLine" style="margin-top:6px">
+            Select a package + dates to get a full estimate.
+          </p>
+
+          <ul class="sumList" id="sumList">
+            <li><span>Package</span> <small id="sumPkg">—</small></li>
+            <li><span>Tier</span> <small id="sumTier">—</small></li>
+            <li><span>Travelers</span> <small id="sumTrav">—</small></li>
+            <li><span>Add-ons</span> <small id="sumAdd">—</small></li>
+          </ul>
+
+          <div class="pillRow" id="pillRow">
+            <span class="pillMini" id="pillSeason">Season: —</span>
+            <span class="pillMini" id="pillRoom">Room: —</span>
+            <span class="pillMini" id="pillStyle">Pace: —</span>
+          </div>
+
+          <div class="warn" id="depositBox">
+            Deposit estimate: <b id="sumDeposit">$0</b> (25%). Final cost depends on real-time availability and upgrades.
+          </div>
+
+          <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="btn btn--secondary magnetic" type="button" id="saveDraft">Save draft</button>
+            <a class="btn btn--primary magnetic" href="#planner">Continue</a>
+          </div>
+
+          <p class="muted" style="margin-top:12px;font-size:.95rem;">
+            Pro tip: open with a package preselected via URL: <code>?package=aurelia</code>
+          </p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <div class="footer__bar">
+      <div>
+        <a class="brand" href="index.html"><span>V</span>oyageX</a>
+        <p style="margin-top:10px;max-width:52ch;">
+          Immersive tourism experiences, built for mobile, tuned for motion, and styled with premium depth.
+        </p>
+      </div>
+
+      <div class="socials">
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">IG</a>
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X">X</a>
+        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">YT</a>
+        <a href="#top" aria-label="Back to top">↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------------- Nav + progress ---------------- */
+    const navWrap = document.getElementById('navWrap');
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    const progressBar = document.querySelector('.progress span');
+
+    function updateProgress() {
+      const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      progressBar.style.width = (window.scrollY / max) * 100 + '%';
+    }
+    function updateNavState() {
+      navWrap.classList.toggle('scrolled', window.scrollY > 20);
+    }
+    window.addEventListener('scroll', () => { updateProgress(); updateNavState(); }, { passive:true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress(); updateNavState();
+
+    function closeMenu() {
+      navLinks.classList.remove('open');
+      menuBtn.classList.remove('active');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    }
+    menuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = navLinks.classList.toggle('open');
+      menuBtn.classList.toggle('active', open);
+      menuBtn.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('click', (e) => { if (!navWrap.contains(e.target)) closeMenu(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+    closeMenu();
+
+    /* ---------------- Toast ---------------- */
+    const toast = document.getElementById('toast');
+    let toastTimer = null;
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    /* ---------------- Reveal ---------------- */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
+    }, { threshold: 0.14 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* ---------------- Cursor glow ---------------- */
+    const cursorGlow = document.getElementById('cursorGlow');
+    const pointer = { x: null, y: null };
+    window.addEventListener('pointermove', (e) => {
+      pointer.x = e.clientX; pointer.y = e.clientY;
+      if (cursorGlow) { cursorGlow.style.left = e.clientX + 'px'; cursorGlow.style.top = e.clientY + 'px'; }
+    });
+
+    /* ---------------- Particles ---------------- */
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let cw = 0, ch = 0, particles = [];
+
+    function createParticle() {
+      return {
+        x: Math.random() * cw,
+        y: Math.random() * ch,
+        r: Math.random() * 1.8 + 0.4,
+        vx: (Math.random() - 0.5) * 0.22,
+        vy: (Math.random() - 0.5) * 0.22,
+        hue: 190 + Math.random() * 80,
+        alpha: Math.random() * 0.5 + 0.15
+      };
+    }
+    function resizeParticles() {
+      cw = canvas.width = window.innerWidth;
+      ch = canvas.height = window.innerHeight;
+      const count = Math.min(60, Math.max(28, Math.floor(cw / 24)));
+      particles = Array.from({ length: count }, createParticle);
+    }
+    function drawParticles() {
+      ctx.clearRect(0, 0, cw, ch);
+      ctx.globalCompositeOperation = 'lighter';
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+
+        if (p.x < -20) p.x = cw + 20;
+        if (p.x > cw + 20) p.x = -20;
+        if (p.y < -20) p.y = ch + 20;
+        if (p.y > ch + 20) p.y = -20;
+
+        if (pointer.x !== null) {
+          const dx = p.x - pointer.x, dy = p.y - pointer.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 120) {
+            const force = (120 - dist) / 120;
+            p.x += dx * force * 0.018;
+            p.y += dy * force * 0.018;
+          }
+        }
+
+        ctx.beginPath();
+        ctx.fillStyle = `hsla(${p.hue}, 100%, 70%, ${p.alpha})`;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const q = particles[j];
+          const dx = p.x - q.x, dy = p.y - q.y;
+          const d = Math.hypot(dx, dy);
+          if (d < 120) {
+            ctx.strokeStyle = `rgba(120, 200, 255, ${(1 - d / 120) * 0.08})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(drawParticles);
+    }
+    resizeParticles();
+    drawParticles();
+    window.addEventListener('resize', resizeParticles);
+
+    /* ---------------- Magnetic buttons ---------------- */
+    function bindMagnetic(el) {
+      if (!el || el.dataset.magBound === '1') return;
+      el.dataset.magBound = '1';
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        el.style.transform = `translate3d(${x * 0.15}px, ${y * 0.15}px, 0)`;
+      });
+      el.addEventListener('mouseleave', () => el.style.transform = '');
+    }
+    document.querySelectorAll('.magnetic').forEach(bindMagnetic);
+
+    /* ---------------- Tilt cards ---------------- */
+    function bindTilt(el) {
+      if (!el || el.dataset.tiltBound === '1') return;
+      el.dataset.tiltBound = '1';
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const rx = ((y / rect.height) - 0.5) * -10;
+        const ry = ((x / rect.width) - 0.5) * 12;
+        el.style.transform = `perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.01)`;
+      });
+      el.addEventListener('mouseleave', () => el.style.transform = '');
+    }
+    document.querySelectorAll('[data-tilt]').forEach(bindTilt);
+
+    /* ---------------- Collage parallax (unique magic) ---------------- */
+    const collageWrap = document.getElementById('collageWrap');
+    const collage = document.getElementById('collage');
+
+    if (window.matchMedia('(pointer:fine)').matches && collageWrap && collage) {
+      collageWrap.addEventListener('mousemove', (e) => {
+        const r = collageWrap.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        collage.style.transform =
+          `rotateX(${y * -6}deg) rotateY(${x * 10}deg) translate3d(${x * 10}px, ${y * 8}px, 0)`;
+      });
+      collageWrap.addEventListener('mouseleave', () => collage.style.transform = '');
+    }
+
+    /* ---------------- Data ---------------- */
+    const pkgs = [
+      {
+        id:"aurelia", type:"beach",
+        title:"Aurelia Coast", days:5, nights:4, rating:4.9,
+        base:1240,
+        line:"private sail • sea-view suite",
+        desc:"Sunset sails, hidden coves, and a cliffside villa that feels like a private dream.",
+        img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80",
+        meta:["Private sail","Sea-view suite","Sunset dining"]
+      },
+      {
+        id:"nord", type:"mountain",
+        title:"Nord Fjord", days:7, nights:6, rating:4.8,
+        base:1890,
+        line:"aurora lodge • glacier trek",
+        desc:"Aurora skies, glacier hikes, and thermal pools wrapped in quiet luxury.",
+        img:"https://images.unsplash.com/photo-1500048993953-d23a436266cf?auto=format&fit=crop&w=1400&q=80",
+        meta:["Aurora lodge","Glacier trek","Hot spring spa"]
+      },
+      {
+        id:"neon", type:"city",
+        title:"Neon Harbor", days:4, nights:3, rating:4.9,
+        base:980,
+        line:"rooftops • food districts",
+        desc:"Skyline nights, rooftop cuisine, and design-forward stays in the city glow.",
+        img:"https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1400&q=80",
+        meta:["Rooftop dinner","City tour","Night lounge"]
+      },
+      {
+        id:"ember", type:"desert",
+        title:"Ember Dunes", days:6, nights:5, rating:4.8,
+        base:1550,
+        line:"luxury camp • stargazing",
+        desc:"Golden dunes, stargazing camps, and 4x4 trails built for adventure.",
+        img:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1400&q=80",
+        meta:["Luxury camp","4x4 ride","Star session"]
+      },
+      {
+        id:"bamboo", type:"escape",
+        title:"Bamboo Serenity", days:5, nights:4, rating:4.9,
+        base:1110,
+        line:"tea ritual • lantern walk",
+        desc:"Tea houses, lantern walks, and temple mornings with local guides.",
+        img:"https://images.unsplash.com/photo-1491884662610-dfcd28f30cfb?auto=format&fit=crop&w=1400&q=80",
+        meta:["Tea ritual","Temple guide","Lantern walk"]
+      },
+      {
+        id:"cloud", type:"mountain",
+        title:"Cloud Ridge", days:8, nights:7, rating:5.0,
+        base:2040,
+        line:"alpine stay • sky dining",
+        desc:"Alpine panoramas, cable cars, and a fresh-air escape above the clouds.",
+        img:"https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80",
+        meta:["Cable car","Alpine stay","Sky dining"]
+      }
+    ];
+
+    const rail = document.getElementById('pkgRail');
+    const filterBtns = [...document.querySelectorAll('#pkgFilters .filter-btn')];
+
+    let selectedPkgId = pkgs[0].id;
+
+    function money(n){ return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n); }
+
+    function qsPackage() {
+      const p = new URLSearchParams(location.search).get('package');
+      return p && pkgs.some(x => x.id === p) ? p : null;
+    }
+
+    function setHero(pkg){
+      document.getElementById('heroPkgName').textContent = pkg.title;
+      document.getElementById('heroPkgLine').textContent = `${pkg.days}D / ${pkg.nights}N • ${pkg.line}`;
+      document.getElementById('heroPrice').textContent = `From ${money(pkg.base)}`;
+      document.getElementById('heroChip').textContent = `${pkg.type} package`;
+    }
+
+    function setSelected(pkg){
+      selectedPkgId = pkg.id;
+      document.getElementById('selName').textContent = pkg.title;
+      document.getElementById('selDesc').textContent = pkg.desc;
+      setHero(pkg);
+
+      // highlight
+      rail.querySelectorAll('.pkg').forEach(card => {
+        card.classList.toggle('selected', card.dataset.id === selectedPkgId);
+      });
+
+      // also update URL (nice pro behavior)
+      const u = new URL(location.href);
+      u.searchParams.set('package', selectedPkgId);
+      history.replaceState({}, '', u.toString());
+
+      updateSummary(true);
+    }
+
+    function renderRail(filter="all"){
+      const list = pkgs.filter(p => filter==="all" || p.type===filter);
+
+      rail.innerHTML = list.map(p => `
+        <article class="pkg reveal ${p.id===selectedPkgId?'selected':''}" data-tilt data-id="${p.id}">
+          <div class="pkg__media">
+            <img src="${p.img}" alt="${p.title}" loading="lazy">
+            <div class="tag">${p.days}D / ${p.nights}N • ${p.type}</div>
+          </div>
+          <div class="pkg__body">
+            <div class="pkg__top">
+              <h3>${p.title}</h3>
+              <div class="rating">★ ${p.rating.toFixed(1)}</div>
+            </div>
+            <p>${p.desc}</p>
+            <div class="pkg__foot">
+              <div class="price">From ${money(p.base)}</div>
+              <div class="choose">Select <span>↗</span></div>
+            </div>
+          </div>
+        </article>
+      `).join("");
+
+      rail.querySelectorAll('.pkg').forEach(el => {
+        el.addEventListener('click', () => setSelected(pkgs.find(x => x.id === el.dataset.id)));
+      });
+
+      rail.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+      rail.querySelectorAll('[data-tilt]').forEach(bindTilt);
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderRail(btn.dataset.filter);
+      });
+    });
+
+    // init selected from URL
+    const fromUrl = qsPackage();
+    if (fromUrl) selectedPkgId = fromUrl;
+    renderRail("all");
+    setSelected(pkgs.find(p => p.id === selectedPkgId) || pkgs[0]);
+
+    /* ---------------- Wizard navigation ---------------- */
+    const stepsEls = [...document.querySelectorAll('.step')];
+    const panes = [...document.querySelectorAll('.pane')];
+
+    function go(step){
+      stepsEls.forEach(s => s.classList.toggle('active', Number(s.dataset.step) === step));
+      panes.forEach(p => p.classList.toggle('active', Number(p.dataset.pane) === step));
+      updateProgressRing();
+      updateSummary();
+    }
+
+    document.getElementById('next1').addEventListener('click', () => go(2));
+    document.getElementById('back2').addEventListener('click', () => go(1));
+    document.getElementById('next2').addEventListener('click', () => {
+      if (!validateStep2()) return;
+      go(3);
+    });
+    document.getElementById('back3').addEventListener('click', () => go(2));
+
+    /* ---------------- Pricing engine (magic) ---------------- */
+    const form = document.getElementById('planForm');
+    const tierEl = document.getElementById('tier');
+    const styleEl = document.getElementById('style');
+    const roomEl = document.getElementById('room');
+    const travelersEl = document.getElementById('travelers');
+    const startEl = document.getElementById('startDate');
+    const endEl = document.getElementById('endDate');
+    const promoEl = document.getElementById('promo');
+
+    // set default dates to next week + 5 days
+    const now = new Date();
+    const d1 = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 7);
+    const d2 = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 12);
+    startEl.valueAsDate = d1;
+    endEl.valueAsDate = d2;
+
+    const addonPrices = {
+      privateGuide: 220,
+      airportVIP: 160,
+      photoSession: 190,
+      spa: 140
+    };
+
+    function daysBetween(a,b){
+      const ms = 24*60*60*1000;
+      const A = new Date(a.getFullYear(), a.getMonth(), a.getDate());
+      const B = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+      return Math.max(0, Math.round((B - A) / ms));
+    }
+
+    function seasonMultiplier(date){
+      const m = date.getMonth() + 1;
+      // demo season logic
+      if ([12,1,2].includes(m)) return { name:"Peak", mult:1.12 };
+      if ([6,7,8].includes(m)) return { name:"High", mult:1.08 };
+      return { name:"Standard", mult:1.00 };
+    }
+
+    function tierMultiplier(t){
+      return t === 'elite' ? 1.35 : t === 'premium' ? 1.15 : 1.00;
+    }
+
+    function roomMultiplier(r){
+      return r === 'suite' ? 1.18 : r === 'twin' ? 1.03 : 1.00;
+    }
+
+    function styleMultiplier(s){
+      return s === 'fast' ? 1.06 : s === 'balanced' ? 1.03 : 1.00;
+    }
+
+    function getSelectedAddons(){
+      return [...form.querySelectorAll('input[name="addons"]:checked')].map(x => x.value);
+    }
+
+    function calcTotal(){
+      const pkg = pkgs.find(p => p.id === selectedPkgId);
+      const t = tierEl.value;
+      const r = roomEl.value;
+      const s = styleEl.value;
+      const travelers = Math.max(1, Number(travelersEl.value || 1));
+
+      const start = startEl.valueAsDate;
+      const end = endEl.valueAsDate;
+      const nights = (start && end) ? daysBetween(start, end) : 0;
+
+      const season = start ? seasonMultiplier(start) : { name:"—", mult:1 };
+
+      // base: package base price is per 2 travelers for default nights; scale by travelers and nights ratio
+      const baseNights = pkg.nights;
+      const nightRatio = nights > 0 ? (nights / baseNights) : 1;
+
+      let base = pkg.base * nightRatio;
+      // traveler factor: first 2 included, extra travelers add 35% each (demo)
+      const extra = Math.max(0, travelers - 2);
+      const travelerMult = 1 + extra * 0.35;
+
+      base *= tierMultiplier(t) * roomMultiplier(r) * styleMultiplier(s) * season.mult * travelerMult;
+
+      // add-ons (flat)
+      const addons = getSelectedAddons();
+      const addonsCost = addons.reduce((sum, key) => sum + (addonPrices[key] || 0), 0);
+
+      // promo (demo)
+      const promo = (promoEl.value || '').trim().toUpperCase();
+      const promoDisc = promo === 'VOYAGEX10' ? 0.10 : 0;
+
+      const subtotal = base + addonsCost;
+      const total = subtotal * (1 - promoDisc);
+
+      return {
+        pkg, nights, travelers, season,
+        base: Math.round(base),
+        addonsCost,
+        promoDisc,
+        total: Math.round(total),
+        deposit: Math.round(total * 0.25),
+        addons
+      };
+    }
+
+    function animateNumber(el, to){
+      const from = Number(el.dataset.val || 0);
+      const start = performance.now();
+      const dur = 520;
+      function tick(now){
+        const p = Math.min((now - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        const v = Math.round(from + (to - from) * ease);
+        el.textContent = money(v);
+        el.dataset.val = String(v);
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function updateSummary(quiet=false){
+      const data = calcTotal();
+
+      document.getElementById('sumNights').textContent = data.nights ? `${data.nights} nights` : '— nights';
+      document.getElementById('sumPkg').textContent = data.pkg.title;
+      document.getElementById('sumTier').textContent = tierEl.value;
+      document.getElementById('sumTrav').textContent = `${data.travelers}`;
+      document.getElementById('sumAdd').textContent = data.addons.length ? data.addons.join(', ') : 'none';
+
+      document.getElementById('pillSeason').textContent = `Season: ${data.season.name}`;
+      document.getElementById('pillRoom').textContent = `Room: ${roomEl.value}`;
+      document.getElementById('pillStyle').textContent = `Pace: ${styleEl.value}`;
+
+      document.getElementById('sumLine').textContent =
+        `Estimate includes tier + season + ${data.nights || data.pkg.nights} night pacing. Promo: ${data.promoDisc ? '10% applied' : 'none'}.`;
+
+      const totalEl = document.getElementById('sumTotal');
+      if (!quiet) animateNumber(totalEl, data.total);
+      else {
+        totalEl.textContent = money(data.total);
+        totalEl.dataset.val = String(data.total);
+      }
+
+      document.getElementById('sumDeposit').textContent = money(data.deposit);
+    }
+
+    function validateStep2(){
+      const s = startEl.valueAsDate;
+      const e = endEl.valueAsDate;
+      if (!s || !e) { showToast("Please select start and end dates."); return false; }
+      const n = daysBetween(s,e);
+      if (n < 2) { showToast("Trip must be at least 2 nights."); return false; }
+      return true;
+    }
+
+    // update on changes
+    ['change','input'].forEach(evt => {
+      form.addEventListener(evt, (e) => {
+        if (e.target.matches('input,select,textarea')) {
+          updateSummary();
+          updateProgressRing();
+        }
+      });
+    });
+
+    /* ---------------- Progress ring ---------------- */
+    const circle = document.getElementById('progCircle');
+    const label = document.getElementById('progLabel');
+    const circumference = 2 * Math.PI * 26; // r=26
+    circle.style.strokeDasharray = String(circumference);
+
+    function completionScore(){
+      // score based on key fields
+      let score = 0;
+      score += selectedPkgId ? 20 : 0;
+      score += tierEl.value ? 10 : 0;
+      score += styleEl.value ? 10 : 0;
+      score += getSelectedAddons().length ? 10 : 0;
+
+      const s = startEl.valueAsDate, e = endEl.valueAsDate;
+      score += (s && e && daysBetween(s,e) >= 2) ? 20 : 0;
+      score += travelersEl.value ? 10 : 0;
+      score += roomEl.value ? 10 : 0;
+
+      score += document.getElementById('fullName').value.trim() ? 5 : 0;
+      score += document.getElementById('email').value.trim() ? 5 : 0;
+      return Math.min(100, score);
+    }
+
+    function updateProgressRing(){
+      const pct = completionScore();
+      label.textContent = pct + '%';
+      const offset = circumference * (1 - pct / 100);
+      circle.style.strokeDashoffset = String(offset);
+    }
+    updateProgressRing();
+    updateSummary(true);
+
+    /* ---------------- Save draft ---------------- */
+    const saveDraftBtn = document.getElementById('saveDraft');
+    saveDraftBtn.addEventListener('click', () => {
+      const data = {
+        package: selectedPkgId,
+        tier: tierEl.value,
+        style: styleEl.value,
+        room: roomEl.value,
+        travelers: travelersEl.value,
+        startDate: startEl.value,
+        endDate: endEl.value,
+        addons: getSelectedAddons(),
+        notes: document.getElementById('notes').value,
+        promo: promoEl.value
+      };
+      localStorage.setItem('voyagex_plan_draft', JSON.stringify(data));
+      showToast("Draft saved on this device.");
+    });
+
+    // load draft if exists and no URL package override
+    (function loadDraft(){
+      const raw = localStorage.getItem('voyagex_plan_draft');
+      if (!raw) return;
+      try{
+        const d = JSON.parse(raw);
+        if (!qsPackage() && d.package && pkgs.some(p => p.id === d.package)) setSelected(pkgs.find(p => p.id === d.package));
+        if (d.tier) tierEl.value = d.tier;
+        if (d.style) styleEl.value = d.style;
+        if (d.room) roomEl.value = d.room;
+        if (d.travelers) travelersEl.value = d.travelers;
+        if (d.startDate) startEl.value = d.startDate;
+        if (d.endDate) endEl.value = d.endDate;
+        if (Array.isArray(d.addons)) {
+          form.querySelectorAll('input[name="addons"]').forEach(i => i.checked = d.addons.includes(i.value));
+        }
+        if (d.notes) document.getElementById('notes').value = d.notes;
+        if (d.promo) promoEl.value = d.promo;
+        updateSummary(true);
+        updateProgressRing();
+      } catch {}
+    })();
+
+    /* ---------------- Submit (demo) ---------------- */
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const s = startEl.valueAsDate, end = endEl.valueAsDate;
+      if (!validateStep2()) { go(2); return; }
+
+      const name = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      if (!name || !email) { showToast("Please enter your name and email."); return; }
+
+      const data = calcTotal();
+      showToast(`Request created: ${data.pkg.title} • ${data.nights || data.pkg.nights} nights • Est. ${money(data.total)}.`);
+
+      // reset (optional) - keep draft for pro feeling
+      // form.reset();
+    });
+
+    /* ---------------- Bonus: small hero highlights from selection ---------------- */
+    // If user clicks packages quickly, keep hero price consistent.
+    setHero(pkgs.find(p => p.id === selectedPkgId));
+
+  </script>
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+
+</body>
+</html>

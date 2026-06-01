@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoyageX — Premium Services</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#050816;
+      --text:#eef4ff;
+      --muted:#a9b7d1;
+      --accent:#7c5cff;
+      --accent2:#11d7ff;
+      --accent3:#13ffa8;
+      --shadow:0 30px 80px rgba(0,0,0,.4);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      min-height:100vh;
+      font-family:'Inter',sans-serif;
+      color:var(--text);
+      background: radial-gradient(circle at 20% 20%, rgba(124,92,255,.2), transparent 30%),
+                  radial-gradient(circle at 80% 80%, rgba(17,215,255,.12), transparent 28%),
+                  #050816;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image: radial-gradient(circle at center, rgba(255,255,255,.07) 0.8px, transparent 0.8px);
+      background-size:28px 28px;
+      opacity:.07;
+      pointer-events:none;
+      z-index:-1;
+    }
+
+    .container{width:min(1180px, calc(100% - 32px));margin:0 auto;}
+
+    /* Particles & Cursor & Progress */
+    #particles{position:fixed;inset:0;z-index:-2;pointer-events:none;}
+    .cursor-glow{position:fixed;left:0;top:0;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle, rgba(17,215,255,.15) 0%, transparent 70%);filter:blur(25px);transform:translate(-50%, -50%);pointer-events:none;z-index:0;mix-blend-mode:screen;}
+    .progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:50;background:rgba(255,255,255,.04);}
+    .progress span{display:block;width:0;height:100%;background:linear-gradient(90deg, var(--accent), var(--accent2));box-shadow:0 0 18px rgba(17,215,255,.6);}
+
+    /* Navbar - Exact Index Style */
+    .nav-wrap{position:fixed;top:12px;left:0;right:0;z-index:40;}
+    .nav{
+      width:min(1200px, calc(100% - 16px));margin:0 auto;padding:14px 18px;
+      border:1px solid rgba(255,255,255,.08);border-radius:20px;
+      background:rgba(7,13,28,.56);backdrop-filter:blur(20px);
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 14px 40px rgba(0,0,0,.18);
+    }
+    .nav-wrap.scrolled .nav{background:rgba(7,13,28,.85);}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px;font-size:1.05rem;font-family:'Space Grotesk',sans-serif;}
+    .brand span{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg, var(--accent), var(--accent2));color:#fff;box-shadow:0 10px 24px rgba(17,215,255,.3);}
+    .nav__links{display:flex;align-items:center;gap:18px;}
+    .nav__links a{color:var(--muted);font-weight:600;transition:.25s;position:relative;}
+    .nav__links a::after{content:"";position:absolute;left:0;bottom:-7px;width:100%;height:2px;background:linear-gradient(90deg, var(--accent), var(--accent2));transform:scaleX(0);transform-origin:left;transition:.25s;}
+    .nav__links a:hover,.nav__links a.active{color:var(--text);}
+    .nav__links a:hover::after,.nav__links a.active::after{transform:scaleX(1);}
+    .nav__cta{padding:10px 15px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(135deg, rgba(124,92,255,.18), rgba(17,215,255,.14));}
+    .menu-btn{display:none;background:none;border:0;width:42px;height:42px;border-radius:12px;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);}
+    .menu-btn span{width:18px;height:2px;background:var(--text);display:block;transition:.25s;border-radius:999px;}
+    .menu-btn.active span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .menu-btn.active span:nth-child(2){transform:translateY(-7px) rotate(-45deg);}
+
+    /* Hero Section */
+    .hero{
+      min-height:85vh;
+      display:flex;
+      align-items:center;
+      padding-top:110px;
+      position:relative;
+    }
+    .hero-content{
+      display:grid;
+      grid-template-columns:1.1fr 0.9fr;
+      align-items:center;
+      gap:60px;
+    }
+    .hero h1{
+      font-family:'Space Grotesk',sans-serif;
+      font-size:clamp(3.2rem, 6.5vw, 5.4rem);
+      line-height:0.95;
+      letter-spacing:-0.06em;
+      margin-bottom:24px;
+    }
+    .hero h1 span{background:linear-gradient(90deg, #fff, #7cf8ff);-webkit-background-clip:text;background-clip:text;color:transparent;}
+    .hero p{font-size:1.15rem;color:var(--muted);max-width:480px;line-height:1.8;margin-bottom:40px;}
+    .hero-visual{
+      position:relative;
+      height:500px;
+      border-radius:32px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.1);
+      box-shadow:var(--shadow);
+    }
+    .hero-visual img{width:100%;height:100%;object-fit:cover;transition:transform 8s ease;}
+    .hero-visual:hover img{transform:scale(1.1);}
+    .hero-visual::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, transparent 50%, rgba(5,8,22,0.6) 100%);
+    }
+
+    /* Services List */
+    .section{padding:110px 0;position:relative;}
+    .section-header{text-align:center;margin-bottom:80px;}
+    .section-header .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.04);color:var(--muted);font-size:0.9rem;margin-bottom:18px;}
+    .section-header h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.5rem, 5vw, 3.8rem);letter-spacing:-0.04em;}
+    .section-header p{color:var(--muted);max-width:580px;margin:16px auto 0;font-size:1.1rem;}
+
+    .service-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:60px;
+      align-items:center;
+      margin-bottom:100px;
+    }
+    .service-row:nth-child(even){direction:rtl;}
+    .service-row:nth-child(even) > *{direction:ltr;}
+
+    .service-text{padding-right:40px;}
+    .service-row:nth-child(even) .service-text{padding-right:0;padding-left:40px;}
+    
+    .service-number{
+      font-family:'Space Grotesk',sans-serif;
+      font-size:1rem;
+      color:var(--accent2);
+      margin-bottom:16px;
+      letter-spacing:2px;
+    }
+    .service-text h3{
+      font-family:'Space Grotesk',sans-serif;
+      font-size:2.8rem;
+      margin-bottom:20px;
+      line-height:1.1;
+    }
+    .service-text p{color:var(--muted);line-height:1.85;font-size:1.05rem;margin-bottom:30px;}
+    
+    .service-visual{
+      position:relative;
+      height:420px;
+      border-radius:28px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.1);
+      box-shadow:var(--shadow);
+      background:rgba(255,255,255,.03);
+    }
+    .service-visual img{width:100%;height:100%;object-fit:cover;transition:transform 6s ease;}
+    .service-visual:hover img{transform:scale(1.08);}
+
+    /* List Style Features */
+    .features{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:30px;
+      margin-top:120px;
+    }
+    .feature-card{
+      padding:40px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:28px;
+      transition:all .3s ease;
+    }
+    .feature-card:hover{
+      border-color:var(--accent2);
+      transform:translateY(-8px);
+      box-shadow:0 20px 60px rgba(17,215,255,.15);
+    }
+    .feature-icon{
+      width:56px;
+      height:56px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      background:linear-gradient(135deg, rgba(124,92,255,.18), rgba(17,215,255,.12));
+      font-size:1.6rem;
+      margin-bottom:24px;
+    }
+    .feature-card h4{font-size:1.35rem;margin-bottom:12px;}
+    .feature-card p{color:var(--muted);line-height:1.7;font-size:0.95rem;}
+
+    /* Footer - Exact Index Style */
+    .footer{padding:50px 0;color:var(--muted);}
+    .footer__bar{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center;padding-top:30px;border-top:1px solid rgba(255,255,255,.08);}
+    .socials{display:flex;gap:10px;}
+    .socials a{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);transition:.25s;color:#fff;font-weight:800;font-size:.85rem;}
+    .socials a:hover{transform:translateY(-2px);border-color:rgba(17,215,255,.3);}
+
+    /* Animations */
+    .reveal{opacity:0;transform:translateY(60px);transition:all 1s cubic-bezier(0.23,1,0.32,1);}
+    .reveal.is-visible{opacity:1;transform:translateY(0);}
+
+    @media (max-width:1000px){
+      .hero-content, .service-row, .features{grid-template-columns:1fr;}
+      .service-row{gap:40px;}
+      .service-row:nth-child(even){direction:ltr;}
+      .service-visual{order:-1;height:320px;}
+      .features{margin-top:60px;}
+    }
+    @media (max-width:720px){
+      .nav__links{position:absolute;left:8px;right:8px;top:calc(100% + 10px);flex-direction:column;background:rgba(5,8,22,.96);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:16px;opacity:0;pointer-events:none;transition:.3s;}
+      .nav__links.open{opacity:1;pointer-events:all;}
+      .menu-btn{display:flex;}
+
+                              html, body {
+    width: 100%;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
+    
+}
+    }
+  </style>
+</head>
+<body>
+  <div class="progress"><span id="progressBar"></span></div>
+  <canvas id="particles"></canvas>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- Navbar -->
+  <div class="nav-wrap" id="navWrap">
+    <nav class="nav container">
+      <a class="brand" href="index.html"><span>V</span>oyageX</a>
+      <button class="menu-btn" id="menuBtn"><span></span><span></span></button>
+      <div class="nav__links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="destinations.html">Destinations</a>
+        <a href="experience.html">Experiences</a>
+        <a href="service.html" class="active">Services</a>
+         <a href="packages.html">Packages</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="contact.html">Contac</a>
+         <a href="planning.html" class="nav__cta">Start Planning</a>
+      </div>
+    </nav>
+  </div>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero container">
+      <div class="hero-content">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> WHAT WE DO</div>
+          <h1>Travel designed with <span>precision</span>.</h1>
+          <p>We handle every detail of your journey with obsessive attention to quality. From private jets to secret dining spots, our services are designed for travelers who expect the extraordinary.</p>
+          <a href="#services" class="btn" style="padding:16px 32px;border-radius:999px;background:linear-gradient(135deg, var(--accent), var(--accent2));color:#fff;text-decoration:none;font-weight:700;display:inline-block;">View Services</a>
+        </div>
+        <div class="hero-visual reveal">
+          <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1400&q=80" alt="Service Visual">
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Detail -->
+    <section id="services" class="section container">
+      <div class="section-header reveal">
+        <div class="eyebrow"><span class="dot"></span> CORE SERVICES</div>
+        <h2>Comprehensive Travel Solutions</h2>
+        <p>Every service is tailored to your specific needs, ensuring a seamless and luxurious experience from start to finish.</p>
+      </div>
+
+      <!-- Service 1 -->
+      <div class="service-row reveal">
+        <div class="service-text">
+          <div class="service-number">01</div>
+          <h3>Bespoke Itinerary Design</h3>
+          <p>We don't do cookie-cutter trips. Our team of travel architects crafts every day from scratch, matching your pace, interests, and dreams. Whether it's a quiet vineyard tour or a multi-country expedition, every detail is considered.</p>
+          <ul style="color:var(--muted);line-height:1.9;list-style:none;">
+            <li style="display:flex;gap:10px;margin-bottom:8px;"><span style="color:var(--accent3);">✓</span> Personalized route planning</li>
+            <li style="display:flex;gap:10px;margin-bottom:8px;"><span style="color:var(--accent3);">✓</span> Local expert consultation</li>
+            <li style="display:flex;gap:10px;"><span style="color:var(--accent3);">✓</span> Flexible scheduling</li>
+          </ul>
+        </div>
+        <div class="service-visual">
+          <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=900&q=80" alt="Itinerary">
+        </div>
+      </div>
+
+      <!-- Service 2 -->
+      <div class="service-row reveal">
+        <div class="service-text">
+          <div class="service-number">02</div>
+          <h3>Private Concierge</h3>
+          <p>A dedicated specialist available 24/7 to handle every request. From last-minute restaurant reservations to securing impossible tickets, your concierge makes the inaccessible accessible.</p>
+          <ul style="color:var(--muted);line-height:1.9;list-style:none;">
+            <li style="display:flex;gap:10px;margin-bottom:8px;"><span style="color:var(--accent3);">✓</span> 24/7 direct contact line</li>
+            <li style="display:flex;gap:10px;margin-bottom:8px;"><span style="color:var(--accent3);">✓</span> Real-time adjustments</li>
+            <li style="display:flex;gap:10px;"><span style="color:var(--accent3);">✓</span> Emergency support</li>
+          </ul>
+        </div>
+        <div class="service-visual">
+          <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80" alt="Concierge">
+        </div>
+      </div>
+
+      <!-- Service 3 -->
+      <div class="service-row reveal">
+        <div class="service-text">
+          <div class="service-number">03</div>
+          <h3>Luxury Transfers & Logistics</h3>
+          <p>Move seamlessly between destinations with our private fleet and partnerships. Helicopters, yachts, luxury cars, and private jets — your journey is as important as the destination.</p>
+          <ul style="color:var(--muted);line-height:1.9;list-style:none;">
+            <li style="display:flex;gap:10px;margin-bottom:8px;"><span style="color:var(--accent3);">✓</span> Airport meet & greet</li>
+            <li style="display:flex;gap:10px;margin-bottom:8px;"><span style="color:var(--accent3);">✓</span> Private aviation</li>
+            <li style="display:flex;gap:10px;"><span style="color:var(--accent3);">✓</span> Chauffeur services</li>
+          </ul>
+        </div>
+        <div class="service-visual">
+          <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80" alt="Transfers">
+        </div>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="features reveal">
+        <div class="feature-card">
+          <div class="feature-icon">✦</div>
+          <h4>Curated Stays</h4>
+          <p>We partner with the world's most exclusive hotels, villas, and eco-lodges to ensure your accommodation is an experience in itself.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✦</div>
+          <h4>Exclusive Access</h4>
+          <p>Gain entry to private museums, closed archaeological sites, and members-only clubs through our network of local connections.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✦</div>
+          <h4>Wellness Integration</h4>
+          <p>Integrate spa treatments, meditation sessions, and holistic health experiences directly into your itinerary.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="container footer">
+    <div class="footer__bar">
+      <div>
+        <a class="brand" href="index.html"><span>V</span>oyageX</a>
+        <p style="margin-top:10px;max-width:52ch;">Immersive tourism experiences, built for mobile, tuned for motion, and styled with premium depth.</p>
+      </div>
+      <div class="socials">
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">IG</a>
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X">X</a>
+        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">YT</a>
+        <a href="#" aria-label="Back to top">↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // === Core Logic (Particles, Nav, Progress, Reveal) ===
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particles = [], cw, ch;
+
+    function resize() {
+      cw = canvas.width = window.innerWidth;
+      ch = canvas.height = window.innerHeight;
+      particles = Array.from({length: 55}, () => ({
+        x: Math.random()*cw, y: Math.random()*ch,
+        r: Math.random()*1.6 + 0.5,
+        vx: (Math.random()-0.5)*0.25,
+        vy: (Math.random()-0.5)*0.25,
+        alpha: Math.random()*0.5 + 0.2
+      }));
+    }
+
+    function animate() {
+      ctx.clearRect(0,0,cw,ch);
+      for (let p of particles) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > cw) p.vx *= -1;
+        if (p.y < 0 || p.y > ch) p.vy *= -1;
+        ctx.fillStyle = `hsla(200, 90%, 85%, ${p.alpha})`;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+      }
+      requestAnimationFrame(animate);
+    }
+    resize(); animate(); window.addEventListener('resize', resize);
+
+    const cursorGlow = document.getElementById('cursorGlow');
+    document.addEventListener('pointermove', e => {
+      cursorGlow.style.left = e.clientX + 'px';
+      cursorGlow.style.top = e.clientY + 'px';
+    });
+
+    const progressBar = document.getElementById('progressBar');
+    const navWrap = document.getElementById('navWrap');
+    window.addEventListener('scroll', () => {
+      const percent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      progressBar.style.width = percent + '%';
+      navWrap.classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+      menuBtn.classList.toggle('active');
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('is-visible');
+      });
+    }, {threshold: 0.15});
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Close menu on link click
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuBtn.classList.remove('active');
+      });
+    });
+  </script>
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+
+</body>
+</html>
