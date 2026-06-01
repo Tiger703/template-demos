@@ -1,1 +1,3579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>NEURA TABLE | Full  Restaurant Home Page</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* =====================================================
+   NEURA TABLE — ASSISTANT B FULL HOME PAGE
+===================================================== */
+
+:root{
+  --bg:#fbfaf4;
+  --paper:#ffffff;
+  --ink:#111111;
+  --muted:#746d62;
+  --line:rgba(20,20,20,.09);
+
+  --gold:#c99a2e;
+  --gold-soft:#fff0c3;
+
+  --green:#35a878;
+  --green-soft:#e9fff5;
+
+  --blue:#6aa9ff;
+  --blue-soft:#eef6ff;
+
+  --rose:#ee7d9b;
+  --rose-soft:#ffeaf1;
+
+  --orange:#ff9457;
+  --orange-soft:#fff0e7;
+
+  --accent:#c99a2e;
+  --accent-soft:#fff0c3;
+
+  --glass:rgba(255,255,255,.68);
+  --glass-2:rgba(255,255,255,.86);
+
+  --shadow:0 30px 90px rgba(61,45,8,.13);
+  --shadow-soft:0 18px 45px rgba(61,45,8,.08);
+
+  --radius:32px;
+  --radius-lg:46px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:"Inter",sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255,240,195,.74), transparent 27%),
+    radial-gradient(circle at 86% 12%, rgba(106,169,255,.13), transparent 25%),
+    radial-gradient(circle at 70% 92%, rgba(53,168,120,.12), transparent 32%),
+    var(--bg);
+  min-height:100vh;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+body.lock{
+  overflow:hidden;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input,
+select,
+textarea{
+  font-family:inherit;
+}
+
+button{
+  cursor:none;
+}
+
+img{
+  max-width:100%;
+  display:block;
+}
+
+::selection{
+  background:var(--accent);
+  color:#fff;
+}
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
+::-webkit-scrollbar{
+  width:10px;
+}
+
+::-webkit-scrollbar-track{
+  background:#efe8d9;
+}
+
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(var(--accent),var(--gold));
+  border-radius:999px;
+}
+
+/* =====================================================
+   LOADER
+===================================================== */
+
+.loader{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:#fffaf0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  transition:opacity .75s var(--ease), visibility .75s var(--ease);
+}
+
+.loader.hide{
+  opacity:0;
+  visibility:hidden;
+}
+
+.loader-core{
+  width:96px;
+  height:96px;
+  border-radius:50%;
+  position:relative;
+  background:
+    radial-gradient(circle at 35% 28%, white 0 12%, transparent 13%),
+    linear-gradient(135deg,var(--accent-soft),var(--accent));
+  box-shadow:
+    0 0 0 16px rgba(201,154,46,.09),
+    0 0 70px rgba(201,154,46,.32);
+  animation:pulse 1.5s ease-in-out infinite;
+}
+
+.loader-core::before,
+.loader-core::after{
+  content:"";
+  position:absolute;
+  inset:-20px;
+  border-radius:50%;
+  border:1px solid rgba(201,154,46,.35);
+  animation:spin 4s linear infinite;
+}
+
+.loader-core::after{
+  inset:-36px;
+  border-style:dashed;
+  animation-duration:7s;
+}
+
+.loader h2{
+  margin-top:34px;
+  font-family:"Playfair Display",serif;
+  font-size:38px;
+  letter-spacing:-.03em;
+}
+
+.loader p{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.35em;
+  text-transform:uppercase;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.07)}
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* =====================================================
+   CANVAS / CURSOR / EFFECTS
+===================================================== */
+
+#neuraCanvas{
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  pointer-events:none;
+}
+
+.grain{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  opacity:.36;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 500 500' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+}
+
+.cursor-dot,
+.cursor-ring{
+  position:fixed;
+  top:0;
+  left:0;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  border-radius:50%;
+  z-index:99998;
+}
+
+.cursor-dot{
+  width:8px;
+  height:8px;
+  background:var(--accent);
+}
+
+.cursor-ring{
+  width:44px;
+  height:44px;
+  border:1px solid rgba(201,154,46,.65);
+  transition:width .25s var(--ease), height .25s var(--ease), background .25s var(--ease);
+}
+
+.cursor-ring.hover{
+  width:76px;
+  height:76px;
+  background:rgba(201,154,46,.08);
+}
+
+.progress{
+  position:fixed;
+  top:0;
+  left:0;
+  width:0%;
+  height:4px;
+  z-index:5000;
+  background:linear-gradient(90deg,var(--accent),var(--green),var(--blue));
+  box-shadow:0 0 18px rgba(201,154,46,.35);
+}
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.nav{
+  position:fixed;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(1220px,calc(100% - 32px));
+  height:76px;
+  z-index:2000;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 14px 0 22px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.82);
+  background:rgba(255,255,255,.62);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  box-shadow:0 20px 70px rgba(60,43,5,.09);
+  transition:.35s var(--ease);
+}
+
+.nav.scrolled{
+  top:10px;
+  height:68px;
+  background:rgba(255,255,255,.9);
+  box-shadow:0 20px 80px rgba(60,43,5,.14);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:950;
+}
+
+.logo-icon{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 34% 26%, white 0 13%, transparent 14%),
+    linear-gradient(135deg,var(--accent-soft),var(--accent));
+  box-shadow:0 12px 30px rgba(201,154,46,.28);
+  position:relative;
+}
+
+.logo-icon::after{
+  content:"";
+  position:absolute;
+  inset:-6px;
+  border-radius:50%;
+  border:1px solid rgba(201,154,46,.32);
+}
+
+.logo strong{
+  display:block;
+  font-size:18px;
+  letter-spacing:-.03em;
+}
+
+.logo span:last-child{
+  display:block;
+  margin-top:4px;
+  font-size:10px;
+  color:var(--muted);
+  letter-spacing:.28em;
+  text-transform:uppercase;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.nav-links a{
+  padding:12px 15px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:800;
+  color:#332c22;
+  transition:.3s var(--ease);
+}
+
+.nav-links a:hover{
+  background:rgba(201,154,46,.11);
+  color:#000;
+}
+
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.nav-ai{
+  border:0;
+  padding:14px 20px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#111,#3b3021);
+  color:white;
+  font-weight:900;
+  box-shadow:0 16px 34px rgba(17,17,17,.19);
+  transition:.35s var(--ease);
+}
+
+.nav-ai:hover{
+  transform:translateY(-3px);
+}
+
+.hamburger{
+  display:none;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  border:0;
+  background:#111;
+  position:relative;
+}
+
+.hamburger span{
+  position:absolute;
+  left:14px;
+  width:20px;
+  height:2px;
+  border-radius:4px;
+  background:white;
+  transition:.35s var(--ease);
+}
+
+.hamburger span:nth-child(1){top:17px}
+.hamburger span:nth-child(2){top:23px}
+.hamburger span:nth-child(3){top:29px}
+
+.hamburger.active span:nth-child(1){
+  top:23px;
+  transform:rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2){
+  opacity:0;
+}
+
+.hamburger.active span:nth-child(3){
+  top:23px;
+  transform:rotate(-45deg);
+}
+
+/* =====================================================
+   MOBILE PANEL
+===================================================== */
+
+.mobile-panel{
+  position:fixed;
+  inset:0;
+  z-index:1800;
+  background:rgba(255,250,240,.84);
+  backdrop-filter:blur(32px);
+  -webkit-backdrop-filter:blur(32px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform:translateX(100%);
+  transition:.7s var(--ease);
+  overflow:hidden;
+}
+
+.mobile-panel.active{
+  transform:translateX(0);
+}
+
+.mobile-panel::before{
+  content:"B";
+  position:absolute;
+  right:-4vw;
+  bottom:-8vw;
+  font-size:40vw;
+  font-weight:950;
+  color:rgba(201,154,46,.08);
+  line-height:.8;
+}
+
+.mobile-links{
+  position:relative;
+  z-index:2;
+  text-align:center;
+}
+
+.mobile-links a{
+  display:block;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(42px,11vw,86px);
+  font-weight:900;
+  line-height:1.1;
+  opacity:0;
+  transform:translateX(50px);
+  transition:.55s var(--ease);
+}
+
+.mobile-panel.active .mobile-links a{
+  opacity:1;
+  transform:translateX(0);
+}
+
+.mobile-panel.active .mobile-links a:nth-child(1){transition-delay:.12s}
+.mobile-panel.active .mobile-links a:nth-child(2){transition-delay:.2s}
+.mobile-panel.active .mobile-links a:nth-child(3){transition-delay:.28s}
+.mobile-panel.active .mobile-links a:nth-child(4){transition-delay:.36s}
+.mobile-panel.active .mobile-links a:nth-child(5){transition-delay:.44s}
+.mobile-panel.active .mobile-links a:nth-child(6){transition-delay:.52s}
+
+.mobile-links a:hover{
+  color:var(--accent);
+}
+
+/* =====================================================
+   SHARED
+===================================================== */
+
+.container{
+  width:min(1220px,100%);
+  margin:0 auto;
+}
+
+.section{
+  position:relative;
+  padding:115px 22px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 15px;
+  border-radius:999px;
+  background:rgba(255,255,255,.68);
+  border:1px solid rgba(255,255,255,.8);
+  box-shadow:var(--shadow-soft);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  color:#775914;
+}
+
+.badge::before{
+  content:"";
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 18px var(--accent);
+}
+
+.section-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:32px;
+  margin-bottom:48px;
+}
+
+.section-title{
+  margin-top:22px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(42px,6vw,78px);
+  line-height:.95;
+  letter-spacing:-.055em;
+}
+
+.section-title span,
+.home-title span{
+  display:inline-block;
+  background:linear-gradient(120deg,var(--accent),#5e4103 48%,var(--accent-soft));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.section-text{
+  max-width:520px;
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.8;
+}
+
+.btn{
+  border:0;
+  border-radius:999px;
+  padding:16px 24px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-weight:950;
+  transition:.35s var(--ease);
+  position:relative;
+  overflow:hidden;
+}
+
+.btn-dark{
+  background:linear-gradient(135deg,#111,#3b3021);
+  color:white;
+  box-shadow:0 20px 42px rgba(17,17,17,.19);
+}
+
+.btn-dark:hover{
+  transform:translateY(-4px);
+  box-shadow:0 28px 65px rgba(17,17,17,.26);
+}
+
+.btn-gold{
+  background:linear-gradient(135deg,var(--accent-soft),var(--accent));
+  color:#251703;
+  box-shadow:0 20px 42px rgba(201,154,46,.23);
+}
+
+.btn-gold:hover{
+  transform:translateY(-4px);
+  box-shadow:0 28px 65px rgba(201,154,46,.34);
+}
+
+.btn-white{
+  background:rgba(255,255,255,.72);
+  color:#111;
+  border:1px solid var(--line);
+}
+
+.btn-white:hover{
+  background:#fff;
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-soft);
+}
+
+.reveal{
+  opacity:0;
+  transform:translateY(34px);
+  transition:opacity .8s var(--ease), transform .8s var(--ease);
+}
+
+.reveal.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.home{
+  min-height:100vh;
+  padding:132px 22px 74px;
+  position:relative;
+  overflow:hidden;
+}
+
+.home::before{
+  content:"NEURA";
+  position:absolute;
+  top:16%;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:18vw;
+  font-weight:950;
+  letter-spacing:-.08em;
+  color:rgba(17,17,17,.035);
+  pointer-events:none;
+  white-space:nowrap;
+}
+
+.home-shell{
+  width:min(1220px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr .95fr;
+  gap:44px;
+  align-items:center;
+  min-height:calc(100vh - 210px);
+}
+
+.home-copy{
+  position:relative;
+  z-index:2;
+}
+
+.home-title{
+  margin-top:22px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(54px,7.3vw,104px);
+  line-height:.88;
+  letter-spacing:-.065em;
+}
+
+.home-text{
+  margin-top:26px;
+  max-width:650px;
+  font-size:18px;
+  line-height:1.8;
+  color:var(--muted);
+}
+
+.typed{
+  color:#111;
+  font-weight:900;
+  border-bottom:2px solid var(--accent);
+}
+
+.home-actions{
+  margin-top:34px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.mood-board{
+  margin-top:38px;
+  padding:16px;
+  border-radius:26px;
+  background:rgba(255,255,255,.58);
+  border:1px solid rgba(255,255,255,.78);
+  backdrop-filter:blur(20px);
+  box-shadow:var(--shadow-soft);
+  max-width:650px;
+}
+
+.mood-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:12px;
+}
+
+.mood-top strong{
+  font-size:14px;
+}
+
+.mood-top span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+}
+
+.mood-pills{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.mood-pill{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.72);
+  border-radius:999px;
+  padding:11px 14px;
+  font-size:13px;
+  font-weight:900;
+  transition:.3s var(--ease);
+}
+
+.mood-pill.active,
+.mood-pill:hover{
+  background:#111;
+  color:white;
+  border-color:#111;
+  transform:translateY(-2px);
+}
+
+/* =====================================================
+   HERO STAGE
+===================================================== */
+
+.home-stage{
+  min-height:650px;
+  position:relative;
+}
+
+.stage-card{
+  position:absolute;
+  inset:34px 0 26px 0;
+  border-radius:52px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.88),rgba(255,255,255,.44)),
+    radial-gradient(circle at 28% 18%, var(--accent-soft), transparent 34%);
+  border:1px solid rgba(255,255,255,.86);
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(24px);
+  overflow:hidden;
+  transform-style:preserve-3d;
+}
+
+.stage-card::before{
+  content:"";
+  position:absolute;
+  width:560px;
+  height:560px;
+  border-radius:50%;
+  border:1px dashed rgba(201,154,46,.34);
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  animation:spin 28s linear infinite;
+}
+
+.stage-card::after{
+  content:"";
+  position:absolute;
+  width:390px;
+  height:390px;
+  border-radius:50%;
+  border:1px solid rgba(17,17,17,.07);
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+}
+
+.plate{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:min(440px,82%);
+  aspect-ratio:1/1;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  padding:17px;
+  background:linear-gradient(145deg,#fff,#efe5d3);
+  box-shadow:
+    inset 0 -24px 50px rgba(0,0,0,.055),
+    0 40px 90px rgba(70,50,8,.17);
+  z-index:2;
+  animation:floatPlate 5.4s ease-in-out infinite;
+}
+
+.plate img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+  transition:.45s var(--ease);
+}
+
+@keyframes floatPlate{
+  0%,100%{transform:translate(-50%,-50%) translateY(0)}
+  50%{transform:translate(-50%,-50%) translateY(-16px)}
+}
+
+.float-chip{
+  position:absolute;
+  z-index:5;
+  padding:12px 15px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  border-radius:999px;
+  background:rgba(255,255,255,.84);
+  border:1px solid rgba(255,255,255,.92);
+  backdrop-filter:blur(18px);
+  box-shadow:0 18px 42px rgba(60,43,5,.12);
+  font-size:13px;
+  font-weight:900;
+}
+
+.float-chip b{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--accent-soft);
+}
+
+.chip-a{
+  top:76px;
+  right:12px;
+  animation:chipMove 4.7s ease-in-out infinite;
+}
+
+.chip-b{
+  left:-10px;
+  top:230px;
+  animation:chipMove 5.1s ease-in-out infinite reverse;
+}
+
+.chip-c{
+  right:36px;
+  bottom:140px;
+  animation:chipMove 5.4s ease-in-out infinite .2s;
+}
+
+@keyframes chipMove{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-15px)}
+}
+
+.ai-score{
+  position:absolute;
+  left:0;
+  bottom:44px;
+  width:300px;
+  z-index:6;
+  padding:20px;
+  border-radius:28px;
+  background:rgba(255,255,255,.84);
+  border:1px solid rgba(255,255,255,.92);
+  backdrop-filter:blur(22px);
+  box-shadow:var(--shadow);
+}
+
+.score-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.score-head strong{
+  font-size:14px;
+}
+
+.score-number{
+  font-size:32px;
+  font-weight:950;
+  color:var(--accent);
+}
+
+.score-desc{
+  margin-top:12px;
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.score-line{
+  margin-top:16px;
+  height:9px;
+  border-radius:999px;
+  background:#eee5d4;
+  overflow:hidden;
+}
+
+.score-line span{
+  display:block;
+  width:0%;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--green));
+  transition:1s var(--ease);
+}
+
+.pair-card{
+  position:absolute;
+  right:0;
+  top:36px;
+  width:250px;
+  z-index:6;
+  padding:18px;
+  border-radius:26px;
+  background:rgba(255,255,255,.82);
+  border:1px solid rgba(255,255,255,.92);
+  backdrop-filter:blur(20px);
+  box-shadow:var(--shadow-soft);
+}
+
+.pair-card small{
+  display:block;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.14em;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+
+.pair-card h3{
+  margin-top:8px;
+  font-size:20px;
+  letter-spacing:-.04em;
+}
+
+.pair-card p{
+  margin-top:8px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.55;
+}
+
+.home-dock{
+  width:min(1220px,100%);
+  margin:18px auto 0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+.dock-card{
+  padding:20px;
+  border-radius:28px;
+  background:rgba(255,255,255,.6);
+  border:1px solid rgba(255,255,255,.82);
+  backdrop-filter:blur(20px);
+  box-shadow:var(--shadow-soft);
+  display:grid;
+  grid-template-columns:52px 1fr;
+  gap:16px;
+  align-items:center;
+  transition:.35s var(--ease);
+}
+
+.dock-card:hover{
+  transform:translateY(-8px);
+  box-shadow:var(--shadow);
+}
+
+.dock-icon{
+  width:52px;
+  height:52px;
+  border-radius:18px;
+  display:grid;
+  place-items:center;
+  font-size:24px;
+  background:linear-gradient(135deg,#fff,var(--accent-soft));
+}
+
+.dock-card h3{
+  font-size:18px;
+  letter-spacing:-.03em;
+}
+
+.dock-card p{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+/* =====================================================
+   TASTE SCAN SECTION
+===================================================== */
+
+.taste{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,.62)),
+    radial-gradient(circle at 20% 40%, rgba(255,240,195,.42), transparent 32%);
+}
+
+.taste-grid{
+  display:grid;
+  grid-template-columns:.9fr 1.1fr;
+  gap:22px;
+  align-items:stretch;
+}
+
+.scan-panel,
+.scan-result{
+  border-radius:var(--radius-lg);
+  background:rgba(255,255,255,.68);
+  border:1px solid rgba(255,255,255,.86);
+  backdrop-filter:blur(24px);
+  box-shadow:var(--shadow-soft);
+  overflow:hidden;
+}
+
+.scan-panel{
+  padding:32px;
+}
+
+.scan-panel h3{
+  font-size:28px;
+  letter-spacing:-.05em;
+}
+
+.scan-panel p{
+  margin-top:10px;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.scan-options{
+  margin-top:26px;
+  display:grid;
+  gap:18px;
+}
+
+.scan-field label{
+  display:block;
+  margin-bottom:9px;
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:.13em;
+  color:#6d5a27;
+  text-transform:uppercase;
+}
+
+.scan-field select,
+.scan-field input{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:15px 16px;
+  outline:0;
+  background:rgba(255,255,255,.72);
+  font-weight:800;
+  color:#111;
+  transition:.3s var(--ease);
+}
+
+.scan-field select:focus,
+.scan-field input:focus{
+  border-color:rgba(201,154,46,.5);
+  box-shadow:0 0 0 5px rgba(201,154,46,.12);
+}
+
+.range-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:800;
+}
+
+.range-row input{
+  accent-color:var(--accent);
+}
+
+.scan-result{
+  display:grid;
+  grid-template-columns:.94fr 1.06fr;
+  min-height:530px;
+}
+
+.result-img{
+  position:relative;
+  overflow:hidden;
+}
+
+.result-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:.45s var(--ease);
+}
+
+.result-content{
+  padding:36px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.match{
+  display:inline-flex;
+  width:max-content;
+  align-items:center;
+  gap:8px;
+  padding:9px 14px;
+  border-radius:999px;
+  background:#ecfff7;
+  color:#227b55;
+  font-size:12px;
+  font-weight:950;
+}
+
+.result-content h3{
+  margin-top:18px;
+  font-family:"Playfair Display",serif;
+  font-size:46px;
+  line-height:.98;
+  letter-spacing:-.06em;
+}
+
+.result-content p{
+  margin-top:18px;
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.result-stats{
+  margin-top:26px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.r-stat{
+  padding:15px;
+  border-radius:20px;
+  text-align:center;
+  background:#f7efdf;
+}
+
+.r-stat strong{
+  display:block;
+  color:#8c6411;
+  font-size:18px;
+}
+
+.r-stat span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:950;
+  text-transform:uppercase;
+}
+
+/* =====================================================
+   MENU PREVIEW
+===================================================== */
+
+.menu-preview{
+  overflow:hidden;
+}
+
+.menu-tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:26px;
+}
+
+.menu-tab{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.72);
+  border-radius:999px;
+  padding:12px 18px;
+  font-weight:950;
+  color:#4e4638;
+  transition:.3s var(--ease);
+}
+
+.menu-tab.active,
+.menu-tab:hover{
+  background:#111;
+  color:#fff;
+  border-color:#111;
+  transform:translateY(-2px);
+}
+
+.menu-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+}
+
+.menu-card{
+  position:relative;
+  overflow:hidden;
+  border-radius:30px;
+  background:rgba(255,255,255,.76);
+  border:1px solid rgba(255,255,255,.86);
+  box-shadow:var(--shadow-soft);
+  transition:.45s var(--ease);
+}
+
+.menu-card.hide{
+  display:none;
+}
+
+.menu-card:hover{
+  transform:translateY(-10px);
+  box-shadow:var(--shadow);
+}
+
+.menu-img{
+  height:210px;
+  overflow:hidden;
+}
+
+.menu-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:.7s var(--ease);
+}
+
+.menu-card:hover .menu-img img{
+  transform:scale(1.09);
+}
+
+.menu-body{
+  padding:20px;
+}
+
+.menu-body h3{
+  font-size:21px;
+  letter-spacing:-.04em;
+}
+
+.menu-body p{
+  margin-top:9px;
+  color:var(--muted);
+  line-height:1.6;
+  font-size:14px;
+}
+
+.menu-bottom{
+  margin-top:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.price{
+  font-size:22px;
+  font-weight:950;
+  color:#8a6210;
+}
+
+.add-btn{
+  width:44px;
+  height:44px;
+  border:0;
+  border-radius:50%;
+  background:#111;
+  color:#fff;
+  font-size:22px;
+  display:grid;
+  place-items:center;
+  transition:.3s var(--ease);
+}
+
+.add-btn:hover{
+  background:var(--accent);
+  transform:rotate(90deg) scale(1.07);
+}
+
+/* =====================================================
+   JOURNEY
+===================================================== */
+
+.journey-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+  align-items:center;
+}
+
+.journey-photo{
+  min-height:620px;
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  position:relative;
+  box-shadow:var(--shadow);
+}
+
+.journey-photo img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.journey-photo::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,transparent 42%,rgba(0,0,0,.42));
+}
+
+.journey-label{
+  position:absolute;
+  left:28px;
+  right:28px;
+  bottom:28px;
+  z-index:2;
+  padding:24px;
+  border-radius:28px;
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(20px);
+}
+
+.journey-label h3{
+  font-size:26px;
+}
+
+.journey-label p{
+  margin-top:8px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.steps{
+  display:grid;
+  gap:16px;
+}
+
+.step{
+  display:grid;
+  grid-template-columns:58px 1fr;
+  gap:18px;
+  padding:22px;
+  border-radius:28px;
+  background:rgba(255,255,255,.64);
+  border:1px solid rgba(255,255,255,.82);
+  backdrop-filter:blur(20px);
+  box-shadow:var(--shadow-soft);
+  transition:.35s var(--ease);
+}
+
+.step:hover{
+  transform:translateX(8px);
+  background:#fff;
+}
+
+.step-num{
+  width:58px;
+  height:58px;
+  display:grid;
+  place-items:center;
+  border-radius:18px;
+  background:linear-gradient(135deg,#111,#3b3021);
+  color:#fff;
+  font-weight:950;
+}
+
+.step h3{
+  font-size:22px;
+}
+
+.step p{
+  margin-top:6px;
+  color:var(--muted);
+  line-height:1.65;
+}
+
+/* =====================================================
+   ATMOSPHERE GALLERY
+===================================================== */
+
+.gallery-section{
+  background:
+    radial-gradient(circle at 86% 16%, rgba(106,169,255,.12), transparent 26%),
+    radial-gradient(circle at 15% 80%, rgba(201,154,46,.22), transparent 28%);
+}
+
+.gallery-grid{
+  display:grid;
+  grid-template-columns:1.2fr .8fr .8fr;
+  grid-template-rows:260px 260px;
+  gap:18px;
+}
+
+.gallery-item{
+  border-radius:30px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:var(--shadow-soft);
+}
+
+.gallery-item:first-child{
+  grid-row:span 2;
+}
+
+.gallery-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:.7s var(--ease);
+}
+
+.gallery-item:hover img{
+  transform:scale(1.08);
+}
+
+.gallery-overlay{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(17,17,17,.36);
+  opacity:0;
+  transition:.35s var(--ease);
+}
+
+.gallery-item:hover .gallery-overlay{
+  opacity:1;
+}
+
+.gallery-overlay span{
+  color:white;
+  border:1px solid rgba(255,255,255,.7);
+  padding:12px 18px;
+  border-radius:999px;
+  font-weight:950;
+  transform:translateY(18px);
+  transition:.35s var(--ease);
+}
+
+.gallery-item:hover .gallery-overlay span{
+  transform:translateY(0);
+}
+
+/* =====================================================
+   TESTIMONIALS
+===================================================== */
+
+.test-wrap{
+  border-radius:var(--radius-lg);
+  background:rgba(255,255,255,.66);
+  border:1px solid rgba(255,255,255,.86);
+  box-shadow:var(--shadow-soft);
+  overflow:hidden;
+  position:relative;
+}
+
+.test-track{
+  display:flex;
+  transition:.65s var(--ease);
+}
+
+.testimonial{
+  min-width:100%;
+  padding:60px;
+  display:grid;
+  grid-template-columns:.34fr .66fr;
+  gap:36px;
+  align-items:center;
+}
+
+.guest{
+  text-align:center;
+}
+
+.guest img{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  margin:0 auto;
+  border:8px solid white;
+  box-shadow:0 14px 30px rgba(0,0,0,.1);
+}
+
+.guest h4{
+  margin-top:16px;
+  font-size:20px;
+}
+
+.guest span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.quote{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(28px,3.6vw,48px);
+  line-height:1.15;
+  letter-spacing:-.05em;
+}
+
+.stars{
+  color:var(--accent);
+  font-size:24px;
+  margin-bottom:16px;
+}
+
+.slider-controls{
+  position:absolute;
+  right:28px;
+  bottom:28px;
+  display:flex;
+  gap:10px;
+}
+
+.slider-btn{
+  width:48px;
+  height:48px;
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:50%;
+  font-size:22px;
+  transition:.3s var(--ease);
+}
+
+.slider-btn:hover{
+  background:#111;
+  color:#fff;
+  transform:translateY(-3px);
+}
+
+/* =====================================================
+   RESERVATION CTA
+===================================================== */
+
+.reserve{
+  padding-bottom:130px;
+}
+
+.reserve-box{
+  border-radius:56px;
+  background:
+    linear-gradient(135deg,rgba(17,17,17,.92),rgba(62,48,27,.88)),
+    url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600") center/cover;
+  overflow:hidden;
+  color:#fff;
+  min-height:560px;
+  display:grid;
+  grid-template-columns:.95fr 1.05fr;
+  box-shadow:var(--shadow);
+}
+
+.reserve-copy{
+  padding:54px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.reserve-copy .badge{
+  color:#fff;
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.18);
+  box-shadow:none;
+}
+
+.reserve-copy h2{
+  margin-top:22px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(44px,5.6vw,78px);
+  line-height:.95;
+  letter-spacing:-.055em;
+}
+
+.reserve-copy p{
+  margin-top:22px;
+  max-width:500px;
+  color:rgba(255,255,255,.72);
+  line-height:1.8;
+  font-size:17px;
+}
+
+.reserve-form{
+  margin:30px;
+  padding:30px;
+  border-radius:40px;
+  background:rgba(255,255,255,.9);
+  color:#111;
+  backdrop-filter:blur(24px);
+  align-self:center;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.field.full{
+  grid-column:1/-1;
+}
+
+.field label{
+  display:block;
+  margin-bottom:8px;
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:.13em;
+  color:#6d5a27;
+  text-transform:uppercase;
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:14px 15px;
+  background:#fff;
+  color:#111;
+  outline:0;
+  font-weight:750;
+  transition:.3s var(--ease);
+}
+
+.field textarea{
+  min-height:105px;
+  resize:none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:rgba(201,154,46,.55);
+  box-shadow:0 0 0 5px rgba(201,154,46,.12);
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer{
+  padding:72px 22px 32px;
+  background:#111;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+
+.footer::before{
+  content:"NEURA";
+  position:absolute;
+  right:-30px;
+  bottom:-44px;
+  font-size:16vw;
+  font-weight:950;
+  letter-spacing:-.08em;
+  color:rgba(255,255,255,.035);
+}
+
+.footer-grid{
+  width:min(1220px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1.35fr .8fr .8fr 1fr;
+  gap:36px;
+  position:relative;
+  z-index:2;
+}
+
+.footer .logo{
+  color:#fff;
+  margin-bottom:20px;
+}
+
+.footer p,
+.footer a,
+.footer li{
+  color:rgba(255,255,255,.64);
+  line-height:1.8;
+}
+
+.footer h4{
+  margin-bottom:18px;
+}
+
+.footer ul{
+  list-style:none;
+}
+
+.footer a:hover{
+  color:var(--gold-soft);
+}
+
+.footer-bottom{
+  width:min(1220px,100%);
+  margin:48px auto 0;
+  padding-top:26px;
+  border-top:1px solid rgba(255,255,255,.12);
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:18px;
+  color:rgba(255,255,255,.5);
+  position:relative;
+  z-index:2;
+}
+
+/* =====================================================
+   ASSISTANT / TOAST / LIGHTBOX
+===================================================== */
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:28px;
+  transform:translate(-50%,120px);
+  z-index:8000;
+  padding:15px 22px;
+  border-radius:999px;
+  background:#111;
+  color:#fff;
+  box-shadow:0 20px 50px rgba(0,0,0,.24);
+  font-weight:850;
+  transition:.45s var(--ease);
+}
+
+.toast.show{
+  transform:translate(-50%,0);
+}
+
+.lightbox{
+  position:fixed;
+  inset:0;
+  z-index:7000;
+  background:rgba(10,10,10,.88);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:28px;
+}
+
+.lightbox.show{
+  display:flex;
+}
+
+.lightbox img{
+  max-width:min(1000px,100%);
+  max-height:82vh;
+  border-radius:28px;
+  box-shadow:0 40px 100px rgba(0,0,0,.5);
+  animation:zoomIn .35s var(--ease);
+}
+
+.lightbox-close{
+  position:absolute;
+  top:24px;
+  right:24px;
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.1);
+  color:#fff;
+  font-size:24px;
+}
+
+@keyframes zoomIn{
+  from{opacity:0;transform:scale(.86)}
+  to{opacity:1;transform:scale(1)}
+}
+
+.assistant{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  width:390px;
+  max-width:calc(100% - 36px);
+  z-index:6500;
+  transform:translateY(calc(100% + 30px));
+  transition:.55s var(--ease);
+}
+
+.assistant.open{
+  transform:translateY(0);
+}
+
+.assistant-box{
+  border-radius:32px;
+  overflow:hidden;
+  background:rgba(255,255,255,.9);
+  border:1px solid rgba(255,255,255,.9);
+  backdrop-filter:blur(24px);
+  box-shadow:0 30px 100px rgba(20,20,20,.18);
+}
+
+.assistant-head{
+  padding:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:linear-gradient(135deg,#111,#3c3021);
+  color:white;
+}
+
+.assistant-head strong{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.assistant-dot{
+  width:11px;
+  height:11px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 15px var(--green);
+}
+
+.close-ai{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.1);
+  color:white;
+}
+
+.chat{
+  padding:18px;
+  height:280px;
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.msg{
+  padding:12px 14px;
+  border-radius:18px;
+  max-width:88%;
+  font-size:14px;
+  line-height:1.55;
+}
+
+.bot{
+  background:#f4eddf;
+  align-self:flex-start;
+}
+
+.user{
+  background:#111;
+  color:white;
+  align-self:flex-end;
+}
+
+.quick{
+  padding:0 18px 16px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.quick button{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:999px;
+  padding:9px 12px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.chat-form{
+  display:flex;
+  gap:8px;
+  padding:14px;
+  border-top:1px solid var(--line);
+}
+
+.chat-form input{
+  flex:1;
+  border:1px solid var(--line);
+  outline:0;
+  border-radius:999px;
+  padding:13px 14px;
+  font-weight:700;
+}
+
+.chat-form button{
+  border:0;
+  border-radius:999px;
+  padding:0 16px;
+  background:var(--accent);
+  color:white;
+  font-weight:950;
+}
+
+.floating-ai{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:6300;
+  width:66px;
+  height:66px;
+  border-radius:50%;
+  border:0;
+  background:linear-gradient(135deg,#111,#3b3021);
+  color:white;
+  font-size:24px;
+  box-shadow:0 24px 60px rgba(17,17,17,.25);
+  transition:.35s var(--ease);
+}
+
+.floating-ai:hover{
+  transform:translateY(-6px) rotate(-6deg);
+}
+
+.assistant.open + .floating-ai{
+  opacity:0;
+  pointer-events:none;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1120px){
+  .home-shell,
+  .taste-grid,
+  .journey-grid,
+  .reserve-box{
+    grid-template-columns:1fr;
+  }
+
+  .home-shell{
+    min-height:auto;
+  }
+
+  .home-stage{
+    min-height:600px;
+  }
+
+  .home-dock{
+    grid-template-columns:1fr;
+  }
+
+  .menu-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .footer-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .reserve-box{
+    background:
+      linear-gradient(135deg,rgba(17,17,17,.92),rgba(62,48,27,.88)),
+      url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600") center/cover;
+  }
+}
+
+@media(max-width:860px){
+  body{
+    cursor:auto;
+  }
+
+  button,
+  a,
+  .mood-pill,
+  .gallery-item{
+    cursor:pointer;
+  }
+
+  .cursor-dot,
+  .cursor-ring{
+    display:none;
+  }
+
+  .nav{
+    height:68px;
+    top:10px;
+    width:calc(100% - 22px);
+  }
+
+  .nav-links,
+  .nav-ai{
+    display:none;
+  }
+
+  .hamburger{
+    display:block;
+  }
+
+  .section{
+    padding:86px 16px;
+  }
+
+  .section-head{
+    display:block;
+  }
+
+  .section-text{
+    margin-top:22px;
+  }
+
+  .home{
+    padding:112px 16px 56px;
+  }
+
+  .home-title{
+    font-size:clamp(50px,15vw,82px);
+  }
+
+  .home-actions{
+    flex-direction:column;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  .home-stage{
+    min-height:540px;
+  }
+
+  .stage-card{
+    inset:28px 0 32px;
+  }
+
+  .plate{
+    width:86%;
+  }
+
+  .pair-card{
+    width:230px;
+    right:4px;
+  }
+
+  .ai-score{
+    width:270px;
+  }
+
+  .chip-b{
+    display:none;
+  }
+
+  .scan-result{
+    grid-template-columns:1fr;
+  }
+
+  .result-img{
+    height:320px;
+  }
+
+  .gallery-grid{
+    grid-template-columns:1fr;
+    grid-template-rows:auto;
+  }
+
+  .gallery-item,
+  .gallery-item:first-child{
+    height:280px;
+    grid-row:auto;
+  }
+
+  .testimonial{
+    grid-template-columns:1fr;
+    padding:42px 24px 96px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .field.full{
+    grid-column:auto;
+  }
+
+  .reserve-copy{
+    padding:36px 24px 8px;
+  }
+
+  .reserve-form{
+    margin:20px;
+  }
+}
+
+@media(max-width:600px){
+  .menu-grid,
+  .footer-grid{
+    grid-template-columns:1fr;
+  }
+
+  .home-stage{
+    min-height:500px;
+  }
+
+  .float-chip{
+    font-size:12px;
+    padding:10px 12px;
+  }
+
+  .chip-a{
+    top:54px;
+  }
+
+  .chip-c{
+    right:4px;
+    bottom:126px;
+  }
+
+  .pair-card{
+    width:210px;
+    top:20px;
+  }
+
+  .ai-score{
+    left:0;
+    bottom:30px;
+    width:250px;
+  }
+
+  .dock-card{
+    grid-template-columns:1fr;
+  }
+
+  .result-stats{
+    grid-template-columns:1fr;
+  }
+
+  .footer-bottom{
+    display:block;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-core"></div>
+  <h2>NEURA TABLE</h2>
+  <p>Full Home Page</p>
+</div>
+
+<canvas id="neuraCanvas"></canvas>
+<div class="grain"></div>
+<div class="progress" id="progress"></div>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAVBAR -->
+<nav class="nav" id="nav">
+  <a href="index.html" class="logo magnetic">
+    <span class="logo-icon"></span>
+    <span>
+      <strong>NEURA TABLE</strong>
+      <span>Restaurant</span>
+    </span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="taste.html">Taste</a>
+       <a href="scanner.html">Scanner</a>
+     <a href="dishes.html">Dishes</a>
+    <a href="pairing.html">Pairing</a>
+    <a href="reserve.html">Reserve</a>
+    <a href="menu.html">Menu</a>
+    <a href="journey.html">Journey</a>
+   <a href="chefs.html">Chefs</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="nav-actions">
+    <button class="nav-ai magnetic" id="openAssistantTop">Ask Assistant</button>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-panel" id="mobilePanel">
+  <div class="mobile-links">
+    <a href="index.html" class="mobile-link">Home</a>
+    <a href="taste.html" class="mobile-link">Taste</a>
+    <a href="scanner.html" class="mobile-link">Scanner</a>
+    <a href="dishes.html" class="mobile-link">Dishes</a>
+    <a href="pairing.html" class="mobile-link">Pairing</a>
+    <a href="reserve.html" class="mobile-link">Reserve</a>
+    <a href="menu.html" class="mobile-link">Menu</a>
+    <a href="journey.html" class="mobile-link">journey</a>
+    <a href="chefs.html" class="mobile-link">Chefs</a>
+    <a href="contact.html" class="mobile-link">Contact</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<main class="home" id="home">
+  <div class="home-shell">
+
+    <section class="home-copy">
+      <div class="badge reveal">Assistant B · Full Light AI Dining</div>
+
+      <h1 class="home-title reveal" style="transition-delay:.08s">
+        Your table is ready in the
+        <span>future of flavor.</span>
+      </h1>
+
+      <p class="home-text reveal" style="transition-delay:.16s">
+        A complete luxury restaurant homepage where AI reads your mood, recommends the perfect plate,
+        and creates a dining atmosphere that feels
+        <span class="typed" id="typedWord">personal</span>.
+      </p>
+
+      <div class="home-actions reveal" style="transition-delay:.24s">
+        <a href="#taste" class="btn btn-dark magnetic">Start Taste Scan →</a>
+        <a href="#menu" class="btn btn-gold magnetic">Preview Menu ✨</a>
+        <a href="#reserve" class="btn btn-white magnetic">Reserve Table</a>
+      </div>
+
+      <div class="mood-board reveal" style="transition-delay:.32s">
+        <div class="mood-top">
+          <strong>Choose your dining mood</strong>
+          <span>Hero changes live</span>
+        </div>
+
+        <div class="mood-pills">
+          <button class="mood-pill active" data-index="0">🌿 Fresh</button>
+          <button class="mood-pill" data-index="1">🌹 Romantic</button>
+          <button class="mood-pill" data-index="2">🔥 Bold</button>
+          <button class="mood-pill" data-index="3">🍫 Sweet</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-stage reveal" style="transition-delay:.22s">
+      <div class="stage-card" id="stageCard"></div>
+
+      <div class="plate">
+        <img id="dishImage" src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=900" alt="AI selected dish">
+      </div>
+
+      <div class="float-chip chip-a">
+        <b id="chipIconA">🌿</b>
+        <span id="chipTextA">Fresh herbs</span>
+      </div>
+
+      <div class="float-chip chip-b">
+        <b id="chipIconB">🍋</b>
+        <span id="chipTextB">Citrus balance</span>
+      </div>
+
+      <div class="float-chip chip-c">
+        <b id="chipIconC">🍷</b>
+        <span id="chipTextC">Wine pairing</span>
+      </div>
+
+      <div class="pair-card">
+        <small>Recommended pairing</small>
+        <h3 id="pairTitle">Yuzu Sparkling Wine</h3>
+        <p id="pairDesc">Crisp bubbles with citrus aroma and clean mineral finish.</p>
+      </div>
+
+      <div class="ai-score">
+        <div class="score-head">
+          <strong>AI Taste Match</strong>
+          <span class="score-number" id="scoreNumber">96%</span>
+        </div>
+        <p class="score-desc" id="dishDesc">
+          A light seafood plate with miso citrus glaze, jasmine foam, and a calm elegant finish.
+        </p>
+        <div class="score-line">
+          <span id="scoreLine"></span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <section class="home-dock">
+    <div class="dock-card reveal">
+      <div class="dock-icon">🧠</div>
+      <div>
+        <h3>AI Taste Memory</h3>
+        <p>Remembers spice, texture, allergies, and favorite dishes for your next visit.</p>
+      </div>
+    </div>
+
+    <div class="dock-card reveal" style="transition-delay:.08s">
+      <div class="dock-icon">💡</div>
+      <div>
+        <h3>Adaptive Atmosphere</h3>
+        <p>Lighting and sound shift softly to match the mood of your table.</p>
+      </div>
+    </div>
+
+    <div class="dock-card reveal" style="transition-delay:.16s">
+      <div class="dock-icon">🍷</div>
+      <div>
+        <h3>Smart Pairing</h3>
+        <p>Food, drinks, aroma, and timing are intelligently balanced for every guest.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- TASTE AI -->
+<section class="section taste" id="taste">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">AI Taste Scanner</div>
+        <h2 class="section-title reveal">Let the system find <span>your perfect plate.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        Choose your mood, diet, and spice level. NEURA simulates a personalized dish recommendation instantly.
+      </p>
+    </div>
+
+    <div class="taste-grid">
+      <div class="scan-panel reveal">
+        <h3>Personal Flavor Console</h3>
+        <p>Our AI-style engine reads your preferences and transforms them into a dish suggestion.</p>
+
+        <div class="scan-options">
+          <div class="scan-field">
+            <label>Mood</label>
+            <select id="scanMood">
+              <option value="fresh">Fresh & Light</option>
+              <option value="romantic">Romantic</option>
+              <option value="bold">Bold & Powerful</option>
+              <option value="sweet">Sweet Luxury</option>
+            </select>
+          </div>
+
+          <div class="scan-field">
+            <label>Diet Style</label>
+            <select id="scanDiet">
+              <option value="any">Anything</option>
+              <option value="seafood">Seafood</option>
+              <option value="meat">Meat Lover</option>
+              <option value="vegetarian">Vegetarian</option>
+              <option value="dessert">Dessert</option>
+            </select>
+          </div>
+
+          <div class="scan-field">
+            <label>Spice Level</label>
+            <div class="range-row">
+              Mild
+              <input id="scanSpice" type="range" min="1" max="5" value="3">
+              Wild
+            </div>
+          </div>
+
+          <button class="btn btn-dark magnetic" id="scanBtn">Generate Recommendation ✨</button>
+        </div>
+      </div>
+
+      <div class="scan-result reveal">
+        <div class="result-img">
+          <img id="scanImg" src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=900" alt="AI recommendation">
+        </div>
+
+        <div class="result-content">
+          <span class="match">● 98% Taste Match</span>
+          <h3 id="scanTitle">AI Sea Bass</h3>
+          <p id="scanDesc">
+            A bright seafood plate with citrus miso glaze, jasmine foam, yuzu herb aroma, and elegant lightness.
+          </p>
+
+          <div class="result-stats">
+            <div class="r-stat">
+              <strong id="statAroma">94%</strong>
+              <span>Aroma</span>
+            </div>
+            <div class="r-stat">
+              <strong id="statBalance">97%</strong>
+              <span>Balance</span>
+            </div>
+            <div class="r-stat">
+              <strong id="statMood">96%</strong>
+              <span>Mood</span>
+            </div>
+          </div>
+
+          <button class="btn btn-gold magnetic" id="saveScan" style="margin-top:28px;width:max-content">
+            Save to My Table
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU PREVIEW -->
+<section class="section menu-preview" id="menu">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Signature Menu Preview</div>
+        <h2 class="section-title reveal">Bright plates with <span>intelligent flavor.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        Explore a preview of NEURA’s home menu. Filter categories and add favorites to your virtual table.
+      </p>
+    </div>
+
+    <div class="menu-tabs reveal">
+      <button class="menu-tab active" data-filter="all">All</button>
+      <button class="menu-tab" data-filter="starter">Starters</button>
+      <button class="menu-tab" data-filter="main">Mains</button>
+      <button class="menu-tab" data-filter="dessert">Desserts</button>
+      <button class="menu-tab" data-filter="drink">Drinks</button>
+    </div>
+
+    <div class="menu-grid">
+      <article class="menu-card reveal" data-cat="starter">
+        <div class="menu-img">
+          <img src="https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=700" alt="Golden Burrata">
+        </div>
+        <div class="menu-body">
+          <h3>Golden Burrata</h3>
+          <p>Heirloom tomato, basil oil, balsamic pearls, pine dust.</p>
+          <div class="menu-bottom">
+            <span class="price">$22</span>
+            <button class="add-btn" data-name="Golden Burrata">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card reveal" data-cat="main">
+        <div class="menu-img">
+          <img src="https://images.unsplash.com/photo-1558030006-450675393462?w=700" alt="Solar Wagyu">
+        </div>
+        <div class="menu-body">
+          <h3>Solar Wagyu</h3>
+          <p>Black garlic jus, saffron potato silk, smoked sea salt.</p>
+          <div class="menu-bottom">
+            <span class="price">$88</span>
+            <button class="add-btn" data-name="Solar Wagyu">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card reveal" data-cat="main">
+        <div class="menu-img">
+          <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=700" alt="AI Sea Bass">
+        </div>
+        <div class="menu-body">
+          <h3>AI Sea Bass</h3>
+          <p>Miso citrus glaze, jasmine foam, bok choy, yuzu aroma.</p>
+          <div class="menu-bottom">
+            <span class="price">$54</span>
+            <button class="add-btn" data-name="AI Sea Bass">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card reveal" data-cat="starter">
+        <div class="menu-img">
+          <img src="https://images.unsplash.com/photo-1541014741259-de529411b96a?w=700" alt="Crystal Tuna">
+        </div>
+        <div class="menu-body">
+          <h3>Crystal Tuna</h3>
+          <p>Yellowfin tuna, avocado glass, sesame ginger mist.</p>
+          <div class="menu-bottom">
+            <span class="price">$29</span>
+            <button class="add-btn" data-name="Crystal Tuna">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card reveal" data-cat="dessert">
+        <div class="menu-img">
+          <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=700" alt="Chocolate Sphere">
+        </div>
+        <div class="menu-body">
+          <h3>Neural Chocolate</h3>
+          <p>Valrhona shell, molten vanilla, pistachio crumble.</p>
+          <div class="menu-bottom">
+            <span class="price">$18</span>
+            <button class="add-btn" data-name="Neural Chocolate">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card reveal" data-cat="drink">
+        <div class="menu-img">
+          <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=700" alt="Lumina Elixir">
+        </div>
+        <div class="menu-body">
+          <h3>Lumina Elixir</h3>
+          <p>Champagne, elderflower, citrus vapor, edible gold.</p>
+          <div class="menu-bottom">
+            <span class="price">$21</span>
+            <button class="add-btn" data-name="Lumina Elixir">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card reveal" data-cat="main">
+        <div class="menu-img">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=700" alt="Duck Confit">
+        </div>
+        <div class="menu-body">
+          <h3>Amber Duck</h3>
+          <p>Cherry gastrique, crisp skin, herb potato, orange glaze.</p>
+          <div class="menu-bottom">
+            <span class="price">$48</span>
+            <button class="add-btn" data-name="Amber Duck">+</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card reveal" data-cat="dessert">
+        <div class="menu-img">
+          <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=700" alt="Creme Brulee">
+        </div>
+        <div class="menu-body">
+          <h3>Vanilla Signal</h3>
+          <p>Crème brûlée, berries, caramel glass, vanilla mist.</p>
+          <div class="menu-bottom">
+            <span class="price">$16</span>
+            <button class="add-btn" data-name="Vanilla Signal">+</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section class="section" id="journey">
+  <div class="container journey-grid">
+    <div class="journey-photo reveal">
+      <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1000" alt="Dining room">
+      <div class="journey-label">
+        <h3>Golden Hour Dining</h3>
+        <p>Soft light, natural textures, elegant plating, and AI-timed service rhythm.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="badge reveal">Dining Journey</div>
+      <h2 class="section-title reveal">A perfect evening in <span>four movements.</span></h2>
+
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-num">01</div>
+          <div>
+            <h3>Arrival Scan</h3>
+            <p>Your preferences, occasion, and atmosphere are tuned as soon as you arrive.</p>
+          </div>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-num">02</div>
+          <div>
+            <h3>AI Menu Match</h3>
+            <p>NEURA suggests dishes and drinks based on your mood and flavor profile.</p>
+          </div>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-num">03</div>
+          <div>
+            <h3>Chef Precision</h3>
+            <p>Human chefs craft every plate while AI supports timing and balance.</p>
+          </div>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-num">04</div>
+          <div>
+            <h3>Memory Saved</h3>
+            <p>Your dining profile improves for next time, making every visit smarter.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="section gallery-section" id="gallery">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Atmosphere Gallery</div>
+        <h2 class="section-title reveal">Light, flavor, <span>and visual poetry.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        A full homepage needs atmosphere. Click any image to open a luxury preview.
+      </p>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1000" alt="Gallery">
+        <div class="gallery-overlay"><span>Open View</span></div>
+      </div>
+
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb51f3a?w=800" alt="Gallery">
+        <div class="gallery-overlay"><span>Open View</span></div>
+      </div>
+
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=800" alt="Gallery">
+        <div class="gallery-overlay"><span>Open View</span></div>
+      </div>
+
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=800" alt="Gallery">
+        <div class="gallery-overlay"><span>Open View</span></div>
+      </div>
+
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=800" alt="Gallery">
+        <div class="gallery-overlay"><span>Open View</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Guest Signals</div>
+        <h2 class="section-title reveal">Loved by humans. <span>Enhanced by AI.</span></h2>
+      </div>
+    </div>
+
+    <div class="test-wrap reveal">
+      <div class="test-track" id="testTrack">
+        <div class="testimonial">
+          <div class="guest">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300" alt="Guest">
+            <h4>Sarah Mitchell</h4>
+            <span>Food Critic</span>
+          </div>
+          <div>
+            <div class="stars">★★★★★</div>
+            <p class="quote">“The AI pairing, light atmosphere, and precision of every dish felt like dining inside the future.”</p>
+          </div>
+        </div>
+
+        <div class="testimonial">
+          <div class="guest">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300" alt="Guest">
+            <h4>James Carter</h4>
+            <span>Verified Guest</span>
+          </div>
+          <div>
+            <div class="stars">★★★★★</div>
+            <p class="quote">“Not just food. It was a complete experience. The AI recommendation gave me exactly what I wanted.”</p>
+          </div>
+        </div>
+
+        <div class="testimonial">
+          <div class="guest">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300" alt="Guest">
+            <h4>Emily Chen</h4>
+            <span>Chef & Founder</span>
+          </div>
+          <div>
+            <div class="stars">★★★★★</div>
+            <p class="quote">“Elegant, intelligent, and deeply human. NEURA proves technology can make dining more emotional.”</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slider-controls">
+        <button class="slider-btn" id="prevTest">‹</button>
+        <button class="slider-btn" id="nextTest">›</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVATION -->
+<section class="section reserve" id="reserve">
+  <div class="container">
+    <div class="reserve-box reveal">
+      <div class="reserve-copy">
+        <div class="badge">Reserve Experience</div>
+        <h2>Book your AI dining table tonight.</h2>
+        <p>
+          Choose your guests, date, and time. NEURA prepares your atmosphere before you arrive.
+        </p>
+      </div>
+
+      <form class="reserve-form" id="reserveForm">
+        <div class="form-grid">
+          <div class="field">
+            <label>Name</label>
+            <input required type="text" placeholder="Your name">
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+            <input required type="email" placeholder="you@example.com">
+          </div>
+
+          <div class="field">
+            <label>Guests</label>
+            <select required>
+              <option value="">Select guests</option>
+              <option>1 Guest</option>
+              <option>2 Guests</option>
+              <option>3 Guests</option>
+              <option>4 Guests</option>
+              <option>5+ Guests</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Date</label>
+            <input required type="date" id="dateInput">
+          </div>
+
+          <div class="field full">
+            <label>Message</label>
+            <textarea placeholder="Occasion, allergies, mood, favorite flavors..."></textarea>
+          </div>
+        </div>
+
+        <button class="btn btn-dark magnetic" style="width:100%;margin-top:18px" type="submit">
+          Confirm Reservation
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="logo">
+        <span class="logo-icon"></span>
+        <span>
+          <strong>NEURA TABLE</strong>
+          <span>AI Restaurant</span>
+        </span>
+      </div>
+      <p>A full light-mode AI restaurant homepage built for emotion, luxury, precision, and unforgettable flavor.</p>
+    </div>
+
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#taste">Taste AI</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#journey">Journey</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Experience</h4>
+      <ul>
+        <li><a href="#">Private Dining</a></li>
+        <li><a href="#">AI Pairing</a></li>
+        <li><a href="#">Chef Table</a></li>
+        <li><a href="#">Events</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Hours</h4>
+      <p>Monday — Sunday</p>
+      <p>5:00 PM — 12:00 AM</p>
+      <p style="margin-top:14px">hello@neuratable.ai</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2025 NEURA TABLE. All rights reserved.</span>
+    <span>Full Assistant B Home Page.</span>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">Added</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">×</button>
+  <img src="" alt="Preview" id="lightboxImg">
+</div>
+
+<!-- AI ASSISTANT -->
+<div class="assistant" id="assistant">
+  <div class="assistant-box">
+    <div class="assistant-head">
+      <strong><span class="assistant-dot"></span> ORI Assistant</strong>
+      <button class="close-ai" id="closeAssistant">×</button>
+    </div>
+
+    <div class="chat" id="chat">
+      <div class="msg bot">
+        Hello, I’m ORI — your AI dining assistant. Tell me your mood and I’ll suggest a perfect plate.
+      </div>
+    </div>
+
+    <div class="quick">
+      <button data-msg="I want something romantic">Romantic</button>
+      <button data-msg="Suggest something fresh">Fresh</button>
+      <button data-msg="I like bold flavors">Bold</button>
+      <button data-msg="I want dessert">Dessert</button>
+    </div>
+
+    <form class="chat-form" id="chatForm">
+      <input id="chatInput" type="text" placeholder="Ask ORI..." autocomplete="off">
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</div>
+
+<button class="floating-ai magnetic" id="openAssistant">🤖</button>
+
+<script>
+/* =====================================================
+   NEURA TABLE — FULL HOME PAGE JAVASCRIPT
+===================================================== */
+
+(function(){
+  "use strict";
+
+  const $ = (s,p=document)=>p.querySelector(s);
+  const $$ = (s,p=document)=>[...p.querySelectorAll(s)];
+
+  /* Loader */
+  const loader = $("#loader");
+  window.addEventListener("load",()=>{
+    setTimeout(()=>loader.classList.add("hide"),850);
+  });
+  setTimeout(()=>loader.classList.add("hide"),2200);
+
+  const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+  /* Cursor */
+  const dot = $("#cursorDot");
+  const ring = $("#cursorRing");
+  let mx=0,my=0,rx=0,ry=0;
+
+  if(!isTouch){
+    window.addEventListener("mousemove",e=>{
+      mx=e.clientX;
+      my=e.clientY;
+      dot.style.left=mx+"px";
+      dot.style.top=my+"px";
+    });
+
+    function cursorLoop(){
+      rx += (mx-rx)*.14;
+      ry += (my-ry)*.14;
+      ring.style.left=rx+"px";
+      ring.style.top=ry+"px";
+      requestAnimationFrame(cursorLoop);
+    }
+
+    cursorLoop();
+
+    $$("a,button,.dock-card,.stage-card,.mood-pill,.gallery-item,.menu-card,.step").forEach(el=>{
+      el.addEventListener("mouseenter",()=>ring.classList.add("hover"));
+      el.addEventListener("mouseleave",()=>ring.classList.remove("hover"));
+    });
+  }
+
+  /* Canvas AI Background */
+  const canvas = $("#neuraCanvas");
+  const ctx = canvas.getContext("2d");
+  let w,h,nodes=[],pointer={x:-999,y:-999};
+
+  function resize(){
+    w=canvas.width=window.innerWidth*devicePixelRatio;
+    h=canvas.height=window.innerHeight*devicePixelRatio;
+    canvas.style.width=window.innerWidth+"px";
+    canvas.style.height=window.innerHeight+"px";
+
+    const count = Math.min(88, Math.max(38, Math.floor(window.innerWidth/18)));
+    nodes = Array.from({length:count},()=>({
+      x:Math.random()*w,
+      y:Math.random()*h,
+      vx:(Math.random()-.5)*.32*devicePixelRatio,
+      vy:(Math.random()-.5)*.32*devicePixelRatio,
+      r:(Math.random()*2+1)*devicePixelRatio
+    }));
+  }
+
+  resize();
+  window.addEventListener("resize",resize);
+
+  window.addEventListener("mousemove",e=>{
+    pointer.x=e.clientX*devicePixelRatio;
+    pointer.y=e.clientY*devicePixelRatio;
+  });
+
+  function canvasLoop(){
+    ctx.clearRect(0,0,w,h);
+
+    for(const n of nodes){
+      n.x+=n.vx;
+      n.y+=n.vy;
+
+      if(n.x<0 || n.x>w) n.vx*=-1;
+      if(n.y<0 || n.y>h) n.vy*=-1;
+
+      const dx=pointer.x-n.x;
+      const dy=pointer.y-n.y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+
+      if(d<160*devicePixelRatio){
+        n.x-=dx*.006;
+        n.y-=dy*.006;
+      }
+
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle="rgba(201,154,46,.32)";
+      ctx.fill();
+    }
+
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const a=nodes[i],b=nodes[j];
+        const dx=a.x-b.x;
+        const dy=a.y-b.y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        const max=130*devicePixelRatio;
+
+        if(d<max){
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y);
+          ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle=`rgba(201,154,46,${(1-d/max)*.16})`;
+          ctx.lineWidth=.7*devicePixelRatio;
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(canvasLoop);
+  }
+
+  canvasLoop();
+
+  /* Navbar and Progress */
+  const nav = $("#nav");
+  const progress = $("#progress");
+
+  function scrollUI(){
+    const y=window.scrollY;
+    nav.classList.toggle("scrolled",y>35);
+
+    const max=document.documentElement.scrollHeight-window.innerHeight;
+    const pct=max>0 ? y/max*100 : 0;
+    progress.style.width=pct+"%";
+  }
+
+  window.addEventListener("scroll",scrollUI);
+  scrollUI();
+
+  /* Mobile Menu */
+  const hamburger = $("#hamburger");
+  const mobilePanel = $("#mobilePanel");
+
+  hamburger.addEventListener("click",()=>{
+    hamburger.classList.toggle("active");
+    mobilePanel.classList.toggle("active");
+    document.body.classList.toggle("lock", mobilePanel.classList.contains("active"));
+  });
+
+  $$(".mobile-link").forEach(link=>{
+    link.addEventListener("click",()=>{
+      hamburger.classList.remove("active");
+      mobilePanel.classList.remove("active");
+      document.body.classList.remove("lock");
+    });
+  });
+
+  /* Smooth Anchor */
+  $$('a[href^="#"]').forEach(a=>{
+    a.addEventListener("click",e=>{
+      const target=$(a.getAttribute("href"));
+      if(target){
+        e.preventDefault();
+        window.scrollTo({
+          top:target.offsetTop-90,
+          behavior:"smooth"
+        });
+      }
+    });
+  });
+
+  /* Reveal */
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("show");
+        io.unobserve(entry.target);
+      }
+    });
+  },{threshold:.14});
+
+  $$(".reveal").forEach(el=>io.observe(el));
+
+  /* Magnetic */
+  if(!isTouch){
+    $$(".magnetic").forEach(el=>{
+      el.addEventListener("mousemove",e=>{
+        const r=el.getBoundingClientRect();
+        const x=e.clientX-r.left-r.width/2;
+        const y=e.clientY-r.top-r.height/2;
+        el.style.transform=`translate(${x*.16}px,${y*.16}px)`;
+      });
+      el.addEventListener("mouseleave",()=>{
+        el.style.transform="";
+      });
+    });
+  }
+
+  /* Hero Tilt */
+  const stage = $("#stageCard");
+
+  if(!isTouch){
+    stage.addEventListener("mousemove",e=>{
+      const r=stage.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-.5;
+      const y=(e.clientY-r.top)/r.height-.5;
+      stage.style.transform=`perspective(1000px) rotateX(${y*-5}deg) rotateY(${x*5}deg)`;
+    });
+
+    stage.addEventListener("mouseleave",()=>{
+      stage.style.transform="";
+    });
+  }
+
+  /* Typed Words */
+  const typed = $("#typedWord");
+  const words = ["personal","cinematic","intelligent","luxurious","alive"];
+  let wi=0;
+
+  function typeWord(){
+    const word=words[wi];
+    typed.textContent="";
+    let i=0;
+
+    const timer=setInterval(()=>{
+      typed.textContent+=word[i];
+      i++;
+      if(i>=word.length){
+        clearInterval(timer);
+        setTimeout(()=>{
+          wi=(wi+1)%words.length;
+          typeWord();
+        },1500);
+      }
+    },75);
+  }
+
+  typeWord();
+
+  /* Hero Mood System */
+  const moodData = [
+    {
+      name:"Fresh",
+      accent:"#35a878",
+      soft:"#e8fff4",
+      img:"https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=900",
+      score:96,
+      desc:"A light seafood plate with miso citrus glaze, jasmine foam, and a calm elegant finish.",
+      pair:"Yuzu Sparkling Wine",
+      pairDesc:"Crisp bubbles with citrus aroma and clean mineral finish.",
+      chips:["🌿","Fresh herbs","🍋","Citrus balance","🍷","Wine pairing"]
+    },
+    {
+      name:"Romantic",
+      accent:"#ee7d9b",
+      soft:"#ffeaf0",
+      img:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=900",
+      score:98,
+      desc:"A warm candlelight tasting plate with silky sauce, tender texture, and floral aroma.",
+      pair:"Rose Champagne",
+      pairDesc:"Soft berry notes, romantic sparkle, and elegant sweetness.",
+      chips:["🌹","Rose aroma","🕯️","Candle mood","🥂","Champagne match"]
+    },
+    {
+      name:"Bold",
+      accent:"#ff9457",
+      soft:"#fff0e7",
+      img:"https://images.unsplash.com/photo-1558030006-450675393462?w=900",
+      score:94,
+      desc:"A powerful flame-grilled wagyu plate with black garlic jus and smoked sea salt.",
+      pair:"Oak Barrel Red",
+      pairDesc:"Deep tannins, dark fruit, and smoky oak structure.",
+      chips:["🔥","Charred flavor","🧄","Black garlic","🍷","Bold red wine"]
+    },
+    {
+      name:"Sweet",
+      accent:"#c99a2e",
+      soft:"#fff0c3",
+      img:"https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=900",
+      score:97,
+      desc:"A golden chocolate sphere with molten vanilla center, pistachio crumble, and soft cream.",
+      pair:"Vanilla Espresso",
+      pairDesc:"Rich espresso with vanilla cream and caramel warmth.",
+      chips:["🍫","Chocolate core","✨","Gold shimmer","☕","Espresso pair"]
+    }
+  ];
+
+  const pills = $$(".mood-pill");
+  const dishImage = $("#dishImage");
+  const scoreNumber = $("#scoreNumber");
+  const scoreLine = $("#scoreLine");
+  const dishDesc = $("#dishDesc");
+  const pairTitle = $("#pairTitle");
+  const pairDesc = $("#pairDesc");
+
+  const chipIconA = $("#chipIconA");
+  const chipTextA = $("#chipTextA");
+  const chipIconB = $("#chipIconB");
+  const chipTextB = $("#chipTextB");
+  const chipIconC = $("#chipIconC");
+  const chipTextC = $("#chipTextC");
+
+  let activeMood = 0;
+  let userSelected = false;
+
+  function typeDescription(text){
+    dishDesc.textContent="";
+    let i=0;
+    const t=setInterval(()=>{
+      dishDesc.textContent+=text[i];
+      i++;
+      if(i>=text.length) clearInterval(t);
+    },14);
+  }
+
+  function animateScore(num){
+    let start=0;
+    const duration=850;
+    const startTime=performance.now();
+
+    function step(now){
+      const p=Math.min((now-startTime)/duration,1);
+      const eased=1-Math.pow(1-p,3);
+      const current=Math.floor(start+(num-start)*eased);
+      scoreNumber.textContent=current+"%";
+      scoreLine.style.width=current+"%";
+      if(p<1) requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  function setMood(index){
+    const data=moodData[index];
+    activeMood=index;
+
+    document.documentElement.style.setProperty("--accent",data.accent);
+    document.documentElement.style.setProperty("--accent-soft",data.soft);
+
+    pills.forEach(p=>p.classList.remove("active"));
+    pills[index].classList.add("active");
+
+    dishImage.style.opacity="0";
+    dishImage.style.transform="scale(.96) rotate(-3deg)";
+
+    setTimeout(()=>{
+      dishImage.src=data.img;
+      dishImage.style.opacity="1";
+      dishImage.style.transform="";
+    },220);
+
+    pairTitle.textContent=data.pair;
+    pairDesc.textContent=data.pairDesc;
+
+    chipIconA.textContent=data.chips[0];
+    chipTextA.textContent=data.chips[1];
+
+    chipIconB.textContent=data.chips[2];
+    chipTextB.textContent=data.chips[3];
+
+    chipIconC.textContent=data.chips[4];
+    chipTextC.textContent=data.chips[5];
+
+    typeDescription(data.desc);
+    animateScore(data.score);
+  }
+
+  pills.forEach((pill,index)=>{
+    pill.addEventListener("click",()=>{
+      userSelected=true;
+      setMood(index);
+    });
+  });
+
+  setTimeout(()=>setMood(0),650);
+
+  setInterval(()=>{
+    if(userSelected) return;
+    setMood((activeMood+1)%moodData.length);
+  },6500);
+
+  /* Toast */
+  function toast(message){
+    const t=$("#toast");
+    t.textContent=message;
+    t.classList.add("show");
+    clearTimeout(toast.timer);
+    toast.timer=setTimeout(()=>t.classList.remove("show"),2600);
+  }
+
+  /* Taste Scanner */
+  const scanDishes = [
+    {
+      title:"AI Sea Bass",
+      diet:"seafood",
+      moods:["fresh","romantic"],
+      img:"https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=900",
+      desc:"A bright seafood plate with citrus miso glaze, jasmine foam, yuzu herb aroma, and elegant lightness."
+    },
+    {
+      title:"Solar Wagyu",
+      diet:"meat",
+      moods:["bold","romantic"],
+      img:"https://images.unsplash.com/photo-1558030006-450675393462?w=900",
+      desc:"A powerful premium wagyu experience with black garlic jus, saffron potato silk, and smoked salt depth."
+    },
+    {
+      title:"Golden Burrata",
+      diet:"vegetarian",
+      moods:["fresh"],
+      img:"https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=900",
+      desc:"Creamy burrata with heirloom tomatoes, basil oil, balsamic pearls, and a soft golden vegetarian balance."
+    },
+    {
+      title:"Neural Chocolate Sphere",
+      diet:"dessert",
+      moods:["sweet","romantic"],
+      img:"https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=900",
+      desc:"A theatrical dessert sphere with molten vanilla core, Valrhona chocolate, pistachio crumble, and gold shimmer."
+    }
+  ];
+
+  const scanImg=$("#scanImg");
+  const scanTitle=$("#scanTitle");
+  const scanDesc=$("#scanDesc");
+
+  function typeScan(text){
+    scanDesc.textContent="";
+    let i=0;
+    const timer=setInterval(()=>{
+      scanDesc.textContent+=text[i];
+      i++;
+      if(i>=text.length) clearInterval(timer);
+    },13);
+  }
+
+  function runScan(){
+    const mood=$("#scanMood").value;
+    const diet=$("#scanDiet").value;
+    const spice=Number($("#scanSpice").value);
+
+    let list=scanDishes.filter(d=>{
+      const dietOk=diet==="any" || d.diet===diet;
+      const moodOk=d.moods.includes(mood);
+      return dietOk && moodOk;
+    });
+
+    if(!list.length){
+      list=scanDishes.filter(d=>diet==="any" || d.diet===diet);
+    }
+
+    if(!list.length) list=scanDishes;
+
+    const pick=list[Math.floor(Math.random()*list.length)];
+
+    scanImg.style.opacity="0";
+    setTimeout(()=>{
+      scanImg.src=pick.img;
+      scanImg.style.opacity="1";
+    },220);
+
+    scanTitle.textContent=pick.title;
+    typeScan(pick.desc);
+
+    $("#statAroma").textContent=Math.min(99,84+spice*3)+"%";
+    $("#statBalance").textContent=Math.min(99,90+Math.floor(Math.random()*8))+"%";
+    $("#statMood").textContent=Math.min(99,88+Math.floor(Math.random()*10))+"%";
+
+    toast("✨ AI recommends " + pick.title);
+  }
+
+  $("#scanBtn").addEventListener("click",runScan);
+  $("#saveScan").addEventListener("click",()=>toast("🍽️ Recommendation saved to your table"));
+
+  /* Menu Filter */
+  const menuTabs=$$(".menu-tab");
+  const menuCards=$$(".menu-card");
+
+  menuTabs.forEach(tab=>{
+    tab.addEventListener("click",()=>{
+      menuTabs.forEach(t=>t.classList.remove("active"));
+      tab.classList.add("active");
+
+      const filter=tab.dataset.filter;
+
+      menuCards.forEach(card=>{
+        const pass=filter==="all" || card.dataset.cat===filter;
+        card.classList.toggle("hide",!pass);
+      });
+    });
+  });
+
+  $$(".add-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      toast("🍽️ " + btn.dataset.name + " added to your table");
+    });
+  });
+
+  /* Gallery Lightbox */
+  const lightbox=$("#lightbox");
+  const lightboxImg=$("#lightboxImg");
+
+  $$(".gallery-item").forEach(item=>{
+    item.addEventListener("click",()=>{
+      const img=$("img",item);
+      lightboxImg.src=img.src;
+      lightbox.classList.add("show");
+      document.body.classList.add("lock");
+    });
+  });
+
+  function closeLightbox(){
+    lightbox.classList.remove("show");
+    document.body.classList.remove("lock");
+  }
+
+  $("#lightboxClose").addEventListener("click",closeLightbox);
+  lightbox.addEventListener("click",e=>{
+    if(e.target===lightbox) closeLightbox();
+  });
+
+  /* Testimonials */
+  const testTrack=$("#testTrack");
+  const slides=$$(".testimonial");
+  let slide=0;
+
+  function goSlide(i){
+    slide=(i+slides.length)%slides.length;
+    testTrack.style.transform=`translateX(-${slide*100}%)`;
+  }
+
+  $("#nextTest").addEventListener("click",()=>goSlide(slide+1));
+  $("#prevTest").addEventListener("click",()=>goSlide(slide-1));
+
+  setInterval(()=>goSlide(slide+1),6500);
+
+  /* Reservation */
+  const dateInput=$("#dateInput");
+  if(dateInput){
+    dateInput.min=new Date().toISOString().split("T")[0];
+  }
+
+  $("#reserveForm").addEventListener("submit",e=>{
+    e.preventDefault();
+    const btn=e.target.querySelector("button[type='submit']");
+    const old=btn.textContent;
+
+    btn.textContent="Confirming with AI...";
+    btn.disabled=true;
+
+    setTimeout(()=>{
+      toast("🎉 Reservation confirmed. Welcome to NEURA TABLE.");
+      btn.textContent="Reservation Confirmed ✓";
+      e.target.reset();
+
+      setTimeout(()=>{
+        btn.textContent=old;
+        btn.disabled=false;
+      },2200);
+    },1200);
+  });
+
+  /* AI Assistant */
+  const assistant=$("#assistant");
+  const openAssistant=$("#openAssistant");
+  const openAssistantTop=$("#openAssistantTop");
+  const closeAssistant=$("#closeAssistant");
+  const chat=$("#chat");
+  const chatForm=$("#chatForm");
+  const chatInput=$("#chatInput");
+
+  function openAI(){
+    assistant.classList.add("open");
+  }
+
+  function closeAI(){
+    assistant.classList.remove("open");
+  }
+
+  openAssistant.addEventListener("click",openAI);
+  openAssistantTop.addEventListener("click",openAI);
+  closeAssistant.addEventListener("click",closeAI);
+
+  function addMsg(text,type){
+    const div=document.createElement("div");
+    div.className="msg "+type;
+    div.textContent=text;
+    chat.appendChild(div);
+    chat.scrollTop=chat.scrollHeight;
+  }
+
+  function botReply(text){
+    setTimeout(()=>{
+      const lower=text.toLowerCase();
+      let reply;
+
+      if(lower.includes("romantic")){
+        reply="For a romantic table, I suggest the Rose Champagne pairing with our candlelight tasting plate.";
+        setMood(1);
+      }else if(lower.includes("fresh")){
+        reply="Fresh mood detected. I recommend AI Sea Bass with yuzu sparkling wine.";
+        setMood(0);
+      }else if(lower.includes("bold")){
+        reply="Bold flavor profile selected. Solar Wagyu with oak barrel red wine is perfect.";
+        setMood(2);
+      }else if(lower.includes("dessert") || lower.includes("sweet")){
+        reply="Sweet signal received. Try the Golden Chocolate Sphere with vanilla espresso.";
+        setMood(3);
+      }else if(lower.includes("reserve") || lower.includes("book")){
+        reply="Reservation is ready. Scroll to the reservation section and choose your date.";
+      }else{
+        reply="I can help with mood, menu, reservation, wine pairing, or allergies. Try asking for something fresh, bold, romantic, or sweet.";
+      }
+
+      addMsg(reply,"bot");
+    },550);
+  }
+
+  chatForm.addEventListener("submit",e=>{
+    e.preventDefault();
+    const text=chatInput.value.trim();
+    if(!text) return;
+    addMsg(text,"user");
+    chatInput.value="";
+    botReply(text);
+  });
+
+  $$(".quick button").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const msg=btn.dataset.msg;
+      addMsg(msg,"user");
+      botReply(msg);
+    });
+  });
+
+  /* ESC */
+  window.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){
+      closeAI();
+      closeLightbox();
+      hamburger.classList.remove("active");
+      mobilePanel.classList.remove("active");
+      document.body.classList.remove("lock");
+    }
+  });
+
+})();
+</script>
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

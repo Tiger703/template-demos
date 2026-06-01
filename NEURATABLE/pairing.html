@@ -1,0 +1,3025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>NEURA TABLE |  Pairing Page</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* =====================================================
+   NEURA TABLE — PAIRING PAGE ULTRA PRO
+   Unique design different from Scanner / Taste AI / Dishes
+===================================================== */
+
+:root{
+  --bg:#fbfaf4;
+  --paper:#ffffff;
+  --ink:#101010;
+  --muted:#746d62;
+  --line:rgba(20,20,20,.09);
+
+  --gold:#c99a2e;
+  --gold-soft:#fff0c3;
+
+  --wine:#8d2538;
+  --wine-soft:#ffe8ee;
+
+  --green:#35a878;
+  --green-soft:#e9fff5;
+
+  --blue:#6aa9ff;
+  --blue-soft:#eef6ff;
+
+  --rose:#ee7d9b;
+  --rose-soft:#ffeaf1;
+
+  --amber:#d8842c;
+  --amber-soft:#fff1df;
+
+  --violet:#9b7cff;
+  --violet-soft:#f1edff;
+
+  --accent:#8d2538;
+  --accent-soft:#ffe8ee;
+
+  --shadow:0 30px 90px rgba(61,45,8,.13);
+  --shadow-soft:0 18px 45px rgba(61,45,8,.08);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:"Inter",sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 10% 10%, rgba(255,232,238,.70), transparent 30%),
+    radial-gradient(circle at 88% 14%, rgba(255,240,195,.50), transparent 28%),
+    radial-gradient(circle at 72% 92%, rgba(53,168,120,.10), transparent 34%),
+    var(--bg);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+body.lock{
+  overflow:hidden;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input,
+select{
+  font-family:inherit;
+}
+
+button{
+  cursor:none;
+}
+
+img{
+  max-width:100%;
+  display:block;
+}
+
+::selection{
+  background:var(--accent);
+  color:white;
+}
+
+::-webkit-scrollbar{
+  width:10px;
+}
+
+::-webkit-scrollbar-track{
+  background:#efe8d9;
+}
+
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(var(--accent),var(--gold));
+  border-radius:999px;
+}
+
+/* =====================================================
+   BACKGROUND / CURSOR / LOADER
+===================================================== */
+
+#pairingCanvas{
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  pointer-events:none;
+}
+
+.grain{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  opacity:.32;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 500 500' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+}
+
+.progress{
+  position:fixed;
+  top:0;
+  left:0;
+  width:0%;
+  height:4px;
+  z-index:6000;
+  background:linear-gradient(90deg,var(--wine),var(--gold),var(--green),var(--blue));
+}
+
+.cursor-dot,
+.cursor-ring{
+  position:fixed;
+  top:0;
+  left:0;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  border-radius:50%;
+  z-index:9999;
+}
+
+.cursor-dot{
+  width:8px;
+  height:8px;
+  background:var(--accent);
+}
+
+.cursor-ring{
+  width:44px;
+  height:44px;
+  border:1px solid rgba(141,37,56,.65);
+  transition:.25s var(--ease);
+}
+
+.cursor-ring.hover{
+  width:76px;
+  height:76px;
+  background:rgba(141,37,56,.08);
+}
+
+.loader{
+  position:fixed;
+  inset:0;
+  background:#fffaf0;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  transition:.75s var(--ease);
+}
+
+.loader.hide{
+  opacity:0;
+  visibility:hidden;
+}
+
+.loader-glass{
+  width:96px;
+  height:96px;
+  border-radius:28px 28px 48px 48px;
+  position:relative;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.15)),
+    linear-gradient(135deg,var(--wine-soft),var(--wine));
+  box-shadow:
+    0 0 0 16px rgba(141,37,56,.08),
+    0 0 80px rgba(141,37,56,.25);
+  animation:pulse 1.5s ease-in-out infinite;
+}
+
+.loader-glass::before,
+.loader-glass::after{
+  content:"";
+  position:absolute;
+  inset:-22px;
+  border-radius:50%;
+  border:1px solid rgba(141,37,56,.28);
+  animation:spin 4s linear infinite;
+}
+
+.loader-glass::after{
+  inset:-38px;
+  border-style:dashed;
+  animation-duration:7s;
+}
+
+.loader h2{
+  margin-top:34px;
+  font-family:"Playfair Display",serif;
+  font-size:38px;
+  letter-spacing:-.035em;
+}
+
+.loader p{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+  letter-spacing:.35em;
+  text-transform:uppercase;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.07)}
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.nav{
+  position:fixed;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(1220px,calc(100% - 32px));
+  height:76px;
+  z-index:2200;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 14px 0 22px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.82);
+  background:rgba(255,255,255,.62);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  box-shadow:0 20px 70px rgba(60,43,5,.09);
+  transition:.35s var(--ease);
+}
+
+.nav.scrolled{
+  top:10px;
+  height:68px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 20px 80px rgba(60,43,5,.14);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:950;
+}
+
+.logo-icon{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 34% 26%, white 0 13%, transparent 14%),
+    linear-gradient(135deg,var(--accent-soft),var(--accent));
+  box-shadow:0 12px 30px rgba(141,37,56,.24);
+  position:relative;
+}
+
+.logo-icon::after{
+  content:"";
+  position:absolute;
+  inset:-6px;
+  border-radius:50%;
+  border:1px solid rgba(141,37,56,.28);
+}
+
+.logo strong{
+  display:block;
+  font-size:18px;
+  letter-spacing:-.03em;
+}
+
+.logo span:last-child{
+  display:block;
+  margin-top:4px;
+  font-size:10px;
+  color:var(--muted);
+  letter-spacing:.28em;
+  text-transform:uppercase;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.nav-links a{
+  padding:12px 15px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:800;
+  color:#332c22;
+  transition:.3s var(--ease);
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+  background:rgba(141,37,56,.10);
+  color:#000;
+}
+
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.nav-cta{
+  border:0;
+  padding:14px 20px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#111,#3b3021);
+  color:white;
+  font-weight:900;
+  box-shadow:0 16px 34px rgba(17,17,17,.19);
+  transition:.35s var(--ease);
+}
+
+.nav-cta:hover{
+  transform:translateY(-3px);
+}
+
+.saved-mini{
+  position:relative;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  border:0;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(20,20,20,.08);
+  font-size:20px;
+  transition:.3s var(--ease);
+}
+
+.saved-mini:hover{
+  transform:translateY(-3px);
+  background:#fff;
+}
+
+.saved-count{
+  position:absolute;
+  top:-3px;
+  right:-3px;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:var(--wine);
+  color:white;
+  font-size:11px;
+  font-weight:950;
+  display:grid;
+  place-items:center;
+}
+
+.hamburger{
+  display:none;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  border:0;
+  background:#111;
+  position:relative;
+}
+
+.hamburger span{
+  position:absolute;
+  left:14px;
+  width:20px;
+  height:2px;
+  border-radius:4px;
+  background:white;
+  transition:.35s var(--ease);
+}
+
+.hamburger span:nth-child(1){top:17px}
+.hamburger span:nth-child(2){top:23px}
+.hamburger span:nth-child(3){top:29px}
+
+.hamburger.active span:nth-child(1){
+  top:23px;
+  transform:rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2){
+  opacity:0;
+}
+
+.hamburger.active span:nth-child(3){
+  top:23px;
+  transform:rotate(-45deg);
+}
+
+/* MOBILE MENU */
+.mobile-panel{
+  position:fixed;
+  inset:0;
+  z-index:2000;
+  background:rgba(255,250,240,.84);
+  backdrop-filter:blur(32px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform:translateX(100%);
+  transition:.7s var(--ease);
+  overflow:hidden;
+}
+
+.mobile-panel.active{
+  transform:translateX(0);
+}
+
+.mobile-panel::before{
+  content:"PAIR";
+  position:absolute;
+  right:-8vw;
+  bottom:-5vw;
+  font-size:32vw;
+  font-weight:950;
+  color:rgba(141,37,56,.08);
+  line-height:.8;
+}
+
+.mobile-links{
+  position:relative;
+  z-index:2;
+  text-align:center;
+}
+
+.mobile-links a{
+  display:block;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(42px,11vw,86px);
+  font-weight:900;
+  line-height:1.1;
+  opacity:0;
+  transform:translateX(50px);
+  transition:.55s var(--ease);
+}
+
+.mobile-panel.active .mobile-links a{
+  opacity:1;
+  transform:translateX(0);
+}
+
+.mobile-panel.active .mobile-links a:nth-child(1){transition-delay:.12s}
+.mobile-panel.active .mobile-links a:nth-child(2){transition-delay:.2s}
+.mobile-panel.active .mobile-links a:nth-child(3){transition-delay:.28s}
+.mobile-panel.active .mobile-links a:nth-child(4){transition-delay:.36s}
+.mobile-panel.active .mobile-links a:nth-child(5){transition-delay:.44s}
+
+/* =====================================================
+   SHARED
+===================================================== */
+
+.container{
+  width:min(1220px,100%);
+  margin:0 auto;
+}
+
+.section{
+  padding:112px 22px;
+  position:relative;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 15px;
+  border-radius:999px;
+  background:rgba(255,255,255,.68);
+  border:1px solid rgba(255,255,255,.8);
+  box-shadow:var(--shadow-soft);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  color:#775914;
+}
+
+.badge::before{
+  content:"";
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 18px var(--accent);
+}
+
+.section-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:32px;
+  margin-bottom:48px;
+}
+
+.section-title{
+  margin-top:22px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(42px,6vw,78px);
+  line-height:.95;
+  letter-spacing:-.055em;
+}
+
+.section-title span,
+.hero-title span{
+  display:inline-block;
+  background:linear-gradient(120deg,var(--accent),#4d111d 48%,var(--gold));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.section-text{
+  max-width:560px;
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.8;
+}
+
+.btn{
+  border:0;
+  border-radius:999px;
+  padding:15px 22px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-weight:950;
+  transition:.35s var(--ease);
+  position:relative;
+  overflow:hidden;
+}
+
+.btn-dark{
+  background:linear-gradient(135deg,#111,#3b3021);
+  color:#fff;
+  box-shadow:0 20px 42px rgba(17,17,17,.19);
+}
+
+.btn-dark:hover{
+  transform:translateY(-4px);
+  box-shadow:0 28px 65px rgba(17,17,17,.26);
+}
+
+.btn-wine{
+  background:linear-gradient(135deg,var(--wine-soft),var(--wine));
+  color:white;
+  box-shadow:0 20px 42px rgba(141,37,56,.20);
+}
+
+.btn-wine:hover{
+  transform:translateY(-4px);
+  box-shadow:0 28px 65px rgba(141,37,56,.30);
+}
+
+.btn-white{
+  background:rgba(255,255,255,.76);
+  color:#111;
+  border:1px solid var(--line);
+}
+
+.btn-white:hover{
+  background:#fff;
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-soft);
+}
+
+.reveal{
+  opacity:0;
+  transform:translateY(34px);
+  transition:opacity .8s var(--ease), transform .8s var(--ease);
+}
+
+.reveal.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* =====================================================
+   HERO — LIQUID CONSTELLATION
+===================================================== */
+
+.pairing-hero{
+  min-height:100vh;
+  padding:132px 22px 82px;
+  position:relative;
+  overflow:hidden;
+}
+
+.pairing-hero::before{
+  content:"PAIRING";
+  position:absolute;
+  left:50%;
+  top:17%;
+  transform:translateX(-50%);
+  font-size:14vw;
+  font-weight:950;
+  letter-spacing:-.08em;
+  color:rgba(17,17,17,.035);
+  pointer-events:none;
+}
+
+.hero-grid{
+  width:min(1220px,100%);
+  margin:0 auto;
+  min-height:calc(100vh - 220px);
+  display:grid;
+  grid-template-columns:.95fr 1.05fr;
+  gap:44px;
+  align-items:center;
+}
+
+.hero-title{
+  margin-top:22px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(54px,7vw,104px);
+  line-height:.88;
+  letter-spacing:-.07em;
+}
+
+.hero-text{
+  margin-top:26px;
+  max-width:660px;
+  color:var(--muted);
+  font-size:18px;
+  line-height:1.8;
+}
+
+.hero-actions{
+  margin-top:34px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.hero-metrics{
+  margin-top:40px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  max-width:680px;
+}
+
+.metric-card{
+  padding:18px;
+  border-radius:24px;
+  background:rgba(255,255,255,.62);
+  border:1px solid rgba(255,255,255,.86);
+  backdrop-filter:blur(18px);
+  box-shadow:var(--shadow-soft);
+}
+
+.metric-card strong{
+  display:block;
+  font-size:26px;
+  font-weight:950;
+}
+
+.metric-card span{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+/* Different hero visual from previous pages */
+.constellation{
+  min-height:660px;
+  position:relative;
+}
+
+.constellation-shell{
+  position:absolute;
+  inset:30px 0;
+  border-radius:58px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.88),rgba(255,255,255,.42)),
+    radial-gradient(circle at 30% 12%, var(--wine-soft), transparent 36%);
+  border:1px solid rgba(255,255,255,.9);
+  backdrop-filter:blur(24px);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.constellation-shell::before{
+  content:"";
+  position:absolute;
+  width:590px;
+  height:590px;
+  border-radius:50%;
+  border:1px dashed rgba(141,37,56,.28);
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  animation:spin 32s linear infinite;
+}
+
+.glass-stage{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:280px;
+  height:420px;
+  transform:translate(-50%,-50%);
+  z-index:3;
+}
+
+.glass-bowl{
+  position:absolute;
+  left:50%;
+  top:40px;
+  width:190px;
+  height:250px;
+  transform:translateX(-50%);
+  border-radius:48% 48% 42% 42%;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.88),rgba(255,255,255,.12)),
+    linear-gradient(180deg,rgba(141,37,56,.92),rgba(141,37,56,.62));
+  box-shadow:
+    inset 20px 0 35px rgba(255,255,255,.18),
+    inset -20px 0 35px rgba(0,0,0,.08),
+    0 30px 70px rgba(141,37,56,.20);
+  overflow:hidden;
+}
+
+.wine-wave{
+  position:absolute;
+  left:-20%;
+  right:-20%;
+  bottom:0;
+  height:58%;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.28),transparent 16%),
+    linear-gradient(180deg,#a72940,#5f1323);
+  animation:wave 5s ease-in-out infinite;
+}
+
+@keyframes wave{
+  0%,100%{transform:translateY(0) rotate(0)}
+  50%{transform:translateY(-8px) rotate(1.4deg)}
+}
+
+.glass-stem{
+  position:absolute;
+  left:50%;
+  top:282px;
+  width:22px;
+  height:92px;
+  transform:translateX(-50%);
+  background:linear-gradient(90deg,rgba(255,255,255,.4),rgba(255,255,255,.12));
+  border-radius:999px;
+}
+
+.glass-base{
+  position:absolute;
+  left:50%;
+  bottom:20px;
+  width:160px;
+  height:34px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:rgba(255,255,255,.34);
+  box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+
+.orbit-pair{
+  position:absolute;
+  width:210px;
+  padding:14px;
+  border-radius:26px;
+  background:rgba(255,255,255,.84);
+  border:1px solid rgba(255,255,255,.94);
+  backdrop-filter:blur(20px);
+  box-shadow:var(--shadow-soft);
+  z-index:5;
+  animation:floatPair 5s ease-in-out infinite;
+}
+
+.orbit-pair.one{
+  left:0;
+  top:105px;
+}
+
+.orbit-pair.two{
+  right:0;
+  top:235px;
+  animation-delay:.5s;
+}
+
+.orbit-pair.three{
+  left:44px;
+  bottom:76px;
+  animation-delay:1s;
+}
+
+@keyframes floatPair{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-14px)}
+}
+
+.orbit-pair small{
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+}
+
+.orbit-pair h4{
+  margin-top:6px;
+  font-size:16px;
+  letter-spacing:-.035em;
+}
+
+.orbit-pair p{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+/* =====================================================
+   PAIRING LAB — UNIQUE BLEND BOARD
+===================================================== */
+
+.pairing-lab{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.72)),
+    radial-gradient(circle at 16% 32%, rgba(141,37,56,.15), transparent 32%),
+    radial-gradient(circle at 86% 70%, rgba(201,154,46,.18), transparent 32%);
+}
+
+.blend-board{
+  display:grid;
+  grid-template-columns:.75fr 1.25fr;
+  gap:24px;
+  align-items:stretch;
+}
+
+.blend-control,
+.blend-result{
+  border-radius:48px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.9);
+  backdrop-filter:blur(24px);
+  box-shadow:var(--shadow-soft);
+  overflow:hidden;
+}
+
+.blend-control{
+  padding:32px;
+}
+
+.blend-head{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:28px;
+}
+
+.blend-icon{
+  width:64px;
+  height:64px;
+  border-radius:22px;
+  display:grid;
+  place-items:center;
+  font-size:30px;
+  background:
+    radial-gradient(circle at 30% 25%, #fff 0 15%, transparent 16%),
+    linear-gradient(135deg,var(--wine-soft),var(--wine));
+  color:#fff;
+  box-shadow:0 18px 42px rgba(141,37,56,.18);
+}
+
+.blend-head h3{
+  font-size:30px;
+  letter-spacing:-.055em;
+}
+
+.blend-head p{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.blend-form{
+  display:grid;
+  gap:16px;
+}
+
+.blend-field label{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:9px;
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:.13em;
+  color:#6d5a27;
+  text-transform:uppercase;
+}
+
+.blend-field label span{
+  color:var(--muted);
+  text-transform:none;
+  letter-spacing:0;
+}
+
+.blend-field select{
+  width:100%;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.78);
+  border-radius:18px;
+  padding:15px 16px;
+  outline:0;
+  font-weight:850;
+  color:#111;
+  transition:.3s var(--ease);
+}
+
+.blend-field select:focus{
+  border-color:rgba(141,37,56,.40);
+  box-shadow:0 0 0 5px rgba(141,37,56,.10);
+}
+
+.blend-range{
+  padding:16px;
+  border-radius:22px;
+  background:rgba(255,255,255,.62);
+  border:1px solid rgba(255,255,255,.82);
+}
+
+.range-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:.12em;
+  color:#6d5a27;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+
+.range-top span:last-child{
+  color:var(--muted);
+  text-transform:none;
+  letter-spacing:0;
+}
+
+.range-wrap{
+  display:grid;
+  grid-template-columns:42px 1fr 42px;
+  gap:10px;
+  align-items:center;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+
+.range-wrap input{
+  width:100%;
+  accent-color:var(--accent);
+}
+
+.pair-progress{
+  margin-top:4px;
+  padding:17px;
+  border-radius:24px;
+  background:#f7efdf;
+  display:none;
+}
+
+.pair-progress.active{
+  display:block;
+}
+
+.progress-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:13px;
+  font-weight:950;
+}
+
+.progress-bar{
+  margin-top:12px;
+  height:10px;
+  border-radius:999px;
+  background:#e7dcc8;
+  overflow:hidden;
+}
+
+.progress-bar span{
+  display:block;
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--wine),var(--gold),var(--green));
+  border-radius:999px;
+}
+
+.blend-result{
+  display:grid;
+  grid-template-columns:.9fr 1.1fr;
+  min-height:720px;
+}
+
+.result-liquid{
+  position:relative;
+  overflow:hidden;
+  background:#111;
+}
+
+.result-liquid img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:.45s var(--ease);
+}
+
+.result-liquid::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(180deg,transparent 34%,rgba(0,0,0,.52)),
+    radial-gradient(circle at 50% 40%,transparent 0 32%,rgba(0,0,0,.22) 58%);
+}
+
+.liquid-ring{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:78%;
+  aspect-ratio:1/1;
+  border-radius:50%;
+  border:1px dashed rgba(255,255,255,.5);
+  transform:translate(-50%,-50%);
+  z-index:2;
+  animation:spin 22s linear infinite;
+}
+
+.liquid-ring::before,
+.liquid-ring::after{
+  content:"";
+  position:absolute;
+  inset:38px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.28);
+}
+
+.liquid-ring::after{
+  inset:-26px;
+  border-style:dashed;
+  opacity:.42;
+}
+
+.result-chip{
+  position:absolute;
+  left:24px;
+  top:24px;
+  z-index:3;
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(14px);
+  font-size:12px;
+  font-weight:950;
+}
+
+.result-bottom{
+  position:absolute;
+  left:24px;
+  right:24px;
+  bottom:24px;
+  z-index:3;
+  padding:20px;
+  border-radius:28px;
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(20px);
+}
+
+.result-bottom strong{
+  display:block;
+  font-size:15px;
+}
+
+.result-bottom span{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.result-content{
+  padding:38px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.match-pill{
+  display:inline-flex;
+  width:max-content;
+  align-items:center;
+  gap:8px;
+  padding:9px 14px;
+  border-radius:999px;
+  background:#ecfff7;
+  color:#227b55;
+  font-size:12px;
+  font-weight:950;
+}
+
+.result-content h3{
+  margin-top:18px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(42px,5vw,64px);
+  line-height:.95;
+  letter-spacing:-.065em;
+}
+
+.result-content p{
+  margin-top:18px;
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.pair-stats{
+  margin-top:28px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.pair-stat{
+  padding:16px;
+  border-radius:22px;
+  text-align:center;
+  background:#f7efdf;
+}
+
+.pair-stat strong{
+  display:block;
+  color:#8c6411;
+  font-size:20px;
+}
+
+.pair-stat span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:950;
+  text-transform:uppercase;
+}
+
+.pair-notes{
+  margin-top:24px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.pair-note{
+  padding:8px 11px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid var(--line);
+  font-size:12px;
+  font-weight:900;
+  color:#6d5a27;
+}
+
+.result-actions{
+  margin-top:28px;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+/* =====================================================
+   PAIRING MATRIX — NOT SAME CARD DESIGN
+===================================================== */
+
+.matrix-section{
+  background:
+    radial-gradient(circle at 80% 12%, rgba(141,37,56,.10), transparent 28%),
+    radial-gradient(circle at 18% 82%, rgba(201,154,46,.18), transparent 28%);
+}
+
+.matrix-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+
+.matrix-card{
+  border-radius:38px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.88);
+  box-shadow:var(--shadow-soft);
+  backdrop-filter:blur(22px);
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:.42fr .58fr;
+  transition:.45s var(--ease);
+}
+
+.matrix-card:hover{
+  transform:translateY(-8px);
+  box-shadow:var(--shadow);
+}
+
+.matrix-img{
+  min-height:260px;
+  position:relative;
+}
+
+.matrix-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.matrix-body{
+  padding:24px;
+}
+
+.matrix-label{
+  display:inline-flex;
+  padding:7px 10px;
+  border-radius:999px;
+  background:#ecfff7;
+  color:#227b55;
+  font-size:11px;
+  font-weight:950;
+}
+
+.matrix-body h3{
+  margin-top:12px;
+  font-size:25px;
+  letter-spacing:-.055em;
+}
+
+.matrix-body p{
+  margin-top:10px;
+  color:var(--muted);
+  line-height:1.65;
+  font-size:14px;
+}
+
+.matrix-lines{
+  margin-top:18px;
+  display:grid;
+  gap:10px;
+}
+
+.matrix-line{
+  display:grid;
+  grid-template-columns:82px 1fr 38px;
+  gap:10px;
+  align-items:center;
+  font-size:12px;
+  font-weight:900;
+  color:#6d5a27;
+}
+
+.matrix-track{
+  height:8px;
+  border-radius:999px;
+  background:#eee4d2;
+  overflow:hidden;
+}
+
+.matrix-track span{
+  display:block;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--wine),var(--gold));
+}
+
+/* =====================================================
+   COLLECTIONS
+===================================================== */
+
+.collections-grid{
+  display:grid;
+  grid-template-columns:1.1fr .9fr .9fr;
+  gap:20px;
+}
+
+.collection-card{
+  min-height:440px;
+  position:relative;
+  border-radius:42px;
+  overflow:hidden;
+  box-shadow:var(--shadow-soft);
+  transition:.45s var(--ease);
+}
+
+.collection-card:hover{
+  transform:translateY(-10px);
+  box-shadow:var(--shadow);
+}
+
+.collection-card img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:.75s var(--ease);
+}
+
+.collection-card:hover img{
+  transform:scale(1.08);
+}
+
+.collection-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.84));
+}
+
+.collection-content{
+  position:absolute;
+  left:26px;
+  right:26px;
+  bottom:26px;
+  z-index:2;
+  color:white;
+}
+
+.collection-content small{
+  display:inline-flex;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.82);
+  color:#111;
+  font-size:11px;
+  font-weight:950;
+  backdrop-filter:blur(14px);
+}
+
+.collection-content h3{
+  margin-top:14px;
+  font-size:30px;
+  letter-spacing:-.055em;
+}
+
+.collection-content p{
+  margin-top:10px;
+  color:rgba(255,255,255,.72);
+  line-height:1.65;
+}
+
+/* =====================================================
+   SAVED DRAWER / TOAST
+===================================================== */
+
+.saved-drawer{
+  position:fixed;
+  top:0;
+  right:0;
+  width:430px;
+  max-width:100%;
+  height:100%;
+  z-index:7200;
+  background:rgba(255,250,240,.95);
+  backdrop-filter:blur(28px);
+  box-shadow:-30px 0 90px rgba(0,0,0,.18);
+  transform:translateX(100%);
+  transition:.55s var(--ease);
+  display:flex;
+  flex-direction:column;
+}
+
+.saved-drawer.open{
+  transform:translateX(0);
+}
+
+.saved-head{
+  padding:24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--line);
+}
+
+.saved-head h3{
+  font-size:24px;
+  letter-spacing:-.045em;
+}
+
+.saved-close{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:0;
+  background:#111;
+  color:white;
+  font-size:20px;
+}
+
+.saved-items{
+  flex:1;
+  overflow:auto;
+  padding:20px;
+  display:grid;
+  align-content:start;
+  gap:12px;
+}
+
+.saved-item{
+  display:grid;
+  grid-template-columns:64px 1fr auto;
+  gap:12px;
+  align-items:center;
+  padding:12px;
+  border-radius:22px;
+  background:#fff;
+  border:1px solid var(--line);
+}
+
+.saved-item img{
+  width:64px;
+  height:64px;
+  border-radius:18px;
+  object-fit:cover;
+}
+
+.saved-item h4{
+  font-size:15px;
+}
+
+.saved-item span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+
+.remove-item{
+  border:0;
+  background:#f7efdf;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  font-weight:950;
+}
+
+.saved-footer{
+  padding:24px;
+  border-top:1px solid var(--line);
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:28px;
+  transform:translate(-50%,120px);
+  z-index:8000;
+  padding:15px 22px;
+  border-radius:999px;
+  background:#111;
+  color:#fff;
+  box-shadow:0 20px 50px rgba(0,0,0,.24);
+  font-weight:850;
+  transition:.45s var(--ease);
+}
+
+.toast.show{
+  transform:translate(-50%,0);
+}
+
+/* =====================================================
+   CTA / FOOTER
+===================================================== */
+
+.cta{
+  padding-bottom:130px;
+}
+
+.cta-box{
+  border-radius:58px;
+  background:
+    linear-gradient(135deg,rgba(17,17,17,.92),rgba(62,48,27,.88)),
+    url("https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1600") center/cover;
+  color:#fff;
+  min-height:460px;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.cta-copy{
+  padding:58px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.cta-copy .badge{
+  color:#fff;
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.18);
+  box-shadow:none;
+}
+
+.cta-copy h2{
+  margin-top:22px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(44px,5.6vw,78px);
+  line-height:.95;
+  letter-spacing:-.055em;
+}
+
+.cta-copy p{
+  margin-top:22px;
+  max-width:560px;
+  color:rgba(255,255,255,.72);
+  line-height:1.8;
+  font-size:17px;
+}
+
+.cta-card-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:34px;
+}
+
+.cta-card{
+  width:100%;
+  max-width:390px;
+  padding:30px;
+  border-radius:38px;
+  background:rgba(255,255,255,.9);
+  color:#111;
+  backdrop-filter:blur(24px);
+}
+
+.cta-card h3{
+  font-size:28px;
+  letter-spacing:-.055em;
+}
+
+.cta-card p{
+  margin-top:10px;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.footer{
+  padding:72px 22px 32px;
+  background:#111;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+
+.footer::before{
+  content:"PAIRING";
+  position:absolute;
+  right:-30px;
+  bottom:-44px;
+  font-size:14vw;
+  font-weight:950;
+  letter-spacing:-.08em;
+  color:rgba(255,255,255,.035);
+}
+
+.footer-grid{
+  width:min(1220px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1.35fr .8fr .8fr 1fr;
+  gap:36px;
+  position:relative;
+  z-index:2;
+}
+
+.footer .logo{
+  color:#fff;
+  margin-bottom:20px;
+}
+
+.footer p,
+.footer a,
+.footer li{
+  color:rgba(255,255,255,.64);
+  line-height:1.8;
+}
+
+.footer h4{
+  margin-bottom:18px;
+}
+
+.footer ul{
+  list-style:none;
+}
+
+.footer a:hover{
+  color:var(--gold-soft);
+}
+
+.footer-bottom{
+  width:min(1220px,100%);
+  margin:48px auto 0;
+  padding-top:26px;
+  border-top:1px solid rgba(255,255,255,.12);
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:18px;
+  color:rgba(255,255,255,.5);
+  position:relative;
+  z-index:2;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1120px){
+  .hero-grid,
+  .blend-board,
+  .cta-box{
+    grid-template-columns:1fr;
+  }
+
+  .constellation{
+    min-height:620px;
+  }
+
+  .blend-result{
+    grid-template-columns:1fr;
+  }
+
+  .result-liquid{
+    min-height:430px;
+  }
+
+  .matrix-grid{
+    grid-template-columns:1fr;
+  }
+
+  .collections-grid{
+    grid-template-columns:1fr;
+  }
+
+  .footer-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:860px){
+  body{
+    cursor:auto;
+  }
+
+  a,
+  button{
+    cursor:pointer;
+  }
+
+  .cursor-dot,
+  .cursor-ring{
+    display:none;
+  }
+
+  .nav{
+    height:68px;
+    top:10px;
+    width:calc(100% - 22px);
+  }
+
+  .nav-links,
+  .nav-cta{
+    display:none;
+  }
+
+  .hamburger{
+    display:block;
+  }
+
+  .pairing-hero{
+    padding:112px 16px 60px;
+  }
+
+  .section{
+    padding:86px 16px;
+  }
+
+  .section-head{
+    display:block;
+  }
+
+  .section-text{
+    margin-top:22px;
+  }
+
+  .hero-title{
+    font-size:clamp(50px,15vw,82px);
+  }
+
+  .hero-actions{
+    flex-direction:column;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  .hero-metrics{
+    grid-template-columns:1fr;
+  }
+
+  .constellation{
+    min-height:560px;
+  }
+
+  .constellation-shell{
+    inset:20px 0;
+    border-radius:42px;
+  }
+
+  .glass-stage{
+    width:230px;
+    height:390px;
+  }
+
+  .glass-bowl{
+    width:160px;
+    height:220px;
+  }
+
+  .glass-stem{
+    top:255px;
+  }
+
+  .orbit-pair{
+    width:205px;
+  }
+
+  .orbit-pair.one{
+    left:8px;
+    top:52px;
+  }
+
+  .orbit-pair.two{
+    right:8px;
+    top:248px;
+  }
+
+  .orbit-pair.three{
+    left:28px;
+    bottom:42px;
+  }
+
+  .blend-control,
+  .blend-result,
+  .dna-orb-card,
+  .collection-card{
+    border-radius:34px;
+  }
+
+  .result-content{
+    padding:26px;
+  }
+
+  .pair-stats{
+    grid-template-columns:1fr;
+  }
+
+  .result-actions{
+    flex-direction:column;
+  }
+
+  .matrix-card{
+    grid-template-columns:1fr;
+  }
+
+  .matrix-img{
+    min-height:260px;
+  }
+
+  .matrix-line{
+    grid-template-columns:1fr;
+  }
+
+  .cta-copy{
+    padding:38px 24px 8px;
+  }
+
+  .cta-card-wrap{
+    padding:24px;
+  }
+}
+
+@media(max-width:560px){
+  .orbit-pair{
+    position:absolute;
+    width:185px;
+    padding:12px;
+  }
+
+  .orbit-pair h4{
+    font-size:14px;
+  }
+
+  .orbit-pair p{
+    display:none;
+  }
+
+  .glass-stage{
+    transform:translate(-50%,-46%) scale(.9);
+  }
+
+  .range-wrap{
+    grid-template-columns:1fr;
+  }
+
+  .result-liquid{
+    min-height:360px;
+  }
+
+  .footer-grid{
+    grid-template-columns:1fr;
+  }
+
+  .footer-bottom{
+    display:block;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="loader" id="loader">
+  <div class="loader-glass"></div>
+  <h2>NEURA PAIRING</h2>
+  <p>AI Sommelier</p>
+</div>
+
+<canvas id="pairingCanvas"></canvas>
+<div class="grain"></div>
+<div class="progress" id="progress"></div>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav class="nav" id="nav">
+  <a href="#top" class="logo magnetic">
+    <span class="logo-icon"></span>
+    <span>
+       <strong>NEURA TABLE</strong>
+      <span>Restaurant</span>
+    </span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="taste.html">Taste</a>
+       <a href="scanner.html">Scanner</a>
+     <a href="dishes.html">Dishes</a>
+    <a href="pairing.html" class="active">Pairing</a>
+    <a href="reserve.html">Reserve</a>
+    <a href="menu.html">Menu</a>
+    <a href="#journey">Journey</a>
+   <a href="chefs.html">chefs</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="nav-actions">
+    <button class="saved-mini" id="savedOpen">
+      🍷
+      <span class="saved-count" id="savedCount">0</span>
+    </button>
+    <a href="#reserve" class="nav-cta magnetic">Reserve</a>
+    <button class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-panel" id="mobilePanel">
+  <div class="mobile-links">
+<a href="index.html" class="mobile-link">Home</a>
+    <a href="taste.html" class="mobile-link">Taste</a>
+    <a href="scanner.html" class="mobile-link">Scanner</a>
+    <a href="dishes.html" class="mobile-link">Dishes</a>
+    <a href="pairing.html" class="mobile-link">Pairing</a>
+    <a href="reserve.html" class="mobile-link">Reserve</a>
+    <a href="menu.html" class="mobile-link">Menu</a>
+    <a href="journey.html" class="mobile-link">journey</a>
+    <a href="chefs.html" class="mobile-link">Chefs</a>
+    <a href="contact.html" class="mobile-link">Contact</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="pairing-hero" id="top">
+  <div class="hero-grid">
+    <section>
+      <div class="badge reveal">AI Sommelier Pairing System</div>
+
+      <h1 class="hero-title reveal" style="transition-delay:.08s">
+        Match every dish with
+        <span>liquid intelligence.</span>
+      </h1>
+
+      <p class="hero-text reveal" style="transition-delay:.16s">
+        A dedicated AI pairing page for wines, mocktails, teas and botanical drinks.
+        Designed differently from scanner and taste pages — this is a liquid constellation experience.
+      </p>
+
+      <div class="hero-actions reveal" style="transition-delay:.24s">
+        <a href="#lab" class="btn btn-dark magnetic">Open Pairing Lab →</a>
+        <button class="btn btn-wine magnetic" id="surpriseBtn">Surprise Pairing ✨</button>
+        <button class="btn btn-white magnetic" id="openSavedHero">Saved Pairings</button>
+      </div>
+
+      <div class="hero-metrics reveal" style="transition-delay:.32s">
+        <div class="metric-card">
+          <strong data-count="128">0</strong>
+          <span>Pairing Routes</span>
+        </div>
+        <div class="metric-card">
+          <strong data-count="52">0</strong>
+          <span>Drink Profiles</span>
+        </div>
+        <div class="metric-card">
+          <strong data-count="98">0</strong>
+          <span>Harmony Rate</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="constellation reveal" style="transition-delay:.2s">
+      <div class="constellation-shell">
+        <div class="glass-stage">
+          <div class="glass-bowl">
+            <div class="wine-wave"></div>
+          </div>
+          <div class="glass-stem"></div>
+          <div class="glass-base"></div>
+        </div>
+
+        <div class="orbit-pair one">
+          <small>Seafood Route</small>
+          <h4>Yuzu Sparkling Wine</h4>
+          <p>Citrus brightness with clean mineral lift.</p>
+        </div>
+
+        <div class="orbit-pair two">
+          <small>Bold Route</small>
+          <h4>Oak Barrel Red</h4>
+          <p>Dark fruit, smoke and deep tannic shape.</p>
+        </div>
+
+        <div class="orbit-pair three">
+          <small>Dessert Route</small>
+          <h4>Vanilla Espresso</h4>
+          <p>Warm bitterness with caramel finish.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</header>
+
+<!-- PAIRING LAB -->
+<section class="section pairing-lab" id="lab">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">AI Pairing Lab</div>
+        <h2 class="section-title reveal">Build harmony through <span>taste signals.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        Choose a dish, dining mood and drink style. NEURA generates a matching drink profile with acidity, aroma and finish scores.
+      </p>
+    </div>
+
+    <div class="blend-board">
+      <div class="blend-control reveal">
+        <div class="blend-head">
+          <div class="blend-icon">🍷</div>
+          <div>
+            <h3>Blend Control</h3>
+            <p>Liquid pairing signal controller</p>
+          </div>
+        </div>
+
+        <div class="blend-form">
+          <div class="blend-field">
+            <label>Dish Route <span>plate direction</span></label>
+            <select id="dishSelect">
+              <option value="seafood">AI Sea Bass</option>
+              <option value="meat">Solar Wagyu</option>
+              <option value="vegetarian">Golden Burrata</option>
+              <option value="dessert">Neural Chocolate</option>
+              <option value="fresh">Crystal Tuna</option>
+            </select>
+          </div>
+
+          <div class="blend-field">
+            <label>Drink Style <span>liquid family</span></label>
+            <select id="drinkStyle">
+              <option value="wine">Wine</option>
+              <option value="sparkling">Sparkling</option>
+              <option value="mocktail">Mocktail</option>
+              <option value="tea">Tea</option>
+              <option value="coffee">Coffee</option>
+            </select>
+          </div>
+
+          <div class="blend-field">
+            <label>Dining Mood <span>emotion</span></label>
+            <select id="moodSelect">
+              <option value="fresh">Fresh</option>
+              <option value="romantic">Romantic</option>
+              <option value="bold">Bold</option>
+              <option value="comfort">Comfort</option>
+              <option value="celebration">Celebration</option>
+            </select>
+          </div>
+
+          <div class="blend-range">
+            <div class="range-top">
+              <span>Acidity</span>
+              <span id="acidVal">4 / 5</span>
+            </div>
+            <div class="range-wrap">
+              <span>Soft</span>
+              <input id="acidRange" type="range" min="1" max="5" value="4">
+              <span>Sharp</span>
+            </div>
+          </div>
+
+          <div class="blend-range">
+            <div class="range-top">
+              <span>Aroma</span>
+              <span id="aromaVal">4 / 5</span>
+            </div>
+            <div class="range-wrap">
+              <span>Clean</span>
+              <input id="aromaRange" type="range" min="1" max="5" value="4">
+              <span>Deep</span>
+            </div>
+          </div>
+
+          <button class="btn btn-dark magnetic" id="generatePairing" style="width:100%">
+            Generate Pairing ✨
+          </button>
+
+          <div class="pair-progress" id="pairProgressBox">
+            <div class="progress-top">
+              <span id="pairText">Reading dish signals...</span>
+              <span id="pairPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+              <span id="pairProgress"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="blend-result reveal">
+        <div class="result-liquid">
+          <img id="resultImg" src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1000" alt="Pairing result">
+          <div class="liquid-ring"></div>
+          <div class="result-chip">AI Pairing Result</div>
+
+          <div class="result-bottom">
+            <strong>Current Liquid Route</strong>
+            <span id="routeText">Seafood → Sparkling → Citrus Finish</span>
+          </div>
+        </div>
+
+        <div class="result-content">
+          <span class="match-pill" id="matchPill">● 98% Harmony</span>
+
+          <h3 id="resultTitle">Yuzu Sparkling Wine</h3>
+
+          <p id="resultDesc">
+            Crisp bubbles with citrus aroma, clean mineral finish and bright lift for seafood and fresh herbs.
+          </p>
+
+          <div class="pair-stats">
+            <div class="pair-stat">
+              <strong id="statAcid">94%</strong>
+              <span>Acidity</span>
+            </div>
+
+            <div class="pair-stat">
+              <strong id="statAroma">92%</strong>
+              <span>Aroma</span>
+            </div>
+
+            <div class="pair-stat">
+              <strong id="statFinish">96%</strong>
+              <span>Finish</span>
+            </div>
+          </div>
+
+          <div class="pair-notes" id="pairNotes">
+            <span class="pair-note">Yuzu</span>
+            <span class="pair-note">Mineral</span>
+            <span class="pair-note">Sparkling</span>
+            <span class="pair-note">Seafood</span>
+          </div>
+
+          <div class="result-actions">
+            <button class="btn btn-wine magnetic" id="savePairing">Save Pairing</button>
+            <a href="#reserve" class="btn btn-white magnetic">Reserve With This</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MATRIX -->
+<section class="section matrix-section" id="matrix">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Pairing Matrix</div>
+        <h2 class="section-title reveal">Dish and drink routes <span>in balance.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        A different layout from dishes and scanner: pairing cards are split into plate image, drink route and harmony lines.
+      </p>
+    </div>
+
+    <div class="matrix-grid" id="matrixGrid"></div>
+  </div>
+</section>
+
+<!-- COLLECTIONS -->
+<section class="section" id="collections">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Sommelier Collections</div>
+        <h2 class="section-title reveal">Curated liquid worlds <span>for every mood.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        Select from wine routes, zero-proof routes and after-dinner rituals.
+      </p>
+    </div>
+
+    <div class="collections-grid">
+      <article class="collection-card reveal">
+        <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1000" alt="Wine Route">
+        <div class="collection-content">
+          <small>Wine Route</small>
+          <h3>Cellar Intelligence</h3>
+          <p>Reds, whites and sparkling profiles matched by acidity, body and aroma depth.</p>
+        </div>
+      </article>
+
+      <article class="collection-card reveal" style="transition-delay:.08s">
+        <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1000" alt="Mocktail Route">
+        <div class="collection-content">
+          <small>Zero Proof</small>
+          <h3>Botanical Signals</h3>
+          <p>Fresh citrus, herbs, smoke and spice without alcohol.</p>
+        </div>
+      </article>
+
+      <article class="collection-card reveal" style="transition-delay:.16s">
+        <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1000" alt="Coffee Route">
+        <div class="collection-content">
+          <small>Final Course</small>
+          <h3>After-Dinner Ritual</h3>
+          <p>Coffee, tea and dessert pairings for a clean final memory.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section cta" id="reserve">
+  <div class="container">
+    <div class="cta-box reveal">
+      <div class="cta-copy">
+        <div class="badge">Reserve With Pairing</div>
+        <h2>Bring your pairing route to dinner.</h2>
+        <p>
+          Save your favorite pairing and let NEURA prepare dish, drink, glassware and service timing before you arrive.
+        </p>
+      </div>
+
+      <div class="cta-card-wrap">
+        <div class="cta-card">
+          <h3>Pairing route ready.</h3>
+          <p>Open your saved pairings or reserve your table with the current AI pairing result.</p>
+          <button class="btn btn-dark magnetic" id="reserveBtn" style="width:100%;margin-top:22px">
+            Reserve Experience
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="logo">
+        <span class="logo-icon"></span>
+        <span>
+          <strong>NEURA TABLE</strong>
+          <span>Pairing Lab</span>
+        </span>
+      </div>
+      <p>A unique AI pairing page for wine, mocktail, tea, coffee and dish harmony experiences.</p>
+    </div>
+
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="#lab">Pairing Lab</a></li>
+        <li><a href="#matrix">Pairing Matrix</a></li>
+        <li><a href="#collections">Collections</a></li>
+        <li><a href="#reserve">Reserve</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Pairing Types</h4>
+      <ul>
+        <li><a href="#lab">Wine</a></li>
+        <li><a href="#lab">Sparkling</a></li>
+        <li><a href="#lab">Mocktail</a></li>
+        <li><a href="#lab">Tea & Coffee</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Contact</h4>
+      <p>hello@neuratable.ai</p>
+      <p>+1 234 567 890</p>
+      <p style="margin-top:14px">Open daily · 5PM — 12AM</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2025 NEURA TABLE. All rights reserved.</span>
+    <span>Pairing Page Ultra Pro.</span>
+  </div>
+</footer>
+
+<!-- SAVED DRAWER -->
+<aside class="saved-drawer" id="savedDrawer">
+  <div class="saved-head">
+    <h3>Saved Pairings</h3>
+    <button class="saved-close" id="savedClose">×</button>
+  </div>
+
+  <div class="saved-items" id="savedItems">
+    <p style="color:var(--muted);line-height:1.7">No pairings saved yet. Generate or save a pairing from the lab.</p>
+  </div>
+
+  <div class="saved-footer">
+    <button class="btn btn-dark magnetic" id="reserveSaved" style="width:100%">
+      Reserve With Saved Pairings
+    </button>
+  </div>
+</aside>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const $ = (s,p=document)=>p.querySelector(s);
+  const $$ = (s,p=document)=>[...p.querySelectorAll(s)];
+
+  /* Loader */
+  const loader=$("#loader");
+  window.addEventListener("load",()=>setTimeout(()=>loader.classList.add("hide"),850));
+  setTimeout(()=>loader.classList.add("hide"),2200);
+
+  const isTouch="ontouchstart" in window || navigator.maxTouchPoints>0;
+
+  /* Cursor */
+  const dot=$("#cursorDot");
+  const ring=$("#cursorRing");
+  let mx=0,my=0,rx=0,ry=0;
+
+  if(!isTouch){
+    window.addEventListener("mousemove",e=>{
+      mx=e.clientX;
+      my=e.clientY;
+      dot.style.left=mx+"px";
+      dot.style.top=my+"px";
+    });
+
+    function cursorLoop(){
+      rx+=(mx-rx)*.14;
+      ry+=(my-ry)*.14;
+      ring.style.left=rx+"px";
+      ring.style.top=ry+"px";
+      requestAnimationFrame(cursorLoop);
+    }
+    cursorLoop();
+
+    function bindHover(){
+      $$("a,button,.matrix-card,.collection-card,.orbit-pair,.saved-item").forEach(el=>{
+        if(el.dataset.hoverBound) return;
+        el.dataset.hoverBound="true";
+        el.addEventListener("mouseenter",()=>ring.classList.add("hover"));
+        el.addEventListener("mouseleave",()=>ring.classList.remove("hover"));
+      });
+    }
+    bindHover();
+    window.bindHover=bindHover;
+  }
+
+  /* Canvas */
+  const canvas=$("#pairingCanvas");
+  const ctx=canvas.getContext("2d");
+  let w,h,nodes=[],pointer={x:-999,y:-999};
+
+  function resizeCanvas(){
+    w=canvas.width=innerWidth*devicePixelRatio;
+    h=canvas.height=innerHeight*devicePixelRatio;
+    canvas.style.width=innerWidth+"px";
+    canvas.style.height=innerHeight+"px";
+
+    const count=Math.min(85,Math.max(38,Math.floor(innerWidth/18)));
+    nodes=Array.from({length:count},()=>({
+      x:Math.random()*w,
+      y:Math.random()*h,
+      vx:(Math.random()-.5)*.32*devicePixelRatio,
+      vy:(Math.random()-.5)*.32*devicePixelRatio,
+      r:(Math.random()*2+1)*devicePixelRatio
+    }));
+  }
+
+  resizeCanvas();
+  addEventListener("resize",resizeCanvas);
+
+  addEventListener("mousemove",e=>{
+    pointer.x=e.clientX*devicePixelRatio;
+    pointer.y=e.clientY*devicePixelRatio;
+  });
+
+  function canvasLoop(){
+    ctx.clearRect(0,0,w,h);
+
+    for(const n of nodes){
+      n.x+=n.vx;
+      n.y+=n.vy;
+
+      if(n.x<0 || n.x>w) n.vx*=-1;
+      if(n.y<0 || n.y>h) n.vy*=-1;
+
+      const dx=pointer.x-n.x;
+      const dy=pointer.y-n.y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+
+      if(d<160*devicePixelRatio){
+        n.x-=dx*.006;
+        n.y-=dy*.006;
+      }
+
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle="rgba(141,37,56,.22)";
+      ctx.fill();
+    }
+
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const a=nodes[i],b=nodes[j];
+        const dx=a.x-b.x;
+        const dy=a.y-b.y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        const max=130*devicePixelRatio;
+
+        if(d<max){
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y);
+          ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle=`rgba(141,37,56,${(1-d/max)*.12})`;
+          ctx.lineWidth=.7*devicePixelRatio;
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(canvasLoop);
+  }
+  canvasLoop();
+
+  /* Nav + progress */
+  const nav=$("#nav");
+  const progress=$("#progress");
+
+  function scrollUI(){
+    nav.classList.toggle("scrolled",scrollY>35);
+    const max=document.documentElement.scrollHeight-innerHeight;
+    progress.style.width=(max>0 ? scrollY/max*100 : 0)+"%";
+  }
+
+  addEventListener("scroll",scrollUI);
+  scrollUI();
+
+  /* Mobile menu */
+  const hamburger=$("#hamburger");
+  const mobilePanel=$("#mobilePanel");
+
+  hamburger.addEventListener("click",()=>{
+    hamburger.classList.toggle("active");
+    mobilePanel.classList.toggle("active");
+    document.body.classList.toggle("lock",mobilePanel.classList.contains("active"));
+  });
+
+  $$(".mobile-link").forEach(link=>{
+    link.addEventListener("click",()=>{
+      hamburger.classList.remove("active");
+      mobilePanel.classList.remove("active");
+      document.body.classList.remove("lock");
+    });
+  });
+
+  /* Smooth anchors */
+  $$('a[href^="#"]').forEach(a=>{
+    a.addEventListener("click",e=>{
+      const target=$(a.getAttribute("href"));
+      if(target){
+        e.preventDefault();
+        scrollTo({top:target.offsetTop-90,behavior:"smooth"});
+      }
+    });
+  });
+
+  /* Reveal */
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("show");
+        io.unobserve(entry.target);
+      }
+    });
+  },{threshold:.14});
+
+  $$(".reveal").forEach(el=>io.observe(el));
+
+  /* Magnetic */
+  if(!isTouch){
+    $$(".magnetic").forEach(el=>{
+      el.addEventListener("mousemove",e=>{
+        const r=el.getBoundingClientRect();
+        const x=e.clientX-r.left-r.width/2;
+        const y=e.clientY-r.top-r.height/2;
+        el.style.transform=`translate(${x*.16}px,${y*.16}px)`;
+      });
+
+      el.addEventListener("mouseleave",()=>{
+        el.style.transform="";
+      });
+    });
+  }
+
+  /* Counters */
+  const counterIO=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        $$("[data-count]").forEach(el=>{
+          const target=Number(el.dataset.count);
+          const start=performance.now();
+
+          function step(now){
+            const p=Math.min((now-start)/1500,1);
+            const eased=1-Math.pow(1-p,3);
+            el.textContent=Math.floor(target*eased)+(target===98?"%":"+");
+            if(p<1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        });
+        counterIO.disconnect();
+      }
+    });
+  });
+  counterIO.observe(document.querySelector("[data-count]"));
+
+  /* Pairing database */
+  const pairings=[
+    {
+      id:1,
+      dish:"seafood",
+      style:"sparkling",
+      moods:["fresh","romantic","celebration"],
+      title:"Yuzu Sparkling Wine",
+      img:"https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1000",
+      desc:"Crisp bubbles with citrus aroma, clean mineral finish and bright lift for seafood and fresh herbs.",
+      notes:["Yuzu","Mineral","Sparkling","Seafood"],
+      route:"Seafood → Sparkling → Citrus Finish",
+      acid:94,
+      aroma:92,
+      finish:96,
+      match:98
+    },
+    {
+      id:2,
+      dish:"meat",
+      style:"wine",
+      moods:["bold","romantic"],
+      title:"Oak Barrel Red",
+      img:"https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=1000",
+      desc:"Deep tannins, dark fruit, smoky oak and structure for rich grilled meat.",
+      notes:["Dark Fruit","Oak","Tannin","Smoke"],
+      route:"Meat → Red Wine → Smoky Finish",
+      acid:78,
+      aroma:94,
+      finish:97,
+      match:96
+    },
+    {
+      id:3,
+      dish:"vegetarian",
+      style:"mocktail",
+      moods:["fresh","comfort"],
+      title:"Basil Citrus Spritz",
+      img:"https://images.unsplash.com/photo-1544145945-f90425340c7e?w=1000",
+      desc:"Garden freshness, gentle acidity and aromatic basil lift for creamy vegetarian plates.",
+      notes:["Basil","Citrus","Garden","Zero Proof"],
+      route:"Vegetarian → Mocktail → Herbal Finish",
+      acid:88,
+      aroma:86,
+      finish:90,
+      match:94
+    },
+    {
+      id:4,
+      dish:"dessert",
+      style:"coffee",
+      moods:["comfort","romantic"],
+      title:"Vanilla Espresso",
+      img:"https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1000",
+      desc:"Rich espresso, vanilla cream and caramel warmth for a luxurious dessert finish.",
+      notes:["Espresso","Vanilla","Caramel","Warm"],
+      route:"Dessert → Coffee → Caramel Finish",
+      acid:52,
+      aroma:93,
+      finish:95,
+      match:95
+    },
+    {
+      id:5,
+      dish:"fresh",
+      style:"tea",
+      moods:["fresh","comfort"],
+      title:"Jasmine Green Tea",
+      img:"https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=1000",
+      desc:"Floral green tea with clean finish, ideal for raw seafood and delicate fresh plates.",
+      notes:["Jasmine","Green Tea","Floral","Clean"],
+      route:"Fresh Dish → Tea → Floral Finish",
+      acid:66,
+      aroma:91,
+      finish:88,
+      match:92
+    },
+    {
+      id:6,
+      dish:"meat",
+      style:"mocktail",
+      moods:["bold"],
+      title:"Smoked Cherry Tonic",
+      img:"https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=1000",
+      desc:"Smoke, cherry, tonic bitterness and citrus peel for bold non-alcoholic pairing.",
+      notes:["Cherry","Smoke","Tonic","Citrus Peel"],
+      route:"Meat → Zero Proof → Smoky Finish",
+      acid:82,
+      aroma:89,
+      finish:91,
+      match:90
+    },
+    {
+      id:7,
+      dish:"seafood",
+      style:"wine",
+      moods:["fresh","celebration"],
+      title:"Mineral Chardonnay",
+      img:"https://images.unsplash.com/photo-1568213816046-0ee1c42bd559?w=1000",
+      desc:"Creamy white wine with mineral lift and balanced acidity for seafood and sauces.",
+      notes:["Mineral","Cream","White Wine","Balanced"],
+      route:"Seafood → White Wine → Mineral Finish",
+      acid:87,
+      aroma:84,
+      finish:92,
+      match:93
+    },
+    {
+      id:8,
+      dish:"dessert",
+      style:"tea",
+      moods:["comfort"],
+      title:"Caramel Rooibos",
+      img:"https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=1000",
+      desc:"Naturally sweet rooibos with caramel aroma and smooth finish for vanilla desserts.",
+      notes:["Rooibos","Caramel","Smooth","Dessert"],
+      route:"Dessert → Tea → Sweet Finish",
+      acid:44,
+      aroma:88,
+      finish:86,
+      match:89
+    }
+  ];
+
+  let currentPairing=pairings[0];
+  const saved=[];
+
+  function findBestPairing(){
+    const dish=$("#dishSelect").value;
+    const style=$("#drinkStyle").value;
+    const mood=$("#moodSelect").value;
+    const acid=Number($("#acidRange").value);
+    const aroma=Number($("#aromaRange").value);
+
+    let scored=pairings.map(p=>{
+      let score=45;
+
+      if(p.dish===dish) score+=25;
+      if(p.style===style) score+=20;
+      if(p.moods.includes(mood)) score+=16;
+
+      score += Math.max(0,10-Math.abs((p.acid/20)-acid)*3);
+      score += Math.max(0,10-Math.abs((p.aroma/20)-aroma)*3);
+
+      return {...p,liveMatch:Math.min(99,Math.round(score))};
+    });
+
+    scored.sort((a,b)=>b.liveMatch-a.liveMatch);
+    return scored[0];
+  }
+
+  $("#acidRange").addEventListener("input",e=>{
+    $("#acidVal").textContent=e.target.value+" / 5";
+  });
+
+  $("#aromaRange").addEventListener("input",e=>{
+    $("#aromaVal").textContent=e.target.value+" / 5";
+  });
+
+  function generatePairing(){
+    const box=$("#pairProgressBox");
+    const bar=$("#pairProgress");
+    const pct=$("#pairPercent");
+    const text=$("#pairText");
+
+    box.classList.add("active");
+    bar.style.width="0%";
+    pct.textContent="0%";
+
+    let value=0;
+    const phrases=[
+      "Reading dish signals...",
+      "Checking acidity...",
+      "Mapping aroma bridge...",
+      "Balancing finish...",
+      "Locking pairing..."
+    ];
+
+    const timer=setInterval(()=>{
+      value+=Math.floor(Math.random()*12)+8;
+      if(value>100) value=100;
+
+      bar.style.width=value+"%";
+      pct.textContent=value+"%";
+      text.textContent=phrases[Math.min(phrases.length-1,Math.floor(value/22))];
+
+      if(value>=100){
+        clearInterval(timer);
+
+        setTimeout(()=>{
+          box.classList.remove("active");
+          const best=findBestPairing();
+          updatePairing(best);
+          toast("✨ Pairing generated: "+best.title);
+        },350);
+      }
+    },170);
+  }
+
+  $("#generatePairing").addEventListener("click",generatePairing);
+
+  function typeText(el,text,speed=13){
+    el.textContent="";
+    let i=0;
+    const timer=setInterval(()=>{
+      el.textContent+=text[i];
+      i++;
+      if(i>=text.length) clearInterval(timer);
+    },speed);
+  }
+
+  function animatePercent(el,value){
+    const start=performance.now();
+    const duration=850;
+
+    function step(now){
+      const p=Math.min((now-start)/duration,1);
+      const eased=1-Math.pow(1-p,3);
+      el.textContent=Math.floor(value*eased)+"%";
+      if(p<1) requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  function updatePairing(p){
+    currentPairing=p;
+
+    $("#resultImg").style.opacity="0";
+
+    setTimeout(()=>{
+      $("#resultImg").src=p.img;
+      $("#resultImg").style.opacity="1";
+    },220);
+
+    $("#matchPill").textContent="● "+(p.liveMatch || p.match)+"% Harmony";
+    $("#resultTitle").textContent=p.title;
+    typeText($("#resultDesc"),p.desc);
+
+    $("#routeText").textContent=p.route;
+
+    animatePercent($("#statAcid"),p.acid);
+    animatePercent($("#statAroma"),p.aroma);
+    animatePercent($("#statFinish"),p.finish);
+
+    $("#pairNotes").innerHTML=p.notes.map(n=>`<span class="pair-note">${n}</span>`).join("");
+
+    document.documentElement.style.setProperty("--accent", p.style==="wine" ? "#8d2538" : p.style==="mocktail" ? "#35a878" : p.style==="tea" ? "#6aa9ff" : p.style==="coffee" ? "#d8842c" : "#c99a2e");
+    document.documentElement.style.setProperty("--accent-soft", p.style==="wine" ? "#ffe8ee" : p.style==="mocktail" ? "#e9fff5" : p.style==="tea" ? "#eef6ff" : p.style==="coffee" ? "#fff1df" : "#fff0c3");
+  }
+
+  /* Matrix */
+  const matrixGrid=$("#matrixGrid");
+
+  function renderMatrix(){
+    matrixGrid.innerHTML=pairings.slice(0,6).map(p=>`
+      <article class="matrix-card reveal show">
+        <div class="matrix-img">
+          <img src="${p.img}" alt="${p.title}">
+        </div>
+        <div class="matrix-body">
+          <span class="matrix-label">${p.match}% Harmony</span>
+          <h3>${p.title}</h3>
+          <p>${p.desc}</p>
+          <div class="matrix-lines">
+            <div class="matrix-line">
+              <span>Acidity</span>
+              <div class="matrix-track"><span style="width:${p.acid}%"></span></div>
+              <b>${p.acid}%</b>
+            </div>
+            <div class="matrix-line">
+              <span>Aroma</span>
+              <div class="matrix-track"><span style="width:${p.aroma}%"></span></div>
+              <b>${p.aroma}%</b>
+            </div>
+            <div class="matrix-line">
+              <span>Finish</span>
+              <div class="matrix-track"><span style="width:${p.finish}%"></span></div>
+              <b>${p.finish}%</b>
+            </div>
+          </div>
+          <button class="btn btn-dark magnetic" data-save="${p.id}" style="margin-top:20px;width:100%">
+            Save Pairing
+          </button>
+        </div>
+      </article>
+    `).join("");
+
+    $$("[data-save]",matrixGrid).forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const p=pairings.find(x=>x.id===Number(btn.dataset.save));
+        savePairing(p);
+      });
+    });
+
+    if(window.bindHover) window.bindHover();
+  }
+
+  renderMatrix();
+
+  /* Saved Pairings */
+  const savedDrawer=$("#savedDrawer");
+
+  function savePairing(pairing=currentPairing){
+    if(!pairing) return;
+
+    const exists=saved.find(x=>x.id===pairing.id);
+    if(!exists) saved.push(pairing);
+
+    updateSaved();
+    toast("🍷 "+pairing.title+" saved");
+  }
+
+  $("#savePairing").addEventListener("click",()=>savePairing(currentPairing));
+
+  function updateSaved(){
+    $("#savedCount").textContent=saved.length;
+
+    if(!saved.length){
+      $("#savedItems").innerHTML=`<p style="color:var(--muted);line-height:1.7">No pairings saved yet. Generate or save a pairing from the lab.</p>`;
+      return;
+    }
+
+    $("#savedItems").innerHTML=saved.map(p=>`
+      <div class="saved-item">
+        <img src="${p.img}" alt="${p.title}">
+        <div>
+          <h4>${p.title}</h4>
+          <span>${p.match}% Harmony</span>
+        </div>
+        <button class="remove-item" data-remove="${p.id}">×</button>
+      </div>
+    `).join("");
+
+    if(window.bindHover) window.bindHover();
+  }
+
+  $("#savedItems").addEventListener("click",e=>{
+    const remove=e.target.closest("[data-remove]");
+    if(!remove) return;
+
+    const index=saved.findIndex(x=>x.id===Number(remove.dataset.remove));
+    if(index>-1) saved.splice(index,1);
+    updateSaved();
+  });
+
+  function openSaved(){
+    savedDrawer.classList.add("open");
+    document.body.classList.add("lock");
+  }
+
+  function closeSaved(){
+    savedDrawer.classList.remove("open");
+    document.body.classList.remove("lock");
+  }
+
+  $("#savedOpen").addEventListener("click",openSaved);
+  $("#openSavedHero").addEventListener("click",openSaved);
+  $("#savedClose").addEventListener("click",closeSaved);
+
+  $("#reserveSaved").addEventListener("click",()=>{
+    toast("🎉 Reservation started with saved pairings");
+  });
+
+  $("#reserveBtn").addEventListener("click",()=>{
+    toast("🎉 Reservation started with "+currentPairing.title);
+  });
+
+  $("#surpriseBtn").addEventListener("click",()=>{
+    const p=pairings[Math.floor(Math.random()*pairings.length)];
+    updatePairing({...p,liveMatch:p.match});
+    toast("✨ Surprise pairing: "+p.title);
+  });
+
+  function toast(message){
+    const t=$("#toast");
+    t.textContent=message;
+    t.classList.add("show");
+    clearTimeout(toast.timer);
+    toast.timer=setTimeout(()=>t.classList.remove("show"),2400);
+  }
+
+  window.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){
+      closeSaved();
+      hamburger.classList.remove("active");
+      mobilePanel.classList.remove("active");
+      document.body.classList.remove("lock");
+    }
+  });
+
+})();
+</script>
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

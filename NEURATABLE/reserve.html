@@ -1,0 +1,3165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>NEURA TABLE | Reserve Experience</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* =====================================================
+   NEURA TABLE — RESERVE PAGE ULTRA PRO
+   Unique reservation design different from Scanner,
+   Taste AI, Dishes and Pairing pages
+===================================================== */
+
+:root{
+  --bg:#fbfaf4;
+  --paper:#ffffff;
+  --ink:#101010;
+  --muted:#746d62;
+  --line:rgba(20,20,20,.09);
+
+  --gold:#c99a2e;
+  --gold-soft:#fff0c3;
+
+  --green:#35a878;
+  --green-soft:#e9fff5;
+
+  --blue:#6aa9ff;
+  --blue-soft:#eef6ff;
+
+  --rose:#ee7d9b;
+  --rose-soft:#ffeaf1;
+
+  --amber:#d8842c;
+  --amber-soft:#fff1df;
+
+  --violet:#9b7cff;
+  --violet-soft:#f1edff;
+
+  --dark:#111;
+  --accent:#c99a2e;
+  --accent-soft:#fff0c3;
+
+  --shadow:0 30px 90px rgba(61,45,8,.13);
+  --shadow-soft:0 18px 45px rgba(61,45,8,.08);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:"Inter",sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 10% 10%, rgba(255,240,195,.70), transparent 30%),
+    radial-gradient(circle at 88% 14%, rgba(106,169,255,.12), transparent 28%),
+    radial-gradient(circle at 72% 92%, rgba(53,168,120,.10), transparent 34%),
+    var(--bg);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+body.lock{
+  overflow:hidden;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input,
+select,
+textarea{
+  font-family:inherit;
+}
+
+button{
+  cursor:none;
+}
+
+img{
+  max-width:100%;
+  display:block;
+}
+
+::selection{
+  background:var(--accent);
+  color:white;
+}
+
+::-webkit-scrollbar{
+  width:10px;
+}
+
+::-webkit-scrollbar-track{
+  background:#efe8d9;
+}
+
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(var(--gold),var(--green));
+  border-radius:999px;
+}
+
+/* =====================================================
+   GLOBAL EFFECTS
+===================================================== */
+
+#reserveCanvas{
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  pointer-events:none;
+}
+
+.grain{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  opacity:.32;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 500 500' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+}
+
+.progress{
+  position:fixed;
+  top:0;
+  left:0;
+  width:0%;
+  height:4px;
+  z-index:6000;
+  background:linear-gradient(90deg,var(--gold),var(--green),var(--blue),var(--rose));
+}
+
+.cursor-dot,
+.cursor-ring{
+  position:fixed;
+  top:0;
+  left:0;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  border-radius:50%;
+  z-index:9999;
+}
+
+.cursor-dot{
+  width:8px;
+  height:8px;
+  background:var(--accent);
+}
+
+.cursor-ring{
+  width:44px;
+  height:44px;
+  border:1px solid rgba(201,154,46,.68);
+  transition:.25s var(--ease);
+}
+
+.cursor-ring.hover{
+  width:76px;
+  height:76px;
+  background:rgba(201,154,46,.08);
+}
+
+/* =====================================================
+   LOADER
+===================================================== */
+
+.loader{
+  position:fixed;
+  inset:0;
+  background:#fffaf0;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  transition:.75s var(--ease);
+}
+
+.loader.hide{
+  opacity:0;
+  visibility:hidden;
+}
+
+.loader-key{
+  width:100px;
+  height:100px;
+  border-radius:34px;
+  position:relative;
+  background:
+    radial-gradient(circle at 35% 28%, white 0 12%, transparent 13%),
+    linear-gradient(135deg,var(--gold-soft),var(--gold));
+  box-shadow:
+    0 0 0 16px rgba(201,154,46,.09),
+    0 0 80px rgba(201,154,46,.34);
+  animation:pulse 1.5s ease-in-out infinite;
+}
+
+.loader-key::before,
+.loader-key::after{
+  content:"";
+  position:absolute;
+  inset:-22px;
+  border-radius:50%;
+  border:1px solid rgba(201,154,46,.34);
+  animation:spin 4s linear infinite;
+}
+
+.loader-key::after{
+  inset:-38px;
+  border-style:dashed;
+  animation-duration:7s;
+}
+
+.loader h2{
+  margin-top:34px;
+  font-family:"Playfair Display",serif;
+  font-size:38px;
+  letter-spacing:-.035em;
+}
+
+.loader p{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+  letter-spacing:.35em;
+  text-transform:uppercase;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.07)}
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.nav{
+  position:fixed;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(1220px,calc(100% - 32px));
+  height:76px;
+  z-index:2200;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 14px 0 22px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.82);
+  background:rgba(255,255,255,.62);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  box-shadow:0 20px 70px rgba(60,43,5,.09);
+  transition:.35s var(--ease);
+}
+
+.nav.scrolled{
+  top:10px;
+  height:68px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 20px 80px rgba(60,43,5,.14);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:950;
+}
+
+.logo-icon{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 34% 26%, white 0 13%, transparent 14%),
+    linear-gradient(135deg,var(--gold-soft),var(--gold));
+  box-shadow:0 12px 30px rgba(201,154,46,.28);
+  position:relative;
+}
+
+.logo-icon::after{
+  content:"";
+  position:absolute;
+  inset:-6px;
+  border-radius:50%;
+  border:1px solid rgba(201,154,46,.32);
+}
+
+.logo strong{
+  display:block;
+  font-size:18px;
+  letter-spacing:-.03em;
+}
+
+.logo span:last-child{
+  display:block;
+  margin-top:4px;
+  font-size:10px;
+  color:var(--muted);
+  letter-spacing:.28em;
+  text-transform:uppercase;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.nav-links a{
+  padding:12px 15px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:800;
+  color:#332c22;
+  transition:.3s var(--ease);
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+  background:rgba(201,154,46,.12);
+  color:#000;
+}
+
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.vault-mini{
+  position:relative;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  border:0;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(20,20,20,.08);
+  font-size:20px;
+  transition:.3s var(--ease);
+}
+
+.vault-mini:hover{
+  transform:translateY(-3px);
+  background:#fff;
+}
+
+.vault-count{
+  position:absolute;
+  top:-3px;
+  right:-3px;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:var(--gold);
+  color:white;
+  font-size:11px;
+  font-weight:950;
+  display:grid;
+  place-items:center;
+}
+
+.nav-cta{
+  border:0;
+  padding:14px 20px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#111,#3b3021);
+  color:white;
+  font-weight:900;
+  box-shadow:0 16px 34px rgba(17,17,17,.19);
+  transition:.35s var(--ease);
+}
+
+.nav-cta:hover{
+  transform:translateY(-3px);
+}
+
+.hamburger{
+  display:none;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  border:0;
+  background:#111;
+  position:relative;
+}
+
+.hamburger span{
+  position:absolute;
+  left:14px;
+  width:20px;
+  height:2px;
+  border-radius:4px;
+  background:white;
+  transition:.35s var(--ease);
+}
+
+.hamburger span:nth-child(1){top:17px}
+.hamburger span:nth-child(2){top:23px}
+.hamburger span:nth-child(3){top:29px}
+
+.hamburger.active span:nth-child(1){
+  top:23px;
+  transform:rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2){
+  opacity:0;
+}
+
+.hamburger.active span:nth-child(3){
+  top:23px;
+  transform:rotate(-45deg);
+}
+
+/* MOBILE PANEL */
+.mobile-panel{
+  position:fixed;
+  inset:0;
+  z-index:2000;
+  background:rgba(255,250,240,.84);
+  backdrop-filter:blur(32px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform:translateX(100%);
+  transition:.7s var(--ease);
+  overflow:hidden;
+}
+
+.mobile-panel.active{
+  transform:translateX(0);
+}
+
+.mobile-panel::before{
+  content:"RESERVE";
+  position:absolute;
+  right:-8vw;
+  bottom:-5vw;
+  font-size:25vw;
+  font-weight:950;
+  color:rgba(201,154,46,.08);
+  line-height:.8;
+}
+
+.mobile-links{
+  position:relative;
+  z-index:2;
+  text-align:center;
+}
+
+.mobile-links a{
+  display:block;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(42px,11vw,86px);
+  font-weight:900;
+  line-height:1.1;
+  opacity:0;
+  transform:translateX(50px);
+  transition:.55s var(--ease);
+}
+
+.mobile-panel.active .mobile-links a{
+  opacity:1;
+  transform:translateX(0);
+}
+
+.mobile-panel.active .mobile-links a:nth-child(1){transition-delay:.12s}
+.mobile-panel.active .mobile-links a:nth-child(2){transition-delay:.2s}
+.mobile-panel.active .mobile-links a:nth-child(3){transition-delay:.28s}
+.mobile-panel.active .mobile-links a:nth-child(4){transition-delay:.36s}
+.mobile-panel.active .mobile-links a:nth-child(5){transition-delay:.44s}
+
+/* =====================================================
+   SHARED
+===================================================== */
+
+.container{
+  width:min(1220px,100%);
+  margin:0 auto;
+}
+
+.section{
+  padding:112px 22px;
+  position:relative;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 15px;
+  border-radius:999px;
+  background:rgba(255,255,255,.68);
+  border:1px solid rgba(255,255,255,.8);
+  box-shadow:var(--shadow-soft);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  color:#775914;
+}
+
+.badge::before{
+  content:"";
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 18px var(--accent);
+}
+
+.section-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:32px;
+  margin-bottom:48px;
+}
+
+.section-title{
+  margin-top:22px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(42px,6vw,78px);
+  line-height:.95;
+  letter-spacing:-.055em;
+}
+
+.section-title span,
+.hero-title span{
+  display:inline-block;
+  background:linear-gradient(120deg,var(--gold),#5e4103 48%,var(--green));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.section-text{
+  max-width:560px;
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.8;
+}
+
+.btn{
+  border:0;
+  border-radius:999px;
+  padding:15px 22px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-weight:950;
+  transition:.35s var(--ease);
+  position:relative;
+  overflow:hidden;
+}
+
+.btn-dark{
+  background:linear-gradient(135deg,#111,#3b3021);
+  color:#fff;
+  box-shadow:0 20px 42px rgba(17,17,17,.19);
+}
+
+.btn-dark:hover{
+  transform:translateY(-4px);
+  box-shadow:0 28px 65px rgba(17,17,17,.26);
+}
+
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+  color:#251703;
+  box-shadow:0 20px 42px rgba(201,154,46,.23);
+}
+
+.btn-gold:hover{
+  transform:translateY(-4px);
+  box-shadow:0 28px 65px rgba(201,154,46,.34);
+}
+
+.btn-white{
+  background:rgba(255,255,255,.76);
+  color:#111;
+  border:1px solid var(--line);
+}
+
+.btn-white:hover{
+  background:#fff;
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-soft);
+}
+
+.reveal{
+  opacity:0;
+  transform:translateY(34px);
+  transition:opacity .8s var(--ease), transform .8s var(--ease);
+}
+
+.reveal.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* =====================================================
+   HERO — RESERVATION KEY DESIGN
+===================================================== */
+
+.reserve-hero{
+  min-height:100vh;
+  padding:132px 22px 82px;
+  position:relative;
+  overflow:hidden;
+}
+
+.reserve-hero::before{
+  content:"RESERVE";
+  position:absolute;
+  left:50%;
+  top:17%;
+  transform:translateX(-50%);
+  font-size:14vw;
+  font-weight:950;
+  letter-spacing:-.08em;
+  color:rgba(17,17,17,.035);
+  pointer-events:none;
+}
+
+.hero-grid{
+  width:min(1220px,100%);
+  margin:0 auto;
+  min-height:calc(100vh - 220px);
+  display:grid;
+  grid-template-columns:.95fr 1.05fr;
+  gap:44px;
+  align-items:center;
+}
+
+.hero-title{
+  margin-top:22px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(54px,7vw,104px);
+  line-height:.88;
+  letter-spacing:-.07em;
+}
+
+.hero-text{
+  margin-top:26px;
+  max-width:660px;
+  color:var(--muted);
+  font-size:18px;
+  line-height:1.8;
+}
+
+.hero-actions{
+  margin-top:34px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.hero-metrics{
+  margin-top:40px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  max-width:680px;
+}
+
+.metric-card{
+  padding:18px;
+  border-radius:24px;
+  background:rgba(255,255,255,.62);
+  border:1px solid rgba(255,255,255,.86);
+  backdrop-filter:blur(18px);
+  box-shadow:var(--shadow-soft);
+}
+
+.metric-card strong{
+  display:block;
+  font-size:26px;
+  font-weight:950;
+}
+
+.metric-card span{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+/* Hero visual different from previous pages */
+.reservation-key{
+  min-height:660px;
+  position:relative;
+}
+
+.key-shell{
+  position:absolute;
+  inset:30px 0;
+  border-radius:58px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.88),rgba(255,255,255,.42)),
+    radial-gradient(circle at 30% 12%, var(--gold-soft), transparent 36%);
+  border:1px solid rgba(255,255,255,.9);
+  backdrop-filter:blur(24px);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.key-shell::before{
+  content:"";
+  position:absolute;
+  width:600px;
+  height:600px;
+  border-radius:50%;
+  border:1px dashed rgba(201,154,46,.32);
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  animation:spin 32s linear infinite;
+}
+
+.table-key{
+  position:absolute;
+  left:50%;
+  top:48%;
+  width:330px;
+  height:330px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:
+    conic-gradient(var(--gold) 0 74%, #eee5d2 0),
+    linear-gradient(145deg,#fff,#eee3cf);
+  padding:18px;
+  box-shadow:0 40px 90px rgba(60,43,5,.16);
+  z-index:3;
+}
+
+.table-key-inner{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  background:
+    linear-gradient(145deg,#fff,#f1eadc),
+    url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900") center/cover;
+  overflow:hidden;
+  position:relative;
+}
+
+.table-key-inner::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.1)),
+    radial-gradient(circle at center,transparent 0 38%,rgba(0,0,0,.18) 78%);
+}
+
+.key-floating{
+  position:absolute;
+  z-index:5;
+  width:230px;
+  padding:16px;
+  border-radius:28px;
+  background:rgba(255,255,255,.84);
+  border:1px solid rgba(255,255,255,.94);
+  backdrop-filter:blur(20px);
+  box-shadow:var(--shadow-soft);
+  animation:floatCard 5s ease-in-out infinite;
+}
+
+.key-floating.one{
+  left:0;
+  top:110px;
+}
+
+.key-floating.two{
+  right:0;
+  top:260px;
+  animation-delay:.5s;
+}
+
+.key-floating.three{
+  left:48px;
+  bottom:78px;
+  animation-delay:1s;
+}
+
+.key-floating small{
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+}
+
+.key-floating h4{
+  margin-top:6px;
+  font-size:17px;
+  letter-spacing:-.035em;
+}
+
+.key-floating p{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+@keyframes floatCard{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-14px)}
+}
+
+/* =====================================================
+   RESERVATION STUDIO — UNIQUE DESIGN
+===================================================== */
+
+.studio{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.72)),
+    radial-gradient(circle at 16% 32%, rgba(201,154,46,.20), transparent 32%),
+    radial-gradient(circle at 86% 70%, rgba(106,169,255,.12), transparent 32%);
+}
+
+.reserve-studio{
+  display:grid;
+  grid-template-columns:.72fr 1.28fr;
+  gap:24px;
+  align-items:stretch;
+}
+
+.signal-rail,
+.booking-stage{
+  border-radius:52px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.9);
+  backdrop-filter:blur(24px);
+  box-shadow:var(--shadow-soft);
+  overflow:hidden;
+}
+
+/* Signal Rail */
+.signal-rail{
+  padding:30px;
+  position:relative;
+}
+
+.signal-rail::before{
+  content:"";
+  position:absolute;
+  right:-100px;
+  top:-100px;
+  width:290px;
+  height:290px;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--gold-soft),transparent 70%);
+}
+
+.rail-head{
+  position:relative;
+  z-index:2;
+  display:flex;
+  gap:16px;
+  align-items:center;
+  margin-bottom:28px;
+}
+
+.rail-orb{
+  width:64px;
+  height:64px;
+  border-radius:22px;
+  display:grid;
+  place-items:center;
+  font-size:30px;
+  background:
+    radial-gradient(circle at 30% 25%, #fff 0 15%, transparent 16%),
+    linear-gradient(135deg,var(--gold-soft),var(--gold));
+  box-shadow:0 18px 42px rgba(201,154,46,.18);
+}
+
+.rail-head h3{
+  font-size:30px;
+  letter-spacing:-.055em;
+}
+
+.rail-head p{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.rail-steps{
+  position:relative;
+  z-index:2;
+  display:grid;
+  gap:14px;
+}
+
+.rail-step{
+  display:grid;
+  grid-template-columns:44px 1fr;
+  gap:14px;
+  padding:15px;
+  border-radius:24px;
+  background:rgba(255,255,255,.66);
+  border:1px solid rgba(255,255,255,.84);
+  transition:.35s var(--ease);
+}
+
+.rail-step:hover,
+.rail-step.active{
+  transform:translateX(6px);
+  background:#fff;
+}
+
+.rail-num{
+  width:44px;
+  height:44px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:#111;
+  color:white;
+  font-weight:950;
+  font-size:13px;
+}
+
+.rail-step strong{
+  display:block;
+  font-size:14px;
+}
+
+.rail-step span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+/* Booking Stage */
+.booking-stage{
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  min-height:820px;
+}
+
+/* Left side visual map */
+.seat-map-zone{
+  position:relative;
+  padding:30px;
+  background:
+    linear-gradient(145deg,rgba(17,17,17,.92),rgba(62,48,27,.84)),
+    url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1400") center/cover;
+  color:white;
+  overflow:hidden;
+}
+
+.seat-map-zone::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 35%,transparent 0 34%,rgba(0,0,0,.24) 70%),
+    linear-gradient(180deg,rgba(0,0,0,.16),rgba(0,0,0,.56));
+}
+
+.map-top{
+  position:relative;
+  z-index:2;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:20px;
+}
+
+.map-top small{
+  display:inline-flex;
+  padding:9px 13px;
+  border-radius:999px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.18);
+  color:white;
+  font-weight:950;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-size:11px;
+  backdrop-filter:blur(12px);
+}
+
+.map-top h3{
+  margin-top:14px;
+  font-size:36px;
+  letter-spacing:-.06em;
+  max-width:340px;
+}
+
+.map-clock{
+  text-align:right;
+}
+
+.map-clock strong{
+  display:block;
+  font-size:34px;
+}
+
+.map-clock span{
+  display:block;
+  margin-top:4px;
+  color:rgba(255,255,255,.64);
+  font-size:12px;
+  font-weight:850;
+}
+
+.floor-map{
+  position:relative;
+  z-index:2;
+  margin-top:48px;
+  min-height:480px;
+  border-radius:38px;
+  border:1px solid rgba(255,255,255,.18);
+  background:
+    radial-gradient(circle at 50% 45%,rgba(255,255,255,.12),transparent 48%),
+    rgba(255,255,255,.08);
+  backdrop-filter:blur(12px);
+  overflow:hidden;
+}
+
+.floor-map::before{
+  content:"BAR";
+  position:absolute;
+  top:24px;
+  left:24px;
+  right:24px;
+  height:58px;
+  border-radius:22px;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.16);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:rgba(255,255,255,.7);
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:.28em;
+}
+
+.floor-map::after{
+  content:"WINDOW VIEW";
+  position:absolute;
+  left:24px;
+  bottom:24px;
+  width:160px;
+  height:52px;
+  border-radius:22px;
+  background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.16);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:rgba(255,255,255,.7);
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.18em;
+}
+
+.table-dot{
+  position:absolute;
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.26);
+  background:rgba(255,255,255,.16);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-size:13px;
+  font-weight:950;
+  backdrop-filter:blur(12px);
+  transition:.35s var(--ease);
+}
+
+.table-dot span{
+  display:block;
+  font-size:10px;
+  color:rgba(255,255,255,.65);
+  font-weight:850;
+}
+
+.table-dot:hover,
+.table-dot.selected{
+  transform:scale(1.1);
+  background:var(--gold);
+  border-color:var(--gold);
+  color:#111;
+  box-shadow:0 0 0 10px rgba(201,154,46,.16);
+}
+
+.table-dot.booked{
+  opacity:.35;
+  pointer-events:none;
+  background:rgba(255,255,255,.08);
+}
+
+.table-dot.t1{left:17%;top:30%}
+.table-dot.t2{left:45%;top:26%}
+.table-dot.t3{right:15%;top:35%}
+.table-dot.t4{left:28%;top:57%}
+.table-dot.t5{right:26%;top:58%}
+.table-dot.t6{right:13%;bottom:16%}
+
+.room-switch{
+  position:relative;
+  z-index:3;
+  margin-top:22px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.room-btn{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.12);
+  color:white;
+  font-size:12px;
+  font-weight:950;
+  backdrop-filter:blur(12px);
+  transition:.3s var(--ease);
+}
+
+.room-btn.active,
+.room-btn:hover{
+  background:white;
+  color:#111;
+}
+
+/* Right Form */
+.booking-form-zone{
+  padding:30px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.date-strip{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-bottom:22px;
+}
+
+.date-chip{
+  padding:13px 10px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:#fff;
+  text-align:center;
+  transition:.3s var(--ease);
+}
+
+.date-chip strong{
+  display:block;
+  font-size:18px;
+}
+
+.date-chip span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:950;
+  text-transform:uppercase;
+}
+
+.date-chip.active,
+.date-chip:hover{
+  background:#111;
+  color:white;
+  transform:translateY(-3px);
+}
+
+.date-chip.active span,
+.date-chip:hover span{
+  color:rgba(255,255,255,.65);
+}
+
+.reserve-form{
+  display:grid;
+  gap:15px;
+}
+
+.form-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.field label{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:8px;
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:.13em;
+  color:#6d5a27;
+  text-transform:uppercase;
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:18px;
+  padding:14px 15px;
+  outline:0;
+  font-weight:800;
+  color:#111;
+  transition:.3s var(--ease);
+}
+
+.field textarea{
+  min-height:105px;
+  resize:none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:rgba(201,154,46,.55);
+  box-shadow:0 0 0 5px rgba(201,154,46,.12);
+}
+
+.live-ticket{
+  margin-top:22px;
+  padding:20px;
+  border-radius:30px;
+  background:
+    linear-gradient(135deg,#111,#3b3021);
+  color:white;
+  position:relative;
+  overflow:hidden;
+}
+
+.live-ticket::before{
+  content:"";
+  position:absolute;
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  border:1px dashed rgba(255,255,255,.18);
+  right:-70px;
+  top:-70px;
+  animation:spin 25s linear infinite;
+}
+
+.ticket-top{
+  position:relative;
+  z-index:2;
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.ticket-top strong{
+  font-size:18px;
+}
+
+.ticket-code{
+  padding:7px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  font-size:12px;
+  font-weight:950;
+}
+
+.ticket-grid{
+  position:relative;
+  z-index:2;
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.ticket-cell{
+  padding:12px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+}
+
+.ticket-cell span{
+  display:block;
+  color:rgba(255,255,255,.58);
+  font-size:11px;
+  font-weight:950;
+  text-transform:uppercase;
+}
+
+.ticket-cell b{
+  display:block;
+  margin-top:5px;
+  font-size:13px;
+}
+
+/* =====================================================
+   DINING ROOMS — UNIQUE HORIZONTAL DESIGN
+===================================================== */
+
+.rooms-section{
+  background:
+    radial-gradient(circle at 80% 12%, rgba(106,169,255,.12), transparent 28%),
+    radial-gradient(circle at 18% 82%, rgba(201,154,46,.18), transparent 28%);
+}
+
+.rooms-track{
+  display:grid;
+  gap:18px;
+}
+
+.room-card{
+  min-height:310px;
+  border-radius:44px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:var(--shadow-soft);
+  transition:.45s var(--ease);
+}
+
+.room-card:hover{
+  transform:translateY(-8px);
+  box-shadow:var(--shadow);
+}
+
+.room-card img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:.75s var(--ease);
+}
+
+.room-card:hover img{
+  transform:scale(1.06);
+}
+
+.room-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,rgba(0,0,0,.84),rgba(0,0,0,.32),transparent);
+}
+
+.room-content{
+  position:absolute;
+  left:34px;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:2;
+  color:white;
+  max-width:460px;
+}
+
+.room-content small{
+  display:inline-flex;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.82);
+  color:#111;
+  font-size:11px;
+  font-weight:950;
+  backdrop-filter:blur(14px);
+}
+
+.room-content h3{
+  margin-top:14px;
+  font-size:38px;
+  letter-spacing:-.065em;
+}
+
+.room-content p{
+  margin-top:10px;
+  color:rgba(255,255,255,.74);
+  line-height:1.7;
+}
+
+/* =====================================================
+   RESERVATION VAULT — UNIQUE SAVED RESERVE DESIGN
+===================================================== */
+
+.vault-section{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.72)),
+    radial-gradient(circle at 10% 35%,rgba(53,168,120,.12),transparent 30%),
+    radial-gradient(circle at 86% 72%,rgba(201,154,46,.18),transparent 30%);
+}
+
+.vault-layout{
+  display:grid;
+  grid-template-columns:.8fr 1.2fr;
+  gap:24px;
+  align-items:stretch;
+}
+
+.vault-summary,
+.vault-board{
+  border-radius:50px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.88);
+  backdrop-filter:blur(24px);
+  box-shadow:var(--shadow-soft);
+}
+
+.vault-summary{
+  padding:34px;
+  position:relative;
+  overflow:hidden;
+}
+
+.vault-summary::before{
+  content:"";
+  position:absolute;
+  right:-90px;
+  bottom:-90px;
+  width:260px;
+  height:260px;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--gold-soft),transparent 70%);
+}
+
+.vault-summary h3{
+  position:relative;
+  z-index:2;
+  font-size:32px;
+  letter-spacing:-.055em;
+}
+
+.vault-summary p{
+  position:relative;
+  z-index:2;
+  margin-top:12px;
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.vault-stats{
+  position:relative;
+  z-index:2;
+  margin-top:26px;
+  display:grid;
+  gap:12px;
+}
+
+.vault-stat{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+  border-radius:20px;
+  background:#fff;
+  border:1px solid var(--line);
+  font-weight:950;
+}
+
+.vault-stat span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.vault-board{
+  padding:24px;
+  min-height:420px;
+}
+
+.board-empty{
+  height:100%;
+  min-height:320px;
+  border:1px dashed rgba(20,20,20,.18);
+  border-radius:34px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  color:var(--muted);
+  padding:30px;
+}
+
+.saved-reservations{
+  display:grid;
+  gap:16px;
+}
+
+.reserve-pass{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:18px;
+  padding:22px;
+  border-radius:32px;
+  background:
+    linear-gradient(135deg,#111,#3b3021);
+  color:white;
+  overflow:hidden;
+}
+
+.reserve-pass::before,
+.reserve-pass::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  background:var(--bg);
+  transform:translateY(-50%);
+}
+
+.reserve-pass::before{
+  left:-15px;
+}
+
+.reserve-pass::after{
+  right:-15px;
+}
+
+.reserve-pass h4{
+  font-size:22px;
+  letter-spacing:-.045em;
+}
+
+.reserve-pass p{
+  margin-top:8px;
+  color:rgba(255,255,255,.68);
+  line-height:1.6;
+  font-size:13px;
+}
+
+.pass-meta{
+  margin-top:16px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.pass-meta span{
+  padding:7px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  font-size:11px;
+  font-weight:950;
+}
+
+.pass-actions{
+  display:grid;
+  align-content:center;
+  gap:8px;
+}
+
+.pass-actions button{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:0;
+  background:rgba(255,255,255,.14);
+  color:white;
+  font-weight:950;
+}
+
+/* =====================================================
+   RESERVATION FAQ / CTA / FOOTER
+===================================================== */
+
+.faq-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+
+.faq-card{
+  padding:26px;
+  border-radius:34px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.88);
+  box-shadow:var(--shadow-soft);
+  backdrop-filter:blur(22px);
+}
+
+.faq-card h3{
+  font-size:22px;
+  letter-spacing:-.045em;
+}
+
+.faq-card p{
+  margin-top:10px;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.cta{
+  padding-bottom:130px;
+}
+
+.cta-box{
+  border-radius:58px;
+  background:
+    linear-gradient(135deg,rgba(17,17,17,.92),rgba(62,48,27,.88)),
+    url("https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1600") center/cover;
+  color:#fff;
+  min-height:460px;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.cta-copy{
+  padding:58px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.cta-copy .badge{
+  color:#fff;
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.18);
+  box-shadow:none;
+}
+
+.cta-copy h2{
+  margin-top:22px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(44px,5.6vw,78px);
+  line-height:.95;
+  letter-spacing:-.055em;
+}
+
+.cta-copy p{
+  margin-top:22px;
+  max-width:560px;
+  color:rgba(255,255,255,.72);
+  line-height:1.8;
+  font-size:17px;
+}
+
+.cta-card-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:34px;
+}
+
+.cta-card{
+  width:100%;
+  max-width:390px;
+  padding:30px;
+  border-radius:38px;
+  background:rgba(255,255,255,.9);
+  color:#111;
+  backdrop-filter:blur(24px);
+}
+
+.cta-card h3{
+  font-size:28px;
+  letter-spacing:-.055em;
+}
+
+.cta-card p{
+  margin-top:10px;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.footer{
+  padding:72px 22px 32px;
+  background:#111;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+
+.footer::before{
+  content:"RESERVE";
+  position:absolute;
+  right:-30px;
+  bottom:-44px;
+  font-size:14vw;
+  font-weight:950;
+  letter-spacing:-.08em;
+  color:rgba(255,255,255,.035);
+}
+
+.footer-grid{
+  width:min(1220px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1.35fr .8fr .8fr 1fr;
+  gap:36px;
+  position:relative;
+  z-index:2;
+}
+
+.footer .logo{
+  color:#fff;
+  margin-bottom:20px;
+}
+
+.footer p,
+.footer a,
+.footer li{
+  color:rgba(255,255,255,.64);
+  line-height:1.8;
+}
+
+.footer h4{
+  margin-bottom:18px;
+}
+
+.footer ul{
+  list-style:none;
+}
+
+.footer a:hover{
+  color:var(--gold-soft);
+}
+
+.footer-bottom{
+  width:min(1220px,100%);
+  margin:48px auto 0;
+  padding-top:26px;
+  border-top:1px solid rgba(255,255,255,.12);
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:18px;
+  color:rgba(255,255,255,.5);
+  position:relative;
+  z-index:2;
+}
+
+/* =====================================================
+   FLOATING VAULT / TOAST
+===================================================== */
+
+.vault-floating{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  z-index:5000;
+  min-width:64px;
+  height:64px;
+  border-radius:999px;
+  padding:0 20px;
+  border:0;
+  background:linear-gradient(135deg,#111,#3b3021);
+  color:white;
+  font-weight:950;
+  box-shadow:0 24px 60px rgba(17,17,17,.24);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  transition:.35s var(--ease);
+}
+
+.vault-floating:hover{
+  transform:translateY(-6px);
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:28px;
+  transform:translate(-50%,120px);
+  z-index:8000;
+  padding:15px 22px;
+  border-radius:999px;
+  background:#111;
+  color:#fff;
+  box-shadow:0 20px 50px rgba(0,0,0,.24);
+  font-weight:850;
+  transition:.45s var(--ease);
+}
+
+.toast.show{
+  transform:translate(-50%,0);
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1120px){
+  .hero-grid,
+  .reserve-studio,
+  .booking-stage,
+  .vault-layout,
+  .cta-box{
+    grid-template-columns:1fr;
+  }
+
+  .reservation-key{
+    min-height:610px;
+  }
+
+  .seat-map-zone{
+    min-height:700px;
+  }
+
+  .faq-grid{
+    grid-template-columns:1fr;
+  }
+
+  .footer-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:860px){
+  body{
+    cursor:auto;
+  }
+
+  a,
+  button{
+    cursor:pointer;
+  }
+
+  .cursor-dot,
+  .cursor-ring{
+    display:none;
+  }
+
+  .nav{
+    height:68px;
+    top:10px;
+    width:calc(100% - 22px);
+  }
+
+  .nav-links,
+  .nav-cta{
+    display:none;
+  }
+
+  .hamburger{
+    display:block;
+  }
+
+  .reserve-hero{
+    padding:112px 16px 60px;
+  }
+
+  .section{
+    padding:86px 16px;
+  }
+
+  .section-head{
+    display:block;
+  }
+
+  .section-text{
+    margin-top:22px;
+  }
+
+  .hero-title{
+    font-size:clamp(50px,15vw,82px);
+  }
+
+  .hero-actions{
+    flex-direction:column;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  .hero-metrics{
+    grid-template-columns:1fr;
+  }
+
+  .reservation-key{
+    min-height:560px;
+  }
+
+  .key-shell{
+    inset:20px 0;
+    border-radius:42px;
+  }
+
+  .table-key{
+    width:260px;
+    height:260px;
+  }
+
+  .key-floating{
+    width:205px;
+  }
+
+  .key-floating.one{
+    left:8px;
+    top:52px;
+  }
+
+  .key-floating.two{
+    right:8px;
+    top:238px;
+  }
+
+  .key-floating.three{
+    left:28px;
+    bottom:42px;
+  }
+
+  .signal-rail,
+  .booking-stage,
+  .vault-summary,
+  .vault-board{
+    border-radius:34px;
+  }
+
+  .seat-map-zone{
+    min-height:660px;
+    padding:24px;
+  }
+
+  .floor-map{
+    min-height:440px;
+  }
+
+  .table-dot{
+    width:62px;
+    height:62px;
+  }
+
+  .booking-form-zone{
+    padding:24px;
+  }
+
+  .form-row{
+    grid-template-columns:1fr;
+  }
+
+  .date-strip{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .ticket-grid{
+    grid-template-columns:1fr;
+  }
+
+  .room-content{
+    left:24px;
+    right:24px;
+  }
+
+  .room-content h3{
+    font-size:32px;
+  }
+
+  .reserve-pass{
+    grid-template-columns:1fr;
+  }
+
+  .pass-actions{
+    display:flex;
+  }
+
+  .cta-copy{
+    padding:38px 24px 8px;
+  }
+
+  .cta-card-wrap{
+    padding:24px;
+  }
+}
+
+@media(max-width:560px){
+  .key-floating{
+    width:185px;
+    padding:12px;
+  }
+
+  .key-floating p{
+    display:none;
+  }
+
+  .table-key{
+    width:235px;
+    height:235px;
+  }
+
+  .map-top{
+    display:block;
+  }
+
+  .map-clock{
+    text-align:left;
+    margin-top:18px;
+  }
+
+  .floor-map{
+    min-height:410px;
+  }
+
+  .table-dot.t1{left:10%;top:30%}
+  .table-dot.t2{left:42%;top:28%}
+  .table-dot.t3{right:8%;top:39%}
+  .table-dot.t4{left:20%;top:57%}
+  .table-dot.t5{right:20%;top:60%}
+  .table-dot.t6{right:8%;bottom:15%}
+
+  .footer-grid{
+    grid-template-columns:1fr;
+  }
+
+  .footer-bottom{
+    display:block;
+  }
+
+  .vault-floating{
+    right:16px;
+    bottom:16px;
+    height:56px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="loader" id="loader">
+  <div class="loader-key"></div>
+  <h2>NEURA RESERVE</h2>
+  <p>AI Booking Studio</p>
+</div>
+
+<canvas id="reserveCanvas"></canvas>
+<div class="grain"></div>
+<div class="progress" id="progress"></div>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav class="nav" id="nav">
+  <a href="#top" class="logo magnetic">
+    <span class="logo-icon"></span>
+    <span>
+      <strong>NEURA TABLE</strong>
+      <span>Reserve</span>
+    </span>
+  </a>
+
+  <div class="nav-links">
+        <a href="index.html">Home</a>
+    <a href="taste.html">Taste</a>
+       <a href="scanner.html">Scanner</a>
+    <a href="dishes.html">Dishes</a>
+    <a href="pairing.html">Pairing</a>
+    <a href="reserve.html" class="active">Reserve</a>
+    <a href="menu.html">Menu</a>
+    <a href="#journey">Journey</a>
+    <a href="chefs.html">chefs</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="nav-actions">
+    <button class="vault-mini" id="vaultMini">
+      🎫
+      <span class="vault-count" id="vaultCount">0</span>
+    </button>
+    <a href="#studio" class="nav-cta magnetic">Book</a>
+    <button class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-panel" id="mobilePanel">
+  <div class="mobile-links">
+  <a href="index.html" class="mobile-link">Home</a>
+    <a href="taste.html" class="mobile-link">Taste</a>
+    <a href="scanner.html" class="mobile-link">Scanner</a>
+    <a href="dishes.html" class="mobile-link">Dishes</a>
+    <a href="pairing.html" class="mobile-link">Pairing</a>
+    <a href="reserve.html" class="mobile-link">Reserve</a>
+    <a href="menu.html" class="mobile-link">Menu</a>
+    <a href="journey.html" class="mobile-link">journey</a>
+    <a href="chefs.html" class="mobile-link">Chefs</a>
+    <a href="contact.html" class="mobile-link">Contact</a>
+  </div>
+</div>
+
+<button class="vault-floating magnetic" id="vaultFloat">
+  🎫 <span>Vault</span>
+</button>
+
+<!-- HERO -->
+<header class="reserve-hero" id="top">
+  <div class="hero-grid">
+    <section>
+      <div class="badge reveal">AI Restaurant Reservation</div>
+
+      <h1 class="hero-title reveal" style="transition-delay:.08s">
+        Reserve your table before
+        <span>the evening begins.</span>
+      </h1>
+
+      <p class="hero-text reveal" style="transition-delay:.16s">
+        A completely unique reservation page with table map, date chips, saved reservation vault,
+        room selection and AI-style booking ticket.
+      </p>
+
+      <div class="hero-actions reveal" style="transition-delay:.24s">
+        <a href="#studio" class="btn btn-dark magnetic">Open Reserve Studio →</a>
+        <button class="btn btn-gold magnetic" id="quickReserve">Quick Reservation ✨</button>
+        <button class="btn btn-white magnetic" id="openVaultHero">Saved Reservations</button>
+      </div>
+
+      <div class="hero-metrics reveal" style="transition-delay:.32s">
+        <div class="metric-card">
+          <strong data-count="86">0</strong>
+          <span>Tables Weekly</span>
+        </div>
+        <div class="metric-card">
+          <strong data-count="12">0</strong>
+          <span>Private Rooms</span>
+        </div>
+        <div class="metric-card">
+          <strong data-count="98">0</strong>
+          <span>Guest Match</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="reservation-key reveal" style="transition-delay:.2s">
+      <div class="key-shell">
+        <div class="table-key">
+          <div class="table-key-inner"></div>
+        </div>
+
+        <div class="key-floating one">
+          <small>Tonight</small>
+          <h4>Chef Table</h4>
+          <p>Limited luxury seating with live kitchen view.</p>
+        </div>
+
+        <div class="key-floating two">
+          <small>AI Timing</small>
+          <h4>Perfect Arrival</h4>
+          <p>Service rhythm adjusted before guests arrive.</p>
+        </div>
+
+        <div class="key-floating three">
+          <small>Saved Vault</small>
+          <h4>Booking Passport</h4>
+          <p>Every reservation becomes a reusable digital pass.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</header>
+
+<!-- RESERVE STUDIO -->
+<section class="section studio" id="studio">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Reserve Studio</div>
+        <h2 class="section-title reveal">Choose room, table, date and <span>arrival rhythm.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        This section is intentionally different from the scanner, dishes and pairing pages: it uses a theatrical floor map and live booking ticket.
+      </p>
+    </div>
+
+    <div class="reserve-studio">
+      <!-- SIGNAL RAIL -->
+      <aside class="signal-rail reveal">
+        <div class="rail-head">
+          <div class="rail-orb">🗝️</div>
+          <div>
+            <h3>Booking Flow</h3>
+            <p>Reservation choreography</p>
+          </div>
+        </div>
+
+        <div class="rail-steps">
+          <div class="rail-step active">
+            <div class="rail-num">01</div>
+            <div>
+              <strong>Select Room</strong>
+              <span>Choose ambience: window, garden, chef table or private salon.</span>
+            </div>
+          </div>
+
+          <div class="rail-step">
+            <div class="rail-num">02</div>
+            <div>
+              <strong>Pick Date</strong>
+              <span>Use quick date chips designed for fast mobile booking.</span>
+            </div>
+          </div>
+
+          <div class="rail-step">
+            <div class="rail-num">03</div>
+            <div>
+              <strong>Choose Table</strong>
+              <span>Tap the dining map to select available seating.</span>
+            </div>
+          </div>
+
+          <div class="rail-step">
+            <div class="rail-num">04</div>
+            <div>
+              <strong>Save Passport</strong>
+              <span>Your reservation is added to the unique reservation vault.</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- BOOKING STAGE -->
+      <div class="booking-stage reveal">
+        <!-- MAP -->
+        <div class="seat-map-zone">
+          <div class="map-top">
+            <div>
+              <small>Live Floor Map</small>
+              <h3 id="roomTitle">Golden Dining Room</h3>
+            </div>
+
+            <div class="map-clock">
+              <strong id="liveTime">--:--</strong>
+              <span>Restaurant Time</span>
+            </div>
+          </div>
+
+          <div class="floor-map">
+            <button class="table-dot t1 selected" data-table="T1">
+              T1 <span>2P</span>
+            </button>
+            <button class="table-dot t2" data-table="T2">
+              T2 <span>4P</span>
+            </button>
+            <button class="table-dot t3 booked" data-table="T3">
+              T3 <span>Booked</span>
+            </button>
+            <button class="table-dot t4" data-table="T4">
+              T4 <span>2P</span>
+            </button>
+            <button class="table-dot t5" data-table="T5">
+              T5 <span>6P</span>
+            </button>
+            <button class="table-dot t6" data-table="T6">
+              T6 <span>VIP</span>
+            </button>
+          </div>
+
+          <div class="room-switch">
+            <button class="room-btn active" data-room="Golden Dining Room">Golden Room</button>
+            <button class="room-btn" data-room="Garden Lounge">Garden Lounge</button>
+            <button class="room-btn" data-room="Chef Counter">Chef Counter</button>
+            <button class="room-btn" data-room="Private Salon">Private Salon</button>
+          </div>
+        </div>
+
+        <!-- FORM -->
+        <div class="booking-form-zone">
+          <div class="date-strip" id="dateStrip"></div>
+
+          <form class="reserve-form" id="reserveForm">
+            <div class="form-row">
+              <div class="field">
+                <label>Name</label>
+                <input id="guestName" type="text" placeholder="Your name" required>
+              </div>
+
+              <div class="field">
+                <label>Email</label>
+                <input id="guestEmail" type="email" placeholder="you@example.com" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label>Phone</label>
+                <input id="guestPhone" type="tel" placeholder="+1 234 567 890" required>
+              </div>
+
+              <div class="field">
+                <label>Guests</label>
+                <select id="guestCount" required>
+                  <option value="2">2 Guests</option>
+                  <option value="3">3 Guests</option>
+                  <option value="4">4 Guests</option>
+                  <option value="5">5 Guests</option>
+                  <option value="6">6 Guests</option>
+                  <option value="8">8 Guests</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label>Time</label>
+                <select id="reserveTime" required>
+                  <option>5:00 PM</option>
+                  <option>5:30 PM</option>
+                  <option>6:00 PM</option>
+                  <option>6:30 PM</option>
+                  <option selected>7:00 PM</option>
+                  <option>7:30 PM</option>
+                  <option>8:00 PM</option>
+                  <option>8:30 PM</option>
+                  <option>9:00 PM</option>
+                  <option>9:30 PM</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Occasion</label>
+                <select id="occasion">
+                  <option>Casual Dinner</option>
+                  <option>Date Night</option>
+                  <option>Birthday</option>
+                  <option>Anniversary</option>
+                  <option>Business Dinner</option>
+                  <option>Chef Experience</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Special Notes</label>
+              <textarea id="notes" placeholder="Allergies, preferred dishes, celebration notes..."></textarea>
+            </div>
+
+            <button class="btn btn-dark magnetic" type="submit" style="width:100%">
+              Confirm Reservation Passport
+            </button>
+          </form>
+
+          <div class="live-ticket">
+            <div class="ticket-top">
+              <strong>Live Reservation Ticket</strong>
+              <div class="ticket-code" id="ticketCode">NT-0001</div>
+            </div>
+
+            <div class="ticket-grid">
+              <div class="ticket-cell">
+                <span>Room</span>
+                <b id="ticketRoom">Golden Room</b>
+              </div>
+
+              <div class="ticket-cell">
+                <span>Table</span>
+                <b id="ticketTable">T1</b>
+              </div>
+
+              <div class="ticket-cell">
+                <span>Date</span>
+                <b id="ticketDate">Today</b>
+              </div>
+
+              <div class="ticket-cell">
+                <span>Time</span>
+                <b id="ticketTime">7:00 PM</b>
+              </div>
+
+              <div class="ticket-cell">
+                <span>Guests</span>
+                <b id="ticketGuests">2</b>
+              </div>
+
+              <div class="ticket-cell">
+                <span>Status</span>
+                <b>Ready</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ROOMS -->
+<section class="section rooms-section" id="rooms">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Dining Rooms</div>
+        <h2 class="section-title reveal">Choose the room that fits <span>your evening.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        Each room has its own atmosphere, light level, sound profile and service rhythm.
+      </p>
+    </div>
+
+    <div class="rooms-track">
+      <article class="room-card reveal">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1400" alt="Golden Dining Room">
+        <div class="room-content">
+          <small>Golden Room</small>
+          <h3>Main Dining Room</h3>
+          <p>Warm light, elegant spacing, perfect for classic dinner reservations and celebrations.</p>
+        </div>
+      </article>
+
+      <article class="room-card reveal">
+        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1400" alt="Garden Lounge">
+        <div class="room-content">
+          <small>Garden Lounge</small>
+          <h3>Soft Botanical Atmosphere</h3>
+          <p>Fresh greenery, relaxed energy, beautiful for romantic and peaceful evenings.</p>
+        </div>
+      </article>
+
+      <article class="room-card reveal">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400" alt="Chef Counter">
+        <div class="room-content">
+          <small>Chef Counter</small>
+          <h3>Live Kitchen View</h3>
+          <p>Interactive chef experience with direct view of plating, fire and service rhythm.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- VAULT -->
+<section class="section vault-section" id="vault">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Reservation Vault</div>
+        <h2 class="section-title reveal">Saved reservations as <span>digital passports.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        Completely different from saved dishes and saved pairings — reservations appear as elegant booking passes.
+      </p>
+    </div>
+
+    <div class="vault-layout">
+      <div class="vault-summary reveal">
+        <h3>Your reservation memory</h3>
+        <p>
+          Confirmed reservations are saved here during this session. Each one becomes a booking passport with room, table, guests and time.
+        </p>
+
+        <div class="vault-stats">
+          <div class="vault-stat">
+            <span>Saved Passports</span>
+            <strong id="vaultStatCount">0</strong>
+          </div>
+          <div class="vault-stat">
+            <span>Latest Room</span>
+            <strong id="vaultStatRoom">None</strong>
+          </div>
+          <div class="vault-stat">
+            <span>Latest Time</span>
+            <strong id="vaultStatTime">None</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="vault-board reveal">
+        <div id="vaultBoard">
+          <div class="board-empty">
+            <div>
+              <h3>No reservation passports yet</h3>
+              <p style="margin-top:10px">Create one in the Reserve Studio and it will appear here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Reservation Info</div>
+        <h2 class="section-title reveal">Everything before <span>you arrive.</span></h2>
+      </div>
+    </div>
+
+    <div class="faq-grid">
+      <article class="faq-card reveal">
+        <h3>Arrival Window</h3>
+        <p>We hold reservations for 15 minutes. For delays, contact the restaurant and we will adjust the rhythm.</p>
+      </article>
+
+      <article class="faq-card reveal">
+        <h3>Dress Code</h3>
+        <p>Smart casual to elegant evening wear is recommended for the main dining room and private salon.</p>
+      </article>
+
+      <article class="faq-card reveal">
+        <h3>Diet Notes</h3>
+        <p>Add allergies or dietary preferences in the notes field. The kitchen will prepare safely in advance.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section cta">
+  <div class="container">
+    <div class="cta-box reveal">
+      <div class="cta-copy">
+        <div class="badge">Reserve Tonight</div>
+        <h2>Your table can be ready before you arrive.</h2>
+        <p>
+          Use the reservation studio to choose your room, table, date and occasion. Save it as a digital passport.
+        </p>
+      </div>
+
+      <div class="cta-card-wrap">
+        <div class="cta-card">
+          <h3>Ready to book?</h3>
+          <p>Jump back to the Reserve Studio and create your table passport.</p>
+          <a href="#studio" class="btn btn-dark magnetic" style="width:100%;margin-top:22px">
+            Open Reserve Studio
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="logo">
+        <span class="logo-icon"></span>
+        <span>
+          <strong>NEURA TABLE</strong>
+          <span>Reserve Studio</span>
+        </span>
+      </div>
+      <p>A unique AI-style reservation page with table map, live ticket, saved reservation vault and room selection.</p>
+    </div>
+
+    <div>
+      <h4>Reserve</h4>
+      <ul>
+        <li><a href="#studio">Reserve Studio</a></li>
+        <li><a href="#rooms">Dining Rooms</a></li>
+        <li><a href="#vault">Reservation Vault</a></li>
+        <li><a href="#faq">Info</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Rooms</h4>
+      <ul>
+        <li><a href="#studio">Golden Room</a></li>
+        <li><a href="#studio">Garden Lounge</a></li>
+        <li><a href="#studio">Chef Counter</a></li>
+        <li><a href="#studio">Private Salon</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Contact</h4>
+      <p>hello@neuratable.ai</p>
+      <p>+1 234 567 890</p>
+      <p style="margin-top:14px">Open daily · 5PM — 12AM</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2025 NEURA TABLE. All rights reserved.</span>
+    <span>Reserve Page Ultra Pro.</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const $ = (s,p=document)=>p.querySelector(s);
+  const $$ = (s,p=document)=>[...p.querySelectorAll(s)];
+
+  /* Loader */
+  const loader=$("#loader");
+  window.addEventListener("load",()=>setTimeout(()=>loader.classList.add("hide"),850));
+  setTimeout(()=>loader.classList.add("hide"),2200);
+
+  const isTouch="ontouchstart" in window || navigator.maxTouchPoints>0;
+
+  /* Cursor */
+  const dot=$("#cursorDot");
+  const ring=$("#cursorRing");
+  let mx=0,my=0,rx=0,ry=0;
+
+  if(!isTouch){
+    window.addEventListener("mousemove",e=>{
+      mx=e.clientX;
+      my=e.clientY;
+      dot.style.left=mx+"px";
+      dot.style.top=my+"px";
+    });
+
+    function cursorLoop(){
+      rx+=(mx-rx)*.14;
+      ry+=(my-ry)*.14;
+      ring.style.left=rx+"px";
+      ring.style.top=ry+"px";
+      requestAnimationFrame(cursorLoop);
+    }
+    cursorLoop();
+
+    function bindHover(){
+      $$("a,button,.room-card,.faq-card,.reserve-pass,.rail-step,.date-chip,.table-dot").forEach(el=>{
+        if(el.dataset.hoverBound) return;
+        el.dataset.hoverBound="true";
+        el.addEventListener("mouseenter",()=>ring.classList.add("hover"));
+        el.addEventListener("mouseleave",()=>ring.classList.remove("hover"));
+      });
+    }
+    bindHover();
+    window.bindHover=bindHover;
+  }
+
+  /* Canvas */
+  const canvas=$("#reserveCanvas");
+  const ctx=canvas.getContext("2d");
+  let w,h,nodes=[],pointer={x:-999,y:-999};
+
+  function resizeCanvas(){
+    w=canvas.width=innerWidth*devicePixelRatio;
+    h=canvas.height=innerHeight*devicePixelRatio;
+    canvas.style.width=innerWidth+"px";
+    canvas.style.height=innerHeight+"px";
+
+    const count=Math.min(85,Math.max(38,Math.floor(innerWidth/18)));
+    nodes=Array.from({length:count},()=>({
+      x:Math.random()*w,
+      y:Math.random()*h,
+      vx:(Math.random()-.5)*.32*devicePixelRatio,
+      vy:(Math.random()-.5)*.32*devicePixelRatio,
+      r:(Math.random()*2+1)*devicePixelRatio
+    }));
+  }
+
+  resizeCanvas();
+  addEventListener("resize",resizeCanvas);
+
+  addEventListener("mousemove",e=>{
+    pointer.x=e.clientX*devicePixelRatio;
+    pointer.y=e.clientY*devicePixelRatio;
+  });
+
+  function canvasLoop(){
+    ctx.clearRect(0,0,w,h);
+
+    for(const n of nodes){
+      n.x+=n.vx;
+      n.y+=n.vy;
+
+      if(n.x<0 || n.x>w) n.vx*=-1;
+      if(n.y<0 || n.y>h) n.vy*=-1;
+
+      const dx=pointer.x-n.x;
+      const dy=pointer.y-n.y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+
+      if(d<160*devicePixelRatio){
+        n.x-=dx*.006;
+        n.y-=dy*.006;
+      }
+
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle="rgba(201,154,46,.30)";
+      ctx.fill();
+    }
+
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const a=nodes[i],b=nodes[j];
+        const dx=a.x-b.x;
+        const dy=a.y-b.y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        const max=130*devicePixelRatio;
+
+        if(d<max){
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y);
+          ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle=`rgba(201,154,46,${(1-d/max)*.14})`;
+          ctx.lineWidth=.7*devicePixelRatio;
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(canvasLoop);
+  }
+  canvasLoop();
+
+  /* Nav / Progress */
+  const nav=$("#nav");
+  const progress=$("#progress");
+
+  function scrollUI(){
+    nav.classList.toggle("scrolled",scrollY>35);
+    const max=document.documentElement.scrollHeight-innerHeight;
+    progress.style.width=(max>0 ? scrollY/max*100 : 0)+"%";
+  }
+
+  addEventListener("scroll",scrollUI);
+  scrollUI();
+
+  /* Mobile Menu */
+  const hamburger=$("#hamburger");
+  const mobilePanel=$("#mobilePanel");
+
+  hamburger.addEventListener("click",()=>{
+    hamburger.classList.toggle("active");
+    mobilePanel.classList.toggle("active");
+    document.body.classList.toggle("lock",mobilePanel.classList.contains("active"));
+  });
+
+  $$(".mobile-link").forEach(link=>{
+    link.addEventListener("click",()=>{
+      hamburger.classList.remove("active");
+      mobilePanel.classList.remove("active");
+      document.body.classList.remove("lock");
+    });
+  });
+
+  /* Smooth anchors */
+  $$('a[href^="#"]').forEach(a=>{
+    a.addEventListener("click",e=>{
+      const target=$(a.getAttribute("href"));
+      if(target){
+        e.preventDefault();
+        scrollTo({top:target.offsetTop-90,behavior:"smooth"});
+      }
+    });
+  });
+
+  /* Reveal */
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("show");
+        io.unobserve(entry.target);
+      }
+    });
+  },{threshold:.14});
+
+  $$(".reveal").forEach(el=>io.observe(el));
+
+  /* Magnetic */
+  if(!isTouch){
+    $$(".magnetic").forEach(el=>{
+      el.addEventListener("mousemove",e=>{
+        const r=el.getBoundingClientRect();
+        const x=e.clientX-r.left-r.width/2;
+        const y=e.clientY-r.top-r.height/2;
+        el.style.transform=`translate(${x*.16}px,${y*.16}px)`;
+      });
+
+      el.addEventListener("mouseleave",()=>{
+        el.style.transform="";
+      });
+    });
+  }
+
+  /* Counters */
+  const counterIO=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        $$("[data-count]").forEach(el=>{
+          const target=Number(el.dataset.count);
+          const start=performance.now();
+
+          function step(now){
+            const p=Math.min((now-start)/1500,1);
+            const eased=1-Math.pow(1-p,3);
+            el.textContent=Math.floor(target*eased)+(target===98?"%":"+");
+            if(p<1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        });
+        counterIO.disconnect();
+      }
+    });
+  });
+  counterIO.observe(document.querySelector("[data-count]"));
+
+  /* Live Clock */
+  function updateClock(){
+    const now=new Date();
+    $("#liveTime").textContent=now.toLocaleTimeString([],{
+      hour:"2-digit",
+      minute:"2-digit"
+    });
+  }
+  updateClock();
+  setInterval(updateClock,1000);
+
+  /* Dates */
+  const state={
+    room:"Golden Dining Room",
+    table:"T1",
+    date:"",
+    saved:[]
+  };
+
+  function createDates(){
+    const strip=$("#dateStrip");
+    const today=new Date();
+
+    let html="";
+
+    for(let i=0;i<8;i++){
+      const d=new Date(today);
+      d.setDate(today.getDate()+i);
+
+      const day=d.toLocaleDateString("en-US",{weekday:"short"});
+      const date=d.getDate();
+      const month=d.toLocaleDateString("en-US",{month:"short"});
+      const iso=d.toISOString();
+
+      if(i===0){
+        state.date=`${day}, ${month} ${date}`;
+      }
+
+      html+=`
+        <button type="button" class="date-chip ${i===0?"active":""}" data-date="${day}, ${month} ${date}">
+          <strong>${date}</strong>
+          <span>${day}</span>
+        </button>
+      `;
+    }
+
+    strip.innerHTML=html;
+    $("#ticketDate").textContent=state.date;
+
+    $$(".date-chip").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        $$(".date-chip").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        state.date=btn.dataset.date;
+        $("#ticketDate").textContent=state.date;
+      });
+    });
+  }
+
+  createDates();
+
+  /* Room Selection */
+  $$(".room-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      $$(".room-btn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+
+      state.room=btn.dataset.room;
+      $("#roomTitle").textContent=state.room;
+      $("#ticketRoom").textContent=state.room.replace(" Dining Room","");
+      toast("Room selected: "+state.room);
+    });
+  });
+
+  /* Table Selection */
+  $$(".table-dot:not(.booked)").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      $$(".table-dot").forEach(b=>b.classList.remove("selected"));
+      btn.classList.add("selected");
+
+      state.table=btn.dataset.table;
+      $("#ticketTable").textContent=state.table;
+    });
+  });
+
+  /* Ticket Updating */
+  $("#reserveTime").addEventListener("change",e=>{
+    $("#ticketTime").textContent=e.target.value;
+  });
+
+  $("#guestCount").addEventListener("change",e=>{
+    $("#ticketGuests").textContent=e.target.value;
+  });
+
+  function makeCode(){
+    return "NT-"+Math.floor(1000+Math.random()*9000);
+  }
+
+  function updateCode(){
+    $("#ticketCode").textContent=makeCode();
+  }
+
+  updateCode();
+
+  /* Reservation Submit */
+  $("#reserveForm").addEventListener("submit",e=>{
+    e.preventDefault();
+
+    const guestName=$("#guestName").value.trim();
+    const email=$("#guestEmail").value.trim();
+    const phone=$("#guestPhone").value.trim();
+
+    if(!guestName || !email || !phone){
+      toast("Please complete required fields");
+      return;
+    }
+
+    const pass={
+      id:Date.now(),
+      code:$("#ticketCode").textContent,
+      name:guestName,
+      email,
+      phone,
+      room:state.room,
+      table:state.table,
+      date:state.date,
+      time:$("#reserveTime").value,
+      guests:$("#guestCount").value,
+      occasion:$("#occasion").value,
+      notes:$("#notes").value.trim()
+    };
+
+    state.saved.unshift(pass);
+    renderVault();
+    updateCode();
+
+    toast("🎉 Reservation passport confirmed");
+    document.querySelector("#vault").scrollIntoView({behavior:"smooth"});
+  });
+
+  /* Quick reservation */
+  $("#quickReserve").addEventListener("click",()=>{
+    $("#guestName").value="Guest";
+    $("#guestEmail").value="guest@example.com";
+    $("#guestPhone").value="+1 234 567 890";
+    document.querySelector("#studio").scrollIntoView({behavior:"smooth"});
+    toast("Quick reservation filled. Confirm in studio.");
+  });
+
+  /* Vault */
+  function renderVault(){
+    $("#vaultCount").textContent=state.saved.length;
+    $("#vaultStatCount").textContent=state.saved.length;
+
+    if(!state.saved.length){
+      $("#vaultStatRoom").textContent="None";
+      $("#vaultStatTime").textContent="None";
+      $("#vaultBoard").innerHTML=`
+        <div class="board-empty">
+          <div>
+            <h3>No reservation passports yet</h3>
+            <p style="margin-top:10px">Create one in the Reserve Studio and it will appear here.</p>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    const latest=state.saved[0];
+    $("#vaultStatRoom").textContent=latest.room.replace(" Dining Room","");
+    $("#vaultStatTime").textContent=latest.time;
+
+    $("#vaultBoard").innerHTML=`
+      <div class="saved-reservations">
+        ${state.saved.map(pass=>`
+          <article class="reserve-pass">
+            <div>
+              <h4>${pass.name}</h4>
+              <p>${pass.occasion} · ${pass.room} · Table ${pass.table}</p>
+              <div class="pass-meta">
+                <span>${pass.code}</span>
+                <span>${pass.date}</span>
+                <span>${pass.time}</span>
+                <span>${pass.guests} Guests</span>
+              </div>
+            </div>
+
+            <div class="pass-actions">
+              <button data-copy="${pass.id}" title="Copy">⧉</button>
+              <button data-remove="${pass.id}" title="Remove">×</button>
+            </div>
+          </article>
+        `).join("")}
+      </div>
+    `;
+
+    if(window.bindHover) window.bindHover();
+  }
+
+  $("#vaultBoard").addEventListener("click",e=>{
+    const remove=e.target.closest("[data-remove]");
+    const copy=e.target.closest("[data-copy]");
+
+    if(remove){
+      const id=Number(remove.dataset.remove);
+      state.saved=state.saved.filter(x=>x.id!==id);
+      renderVault();
+      toast("Reservation removed");
+    }
+
+    if(copy){
+      const pass=state.saved.find(x=>x.id===Number(copy.dataset.copy));
+      if(pass){
+        navigator.clipboard?.writeText(`${pass.code} - ${pass.name} - ${pass.date} ${pass.time}`);
+        toast("Reservation passport copied");
+      }
+    }
+  });
+
+  function scrollVault(){
+    document.querySelector("#vault").scrollIntoView({behavior:"smooth"});
+  }
+
+  $("#vaultMini").addEventListener("click",scrollVault);
+  $("#vaultFloat").addEventListener("click",scrollVault);
+  $("#openVaultHero").addEventListener("click",scrollVault);
+
+  function toast(message){
+    const t=$("#toast");
+    t.textContent=message;
+    t.classList.add("show");
+    clearTimeout(toast.timer);
+    toast.timer=setTimeout(()=>t.classList.remove("show"),2400);
+  }
+
+  window.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){
+      hamburger.classList.remove("active");
+      mobilePanel.classList.remove("active");
+      document.body.classList.remove("lock");
+    }
+  });
+
+})();
+</script>
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

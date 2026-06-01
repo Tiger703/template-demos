@@ -1,0 +1,2898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>NEURA TABLE | Dining Journey</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* =====================================================
+   NEURA TABLE — JOURNEY PAGE ULTRA PRO
+   Unique design: Dining Route / Experience Passport
+===================================================== */
+
+:root{
+  --bg:#fbfaf4;
+  --paper:#ffffff;
+  --ink:#101010;
+  --muted:#746d62;
+  --line:rgba(20,20,20,.09);
+
+  --gold:#c99a2e;
+  --gold-soft:#fff0c3;
+  --green:#35a878;
+  --green-soft:#e9fff5;
+  --blue:#6aa9ff;
+  --blue-soft:#eef6ff;
+  --rose:#ee7d9b;
+  --rose-soft:#ffeaf1;
+  --orange:#ff9457;
+  --orange-soft:#fff0e7;
+  --violet:#9b7cff;
+  --violet-soft:#f1edff;
+
+  --accent:#c99a2e;
+  --accent-soft:#fff0c3;
+
+  --shadow:0 30px 90px rgba(61,45,8,.13);
+  --shadow-soft:0 18px 45px rgba(61,45,8,.08);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:"Inter",sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 10% 10%, rgba(255,240,195,.70), transparent 30%),
+    radial-gradient(circle at 88% 14%, rgba(106,169,255,.12), transparent 28%),
+    radial-gradient(circle at 72% 92%, rgba(53,168,120,.10), transparent 34%),
+    var(--bg);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+body.lock{
+  overflow:hidden;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input,
+select{
+  font-family:inherit;
+}
+
+button{
+  cursor:none;
+}
+
+img{
+  max-width:100%;
+  display:block;
+}
+
+::selection{
+  background:var(--accent);
+  color:white;
+}
+
+::-webkit-scrollbar{
+  width:10px;
+}
+
+::-webkit-scrollbar-track{
+  background:#efe8d9;
+}
+
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(var(--gold),var(--green));
+  border-radius:999px;
+}
+
+/* =====================================================
+   GLOBAL EFFECTS
+===================================================== */
+
+#journeyCanvas{
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  pointer-events:none;
+}
+
+.grain{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  opacity:.32;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 500 500' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+}
+
+.progress{
+  position:fixed;
+  top:0;
+  left:0;
+  width:0%;
+  height:4px;
+  z-index:6000;
+  background:linear-gradient(90deg,var(--gold),var(--green),var(--blue),var(--rose));
+}
+
+.cursor-dot,
+.cursor-ring{
+  position:fixed;
+  top:0;
+  left:0;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  border-radius:50%;
+  z-index:9999;
+}
+
+.cursor-dot{
+  width:8px;
+  height:8px;
+  background:var(--accent);
+}
+
+.cursor-ring{
+  width:44px;
+  height:44px;
+  border:1px solid rgba(201,154,46,.68);
+  transition:.25s var(--ease);
+}
+
+.cursor-ring.hover{
+  width:76px;
+  height:76px;
+  background:rgba(201,154,46,.08);
+}
+
+/* =====================================================
+   LOADER
+===================================================== */
+
+.loader{
+  position:fixed;
+  inset:0;
+  background:#fffaf0;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  transition:.75s var(--ease);
+}
+
+.loader.hide{
+  opacity:0;
+  visibility:hidden;
+}
+
+.loader-compass{
+  width:104px;
+  height:104px;
+  border-radius:50%;
+  position:relative;
+  background:
+    radial-gradient(circle at 35% 28%, white 0 12%, transparent 13%),
+    linear-gradient(135deg,var(--gold-soft),var(--gold));
+  box-shadow:
+    0 0 0 16px rgba(201,154,46,.09),
+    0 0 80px rgba(201,154,46,.34);
+  animation:pulse 1.5s ease-in-out infinite;
+}
+
+.loader-compass::before{
+  content:"";
+  position:absolute;
+  inset:22px;
+  clip-path:polygon(50% 0, 62% 46%, 100% 50%, 62% 54%, 50% 100%, 38% 54%, 0 50%, 38% 46%);
+  background:#111;
+  opacity:.9;
+  animation:spin 3.6s linear infinite;
+}
+
+.loader-compass::after{
+  content:"";
+  position:absolute;
+  inset:-34px;
+  border-radius:50%;
+  border:1px dashed rgba(201,154,46,.38);
+  animation:spin 7s linear infinite reverse;
+}
+
+.loader h2{
+  margin-top:34px;
+  font-family:"Playfair Display",serif;
+  font-size:38px;
+  letter-spacing:-.035em;
+}
+
+.loader p{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+  letter-spacing:.35em;
+  text-transform:uppercase;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.07)}
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.nav{
+  position:fixed;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(1220px,calc(100% - 32px));
+  height:76px;
+  z-index:2200;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 14px 0 22px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.82);
+  background:rgba(255,255,255,.62);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  box-shadow:0 20px 70px rgba(60,43,5,.09);
+  transition:.35s var(--ease);
+}
+
+.nav.scrolled{
+  top:10px;
+  height:68px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 20px 80px rgba(60,43,5,.14);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:950;
+}
+
+.logo-icon{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 34% 26%, white 0 13%, transparent 14%),
+    linear-gradient(135deg,var(--gold-soft),var(--gold));
+  box-shadow:0 12px 30px rgba(201,154,46,.28);
+  position:relative;
+}
+
+.logo-icon::after{
+  content:"";
+  position:absolute;
+  inset:-6px;
+  border-radius:50%;
+  border:1px solid rgba(201,154,46,.32);
+}
+
+.logo strong{
+  display:block;
+  font-size:18px;
+  letter-spacing:-.03em;
+}
+
+.logo span:last-child{
+  display:block;
+  margin-top:4px;
+  font-size:10px;
+  color:var(--muted);
+  letter-spacing:.28em;
+  text-transform:uppercase;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.nav-links a{
+  padding:12px 15px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:800;
+  color:#332c22;
+  transition:.3s var(--ease);
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+  background:rgba(201,154,46,.12);
+  color:#000;
+}
+
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.passport-mini{
+  position:relative;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  border:0;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(20,20,20,.08);
+  font-size:20px;
+  transition:.3s var(--ease);
+}
+
+.passport-mini:hover{
+  transform:translateY(-3px);
+  background:#fff;
+}
+
+.passport-count{
+  position:absolute;
+  top:-3px;
+  right:-3px;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:var(--gold);
+  color:white;
+  font-size:11px;
+  font-weight:950;
+  display:grid;
+  place-items:center;
+}
+
+.nav-cta{
+  border:0;
+  padding:14px 20px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#111,#3b3021);
+  color:white;
+  font-weight:900;
+  box-shadow:0 16px 34px rgba(17,17,17,.19);
+  transition:.35s var(--ease);
+}
+
+.nav-cta:hover{
+  transform:translateY(-3px);
+}
+
+.hamburger{
+  display:none;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  border:0;
+  background:#111;
+  position:relative;
+}
+
+.hamburger span{
+  position:absolute;
+  left:14px;
+  width:20px;
+  height:2px;
+  border-radius:4px;
+  background:white;
+  transition:.35s var(--ease);
+}
+
+.hamburger span:nth-child(1){top:17px}
+.hamburger span:nth-child(2){top:23px}
+.hamburger span:nth-child(3){top:29px}
+
+.hamburger.active span:nth-child(1){
+  top:23px;
+  transform:rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2){
+  opacity:0;
+}
+
+.hamburger.active span:nth-child(3){
+  top:23px;
+  transform:rotate(-45deg);
+}
+
+/* MOBILE */
+.mobile-panel{
+  position:fixed;
+  inset:0;
+  z-index:2000;
+  background:rgba(255,250,240,.84);
+  backdrop-filter:blur(32px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform:translateX(100%);
+  transition:.7s var(--ease);
+  overflow:hidden;
+}
+
+.mobile-panel.active{
+  transform:translateX(0);
+}
+
+.mobile-panel::before{
+  content:"JOURNEY";
+  position:absolute;
+  right:-8vw;
+  bottom:-5vw;
+  font-size:22vw;
+  font-weight:950;
+  color:rgba(201,154,46,.08);
+  line-height:.8;
+}
+
+.mobile-links{
+  position:relative;
+  z-index:2;
+  text-align:center;
+}
+
+.mobile-links a{
+  display:block;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(42px,11vw,86px);
+  font-weight:900;
+  line-height:1.1;
+  opacity:0;
+  transform:translateX(50px);
+  transition:.55s var(--ease);
+}
+
+.mobile-panel.active .mobile-links a{
+  opacity:1;
+  transform:translateX(0);
+}
+
+.mobile-panel.active .mobile-links a:nth-child(1){transition-delay:.12s}
+.mobile-panel.active .mobile-links a:nth-child(2){transition-delay:.2s}
+.mobile-panel.active .mobile-links a:nth-child(3){transition-delay:.28s}
+.mobile-panel.active .mobile-links a:nth-child(4){transition-delay:.36s}
+.mobile-panel.active .mobile-links a:nth-child(5){transition-delay:.44s}
+
+/* =====================================================
+   SHARED
+===================================================== */
+
+.container{
+  width:min(1220px,100%);
+  margin:0 auto;
+}
+
+.section{
+  padding:112px 22px;
+  position:relative;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 15px;
+  border-radius:999px;
+  background:rgba(255,255,255,.68);
+  border:1px solid rgba(255,255,255,.8);
+  box-shadow:var(--shadow-soft);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  color:#775914;
+}
+
+.badge::before{
+  content:"";
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 18px var(--accent);
+}
+
+.section-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:32px;
+  margin-bottom:48px;
+}
+
+.section-title{
+  margin-top:22px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(42px,6vw,78px);
+  line-height:.95;
+  letter-spacing:-.055em;
+}
+
+.section-title span,
+.hero-title span{
+  display:inline-block;
+  background:linear-gradient(120deg,var(--gold),#5e4103 48%,var(--green));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.section-text{
+  max-width:560px;
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.8;
+}
+
+.btn{
+  border:0;
+  border-radius:999px;
+  padding:15px 22px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-weight:950;
+  transition:.35s var(--ease);
+  position:relative;
+  overflow:hidden;
+}
+
+.btn-dark{
+  background:linear-gradient(135deg,#111,#3b3021);
+  color:#fff;
+  box-shadow:0 20px 42px rgba(17,17,17,.19);
+}
+
+.btn-dark:hover{
+  transform:translateY(-4px);
+  box-shadow:0 28px 65px rgba(17,17,17,.26);
+}
+
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+  color:#251703;
+  box-shadow:0 20px 42px rgba(201,154,46,.23);
+}
+
+.btn-gold:hover{
+  transform:translateY(-4px);
+  box-shadow:0 28px 65px rgba(201,154,46,.34);
+}
+
+.btn-white{
+  background:rgba(255,255,255,.76);
+  color:#111;
+  border:1px solid var(--line);
+}
+
+.btn-white:hover{
+  background:#fff;
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-soft);
+}
+
+.reveal{
+  opacity:0;
+  transform:translateY(34px);
+  transition:opacity .8s var(--ease), transform .8s var(--ease);
+}
+
+.reveal.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* =====================================================
+   HERO — JOURNEY ROUTE COMPASS
+===================================================== */
+
+.journey-hero{
+  min-height:100vh;
+  padding:132px 22px 82px;
+  position:relative;
+  overflow:hidden;
+}
+
+.journey-hero::before{
+  content:"JOURNEY";
+  position:absolute;
+  left:50%;
+  top:17%;
+  transform:translateX(-50%);
+  font-size:13vw;
+  font-weight:950;
+  letter-spacing:-.08em;
+  color:rgba(17,17,17,.035);
+  pointer-events:none;
+}
+
+.hero-grid{
+  width:min(1220px,100%);
+  margin:0 auto;
+  min-height:calc(100vh - 220px);
+  display:grid;
+  grid-template-columns:.95fr 1.05fr;
+  gap:44px;
+  align-items:center;
+}
+
+.hero-title{
+  margin-top:22px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(54px,7vw,104px);
+  line-height:.88;
+  letter-spacing:-.07em;
+}
+
+.hero-text{
+  margin-top:26px;
+  max-width:660px;
+  color:var(--muted);
+  font-size:18px;
+  line-height:1.8;
+}
+
+.hero-actions{
+  margin-top:34px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.hero-metrics{
+  margin-top:40px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  max-width:680px;
+}
+
+.metric-card{
+  padding:18px;
+  border-radius:24px;
+  background:rgba(255,255,255,.62);
+  border:1px solid rgba(255,255,255,.86);
+  backdrop-filter:blur(18px);
+  box-shadow:var(--shadow-soft);
+}
+
+.metric-card strong{
+  display:block;
+  font-size:26px;
+  font-weight:950;
+}
+
+.metric-card span{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+/* Compass visual */
+.compass-stage{
+  min-height:660px;
+  position:relative;
+}
+
+.compass-shell{
+  position:absolute;
+  inset:30px 0;
+  border-radius:58px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.9),rgba(255,255,255,.46)),
+    radial-gradient(circle at 30% 12%,var(--gold-soft),transparent 36%);
+  border:1px solid rgba(255,255,255,.9);
+  backdrop-filter:blur(24px);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.compass-shell::before{
+  content:"";
+  position:absolute;
+  width:620px;
+  height:620px;
+  border-radius:50%;
+  border:1px dashed rgba(201,154,46,.32);
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  animation:spin 36s linear infinite;
+}
+
+.compass-core{
+  position:absolute;
+  left:50%;
+  top:48%;
+  width:360px;
+  height:360px;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  background:
+    radial-gradient(circle at 50% 50%, #fff 0 26%, transparent 27%),
+    conic-gradient(from 0deg,var(--gold),var(--green),var(--blue),var(--rose),var(--gold));
+  padding:18px;
+  box-shadow:0 40px 90px rgba(60,43,5,.16);
+  z-index:3;
+}
+
+.compass-inner{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.95),rgba(255,255,255,.55)),
+    url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900") center/cover;
+  position:relative;
+  overflow:hidden;
+}
+
+.compass-inner::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at center,transparent 0 34%,rgba(0,0,0,.18) 78%);
+}
+
+.compass-needle{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:34px;
+  height:180px;
+  transform:translate(-50%,-50%);
+  z-index:5;
+  animation:needleMove 5s ease-in-out infinite;
+}
+
+.compass-needle::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:0;
+  width:0;
+  height:0;
+  transform:translateX(-50%);
+  border-left:17px solid transparent;
+  border-right:17px solid transparent;
+  border-bottom:96px solid #111;
+}
+
+.compass-needle::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:0;
+  width:0;
+  height:0;
+  transform:translateX(-50%);
+  border-left:17px solid transparent;
+  border-right:17px solid transparent;
+  border-top:96px solid var(--gold);
+}
+
+@keyframes needleMove{
+  0%,100%{transform:translate(-50%,-50%) rotate(-8deg)}
+  50%{transform:translate(-50%,-50%) rotate(16deg)}
+}
+
+.route-chip{
+  position:absolute;
+  z-index:6;
+  width:230px;
+  padding:16px;
+  border-radius:28px;
+  background:rgba(255,255,255,.84);
+  border:1px solid rgba(255,255,255,.94);
+  backdrop-filter:blur(20px);
+  box-shadow:var(--shadow-soft);
+  animation:floatChip 5s ease-in-out infinite;
+}
+
+.route-chip.one{left:0;top:98px}
+.route-chip.two{right:0;top:260px;animation-delay:.5s}
+.route-chip.three{left:42px;bottom:76px;animation-delay:1s}
+
+.route-chip small{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.route-chip h4{
+  margin-top:6px;
+  font-size:17px;
+  letter-spacing:-.035em;
+}
+
+.route-chip p{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+@keyframes floatChip{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-14px)}
+}
+
+/* =====================================================
+   ROUTE MAP SECTION
+===================================================== */
+
+.route-section{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.72)),
+    radial-gradient(circle at 16% 32%, rgba(201,154,46,.18), transparent 32%),
+    radial-gradient(circle at 86% 70%, rgba(106,169,255,.10), transparent 32%);
+}
+
+.route-map{
+  position:relative;
+  border-radius:58px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.9);
+  backdrop-filter:blur(24px);
+  box-shadow:var(--shadow-soft);
+  padding:34px;
+  overflow:hidden;
+}
+
+.route-map::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:70px;
+  bottom:70px;
+  width:3px;
+  transform:translateX(-50%);
+  background:linear-gradient(var(--gold),var(--green),var(--blue),var(--rose));
+  border-radius:999px;
+  opacity:.55;
+}
+
+.route-stop{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 96px 1fr;
+  gap:24px;
+  align-items:center;
+  margin:28px 0;
+}
+
+.stop-card{
+  padding:26px;
+  border-radius:34px;
+  background:#fff;
+  border:1px solid var(--line);
+  box-shadow:0 18px 45px rgba(61,45,8,.07);
+  transition:.35s var(--ease);
+}
+
+.stop-card:hover{
+  transform:translateY(-6px);
+  box-shadow:var(--shadow-soft);
+}
+
+.stop-card h3{
+  font-size:26px;
+  letter-spacing:-.05em;
+}
+
+.stop-card p{
+  margin-top:10px;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.stop-card small{
+  display:inline-flex;
+  padding:7px 10px;
+  border-radius:999px;
+  background:#f7efdf;
+  color:#70591f;
+  font-size:11px;
+  font-weight:950;
+  margin-bottom:12px;
+}
+
+.stop-node{
+  width:96px;
+  height:96px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 35% 28%,#fff 0 12%,transparent 13%),
+    linear-gradient(135deg,var(--accent-soft),var(--accent));
+  display:grid;
+  place-items:center;
+  font-size:34px;
+  box-shadow:
+    0 0 0 12px rgba(201,154,46,.10),
+    0 20px 45px rgba(61,45,8,.12);
+  z-index:2;
+}
+
+.stop-image{
+  height:220px;
+  border-radius:34px;
+  overflow:hidden;
+  box-shadow:var(--shadow-soft);
+}
+
+.stop-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* alternate */
+.route-stop:nth-child(even) .stop-card{
+  grid-column:3;
+  grid-row:1;
+}
+
+.route-stop:nth-child(even) .stop-image{
+  grid-column:1;
+  grid-row:1;
+}
+
+/* =====================================================
+   JOURNEY BUILDER
+===================================================== */
+
+.builder-layout{
+  display:grid;
+  grid-template-columns:.78fr 1.22fr;
+  gap:24px;
+}
+
+.builder-control,
+.journey-passport{
+  border-radius:52px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.9);
+  backdrop-filter:blur(24px);
+  box-shadow:var(--shadow-soft);
+  overflow:hidden;
+}
+
+.builder-control{
+  padding:34px;
+  position:relative;
+}
+
+.builder-control::before{
+  content:"";
+  position:absolute;
+  right:-100px;
+  bottom:-100px;
+  width:290px;
+  height:290px;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--gold-soft),transparent 70%);
+}
+
+.builder-head{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:28px;
+}
+
+.builder-orb{
+  width:64px;
+  height:64px;
+  border-radius:22px;
+  display:grid;
+  place-items:center;
+  font-size:30px;
+  background:
+    radial-gradient(circle at 30% 25%, #fff 0 15%, transparent 16%),
+    linear-gradient(135deg,var(--gold-soft),var(--gold));
+  box-shadow:0 18px 42px rgba(201,154,46,.18);
+}
+
+.builder-head h3{
+  font-size:30px;
+  letter-spacing:-.055em;
+}
+
+.builder-head p{
+  margin-top:5px;
+  color:var(--muted);
+  line-height:1.5;
+  font-size:13px;
+}
+
+.route-options{
+  display:grid;
+  gap:12px;
+  position:relative;
+  z-index:2;
+}
+
+.route-option{
+  display:grid;
+  grid-template-columns:48px 1fr auto;
+  gap:14px;
+  align-items:center;
+  padding:16px;
+  border-radius:24px;
+  background:#fff;
+  border:1px solid var(--line);
+  transition:.35s var(--ease);
+  text-align:left;
+}
+
+.route-option:hover,
+.route-option.active{
+  transform:translateX(6px);
+  box-shadow:0 18px 45px rgba(61,45,8,.08);
+}
+
+.route-option.active{
+  border-color:rgba(201,154,46,.35);
+}
+
+.option-icon{
+  width:48px;
+  height:48px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:#f7efdf;
+  font-size:22px;
+}
+
+.route-option h4{
+  font-size:16px;
+  letter-spacing:-.035em;
+}
+
+.route-option span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.option-score{
+  font-weight:950;
+  color:#8a6210;
+}
+
+/* Passport */
+.journey-passport{
+  display:grid;
+  grid-template-columns:.92fr 1.08fr;
+  min-height:620px;
+}
+
+.passport-visual{
+  position:relative;
+  overflow:hidden;
+  background:#111;
+}
+
+.passport-visual img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:.45s var(--ease);
+}
+
+.passport-visual::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(180deg,transparent 34%,rgba(0,0,0,.52)),
+    radial-gradient(circle at 50% 40%,transparent 0 32%,rgba(0,0,0,.22) 58%);
+}
+
+.passport-stamp{
+  position:absolute;
+  left:24px;
+  top:24px;
+  z-index:3;
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(14px);
+  font-size:12px;
+  font-weight:950;
+}
+
+.passport-content{
+  padding:38px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.passport-content small{
+  display:inline-flex;
+  width:max-content;
+  padding:9px 14px;
+  border-radius:999px;
+  background:#ecfff7;
+  color:#227b55;
+  font-size:12px;
+  font-weight:950;
+}
+
+.passport-content h3{
+  margin-top:18px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(42px,5vw,64px);
+  line-height:.95;
+  letter-spacing:-.065em;
+}
+
+.passport-content p{
+  margin-top:18px;
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.passport-grid{
+  margin-top:28px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.passport-cell{
+  padding:16px;
+  border-radius:22px;
+  text-align:center;
+  background:#f7efdf;
+}
+
+.passport-cell strong{
+  display:block;
+  color:#8c6411;
+  font-size:20px;
+}
+
+.passport-cell span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:950;
+  text-transform:uppercase;
+}
+
+/* =====================================================
+   MOMENTS GALLERY — DIAGONAL CARDS
+===================================================== */
+
+.moments-section{
+  background:
+    radial-gradient(circle at 80% 12%, rgba(106,169,255,.12), transparent 28%),
+    radial-gradient(circle at 18% 82%, rgba(201,154,46,.18), transparent 28%);
+}
+
+.moments-grid{
+  display:grid;
+  grid-template-columns:1.1fr .9fr .9fr;
+  gap:20px;
+}
+
+.moment-card{
+  min-height:440px;
+  position:relative;
+  border-radius:42px;
+  overflow:hidden;
+  box-shadow:var(--shadow-soft);
+  transition:.45s var(--ease);
+  transform:skewY(-1.2deg);
+}
+
+.moment-card:hover{
+  transform:skewY(0deg) translateY(-10px);
+  box-shadow:var(--shadow);
+}
+
+.moment-card img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:.75s var(--ease);
+}
+
+.moment-card:hover img{
+  transform:scale(1.08);
+}
+
+.moment-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.84));
+}
+
+.moment-content{
+  position:absolute;
+  left:26px;
+  right:26px;
+  bottom:26px;
+  z-index:2;
+  color:white;
+  transform:skewY(1.2deg);
+}
+
+.moment-content small{
+  display:inline-flex;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.82);
+  color:#111;
+  font-size:11px;
+  font-weight:950;
+}
+
+.moment-content h3{
+  margin-top:14px;
+  font-size:30px;
+  letter-spacing:-.055em;
+}
+
+.moment-content p{
+  margin-top:10px;
+  color:rgba(255,255,255,.72);
+  line-height:1.65;
+}
+
+/* =====================================================
+   MEMORY CAPSULE
+===================================================== */
+
+.capsule-section{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.72)),
+    radial-gradient(circle at 85% 15%, rgba(201,154,46,.18), transparent 30%),
+    radial-gradient(circle at 12% 82%, rgba(53,168,120,.12), transparent 30%);
+}
+
+.capsule-layout{
+  display:grid;
+  grid-template-columns:.86fr 1.14fr;
+  gap:24px;
+}
+
+.capsule-copy,
+.capsule-board{
+  border-radius:52px;
+  background:rgba(255,255,255,.74);
+  border:1px solid rgba(255,255,255,.9);
+  backdrop-filter:blur(24px);
+  box-shadow:var(--shadow-soft);
+  overflow:hidden;
+}
+
+.capsule-copy{
+  padding:42px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  position:relative;
+}
+
+.capsule-copy::before{
+  content:"";
+  position:absolute;
+  right:-90px;
+  bottom:-90px;
+  width:280px;
+  height:280px;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--gold-soft),transparent 70%);
+}
+
+.capsule-copy h3{
+  position:relative;
+  z-index:2;
+  font-size:36px;
+  letter-spacing:-.06em;
+}
+
+.capsule-copy p{
+  position:relative;
+  z-index:2;
+  margin-top:14px;
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.capsule-stats{
+  position:relative;
+  z-index:2;
+  margin-top:28px;
+  display:grid;
+  gap:12px;
+}
+
+.capsule-stat{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+  border-radius:20px;
+  background:#fff;
+  border:1px solid var(--line);
+  font-weight:950;
+}
+
+.capsule-stat span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.capsule-board{
+  padding:24px;
+  min-height:430px;
+}
+
+.capsule-empty{
+  height:100%;
+  min-height:330px;
+  border:1px dashed rgba(20,20,20,.18);
+  border-radius:34px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  color:var(--muted);
+  padding:30px;
+}
+
+.memory-list{
+  display:grid;
+  gap:14px;
+}
+
+.memory-pass{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:18px;
+  padding:22px;
+  border-radius:32px;
+  background:
+    linear-gradient(135deg,#111,#3b3021);
+  color:white;
+  overflow:hidden;
+}
+
+.memory-pass::before,
+.memory-pass::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  background:var(--bg);
+  transform:translateY(-50%);
+}
+
+.memory-pass::before{
+  left:-15px;
+}
+
+.memory-pass::after{
+  right:-15px;
+}
+
+.memory-pass h4{
+  font-size:22px;
+  letter-spacing:-.045em;
+}
+
+.memory-pass p{
+  margin-top:8px;
+  color:rgba(255,255,255,.68);
+  line-height:1.6;
+  font-size:13px;
+}
+
+.memory-meta{
+  margin-top:16px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.memory-meta span{
+  padding:7px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  font-size:11px;
+  font-weight:950;
+}
+
+/* =====================================================
+   CTA / FOOTER
+===================================================== */
+
+.cta{
+  padding-bottom:130px;
+}
+
+.cta-box{
+  border-radius:58px;
+  background:
+    linear-gradient(135deg,rgba(17,17,17,.92),rgba(62,48,27,.88)),
+    url("https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1600") center/cover;
+  color:#fff;
+  min-height:460px;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.cta-copy{
+  padding:58px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.cta-copy .badge{
+  color:#fff;
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.18);
+  box-shadow:none;
+}
+
+.cta-copy h2{
+  margin-top:22px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(44px,5.6vw,78px);
+  line-height:.95;
+  letter-spacing:-.055em;
+}
+
+.cta-copy p{
+  margin-top:22px;
+  max-width:560px;
+  color:rgba(255,255,255,.72);
+  line-height:1.8;
+  font-size:17px;
+}
+
+.cta-card-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:34px;
+}
+
+.cta-card{
+  width:100%;
+  max-width:390px;
+  padding:30px;
+  border-radius:38px;
+  background:rgba(255,255,255,.9);
+  color:#111;
+  backdrop-filter:blur(24px);
+}
+
+.cta-card h3{
+  font-size:28px;
+  letter-spacing:-.055em;
+}
+
+.cta-card p{
+  margin-top:10px;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.footer{
+  padding:72px 22px 32px;
+  background:#111;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+
+.footer::before{
+  content:"JOURNEY";
+  position:absolute;
+  right:-30px;
+  bottom:-44px;
+  font-size:13vw;
+  font-weight:950;
+  letter-spacing:-.08em;
+  color:rgba(255,255,255,.035);
+}
+
+.footer-grid{
+  width:min(1220px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1.35fr .8fr .8fr 1fr;
+  gap:36px;
+  position:relative;
+  z-index:2;
+}
+
+.footer .logo{
+  color:#fff;
+  margin-bottom:20px;
+}
+
+.footer p,
+.footer a,
+.footer li{
+  color:rgba(255,255,255,.64);
+  line-height:1.8;
+}
+
+.footer h4{
+  margin-bottom:18px;
+}
+
+.footer ul{
+  list-style:none;
+}
+
+.footer a:hover{
+  color:var(--gold-soft);
+}
+
+.footer-bottom{
+  width:min(1220px,100%);
+  margin:48px auto 0;
+  padding-top:26px;
+  border-top:1px solid rgba(255,255,255,.12);
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:18px;
+  color:rgba(255,255,255,.5);
+  position:relative;
+  z-index:2;
+}
+
+.passport-floating{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  z-index:5000;
+  min-width:64px;
+  height:64px;
+  border-radius:999px;
+  padding:0 20px;
+  border:0;
+  background:linear-gradient(135deg,#111,#3b3021);
+  color:white;
+  font-weight:950;
+  box-shadow:0 24px 60px rgba(17,17,17,.24);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  transition:.35s var(--ease);
+}
+
+.passport-floating:hover{
+  transform:translateY(-6px);
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:28px;
+  transform:translate(-50%,120px);
+  z-index:8000;
+  padding:15px 22px;
+  border-radius:999px;
+  background:#111;
+  color:#fff;
+  box-shadow:0 20px 50px rgba(0,0,0,.24);
+  font-weight:850;
+  transition:.45s var(--ease);
+}
+
+.toast.show{
+  transform:translate(-50%,0);
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1120px){
+  .hero-grid,
+  .builder-layout,
+  .journey-passport,
+  .capsule-layout,
+  .cta-box{
+    grid-template-columns:1fr;
+  }
+
+  .compass-stage{
+    min-height:610px;
+  }
+
+  .route-map::before{
+    left:48px;
+  }
+
+  .route-stop{
+    grid-template-columns:96px 1fr;
+  }
+
+  .route-stop:nth-child(even) .stop-card,
+  .route-stop:nth-child(even) .stop-image,
+  .route-stop .stop-card,
+  .route-stop .stop-image{
+    grid-column:auto;
+    grid-row:auto;
+  }
+
+  .stop-node{
+    grid-column:1;
+    grid-row:1 / span 2;
+  }
+
+  .moments-grid{
+    grid-template-columns:1fr;
+  }
+
+  .footer-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:860px){
+  body{
+    cursor:auto;
+  }
+
+  a,
+  button{
+    cursor:pointer;
+  }
+
+  .cursor-dot,
+  .cursor-ring{
+    display:none;
+  }
+
+  .nav{
+    height:68px;
+    top:10px;
+    width:calc(100% - 22px);
+  }
+
+  .nav-links,
+  .nav-cta{
+    display:none;
+  }
+
+  .hamburger{
+    display:block;
+  }
+
+  .journey-hero{
+    padding:112px 16px 60px;
+  }
+
+  .section{
+    padding:86px 16px;
+  }
+
+  .section-head{
+    display:block;
+  }
+
+  .section-text{
+    margin-top:22px;
+  }
+
+  .hero-title{
+    font-size:clamp(50px,15vw,82px);
+  }
+
+  .hero-actions{
+    flex-direction:column;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  .hero-metrics{
+    grid-template-columns:1fr;
+  }
+
+  .compass-stage{
+    min-height:560px;
+  }
+
+  .compass-shell{
+    inset:20px 0;
+    border-radius:42px;
+  }
+
+  .compass-core{
+    width:270px;
+    height:270px;
+  }
+
+  .compass-needle{
+    height:140px;
+  }
+
+  .compass-needle::before{
+    border-left-width:13px;
+    border-right-width:13px;
+    border-bottom-width:76px;
+  }
+
+  .compass-needle::after{
+    border-left-width:13px;
+    border-right-width:13px;
+    border-top-width:76px;
+  }
+
+  .route-chip{
+    width:200px;
+  }
+
+  .route-chip.one{
+    left:8px;
+    top:55px;
+  }
+
+  .route-chip.two{
+    right:8px;
+    top:250px;
+  }
+
+  .route-chip.three{
+    left:24px;
+    bottom:45px;
+  }
+
+  .route-map{
+    padding:22px;
+    border-radius:38px;
+  }
+
+  .route-map::before{
+    display:none;
+  }
+
+  .route-stop{
+    grid-template-columns:1fr;
+    margin:22px 0;
+  }
+
+  .stop-node{
+    width:76px;
+    height:76px;
+    font-size:28px;
+  }
+
+  .stop-image{
+    height:200px;
+  }
+
+  .builder-control,
+  .journey-passport,
+  .capsule-copy,
+  .capsule-board{
+    border-radius:34px;
+  }
+
+  .passport-content{
+    padding:26px;
+  }
+
+  .passport-grid{
+    grid-template-columns:1fr;
+  }
+
+  .passport-visual{
+    min-height:360px;
+  }
+
+  .moment-card{
+    transform:none;
+  }
+
+  .moment-content{
+    transform:none;
+  }
+
+  .cta-copy{
+    padding:38px 24px 8px;
+  }
+
+  .cta-card-wrap{
+    padding:24px;
+  }
+}
+
+@media(max-width:560px){
+  .route-chip{
+    width:178px;
+    padding:12px;
+  }
+
+  .route-chip p{
+    display:none;
+  }
+
+  .compass-core{
+    width:235px;
+    height:235px;
+  }
+
+  .route-option{
+    grid-template-columns:1fr;
+  }
+
+  .passport-floating{
+    right:16px;
+    bottom:16px;
+    height:56px;
+  }
+
+  .footer-grid{
+    grid-template-columns:1fr;
+  }
+
+  .footer-bottom{
+    display:block;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="loader" id="loader">
+  <div class="loader-compass"></div>
+  <h2>NEURA JOURNEY</h2>
+  <p>Dining Route</p>
+</div>
+
+<canvas id="journeyCanvas"></canvas>
+<div class="grain"></div>
+<div class="progress" id="progress"></div>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav class="nav" id="nav">
+  <a href="#top" class="logo magnetic">
+    <span class="logo-icon"></span>
+    <span>
+      <strong>NEURA TABLE</strong>
+      <span>Dining Journey</span>
+    </span>
+  </a>
+
+  <div class="nav-links">
+           <a href="index.html">Home</a>
+    <a href="taste.html">Taste</a>
+       <a href="scanner.html">Scanner</a>
+    <a href="dishes.html">Dishes</a>
+    <a href="pairing.html">Pairing</a>
+    <a href="reserve.html">Reserve</a>
+    <a href="menu.html">Menu</a>
+    <a href="journey.html" class="active">Journey</a>
+    <a href="chefs.html">chefs</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="nav-actions">
+    <button class="passport-mini" id="passportMini">
+      🧭
+      <span class="passport-count" id="passportCount">0</span>
+    </button>
+    <a href="#builder" class="nav-cta magnetic">Build</a>
+    <button class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-panel" id="mobilePanel">
+  <div class="mobile-links">
+<a href="index.html" class="mobile-link">Home</a>
+    <a href="taste.html" class="mobile-link">Taste</a>
+    <a href="scanner.html" class="mobile-link">Scanner</a>
+    <a href="dishes.html" class="mobile-link">Dishes</a>
+    <a href="pairing.html" class="mobile-link">Pairing</a>
+    <a href="reserve.html" class="mobile-link">Reserve</a>
+    <a href="menu.html" class="mobile-link">Menu</a>
+    <a href="journey.html" class="mobile-link">journey</a>
+    <a href="chefs.html" class="mobile-link">Chefs</a>
+    <a href="contact.html" class="mobile-link">Contact</a>
+  </div>
+</div>
+
+<button class="passport-floating magnetic" id="passportFloat">
+  🧭 <span>Capsule</span>
+</button>
+
+<!-- HERO -->
+<header class="journey-hero" id="top">
+  <div class="hero-grid">
+    <section>
+      <div class="badge reveal">AI Dining Journey</div>
+
+      <h1 class="hero-title reveal" style="transition-delay:.08s">
+        Follow the route of
+        <span>your perfect evening.</span>
+      </h1>
+
+      <p class="hero-text reveal" style="transition-delay:.16s">
+        A unique journey page designed like a dining compass. Explore each moment of service,
+        build your own route and save the experience into a memory capsule.
+      </p>
+
+      <div class="hero-actions reveal" style="transition-delay:.24s">
+        <a href="#route" class="btn btn-dark magnetic">Explore Journey →</a>
+        <button class="btn btn-gold magnetic" id="autoRouteBtn">Auto Build Route ✨</button>
+        <button class="btn btn-white magnetic" id="openCapsuleHero">Open Capsule</button>
+      </div>
+
+      <div class="hero-metrics reveal" style="transition-delay:.32s">
+        <div class="metric-card">
+          <strong data-count="7">0</strong>
+          <span>Journey Stops</span>
+        </div>
+        <div class="metric-card">
+          <strong data-count="24">0</strong>
+          <span>Service Signals</span>
+        </div>
+        <div class="metric-card">
+          <strong data-count="98">0</strong>
+          <span>Memory Match</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="compass-stage reveal" style="transition-delay:.2s">
+      <div class="compass-shell">
+        <div class="compass-core">
+          <div class="compass-inner"></div>
+          <div class="compass-needle"></div>
+        </div>
+
+        <div class="route-chip one">
+          <small>Arrival</small>
+          <h4>Atmosphere Opens</h4>
+          <p>Lighting, greeting and table rhythm activate.</p>
+        </div>
+
+        <div class="route-chip two">
+          <small>Middle Course</small>
+          <h4>Pairing Lock</h4>
+          <p>Dish, drink and pacing align into harmony.</p>
+        </div>
+
+        <div class="route-chip three">
+          <small>Final Memory</small>
+          <h4>Capsule Saved</h4>
+          <p>Your evening becomes a reusable route.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</header>
+
+<!-- ROUTE MAP -->
+<section class="section route-section" id="route">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Journey Route</div>
+        <h2 class="section-title reveal">Seven moments of <span>intelligent dining.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        This is not a normal timeline. It is a visual route map of how a guest moves through the NEURA dining experience.
+      </p>
+    </div>
+
+    <div class="route-map reveal">
+      <div class="route-stop">
+        <div class="stop-card">
+          <small>Stop 01</small>
+          <h3>Arrival Signal</h3>
+          <p>The host reads the reservation mood, occasion and timing before you reach the table.</p>
+        </div>
+        <div class="stop-node">🚪</div>
+        <div class="stop-image">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900" alt="Arrival">
+        </div>
+      </div>
+
+      <div class="route-stop">
+        <div class="stop-card">
+          <small>Stop 02</small>
+          <h3>Table Atmosphere</h3>
+          <p>Light level, music softness and seating pace are adjusted for your dining style.</p>
+        </div>
+        <div class="stop-node">💡</div>
+        <div class="stop-image">
+          <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=900" alt="Atmosphere">
+        </div>
+      </div>
+
+      <div class="route-stop">
+        <div class="stop-card">
+          <small>Stop 03</small>
+          <h3>Taste Orientation</h3>
+          <p>The first bite introduces acidity, aroma and texture for the rest of the evening.</p>
+        </div>
+        <div class="stop-node">🌿</div>
+        <div class="stop-image">
+          <img src="https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=900" alt="Taste orientation">
+        </div>
+      </div>
+
+      <div class="route-stop">
+        <div class="stop-card">
+          <small>Stop 04</small>
+          <h3>Main Course Peak</h3>
+          <p>The strongest flavor moment arrives with precise heat, plating and drink harmony.</p>
+        </div>
+        <div class="stop-node">🔥</div>
+        <div class="stop-image">
+          <img src="https://images.unsplash.com/photo-1558030006-450675393462?w=900" alt="Main course">
+        </div>
+      </div>
+
+      <div class="route-stop">
+        <div class="stop-card">
+          <small>Stop 05</small>
+          <h3>Pairing Lock</h3>
+          <p>A drink route lifts the dish, cleans the palate and prepares the final course.</p>
+        </div>
+        <div class="stop-node">🍷</div>
+        <div class="stop-image">
+          <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=900" alt="Pairing">
+        </div>
+      </div>
+
+      <div class="route-stop">
+        <div class="stop-card">
+          <small>Stop 06</small>
+          <h3>Sweet Memory</h3>
+          <p>The dessert course slows the rhythm and leaves a warm sensory signature.</p>
+        </div>
+        <div class="stop-node">🍫</div>
+        <div class="stop-image">
+          <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=900" alt="Dessert">
+        </div>
+      </div>
+
+      <div class="route-stop">
+        <div class="stop-card">
+          <small>Stop 07</small>
+          <h3>Memory Capsule</h3>
+          <p>Your route is saved as a guest memory, ready to improve your next visit.</p>
+        </div>
+        <div class="stop-node">🧭</div>
+        <div class="stop-image">
+          <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb51f3a?w=900" alt="Memory">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILDER -->
+<section class="section" id="builder">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Journey Builder</div>
+        <h2 class="section-title reveal">Choose your <span>dining route.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        Pick a route and the journey passport updates with courses, pacing and mood.
+      </p>
+    </div>
+
+    <div class="builder-layout">
+      <div class="builder-control reveal">
+        <div class="builder-head">
+          <div class="builder-orb">🧭</div>
+          <div>
+            <h3>Route Control</h3>
+            <p>Select the experience direction</p>
+          </div>
+        </div>
+
+        <div class="route-options" id="routeOptions">
+          <button class="route-option active" data-route="golden">
+            <div class="option-icon">✨</div>
+            <div>
+              <h4>Golden Evening</h4>
+              <span>Balanced, elegant and romantic</span>
+            </div>
+            <div class="option-score">98%</div>
+          </button>
+
+          <button class="route-option" data-route="fresh">
+            <div class="option-icon">🌿</div>
+            <div>
+              <h4>Fresh Garden</h4>
+              <span>Citrus, herbs and light plates</span>
+            </div>
+            <div class="option-score">95%</div>
+          </button>
+
+          <button class="route-option" data-route="bold">
+            <div class="option-icon">🔥</div>
+            <div>
+              <h4>Fire & Smoke</h4>
+              <span>Char, heat and deep flavors</span>
+            </div>
+            <div class="option-score">94%</div>
+          </button>
+
+          <button class="route-option" data-route="chef">
+            <div class="option-icon">👨‍🍳</div>
+            <div>
+              <h4>Chef Counter</h4>
+              <span>Interactive tasting menu</span>
+            </div>
+            <div class="option-score">99%</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="journey-passport reveal">
+        <div class="passport-visual">
+          <img id="passportImg" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1000" alt="Journey passport">
+          <div class="passport-stamp" id="passportStamp">Golden Route</div>
+        </div>
+
+        <div class="passport-content">
+          <small id="passportMatch">98% Experience Match</small>
+          <h3 id="passportTitle">Golden Evening</h3>
+          <p id="passportDesc">
+            A balanced route with burrata, sea bass, sparkling pairing and chocolate finish.
+          </p>
+
+          <div class="passport-grid">
+            <div class="passport-cell">
+              <strong id="courseCount">4</strong>
+              <span>Courses</span>
+            </div>
+            <div class="passport-cell">
+              <strong id="paceScore">92%</strong>
+              <span>Pacing</span>
+            </div>
+            <div class="passport-cell">
+              <strong id="moodScore">98%</strong>
+              <span>Mood</span>
+            </div>
+          </div>
+
+          <button class="btn btn-dark magnetic" id="saveRoute" style="margin-top:28px;width:max-content">
+            Save to Capsule
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MOMENTS -->
+<section class="section moments-section" id="moments">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Journey Moments</div>
+        <h2 class="section-title reveal">Visual chapters of <span>the evening.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        Diagonal editorial cards create a different design language from all previous pages.
+      </p>
+    </div>
+
+    <div class="moments-grid">
+      <article class="moment-card reveal">
+        <img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=1200" alt="Host moment">
+        <div class="moment-content">
+          <small>Host Signal</small>
+          <h3>Warm Arrival</h3>
+          <p>The first moment sets the emotional direction for the full meal.</p>
+        </div>
+      </article>
+
+      <article class="moment-card reveal" style="transition-delay:.08s">
+        <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=1200" alt="Kitchen moment">
+        <div class="moment-content">
+          <small>Kitchen Rhythm</small>
+          <h3>Chef Precision</h3>
+          <p>Each plate arrives according to heat, pacing and service flow.</p>
+        </div>
+      </article>
+
+      <article class="moment-card reveal" style="transition-delay:.16s">
+        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1200" alt="Final moment">
+        <div class="moment-content">
+          <small>Final Memory</small>
+          <h3>Evening Close</h3>
+          <p>The dessert and final drink create a lasting sensory signature.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CAPSULE -->
+<section class="section capsule-section" id="capsule">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="badge reveal">Memory Capsule</div>
+        <h2 class="section-title reveal">Saved routes become <span>dining passports.</span></h2>
+      </div>
+      <p class="section-text reveal">
+        Every route you save becomes a unique journey passport for your next reservation.
+      </p>
+    </div>
+
+    <div class="capsule-layout">
+      <div class="capsule-copy reveal">
+        <h3>Your saved journey memory</h3>
+        <p>
+          Save your preferred route and return to it later. This capsule is intentionally different from saved menus, saved dishes and reservations.
+        </p>
+
+        <div class="capsule-stats">
+          <div class="capsule-stat">
+            <span>Saved Routes</span>
+            <strong id="capsuleCount">0</strong>
+          </div>
+          <div class="capsule-stat">
+            <span>Latest Route</span>
+            <strong id="latestRoute">None</strong>
+          </div>
+          <div class="capsule-stat">
+            <span>Best Match</span>
+            <strong id="bestMatch">0%</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="capsule-board reveal">
+        <div id="capsuleBoard">
+          <div class="capsule-empty">
+            <div>
+              <h3>No journey passports yet</h3>
+              <p style="margin-top:10px">Choose a route and save it to your memory capsule.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section cta">
+  <div class="container">
+    <div class="cta-box reveal">
+      <div class="cta-copy">
+        <div class="badge">Reserve Journey</div>
+        <h2>Bring your saved journey to dinner.</h2>
+        <p>
+          Save a route, open your memory capsule and reserve the evening exactly as you imagined it.
+        </p>
+      </div>
+
+      <div class="cta-card-wrap">
+        <div class="cta-card">
+          <h3>Your route can become real.</h3>
+          <p>Choose your journey route and reserve your table with the saved dining passport.</p>
+          <button class="btn btn-dark magnetic" id="reserveBtn" style="width:100%;margin-top:22px">
+            Reserve Experience
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="logo">
+        <span class="logo-icon"></span>
+        <span>
+          <strong>NEURA TABLE</strong>
+          <span>Dining Journey</span>
+        </span>
+      </div>
+      <p>A unique dining journey page with route map, journey builder, visual moments and memory capsule.</p>
+    </div>
+
+    <div>
+      <h4>Journey</h4>
+      <ul>
+        <li><a href="#route">Route Map</a></li>
+        <li><a href="#builder">Builder</a></li>
+        <li><a href="#moments">Moments</a></li>
+        <li><a href="#capsule">Capsule</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Routes</h4>
+      <ul>
+        <li><a href="#builder">Golden Evening</a></li>
+        <li><a href="#builder">Fresh Garden</a></li>
+        <li><a href="#builder">Fire & Smoke</a></li>
+        <li><a href="#builder">Chef Counter</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Contact</h4>
+      <p>hello@neuratable.ai</p>
+      <p>+1 234 567 890</p>
+      <p style="margin-top:14px">Open daily · 5PM — 12AM</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2025 NEURA TABLE. All rights reserved.</span>
+    <span>Journey Page Ultra Pro.</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const $ = (s,p=document)=>p.querySelector(s);
+  const $$ = (s,p=document)=>[...p.querySelectorAll(s)];
+
+  /* Loader */
+  const loader=$("#loader");
+  window.addEventListener("load",()=>setTimeout(()=>loader.classList.add("hide"),850));
+  setTimeout(()=>loader.classList.add("hide"),2200);
+
+  const isTouch="ontouchstart" in window || navigator.maxTouchPoints>0;
+
+  /* Cursor */
+  const dot=$("#cursorDot");
+  const ring=$("#cursorRing");
+  let mx=0,my=0,rx=0,ry=0;
+
+  if(!isTouch){
+    window.addEventListener("mousemove",e=>{
+      mx=e.clientX;
+      my=e.clientY;
+      dot.style.left=mx+"px";
+      dot.style.top=my+"px";
+    });
+
+    function cursorLoop(){
+      rx+=(mx-rx)*.14;
+      ry+=(my-ry)*.14;
+      ring.style.left=rx+"px";
+      ring.style.top=ry+"px";
+      requestAnimationFrame(cursorLoop);
+    }
+    cursorLoop();
+
+    function bindHover(){
+      $$("a,button,.route-option,.stop-card,.moment-card,.memory-pass").forEach(el=>{
+        if(el.dataset.hoverBound) return;
+        el.dataset.hoverBound="true";
+        el.addEventListener("mouseenter",()=>ring.classList.add("hover"));
+        el.addEventListener("mouseleave",()=>ring.classList.remove("hover"));
+      });
+    }
+    bindHover();
+    window.bindHover=bindHover;
+  }
+
+  /* Canvas */
+  const canvas=$("#journeyCanvas");
+  const ctx=canvas.getContext("2d");
+  let w,h,nodes=[],pointer={x:-999,y:-999};
+
+  function resizeCanvas(){
+    w=canvas.width=innerWidth*devicePixelRatio;
+    h=canvas.height=innerHeight*devicePixelRatio;
+    canvas.style.width=innerWidth+"px";
+    canvas.style.height=innerHeight+"px";
+
+    const count=Math.min(85,Math.max(38,Math.floor(innerWidth/18)));
+    nodes=Array.from({length:count},()=>({
+      x:Math.random()*w,
+      y:Math.random()*h,
+      vx:(Math.random()-.5)*.32*devicePixelRatio,
+      vy:(Math.random()-.5)*.32*devicePixelRatio,
+      r:(Math.random()*2+1)*devicePixelRatio
+    }));
+  }
+
+  resizeCanvas();
+  addEventListener("resize",resizeCanvas);
+
+  addEventListener("mousemove",e=>{
+    pointer.x=e.clientX*devicePixelRatio;
+    pointer.y=e.clientY*devicePixelRatio;
+  });
+
+  function canvasLoop(){
+    ctx.clearRect(0,0,w,h);
+
+    for(const n of nodes){
+      n.x+=n.vx;
+      n.y+=n.vy;
+
+      if(n.x<0 || n.x>w) n.vx*=-1;
+      if(n.y<0 || n.y>h) n.vy*=-1;
+
+      const dx=pointer.x-n.x;
+      const dy=pointer.y-n.y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+
+      if(d<160*devicePixelRatio){
+        n.x-=dx*.006;
+        n.y-=dy*.006;
+      }
+
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle="rgba(201,154,46,.30)";
+      ctx.fill();
+    }
+
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const a=nodes[i],b=nodes[j];
+        const dx=a.x-b.x;
+        const dy=a.y-b.y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        const max=130*devicePixelRatio;
+
+        if(d<max){
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y);
+          ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle=`rgba(201,154,46,${(1-d/max)*.14})`;
+          ctx.lineWidth=.7*devicePixelRatio;
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(canvasLoop);
+  }
+  canvasLoop();
+
+  /* Nav + progress */
+  const nav=$("#nav");
+  const progress=$("#progress");
+
+  function scrollUI(){
+    nav.classList.toggle("scrolled",scrollY>35);
+    const max=document.documentElement.scrollHeight-innerHeight;
+    progress.style.width=(max>0 ? scrollY/max*100 : 0)+"%";
+  }
+
+  addEventListener("scroll",scrollUI);
+  scrollUI();
+
+  /* Mobile */
+  const hamburger=$("#hamburger");
+  const mobilePanel=$("#mobilePanel");
+
+  hamburger.addEventListener("click",()=>{
+    hamburger.classList.toggle("active");
+    mobilePanel.classList.toggle("active");
+    document.body.classList.toggle("lock",mobilePanel.classList.contains("active"));
+  });
+
+  $$(".mobile-link").forEach(link=>{
+    link.addEventListener("click",()=>{
+      hamburger.classList.remove("active");
+      mobilePanel.classList.remove("active");
+      document.body.classList.remove("lock");
+    });
+  });
+
+  /* Smooth anchors */
+  $$('a[href^="#"]').forEach(a=>{
+    a.addEventListener("click",e=>{
+      const target=$(a.getAttribute("href"));
+      if(target){
+        e.preventDefault();
+        scrollTo({top:target.offsetTop-90,behavior:"smooth"});
+      }
+    });
+  });
+
+  /* Reveal */
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("show");
+        io.unobserve(entry.target);
+      }
+    });
+  },{threshold:.14});
+
+  $$(".reveal").forEach(el=>io.observe(el));
+
+  /* Magnetic */
+  if(!isTouch){
+    $$(".magnetic").forEach(el=>{
+      el.addEventListener("mousemove",e=>{
+        const r=el.getBoundingClientRect();
+        const x=e.clientX-r.left-r.width/2;
+        const y=e.clientY-r.top-r.height/2;
+        el.style.transform=`translate(${x*.16}px,${y*.16}px)`;
+      });
+
+      el.addEventListener("mouseleave",()=>{
+        el.style.transform="";
+      });
+    });
+  }
+
+  /* Counters */
+  const counterIO=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        $$("[data-count]").forEach(el=>{
+          const target=Number(el.dataset.count);
+          const start=performance.now();
+
+          function step(now){
+            const p=Math.min((now-start)/1500,1);
+            const eased=1-Math.pow(1-p,3);
+            el.textContent=Math.floor(target*eased)+(target===98?"%":"+");
+            if(p<1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        });
+        counterIO.disconnect();
+      }
+    });
+  });
+  counterIO.observe(document.querySelector("[data-count]"));
+
+  /* Routes */
+  const routes={
+    golden:{
+      stamp:"Golden Route",
+      title:"Golden Evening",
+      match:"98% Experience Match",
+      desc:"A balanced route with burrata, sea bass, sparkling pairing and chocolate finish.",
+      img:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1000",
+      courses:4,
+      pacing:"92%",
+      mood:"98%"
+    },
+    fresh:{
+      stamp:"Fresh Route",
+      title:"Fresh Garden",
+      match:"95% Experience Match",
+      desc:"A bright route with herbal starters, citrus seafood, botanical drinks and clean finish.",
+      img:"https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=1000",
+      courses:4,
+      pacing:"89%",
+      mood:"95%"
+    },
+    bold:{
+      stamp:"Bold Route",
+      title:"Fire & Smoke",
+      match:"94% Experience Match",
+      desc:"A powerful route with tuna, wagyu, oak barrel red and espresso dessert finish.",
+      img:"https://images.unsplash.com/photo-1558030006-450675393462?w=1000",
+      courses:5,
+      pacing:"88%",
+      mood:"94%"
+    },
+    chef:{
+      stamp:"Chef Route",
+      title:"Chef Counter",
+      match:"99% Experience Match",
+      desc:"An interactive chef-led route with live plating, tasting surprises and premium pairings.",
+      img:"https://images.unsplash.com/photo-1551218808-94e220e084d2?w=1000",
+      courses:6,
+      pacing:"97%",
+      mood:"99%"
+    }
+  };
+
+  let activeRoute="golden";
+  const saved=[];
+
+  function setRoute(key){
+    activeRoute=key;
+    const r=routes[key];
+
+    $$(".route-option").forEach(btn=>{
+      btn.classList.toggle("active",btn.dataset.route===key);
+    });
+
+    $("#passportImg").style.opacity="0";
+
+    setTimeout(()=>{
+      $("#passportImg").src=r.img;
+      $("#passportImg").style.opacity="1";
+    },180);
+
+    $("#passportStamp").textContent=r.stamp;
+    $("#passportMatch").textContent=r.match;
+    $("#passportTitle").textContent=r.title;
+    $("#passportDesc").textContent=r.desc;
+    $("#courseCount").textContent=r.courses;
+    $("#paceScore").textContent=r.pacing;
+    $("#moodScore").textContent=r.mood;
+
+    toast(r.title+" route selected");
+  }
+
+  $("#routeOptions").addEventListener("click",e=>{
+    const btn=e.target.closest(".route-option");
+    if(!btn) return;
+    setRoute(btn.dataset.route);
+  });
+
+  $("#autoRouteBtn").addEventListener("click",()=>{
+    const keys=Object.keys(routes);
+    const key=keys[Math.floor(Math.random()*keys.length)];
+    setRoute(key);
+    document.querySelector("#builder").scrollIntoView({behavior:"smooth"});
+  });
+
+  /* Save route */
+  $("#saveRoute").addEventListener("click",()=>{
+    const r=routes[activeRoute];
+
+    const exists=saved.find(x=>x.title===r.title);
+    if(!exists){
+      saved.unshift({...r,id:Date.now()});
+    }
+
+    renderCapsule();
+    toast("🧭 "+r.title+" saved to capsule");
+  });
+
+  function renderCapsule(){
+    $("#passportCount").textContent=saved.length;
+    $("#capsuleCount").textContent=saved.length;
+    $("#latestRoute").textContent=saved.length ? saved[0].title : "None";
+    $("#bestMatch").textContent=saved.length ? saved[0].mood : "0%";
+
+    if(!saved.length){
+      $("#capsuleBoard").innerHTML=`
+        <div class="capsule-empty">
+          <div>
+            <h3>No journey passports yet</h3>
+            <p style="margin-top:10px">Choose a route and save it to your memory capsule.</p>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    $("#capsuleBoard").innerHTML=`
+      <div class="memory-list">
+        ${saved.map(item=>`
+          <article class="memory-pass">
+            <div>
+              <h4>${item.title}</h4>
+              <p>${item.desc}</p>
+              <div class="memory-meta">
+                <span>${item.courses} Courses</span>
+                <span>${item.pacing} Pacing</span>
+                <span>${item.mood} Mood</span>
+              </div>
+            </div>
+            <button class="btn btn-gold magnetic" data-load="${item.title}">Load</button>
+          </article>
+        `).join("")}
+      </div>
+    `;
+
+    if(window.bindHover) window.bindHover();
+  }
+
+  $("#capsuleBoard").addEventListener("click",e=>{
+    const load=e.target.closest("[data-load]");
+    if(!load) return;
+
+    const found=Object.entries(routes).find(([k,v])=>v.title===load.dataset.load);
+    if(found){
+      setRoute(found[0]);
+      document.querySelector("#builder").scrollIntoView({behavior:"smooth"});
+    }
+  });
+
+  function openCapsule(){
+    document.querySelector("#capsule").scrollIntoView({behavior:"smooth"});
+  }
+
+  $("#passportMini").addEventListener("click",openCapsule);
+  $("#passportFloat").addEventListener("click",openCapsule);
+  $("#openCapsuleHero").addEventListener("click",openCapsule);
+
+  $("#reserveBtn").addEventListener("click",()=>{
+    if(saved.length){
+      toast("🎉 Reservation started with "+saved[0].title+" journey");
+    }else{
+      toast("Save a route first or reserve directly");
+    }
+  });
+
+  function toast(message){
+    const t=$("#toast");
+    t.textContent=message;
+    t.classList.add("show");
+    clearTimeout(toast.timer);
+    toast.timer=setTimeout(()=>t.classList.remove("show"),2400);
+  }
+
+  window.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){
+      hamburger.classList.remove("active");
+      mobilePanel.classList.remove("active");
+      document.body.classList.remove("lock");
+    }
+  });
+
+})();
+</script>
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>
