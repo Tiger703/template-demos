@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Fire Craft | NOIR & SEL</title>
+  <meta name="description" content="The fire philosophy and binchōtan craft of NOIR & SEL." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=Syne:wght@400;500;700;800&family=JetBrains+Mono:wght@100;200;300;400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #040707;
+      --bg-rgb: 4, 7, 7;
+      --bg2: #090e0e;
+      --surface: rgba(255, 255, 255, .03);
+      --surface2: rgba(255, 255, 255, .06);
+      --text: #fbf9f5;
+      --text-rgb: 251, 249, 245;
+      --muted: rgba(251, 249, 245, .6);
+      --line: rgba(251, 249, 245, .08);
+      --accent: #dec285;
+      --accent-rgb: 222, 194, 133;
+      --accent2: #0a2520;
+      --accent2-rgb: 10, 37, 32;
+      --shadow: 0 40px 100px rgba(0, 0, 0, .7);
+      --blur: blur(20px);
+      --ease: cubic-bezier(.16, 1, .3, 1);
+      --ease-strong: cubic-bezier(.85, 0, .15, 1);
+      --radius: 4px;
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+      --serif: "Fraunces", Georgia, serif;
+      --syne: "Syne", sans-serif;
+      --navH: 140px;
+    }
+
+    [data-theme="light"] {
+      --bg: #f9f8f4;
+      --bg-rgb: 249, 248, 244;
+      --bg2: #f0ede4;
+      --surface: rgba(0, 0, 0, .04);
+      --surface2: rgba(0, 0, 0, .07);
+      --text: #0e1212;
+      --text-rgb: 14, 18, 18;
+      --muted: rgba(14, 18, 18, .65);
+      --line: rgba(14, 18, 18, .1);
+      --shadow: 0 35px 90px rgba(14, 18, 18, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--serif);
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x: hidden;
+      transition: background .8s var(--ease-strong), color .8s var(--ease-strong);
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    ::selection { background: rgba(var(--accent-rgb), .3); }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 998;
+      opacity: .04;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+    }
+
+    #kinetic-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: .9;
+      mix-blend-mode: screen;
+      transition: opacity 1s var(--ease);
+    }
+
+    [data-theme="light"] #kinetic-canvas {
+      mix-blend-mode: multiply;
+      opacity: .45;
+    }
+
+    /* PRELOADER */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: all;
+    }
+
+    .shutter-blade {
+      position: absolute;
+      width: 100%;
+      height: 50.5%;
+      background: #030606;
+      transition: transform 1.6s var(--ease-strong);
+    }
+
+    .shutter-blade.top { top: 0; transform-origin: top; }
+    .shutter-blade.bottom { bottom: 0; transform-origin: bottom; }
+
+    .loader-center-panel {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: opacity 1s var(--ease), transform 1.2s var(--ease);
+    }
+
+    .loader-mandala {
+      width: 140px;
+      height: 140px;
+      border: 1px solid rgba(var(--accent-rgb), .12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loader-mandala-inner {
+      width: 100px;
+      height: 100px;
+      border: 1px dashed var(--accent);
+      border-radius: 50%;
+      animation: spin 20s linear infinite;
+    }
+
+    .loader-text {
+      position: absolute;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .loader-progress-bar {
+      width: 220px;
+      height: 1px;
+      background: rgba(var(--text-rgb), .08);
+      position: relative;
+      margin-top: 40px;
+      overflow: hidden;
+    }
+
+    .loader-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0;
+      background: var(--accent);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    body.is-loaded #preloader { pointer-events: none; }
+    body.is-loaded .shutter-blade.top { transform: translateY(-100%); }
+    body.is-loaded .shutter-blade.bottom { transform: translateY(100%); }
+    body.is-loaded .loader-center-panel { opacity: 0; transform: scale(.8) rotate(-5deg); }
+
+    /* NAV */
+    .nav-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid var(--line);
+      background: rgba(4, 7, 7, .3);
+      backdrop-filter: var(--blur);
+      transition: background .6s var(--ease), border-color .6s var(--ease);
+    }
+
+    [data-theme="light"] .nav-container { background: rgba(249, 248, 244, .35); }
+    .nav-container.scrolled { background: rgba(4, 7, 7, .75); }
+    [data-theme="light"] .nav-container.scrolled { background: rgba(249, 248, 244, .78); }
+
+    .nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px clamp(20px, 5vw, 64px) 16px;
+    }
+
+    .nav-brand {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -.03em;
+    }
+
+    .nav-brand span {
+      font-weight: 300;
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .nav-ribbon {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      padding: 0 clamp(20px, 5vw, 64px) 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      scroll-snap-type: x mandatory;
+    }
+
+    .nav-ribbon::-webkit-scrollbar { display: none; }
+
+    .nav-ribbon a {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      position: relative;
+      padding: 6px 0;
+      white-space: nowrap;
+      transition: color .4s var(--ease);
+    }
+
+    .nav-ribbon a:hover,
+    .nav-ribbon a.active { color: var(--text); }
+
+    .nav-ribbon a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      transition: width .4s var(--ease);
+    }
+
+    .nav-ribbon a:hover::after,
+    .nav-ribbon a.active::after { width: 100%; }
+
+    .theme-btn {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .02);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .4s var(--ease);
+    }
+
+    .theme-btn:hover {
+      border-color: rgba(var(--accent-rgb), .65);
+      background: rgba(var(--accent-rgb), .06);
+    }
+
+    /* HERO */
+    .hero-fire {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      align-items: center;
+      gap: 60px;
+      padding: calc(var(--navH) + 40px) clamp(20px, 5vw, 64px) 80px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 980px) {
+      .hero-fire { grid-template-columns: 1fr; }
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+    }
+
+    .hero-kicker {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: clamp(3.6rem, 8vw, 8.5rem);
+      line-height: .88;
+      letter-spacing: -.06em;
+      font-weight: 200;
+      margin: 0;
+    }
+
+    .hero-title em {
+      color: var(--accent);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .hero-title .outline {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--text);
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    .hero-desc {
+      margin-top: 28px;
+      max-width: 56ch;
+      font-family: system-ui, sans-serif;
+      font-size: 1.08rem;
+      line-height: 1.85;
+      color: var(--muted);
+    }
+
+    .hero-actions {
+      margin-top: 36px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 24px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all .4s var(--ease);
+    }
+
+    .btn.primary {
+      background: linear-gradient(90deg, rgba(var(--accent-rgb), .15), rgba(var(--accent2-rgb), .08));
+      border-color: rgba(var(--accent-rgb), .4);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(var(--accent-rgb), .6);
+      background: rgba(var(--accent-rgb), .06);
+    }
+
+    .hero-panel {
+      position: relative;
+      z-index: 2;
+      height: 700px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.02);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.05);
+      transition: transform 1.2s var(--ease);
+      filter: grayscale(20%) contrast(1.08);
+    }
+
+    .hero-panel:hover img { transform: scale(1); }
+
+    .hero-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(600px 300px at 70% 20%, rgba(var(--accent-rgb), .18), transparent 65%),
+        linear-gradient(to top, rgba(0,0,0,.78), transparent 55%);
+    }
+
+    .hero-stamp {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      z-index: 3;
+      padding: 14px 18px;
+      border: 1px solid rgba(var(--accent-rgb), .3);
+      background: rgba(4,7,7,.55);
+      backdrop-filter: var(--blur);
+      border-radius: 10px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .hero-stamp strong {
+      display: block;
+      color: var(--accent);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    /* SECTION BASE */
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 120px clamp(20px, 5vw, 64px);
+    }
+
+    .kicker {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 48px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    .section-title {
+      font-size: clamp(2.6rem, 5.5vw, 5.5rem);
+      font-weight: 300;
+      letter-spacing: -.045em;
+      line-height: 1.02;
+      margin: 0 0 28px;
+    }
+
+    .section-title em {
+      color: var(--accent);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .section-copy {
+      max-width: 76ch;
+      color: var(--muted);
+      font-family: system-ui, sans-serif;
+      line-height: 1.8;
+      margin: 0 0 44px;
+      font-size: 1.05rem;
+    }
+
+    .glass {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      backdrop-filter: var(--blur);
+      box-shadow: 0 24px 70px rgba(0,0,0,.25);
+    }
+
+    [data-theme="light"] .glass {
+      border-color: rgba(0,0,0,.08);
+    }
+
+    /* SECTION 1: FIRE ORIGINS */
+    .origins-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .origins-grid { grid-template-columns: 1fr; }
+    }
+
+    .origins-image {
+      position: relative;
+      min-height: 620px;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+    }
+
+    .origins-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.08);
+      transition: transform 1.3s var(--ease);
+    }
+
+    .origins-image:hover img { transform: scale(1.02); }
+
+    .origins-image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.7), transparent 50%);
+    }
+
+    .origins-note {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      z-index: 2;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .origins-cards {
+      display: grid;
+      gap: 16px;
+    }
+
+    .origin-card {
+      padding: 28px;
+      min-height: 180px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .4s var(--ease), border-color .4s var(--ease);
+    }
+
+    .origin-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(var(--accent-rgb), .55);
+    }
+
+    .origin-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+
+    .origin-card p {
+      margin: 0;
+      color: var(--muted);
+      font-family: system-ui, sans-serif;
+      line-height: 1.75;
+    }
+
+    .origin-stat {
+      margin-top: 20px;
+      font-family: var(--syne);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .origin-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* SECTION 2: THERMAL TIMELINE */
+    .thermal-section {
+      background:
+        radial-gradient(800px 500px at 50% 50%, rgba(var(--accent-rgb), .08), transparent 70%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
+    }
+
+    .thermal-track {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 40px;
+    }
+
+    .thermal-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+      transform: translateX(-50%);
+    }
+
+    @media (max-width: 900px) {
+      .thermal-line { left: 20px; }
+    }
+
+    .thermal-item {
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      gap: 40px;
+      align-items: center;
+      margin-bottom: 80px;
+      position: relative;
+    }
+
+    .thermal-item:nth-child(even) .thermal-card { grid-column: 3; }
+    .thermal-item:nth-child(odd) .thermal-card { grid-column: 1; }
+
+    @media (max-width: 900px) {
+      .thermal-item {
+        grid-template-columns: 40px 1fr;
+        gap: 20px;
+      }
+      .thermal-item .thermal-card { grid-column: 2 !important; }
+      .thermal-item .thermal-point { grid-column: 1; }
+    }
+
+    .thermal-point {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(var(--accent-rgb), .55);
+      justify-self: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .thermal-card {
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: var(--surface);
+      border-radius: var(--radius);
+      backdrop-filter: var(--blur);
+    }
+
+    .thermal-temp {
+      font-family: var(--syne);
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .thermal-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+
+    .thermal-card p {
+      margin: 0;
+      color: var(--muted);
+      font-family: system-ui, sans-serif;
+      line-height: 1.75;
+    }
+
+    /* SECTION 3: TECHNIQUES GRID */
+    .techniques-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 1100px) {
+      .techniques-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 700px) {
+      .techniques-grid { grid-template-columns: 1fr; }
+    }
+
+    .technique-card {
+      min-height: 360px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .45s var(--ease), border-color .45s var(--ease);
+    }
+
+    .technique-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(var(--accent-rgb), .55);
+    }
+
+    .technique-card::before {
+      content: "";
+      position: absolute;
+      inset: -120px;
+      background:
+        radial-gradient(260px 180px at 20% 20%, rgba(var(--accent-rgb), .12), transparent 60%),
+        radial-gradient(260px 200px at 80% 70%, rgba(var(--accent2-rgb), .18), transparent 60%);
+      opacity: 0;
+      transition: opacity .45s var(--ease);
+      pointer-events: none;
+    }
+
+    .technique-card:hover::before { opacity: 1; }
+
+    .tech-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .technique-card h3 {
+      margin: 0 0 14px;
+      font-size: 1.7rem;
+      font-weight: 400;
+      position: relative;
+      z-index: 2;
+    }
+
+    .technique-card p {
+      margin: 0;
+      color: var(--muted);
+      font-family: system-ui, sans-serif;
+      line-height: 1.75;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tech-meta {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tech-chip {
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px dashed rgba(var(--accent-rgb), .3);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      background: rgba(var(--accent-rgb), .05);
+    }
+
+    /* SECTION 4: GRILL BLUEPRINT */
+    .blueprint-section {
+      background: var(--bg2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .blueprint-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(var(--accent-rgb), .04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(var(--accent-rgb), .04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .blueprint-box {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    @media (max-width: 980px) {
+      .blueprint-box { grid-template-columns: 1fr; }
+    }
+
+    .blueprint-diagram {
+      position: relative;
+      min-height: 600px;
+      border: 1px solid rgba(var(--accent-rgb), .15);
+      background: rgba(255,255,255,.02);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .grill-core {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 320px;
+      height: 320px;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(var(--accent-rgb), .45);
+      border-radius: 50%;
+      box-shadow: 0 0 50px rgba(var(--accent-rgb), .08);
+    }
+
+    .grill-core::before,
+    .grill-core::after {
+      content: "";
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      border: 1px dashed rgba(var(--accent-rgb), .18);
+    }
+
+    .grill-core::after {
+      inset: 60px;
+      border-style: solid;
+    }
+
+    .grill-center {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 20px rgba(var(--accent-rgb), .6);
+    }
+
+    .blueprint-node {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(var(--accent-rgb), .6);
+      box-shadow: 0 0 14px rgba(var(--accent-rgb), .4);
+    }
+
+    .blueprint-label {
+      position: absolute;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .blueprint-copy {
+      display: grid;
+      gap: 16px;
+    }
+
+    .blueprint-note {
+      padding: 22px 24px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: var(--surface);
+      border-radius: var(--radius);
+    }
+
+    .blueprint-note h4 {
+      margin: 0 0 10px;
+      font-size: 1.25rem;
+      font-weight: 400;
+    }
+
+    .blueprint-note p {
+      margin: 0;
+      color: var(--muted);
+      font-family: system-ui, sans-serif;
+      line-height: 1.72;
+    }
+
+    /* SECTION 5: MANIFESTO */
+    .manifesto-section {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .manifesto-glow {
+      position: absolute;
+      width: 800px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(var(--accent-rgb), .14), transparent 70%);
+      filter: blur(70px);
+      pointer-events: none;
+    }
+
+    .manifesto-text {
+      position: relative;
+      z-index: 2;
+      max-width: 920px;
+      font-size: clamp(1.8rem, 4vw, 3.8rem);
+      line-height: 1.42;
+      font-weight: 200;
+    }
+
+    .manifesto-text em {
+      color: var(--accent);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .manifesto-sign {
+      margin-top: 40px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 80px clamp(20px, 5vw, 64px) 40px;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, .015);
+    }
+
+    .foot {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 980px) {
+      .foot { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .foot { grid-template-columns: 1fr; }
+    }
+
+    .foot h3 {
+      margin: 0 0 14px;
+      font-size: 2.6rem;
+      font-weight: 300;
+      letter-spacing: -.04em;
+    }
+
+    .foot h3 em {
+      color: var(--accent);
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    .foot p {
+      margin: 0;
+      max-width: 48ch;
+      color: var(--muted);
+      line-height: 1.8;
+      font-family: system-ui, sans-serif;
+    }
+
+    .col h4 {
+      margin: 10px 0 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .col a {
+      display: block;
+      padding: 10px 0;
+      color: var(--text);
+      opacity: .9;
+      transition: transform .4s var(--ease), opacity .4s var(--ease);
+      font-family: system-ui, sans-serif;
+    }
+
+    .col a:hover {
+      transform: translateX(8px);
+      opacity: 1;
+      color: var(--accent);
+    }
+
+    .bottom {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    /* CURSOR */
+    .cursor, .cursorLabel { display: none; }
+
+    @media (pointer: fine) {
+      .cursor, .cursorLabel { display: block; }
+      body { cursor: none; }
+      a, button, .origin-card, .technique-card, .tool-cell { cursor: none; }
+
+      .cursor {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 1000;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 24px rgba(var(--accent-rgb), .35);
+      }
+
+      .cursorRing {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid rgba(var(--accent-rgb), .35);
+        background: rgba(var(--accent-rgb), .05);
+        pointer-events: none;
+        z-index: 999;
+        transform: translate(-50%, -50%);
+        transition: width .3s, height .3s, background .3s;
+      }
+
+      .cursorLabel {
+        position: fixed;
+        pointer-events: none;
+        z-index: 1001;
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        color: #070a0b;
+        background: rgba(var(--accent-rgb), .92);
+        padding: 8px 12px;
+        border-radius: 999px;
+        transform: translate(-50%, 24px);
+        opacity: 0;
+        transition: opacity .25s var(--ease);
+      }
+
+      body.cursor-on .cursorLabel { opacity: 1; }
+      body.cursor-big .cursorRing {
+        width: 76px;
+        height: 76px;
+        border-color: rgba(var(--accent-rgb), .6);
+        background: rgba(var(--accent-rgb), .1);
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      filter: blur(2px);
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+      transition: opacity 1s var(--ease), transform 1s var(--ease), filter 1s var(--ease);
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="kinetic-canvas"></canvas>
+  <div class="grain"></div>
+
+  <div class="cursor" id="cursorDot"></div>
+  <div class="cursorRing" id="cursorRing" style="display:none"></div>
+  <div class="cursorLabel" id="cursorLabel">View</div>
+
+  <!-- PRELOADER -->
+  <div id="preloader" aria-hidden="true">
+    <div class="shutter-blade top"></div>
+    <div class="shutter-blade bottom"></div>
+    <div class="loader-center-panel">
+      <div class="loader-mandala">
+        <div class="loader-mandala-inner"></div>
+        <div class="loader-text">N & S</div>
+      </div>
+      <div class="loader-progress-bar">
+        <div class="loader-fill" id="loaderBarFill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-container" id="nav">
+    <div class="nav-header">
+      <div class="nav-brand">NOIR <span>& SEL</span></div>
+      <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+    </div>
+    <div class="nav-ribbon">
+      <a href="index.html#home">01. Home</a>
+      <a href="maison.html#ethos">02. Maison</a>
+      <a href="experience.html#hero">03. Experience</a>
+      <a href="menu.html#hero">04. Menu</a>
+      <a href="#hero" class="active">05. Fire Craft</a>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero-fire" id="hero">
+      <div class="hero-copy">
+        <div class="hero-kicker reveal">Chapter 05 — Fire Craft</div>
+        <h1 class="hero-title reveal">
+          The<br><em>discipline</em><br><span class="outline">of heat.</span>
+        </h1>
+        <p class="hero-desc reveal">
+          Fire at NOIR & SEL is not spectacle. It is precision. We use flame, ember, smoke, and ash to reveal structure, not to dominate it. Every degree matters.
+        </p>
+        <div class="hero-actions reveal">
+          <a href="#origins" class="btn primary" data-cursor="Read">Discover Fire</a>
+          <a href="#techniques" class="btn" data-cursor="Explore">Techniques</a>
+        </div>
+      </div>
+
+      <div class="hero-panel reveal" data-cursor="Craft">
+        <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=1800&q=85" alt="Fire craft">
+        <div class="hero-stamp">
+          <strong>White Binchōtan</strong>
+          <span>Clean heat · stable energy · no bitterness</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1 -->
+    <section class="section" id="origins">
+      <div class="kicker reveal">Chapter 01 — Origins</div>
+      <h2 class="section-title reveal">Fire begins with <em>material</em>.</h2>
+      <p class="section-copy reveal">
+        Not all charcoal is equal. Not all smoke is welcome. Our fire philosophy starts at the source: oak density, carbonization, airflow, ash behavior, and thermal longevity.
+      </p>
+
+      <div class="origins-grid">
+        <div class="origins-image reveal" data-cursor="View">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=85" alt="Craft interior">
+          <div class="origins-note">Kishu binchōtan · Wakayama tradition</div>
+        </div>
+
+        <div class="origins-cards">
+          <div class="origin-card glass reveal" data-cursor="Detail">
+            <h3>White charcoal</h3>
+            <p>Fired slowly, then shocked at extreme temperature, creating an ultra-dense carbon structure with remarkable heat retention.</p>
+            <div class="origin-stat">1000°C</div>
+            <div class="origin-label">Peak combustion potential</div>
+          </div>
+
+          <div class="origin-card glass reveal" data-cursor="Detail">
+            <h3>Low smoke signature</h3>
+            <p>We avoid aggressive soot and unstable smoke to keep flavors transparent, allowing protein and fat to remain articulate.</p>
+            <div class="origin-stat">0 heavy soot</div>
+            <div class="origin-label">Clean combustion profile</div>
+          </div>
+
+          <div class="origin-card glass reveal" data-cursor="Detail">
+            <h3>Long radiant life</h3>
+            <p>The coals burn steadily for hours, letting us build a layered service instead of chasing unstable heat spikes.</p>
+            <div class="origin-stat">4+ hrs</div>
+            <div class="origin-label">Sustained thermal output</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section class="section thermal-section" id="thermal">
+      <div class="kicker reveal">Chapter 02 — Thermal Arc</div>
+      <h2 class="section-title reveal">The path from <em>warmth</em> to structure.</h2>
+      <p class="section-copy reveal">
+        Heat is not one moment. It is a curve. We think in stages: warming, surface response, caramelization, evaporation, crust formation, and aromatic expansion.
+      </p>
+
+      <div class="thermal-track">
+        <div class="thermal-line"></div>
+
+        <div class="thermal-item reveal">
+          <div class="thermal-card glass">
+            <div class="thermal-temp">60°</div>
+            <h3>Soft warming</h3>
+            <p>At low heat, the ingredient relaxes. Internal moisture redistributes. Texture begins to open without resistance.</p>
+          </div>
+          <div class="thermal-point"></div>
+        </div>
+
+        <div class="thermal-item reveal">
+          <div class="thermal-point"></div>
+          <div class="thermal-card glass">
+            <div class="thermal-temp">140°</div>
+            <h3>Maillard threshold</h3>
+            <p>The first serious browning appears. Sugars and proteins begin their aromatic conversation. Surface complexity starts.</p>
+          </div>
+        </div>
+
+        <div class="thermal-item reveal">
+          <div class="thermal-card glass">
+            <div class="thermal-temp">260°</div>
+            <h3>Crust formation</h3>
+            <p>The exterior tightens, dries, and takes on structure. This is where contrast is born: delicate interior, defined shell.</p>
+          </div>
+          <div class="thermal-point"></div>
+        </div>
+
+        <div class="thermal-item reveal">
+          <div class="thermal-point"></div>
+          <div class="thermal-card glass">
+            <div class="thermal-temp">400°+</div>
+            <h3>Radiant searing</h3>
+            <p>Used only in short windows. This is not brute force—it is exact placement, exact timing, exact withdrawal.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section class="section" id="techniques">
+      <div class="kicker reveal">Chapter 03 — Methods</div>
+      <h2 class="section-title reveal">We do not grill. We <em>calibrate</em>.</h2>
+
+      <div class="techniques-grid">
+        <article class="technique-card glass reveal" data-cursor="Read">
+          <div class="tech-num">01 / Direct ember</div>
+          <h3>Close radiant contact</h3>
+          <p>Fast surface reaction over dense coals. Ideal for fatty cuts requiring immediate outer definition and internal softness.</p>
+          <div class="tech-meta">
+            <span class="tech-chip">Radiant</span>
+            <span class="tech-chip">Fast sear</span>
+            <span class="tech-chip">High control</span>
+          </div>
+        </article>
+
+        <article class="technique-card glass reveal" data-cursor="Read">
+          <div class="tech-num">02 / Lifted grilling</div>
+          <h3>Distance-managed heat</h3>
+          <p>Raising the product away from the core changes airflow and slows reaction, preserving delicate fibers and sugars.</p>
+          <div class="tech-meta">
+            <span class="tech-chip">Indirect</span>
+            <span class="tech-chip">Gentle</span>
+            <span class="tech-chip">Even finish</span>
+          </div>
+        </article>
+
+        <article class="technique-card glass reveal" data-cursor="Read">
+          <div class="tech-num">03 / Ash resting</div>
+          <h3>Residual thermal finish</h3>
+          <p>Hot ash provides stable, surrounding warmth. We use it to complete root vegetables and quietly finish dense textures.</p>
+          <div class="tech-meta">
+            <span class="tech-chip">Ash</span>
+            <span class="tech-chip">Stable</span>
+            <span class="tech-chip">Slow finish</span>
+          </div>
+        </article>
+
+        <article class="technique-card glass reveal" data-cursor="Read">
+          <div class="tech-num">04 / Cold smoking</div>
+          <h3>Aroma without cooking</h3>
+          <p>Smoke can season without heat. We cool and moderate smoke so it perfumes rather than overwhelms the ingredient.</p>
+          <div class="tech-meta">
+            <span class="tech-chip">Aromatic</span>
+            <span class="tech-chip">Low temp</span>
+            <span class="tech-chip">Layered</span>
+          </div>
+        </article>
+
+        <article class="technique-card glass reveal" data-cursor="Read">
+          <div class="tech-num">05 / Fat rendering</div>
+          <h3>Time inside heat</h3>
+          <p>For certain cuts, the real work is not searing but rendering—allowing fat to melt, lubricate, and perfume the flesh.</p>
+          <div class="tech-meta">
+            <span class="tech-chip">Rendered</span>
+            <span class="tech-chip">Extended time</span>
+            <span class="tech-chip">Deep aroma</span>
+          </div>
+        </article>
+
+        <article class="technique-card glass reveal" data-cursor="Read">
+          <div class="tech-num">06 / Post-fire resting</div>
+          <h3>Rebalancing the interior</h3>
+          <p>Rest is part of the cook. Juice migration, thermal equalization, and final seasoning happen after the flame is gone.</p>
+          <div class="tech-meta">
+            <span class="tech-chip">Resting</span>
+            <span class="tech-chip">Juice return</span>
+            <span class="tech-chip">Precision</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section class="section blueprint-section" id="blueprint">
+      <div class="kicker reveal">Chapter 04 — Blueprint</div>
+      <h2 class="section-title reveal">The grill is a map of <em>zones</em>.</h2>
+      <p class="section-copy reveal">
+        A chef does not see one fire. A chef sees gradients, pockets, dead zones, and radiant channels. The grill behaves like a living instrument.
+      </p>
+
+      <div class="blueprint-box">
+        <div class="blueprint-diagram reveal" data-cursor="Map">
+          <div class="grill-core"></div>
+          <div class="grill-center"></div>
+
+          <div class="blueprint-node" style="top:18%; left:48%;"></div>
+          <div class="blueprint-label" style="top:14%; left:52%;">peak zone</div>
+
+          <div class="blueprint-node" style="top:36%; left:22%;"></div>
+          <div class="blueprint-label" style="top:32%; left:5%;">slow finish</div>
+
+          <div class="blueprint-node" style="top:68%; left:26%;"></div>
+          <div class="blueprint-label" style="top:66%; left:5%;">resting edge</div>
+
+          <div class="blueprint-node" style="top:36%; right:22%;"></div>
+          <div class="blueprint-label" style="top:32%; right:5%;">direct sear</div>
+
+          <div class="blueprint-node" style="bottom:18%; left:50%;"></div>
+          <div class="blueprint-label" style="bottom:10%; left:46%;">ash channel</div>
+        </div>
+
+        <div class="blueprint-copy">
+          <div class="blueprint-note glass reveal">
+            <h4>Peak zone</h4>
+            <p>The hottest point above the densest coal concentration. Used in brief contact windows only.</p>
+          </div>
+
+          <div class="blueprint-note glass reveal">
+            <h4>Slow finish</h4>
+            <p>Outer ring used to bring dense cuts through after initial crust formation.</p>
+          </div>
+
+          <div class="blueprint-note glass reveal">
+            <h4>Ash channel</h4>
+            <p>Residual warmth where vegetables and wrapped proteins can continue developing without aggression.</p>
+          </div>
+
+          <div class="blueprint-note glass reveal">
+            <h4>Resting edge</h4>
+            <p>The calm perimeter where heat settles and juices reorganize before carving or plating.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section class="section manifesto-section" id="manifesto">
+      <div class="manifesto-glow"></div>
+      <div>
+        <p class="manifesto-text reveal">
+          Fire is not there to <em>dominate</em> the ingredient.  
+          It is there to expose its hidden <em>architecture</em>.
+        </p>
+        <div class="manifesto-sign reveal">— NOIR & SEL / Fire Philosophy</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot">
+      <div>
+        <h3>NOIR <em>&</em> SEL</h3>
+        <p>French history meets Japanese structural purity. An intentional, quiet culinary transition focused on seasonality, hospitality, and craft.</p>
+      </div>
+      <div class="col">
+        <h4>Explore</h4>
+        <a href="menu.html#hero">Menu</a>
+        <a href="experience.html#hero">Experience</a>
+        <a href="index.html#gallery">Visuals</a>
+      </div>
+      <div class="col">
+        <h4>Relations</h4>
+        <a href="index.html#reserve">Table Request</a>
+        <a href="index.html#reviews">Critiques</a>
+        <a href="#hero">To the Peak</a>
+      </div>
+      <div class="col">
+        <h4>Registry</h4>
+        <a href="mailto:bonsoir@noiretsel.fr">bonsoir@noiretsel.fr</a>
+        <a href="tel:+33142608814">+33 1 42 60 88 14</a>
+        <a href="#">Corporate spaces</a>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <span>© 2026 · NOIR & SEL — Maison Culinaire</span>
+      <span>Fire Craft / Pure HTML CSS JS</span>
+    </div>
+  </footer>
+
+  <script>
+    /* PRELOADER */
+    const fill = document.getElementById('loaderBarFill');
+    let loadProgress = 0;
+    const progressTimer = setInterval(() => {
+      loadProgress += Math.floor(Math.random() * 20) + 15;
+      if (loadProgress >= 100) {
+        loadProgress = 100;
+        clearInterval(progressTimer);
+        setTimeout(() => {
+          document.body.classList.add('is-loaded');
+          document.querySelectorAll('.reveal').forEach((el, i) => setTimeout(() => el.classList.add('in'), i * 70));
+        }, 500);
+      }
+      fill.style.width = loadProgress + '%';
+    }, 100);
+
+    /* KINETIC BACKGROUND */
+    const canvas = document.getElementById('kinetic-canvas');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    let W = 0, H = 0, DPR = 1, points = [];
+    let mouse = { x: -1000, y: -1000 };
+
+    function resizeCanvas() {
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.width = Math.floor(window.innerWidth * DPR);
+      H = canvas.height = Math.floor(window.innerHeight * DPR);
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      buildGrid();
+    }
+
+    class FlowNode {
+      constructor(x, y) {
+        this.x = x * DPR;
+        this.y = y * DPR;
+        this.baseX = this.x;
+        this.baseY = this.y;
+        this.vx = 0;
+        this.vy = 0;
+        this.size = (Math.random() * 1.5 + .5) * DPR;
+        this.colorIndex = Math.random() > .5 ? 1 : 0;
+      }
+      update() {
+        this.vx += (this.baseX - this.x) * .03;
+        this.vy += (this.baseY - this.y) * .03;
+
+        const dx = mouse.x * DPR - this.x;
+        const dy = mouse.y * DPR - this.y;
+        const dist = Math.hypot(dx, dy);
+        const forceDist = 150 * DPR;
+
+        if (dist < forceDist) {
+          const force = (forceDist - dist) / forceDist;
+          this.vx -= (dx / dist) * force * 3 * DPR;
+          this.vy -= (dy / dist) * force * 3 * DPR;
+        }
+
+        this.vx *= .88;
+        this.vy *= .88;
+        this.x += this.vx;
+        this.y += this.vy;
+      }
+    }
+
+    function buildGrid() {
+      points = [];
+      const density = window.innerWidth < 768 ? 40 : 28;
+      const xGap = window.innerWidth / density;
+      const yGap = window.innerHeight / density;
+      for (let x = 0; x <= window.innerWidth + xGap; x += xGap) {
+        for (let y = 0; y <= window.innerHeight + yGap; y += yGap) {
+          points.push(new FlowNode(x, y));
+        }
+      }
+    }
+
+    function drawLoop() {
+      ctx.clearRect(0, 0, W, H);
+      const dark = document.documentElement.getAttribute('data-theme') !== 'light';
+      const gold = dark ? 'rgba(222,194,133,.16)' : 'rgba(156,120,50,.08)';
+      const jade = dark ? 'rgba(10,37,32,.22)' : 'rgba(20,75,75,.08)';
+
+      points.forEach(p => {
+        p.update();
+        ctx.beginPath();
+        ctx.fillStyle = p.colorIndex ? gold : jade;
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(drawLoop);
+    }
+
+    window.addEventListener('mousemove', e => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    }, { passive: true });
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    drawLoop();
+
+    /* REVEALS */
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      });
+    }, { threshold: .12 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* THEME TOGGLE */
+    const themeBtn = document.getElementById('themeBtn');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('ns_theme', theme);
+    }
+
+    themeBtn.addEventListener('click', e => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+
+      const ripple = document.createElement('div');
+      ripple.style.cssText = `
+        position:fixed;
+        left:${e.clientX}px;
+        top:${e.clientY}px;
+        width:0;height:0;
+        border-radius:50%;
+        background:var(--accent);
+        opacity:.12;
+        pointer-events:none;
+        z-index:9999;
+        transform:translate(-50%,-50%);
+        transition:width 1.2s var(--ease), height 1.2s var(--ease), opacity 1.2s;
+      `;
+      document.body.appendChild(ripple);
+      requestAnimationFrame(() => {
+        ripple.style.width = '250vmax';
+        ripple.style.height = '250vmax';
+        ripple.style.opacity = '0';
+      });
+      setTimeout(() => ripple.remove(), 1200);
+    });
+
+    const savedTheme = localStorage.getItem('ns_theme');
+    if (savedTheme) applyTheme(savedTheme);
+
+    /* CURSOR */
+    if (window.matchMedia('(pointer:fine)').matches) {
+      const dot = document.getElementById('cursorDot');
+      const ring = document.getElementById('cursorRing');
+      const label = document.getElementById('cursorLabel');
+      ring.style.display = 'block';
+
+      let mx = 0, my = 0, rx = 0, ry = 0;
+
+      window.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        dot.style.left = mx + 'px';
+        dot.style.top = my + 'px';
+        label.style.left = mx + 'px';
+        label.style.top = my + 'px';
+      }, { passive: true });
+
+      (function animate() {
+        rx += (mx - rx) * .16;
+        ry += (my - ry) * .16;
+        ring.style.left = rx + 'px';
+        ring.style.top = ry + 'px';
+        requestAnimationFrame(animate);
+      })();
+
+      document.querySelectorAll('[data-cursor], a, button, .origin-card, .technique-card, .blueprint-note').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          document.body.classList.add('cursor-on', 'cursor-big');
+          label.textContent = el.getAttribute('data-cursor') || 'Open';
+        });
+        el.addEventListener('mouseleave', () => {
+          document.body.classList.remove('cursor-on', 'cursor-big');
+        });
+      });
+    }
+
+    /* NAV SCROLL */
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 12);
+    }, { passive: true });
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

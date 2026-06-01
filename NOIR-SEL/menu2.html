@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>L'Atelier Menu | NOIR & SEL</title>
+  <meta name="description" content="The exclusive 6-seat L'Atelier tasting menu at NOIR & SEL. A bespoke, interactive culinary journey." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=Syne:wght@400;500;700;800&family=JetBrains+Mono:wght@100;200;300;400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #040707; --bg-rgb: 4, 7, 7; --bg2: #090e0e;
+      --surface: rgba(255, 255, 255, .03); --surface2: rgba(255, 255, 255, .06);
+      --text: #fbf9f5; --text-rgb: 251, 249, 245; --muted: rgba(251, 249, 245, .6);
+      --line: rgba(251, 249, 245, .08);
+      --accent: #dec285; --accent-rgb: 222, 194, 133;
+      --accent2: #0a2520; --accent2-rgb: 10, 37, 32;
+      --shadow: 0 40px 100px rgba(0, 0, 0, .7);
+      --blur: blur(20px);
+      --ease: cubic-bezier(.16, 1, .3, 1);
+      --ease-strong: cubic-bezier(.85, 0, .15, 1);
+      --radius: 16px;
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+      --serif: "Fraunces", Georgia, serif;
+      --syne: "Syne", sans-serif;
+      --navH: 140px;
+    }
+
+    [data-theme="light"] {
+      --bg: #f9f8f4; --bg-rgb: 249, 248, 244; --bg2: #f0ede4;
+      --surface: rgba(0, 0, 0, .04); --surface2: rgba(0, 0, 0, .07);
+      --text: #0e1212; --text-rgb: 14, 18, 18; --muted: rgba(14, 18, 18, .65);
+      --line: rgba(14, 18, 18, .1);
+      --shadow: 0 35px 90px rgba(14, 18, 18, .08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: var(--serif); color: var(--text);
+      background-color: var(--bg); overflow-x: hidden;
+      transition: background-color .8s var(--ease-strong), color .8s var(--ease-strong);
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+    ::selection { background: rgba(var(--accent-rgb), .3); }
+
+    .grain {
+      position: fixed; inset: 0; pointer-events: none; z-index: 998; opacity: .04; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+    }
+
+    #kinetic-canvas {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .9; mix-blend-mode: screen; transition: opacity 1s var(--ease);
+    }
+    [data-theme="light"] #kinetic-canvas { mix-blend-mode: multiply; opacity: .45; }
+
+    /* =========================================================
+       PRELOADER & NAV (Standardized)
+       ========================================================= */
+    #preloader { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; background: transparent; pointer-events: all; }
+    .shutter-blade { position: absolute; width: 100%; height: 50.5%; background: #030606; transition: transform 1.6s var(--ease-strong); }
+    .shutter-blade.top { top: 0; transform-origin: top; }
+    .shutter-blade.bottom { bottom: 0; transform-origin: bottom; }
+    .loader-center-panel { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; transition: opacity 1s var(--ease), transform 1.2s var(--ease); }
+    .loader-mandala { width: 140px; height: 140px; border: 1px solid rgba(var(--accent-rgb), .12); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .loader-mandala-inner { width: 100px; height: 100px; border: 1px dashed var(--accent); border-radius: 50%; animation: spin 20s linear infinite; }
+    .loader-text { position: absolute; font-family: var(--mono); font-size: 11px; letter-spacing: .4em; text-transform: uppercase; color: var(--text); }
+    .loader-progress-bar { width: 220px; height: 1px; background: rgba(var(--text-rgb), .08); position: relative; margin-top: 40px; overflow: hidden; }
+    .loader-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0; background: var(--accent); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    body.is-loaded #preloader { pointer-events: none; }
+    body.is-loaded .shutter-blade.top { transform: translateY(-100%); }
+    body.is-loaded .shutter-blade.bottom { transform: translateY(100%); }
+    body.is-loaded .loader-center-panel { opacity: 0; transform: scale(0.8) rotate(-5deg); }
+
+    .nav-container { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; flex-direction: column; border-bottom: 1px solid var(--line); background: rgba(4, 7, 7, .3); backdrop-filter: var(--blur); transition: background .6s var(--ease), border-color .6s var(--ease); }
+    [data-theme="light"] .nav-container { background: rgba(249, 248, 244, .35); }
+    .nav-container.scrolled { background: rgba(4, 7, 7, .75); }
+    [data-theme="light"] .nav-container.scrolled { background: rgba(249, 248, 244, .78); }
+    .nav-header { display: flex; justify-content: space-between; align-items: center; padding: 24px clamp(20px, 5vw, 64px) 16px; }
+    .nav-brand { font-family: var(--serif); font-size: 24px; font-weight: 700; letter-spacing: -.03em; }
+    .nav-brand span { font-weight: 300; font-style: italic; color: var(--accent); }
+    .nav-ribbon { display: flex; gap: 32px; align-items: center; padding: 0 clamp(20px, 5vw, 64px) 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .nav-ribbon::-webkit-scrollbar { display: none; }
+    .nav-ribbon a { font-family: var(--mono); font-size: 11px; letter-spacing: .25em; text-transform: uppercase; color: var(--muted); position: relative; padding: 6px 0; white-space: nowrap; scroll-snap-align: start; transition: color .4s var(--ease); }
+    .nav-ribbon a:hover, .nav-ribbon a.active { color: var(--text); }
+    .nav-ribbon a::after { content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); transition: width .4s var(--ease); }
+    .nav-ribbon a:hover::after, .nav-ribbon a.active::after { width: 100%; }
+    .theme-btn { border: 1px solid var(--line); background: rgba(255, 255, 255, .02); color: var(--text); padding: 8px 14px; border-radius: 999px; font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; cursor: pointer; transition: all .4s var(--ease); }
+    .theme-btn:hover { border-color: rgba(var(--accent-rgb), .65); background: rgba(var(--accent-rgb), .06); }
+
+    /* =========================================================
+       HERO: ROTATING SVG & MASSIVE TYPOGRAPHY
+       ========================================================= */
+    .hero-atelier {
+      position: relative; z-index: 1; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: calc(var(--navH) + 40px) 20px 80px;
+      overflow: hidden;
+    }
+    .hero-atelier-content { text-align: center; position: relative; z-index: 2; }
+    
+    .rotating-badge {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: clamp(320px, 45vw, 500px); height: clamp(320px, 45vw, 500px);
+      z-index: 1; opacity: .6; pointer-events: none;
+    }
+    .rotating-badge svg { width: 100%; height: 100%; animation: spin 25s linear infinite; }
+    .rotating-badge text { font-family: var(--mono); font-size: 13px; letter-spacing: .3em; text-transform: uppercase; fill: var(--accent); }
+    
+    .hero-title-atelier {
+      font-size: clamp(4.5rem, 12vw, 12rem); line-height: .85; letter-spacing: -.06em; font-weight: 200; margin: 0;
+      position: relative; z-index: 2;
+    }
+    .hero-title-atelier em { font-style: italic; font-weight: 400; color: var(--accent); display: block; }
+    
+    .hero-sub-atelier {
+      margin-top: 40px; font-family: var(--mono); font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--muted);
+      position: relative; z-index: 2;
+    }
+
+    /* =========================================================
+       SECTION 1: STICKY STACK (DECK OF CARDS SCROLL MAGIC)
+       ========================================================= */
+    .stack-wrapper {
+      position: relative; z-index: 1;
+      /* Height is calculated via JS based on number of cards */
+    }
+    .stack-card {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px clamp(20px, 5vw, 64px);
+      transform-origin: center top;
+      will-change: transform, border-radius;
+    }
+    .stack-card-inner {
+      width: 100%; max-width: 1200px; height: 75vh;
+      border-radius: var(--radius); overflow: hidden;
+      border: 1px solid rgba(255,255,255,.08);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      display: grid; grid-template-columns: 1fr 1fr;
+      position: relative;
+    }
+    @media (max-width: 980px) {
+      .stack-card-inner { grid-template-columns: 1fr; height: 85vh; }
+    }
+    
+    .stack-card-img {
+      position: relative; overflow: hidden;
+    }
+    .stack-card-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 1.5s var(--ease);
+    }
+    .stack-card:hover .stack-card-img img { transform: scale(1.05); }
+    .stack-card-img::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(to right, transparent 60%, var(--bg) 100%);
+      pointer-events: none;
+    }
+    @media (max-width: 980px) {
+      .stack-card-img::after { background: linear-gradient(to bottom, transparent 40%, var(--bg) 100%); }
+    }
+
+    .stack-card-content {
+      padding: clamp(30px, 5vw, 80px);
+      display: flex; flex-direction: column; justify-content: center;
+      position: relative; z-index: 2;
+    }
+    .stack-num {
+      font-family: var(--syne); font-size: 8rem; font-weight: 800; color: rgba(var(--accent-rgb), .08);
+      line-height: 1; position: absolute; top: 20px; right: 40px; pointer-events: none;
+    }
+    .stack-kicker { font-family: var(--mono); font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+    .stack-title { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; line-height: 1.1; margin-bottom: 20px; }
+    .stack-title em { font-style: italic; font-weight: 400; color: var(--accent); }
+    .stack-desc { font-family: system-ui, sans-serif; font-size: 1rem; line-height: 1.8; color: var(--muted); margin-bottom: 30px; max-width: 450px; }
+    .stack-meta { display: flex; gap: 24px; flex-wrap: wrap; }
+    .stack-meta-item { display: flex; flex-direction: column; gap: 4px; }
+    .stack-meta-label { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+    .stack-meta-val { font-size: 1.1rem; color: var(--text); }
+
+    /* =========================================================
+       SECTION 2: SLIDING TABS PAIRINGS
+       ========================================================= */
+    .pairings-atelier {
+      position: relative; z-index: 1;
+      padding: 160px clamp(20px, 5vw, 64px);
+      background: var(--bg2);
+    }
+    .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .kicker::before { content: ""; width: 48px; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); }
+    .h2 { font-size: clamp(2.6rem, 5.5vw, 5.5rem); font-weight: 300; letter-spacing: -.045em; line-height: 1.02; margin: 0 0 60px 0; }
+    .h2 em { font-style: italic; font-weight: 400; color: var(--accent); }
+
+    .tabs-container { position: relative; margin-bottom: 60px; }
+    .tabs-nav {
+      display: inline-flex; background: var(--surface); border: 1px solid var(--line);
+      border-radius: 999px; padding: 6px; position: relative; z-index: 2;
+    }
+    .tab-btn {
+      padding: 12px 28px; border-radius: 999px; border: none; background: transparent;
+      font-family: var(--mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--muted); position: relative; z-index: 2; transition: color .4s;
+    }
+    .tab-btn.active { color: var(--bg); }
+    .tab-slider {
+      position: absolute; top: 6px; left: 6px; height: calc(100% - 12px);
+      background: var(--accent); border-radius: 999px; z-index: 1;
+      transition: transform .5s var(--ease), width .5s var(--ease);
+    }
+
+    .tab-panels { position: relative; min-height: 400px; }
+    .tab-panel {
+      display: none; opacity: 0; transform: translateY(20px);
+      transition: opacity .6s var(--ease), transform .6s var(--ease);
+    }
+    .tab-panel.active { display: block; opacity: 1; transform: translateY(0); }
+    
+    .drink-list { display: grid; gap: 0; border-top: 1px solid var(--line); }
+    .drink-item {
+      display: grid; grid-template-columns: 1fr auto auto; gap: 40px; align-items: center;
+      padding: 28px 0; border-bottom: 1px solid var(--line);
+      transition: background .4s, padding-left .4s;
+    }
+    .drink-item:hover { background: rgba(var(--accent-rgb), .02); padding-left: 20px; }
+    .drink-name { font-size: 1.4rem; font-weight: 400; }
+    .drink-detail { font-family: system-ui, sans-serif; font-size: .9rem; color: var(--muted); text-align: right; max-width: 300px; }
+    .drink-price { font-family: var(--mono); font-size: 12px; letter-spacing: .15em; color: var(--accent); }
+
+    /* =========================================================
+       SECTION 3: PARALLAX MANIFESTO
+       ========================================================= */
+    .manifesto-atelier {
+      position: relative; z-index: 1;
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 120px clamp(20px, 5vw, 64px);
+      overflow: hidden; text-align: center;
+    }
+    .manifesto-glow {
+      position: absolute; width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(var(--accent-rgb), .15), transparent 70%);
+      filter: blur(80px); pointer-events: none;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+    }
+    .manifesto-text {
+      font-size: clamp(2rem, 4.5vw, 4.5rem); font-weight: 200; line-height: 1.3;
+      max-width: 1000px; position: relative; z-index: 2;
+    }
+    .manifesto-text em { font-style: italic; font-weight: 400; color: var(--accent); }
+    .manifesto-sig {
+      margin-top: 60px; font-family: var(--mono); font-size: 11px; letter-spacing: .3em;
+      text-transform: uppercase; color: var(--muted); position: relative; z-index: 2;
+    }
+
+    /* =========================================================
+       FOOTER & UTILITIES
+       ========================================================= */
+    footer { position: relative; z-index: 1; padding: 80px clamp(20px, 5vw, 64px) 40px; border-top: 1px solid var(--line); background: rgba(255, 255, 255, .015); }
+    .foot { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    @media (max-width: 980px) { .foot { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px) { .foot { grid-template-columns: 1fr; } }
+    .foot h3 { margin: 0 0 14px; font-size: 2.6rem; font-weight: 300; letter-spacing: -.04em; }
+    .foot h3 em { color: var(--accent); font-style: italic; font-weight: 700; }
+    .foot p { margin: 0; max-width: 48ch; color: var(--muted); line-height: 1.8; font-family: system-ui, sans-serif; }
+    .col h4 { margin: 10px 0 14px; font-family: var(--mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); }
+    .col a { display: block; padding: 10px 0; color: var(--text); opacity: .9; transition: transform .4s var(--ease), opacity .4s var(--ease); font-family: system-ui, sans-serif; }
+    .col a:hover { transform: translateX(8px); opacity: 1; color: var(--accent); }
+    .bottom { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; }
+
+    .cursor, .cursorLabel { display: none; }
+    @media (pointer: fine) {
+      .cursor, .cursorLabel { display: block; }
+      body { cursor: none; }
+      a, button, .stack-card, .drink-item { cursor: none; }
+      .cursor { position: fixed; left: 0; top: 0; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 1000; transform: translate(-50%, -50%); box-shadow: 0 0 24px rgba(var(--accent-rgb), .35); }
+      .cursorRing { position: fixed; left: 0; top: 0; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(var(--accent-rgb), .35); background: rgba(var(--accent-rgb), .05); pointer-events: none; z-index: 999; transform: translate(-50%, -50%); transition: width .3s, height .3s, background .3s; }
+      .cursorLabel { position: fixed; pointer-events: none; z-index: 1001; font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: #070a0b; background: rgba(var(--accent-rgb), .92); padding: 8px 12px; border-radius: 999px; transform: translate(-50%, 24px); opacity: 0; transition: opacity .25s var(--ease); }
+      body.cursor-on .cursorLabel { opacity: 1; }
+      body.cursor-big .cursorRing { width: 76px; height: 76px; border-color: rgba(var(--accent-rgb), .6); background: rgba(var(--accent-rgb), .1); }
+    }
+
+    .reveal { opacity: 0; transform: translateY(30px); filter: blur(2px); }
+    .reveal.in { opacity: 1; transform: translateY(0); filter: blur(0); transition: opacity 1s var(--ease), transform 1s var(--ease), filter 1s var(--ease); }
+  </style>
+</head>
+
+<body>
+  <canvas id="kinetic-canvas"></canvas>
+  <div class="grain"></div>
+
+  <div class="cursor" id="cursorDot"></div>
+  <div class="cursorRing" id="cursorRing" style="display:none"></div>
+  <div class="cursorLabel" id="cursorLabel">View</div>
+
+  <!-- PRELOADER -->
+  <div id="preloader" aria-hidden="true">
+    <div class="shutter-blade top"></div>
+    <div class="shutter-blade bottom"></div>
+    <div class="loader-center-panel">
+      <div class="loader-mandala"><div class="loader-mandala-inner"></div><div class="loader-text">N & S</div></div>
+      <div class="loader-progress-bar"><div class="loader-fill" id="loaderBarFill"></div></div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-container" id="nav">
+    <div class="nav-header">
+      <div class="nav-brand">NOIR <span>& SEL</span></div>
+      <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+    </div>
+    <div class="nav-ribbon" id="navRibbon">
+        <a href="index.html#home">01. Home</a>
+      <a href="maison.html#ethos">02. Maison</a>
+      <a href="experience.html#hero">03. Experience</a>
+      <a href="#hero">04. Menu</a>
+      <a href="menu2.html#hero" class="active">05. Menu 2</a>
+      <a href="fire.html#fire">06. Fire Craft</a>
+
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero-atelier" id="hero">
+      <div class="rotating-badge">
+        <svg viewBox="0 0 500 500">
+          <defs>
+            <path id="circlePath" d="M 250, 250 m -200, 0 a 200,200 0 1,1 400,0 a 200,200 0 1,1 -400,0" />
+          </defs>
+          <text>
+            <textPath href="#circlePath">EXCLUSIVE • SIX SEATS • BESPOKE • L'ATELIER • </textPath>
+          </text>
+        </svg>
+      </div>
+      <div class="hero-atelier-content">
+        <h1 class="hero-title-atelier reveal">
+          L'<em>Atelier</em>
+        </h1>
+        <p class="hero-sub-atelier reveal">The Private Kitchen Experience • €380 per guest</p>
+      </div>
+    </section>
+
+    <!-- SECTION 1: STICKY STACK (DECK OF CARDS) -->
+    <section class="stack-wrapper" id="stackWrapper">
+      <!-- Cards injected via JS -->
+    </section>
+
+    <!-- SECTION 2: SLIDING TABS PAIRINGS -->
+    <section class="pairings-atelier" id="pairings">
+      <div class="kicker reveal">Liquid Architecture</div>
+      <h2 class="h2 reveal">The Atelier <em>Pairings</em>.</h2>
+
+      <div class="tabs-container reveal">
+        <div class="tabs-nav" id="tabsNav">
+          <div class="tab-slider" id="tabSlider"></div>
+          <button class="tab-btn active" data-tab="wine">Wine</button>
+          <button class="tab-btn" data-tab="sake">Sake</button>
+          <button class="tab-btn" data-tab="spirits">Spirits</button>
+          <button class="tab-btn" data-tab="zero">Zero-Proof</button>
+        </div>
+      </div>
+
+      <div class="tab-panels reveal" id="tabPanels">
+        <div class="tab-panel active" id="panel-wine">
+          <div class="drink-list">
+            <div class="drink-item"><span class="drink-name">Domaine Leflaive Puligny-Montrachet</span><span class="drink-detail">Biodynamic, mineral, white flower</span><span class="drink-price">€45 / glass</span></div>
+            <div class="drink-item"><span class="drink-name">Château Rayas Châteauneuf-du-Pape</span><span class="drink-detail">Ethereal, red fruit, garrigue</span><span class="drink-price">€85 / glass</span></div>
+            <div class="drink-item"><span class="drink-name">Krug Grande Cuvée 171ème Édition</span><span class="drink-detail">Brioche, citrus, endless finish</span><span class="drink-price">€65 / glass</span></div>
+          </div>
+        </div>
+        <div class="tab-panel" id="panel-sake">
+          <div class="drink-list">
+            <div class="drink-item"><span class="drink-name">Dassai 23 Junmai Daiginjo</span><span class="drink-detail">Elegant, melon, clean finish</span><span class="drink-price">€35 / glass</span></div>
+            <div class="drink-item"><span class="drink-name">Kamoizumi 'Summer Snow' Junmai Ginjo</span><span class="drink-detail">Unpasteurized, lively, umami</span><span class="drink-price">€28 / glass</span></div>
+            <div class="drink-item"><span class="drink-name">Tedorigawa 'Yamahai' Junmai Koshu</span><span class="drink-detail">Aged 5 years, amber, caramel</span><span class="drink-price">€40 / glass</span></div>
+          </div>
+        </div>
+        <div class="tab-panel" id="panel-spirits">
+          <div class="drink-list">
+            <div class="drink-item"><span class="drink-name">Yamazaki 18 Year Old</span><span class="drink-detail">Mizunara oak, dried fruit, incense</span><span class="drink-price">€95 / pour</span></div>
+            <div class="drink-item"><span class="drink-name">Henri Giraud Argonne Aÿ Grand Cru</span><span class="drink-detail">Rare Champagne, chalk, hazelnut</span><span class="drink-price">€120 / glass</span></div>
+          </div>
+        </div>
+        <div class="tab-panel" id="panel-zero">
+          <div class="drink-list">
+            <div class="drink-item"><span class="drink-name">Pine & Yuzu Clarified Milk Punch</span><span class="drink-detail">Silky, bright, resinous</span><span class="drink-price">€18 / glass</span></div>
+            <div class="drink-item"><span class="drink-name">Kombucha 'Vintage' (Aged 6 Months)</span><span class="drink-detail">Complex, funky, dry cider notes</span><span class="drink-price">€22 / glass</span></div>
+            <div class="drink-item"><span class="drink-name">Smoked Hojicha & Oat Milk</span><span class="drink-detail">Roasted, creamy, comforting</span><span class="drink-price">€15 / glass</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: PARALLAX MANIFESTO -->
+    <section class="manifesto-atelier" id="manifesto">
+      <div class="manifesto-glow"></div>
+      <div>
+        <p class="manifesto-text reveal">
+          "L'Atelier is not a menu. It is a <em>conversation</em>. We sit with you, we listen, and we cook <em>for you</em>—not for the room. This is the purest expression of our <em>craft</em>."
+        </p>
+        <p class="manifesto-sig reveal">— Chef Aimé Laurent</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot">
+      <div><h3>NOIR <em>&</em> SEL</h3><p>French history meets Japanese structural purity. An intentional, quiet culinary transition focused on seasonality, hospitality, and craft.</p></div>
+      <div class="col"><h4>Explore</h4><a href="menu.html#hero">Main Menu</a><a href="experience.html#hero">Experience</a><a href="index.html#gallery">Visuals</a></div>
+      <div class="col"><h4>Relations</h4><a href="index.html#reserve">Table Request</a><a href="index.html#reviews">Critiques</a><a href="#hero">To the Peak</a></div>
+      <div class="col"><h4>Registry</h4><a href="mailto:bonsoir@noiretsel.fr">bonsoir@noiretsel.fr</a><a href="tel:+33142608814">+33 1 42 60 88 14</a><a href="#">Corporate spaces</a></div>
+    </div>
+    <div class="bottom"><span>© 2026 · NOIR & SEL — Maison Culinaire</span><span>Generative Vector Flow Engine</span></div>
+  </footer>
+
+  <script>
+    /* =========================================================
+       DATA
+       ========================================================= */
+    const ATELIER_COURSES = [
+      { num: '01', kicker: 'The Awakening', title: 'Oscietra & <em>Buckwheat</em>', desc: 'A pristine start. Oscietra caviar layered over a warm buckwheat blini, finished with a fermented crème fraîche and a single drop of pine oil.', origin: 'Aquitaine, FR', technique: 'Cold / Raw', img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=1200&q=85', bg: '#0a0f0e' },
+      { num: '02', kicker: 'The Ocean', title: 'Langoustine & <em>Dashi</em>', desc: 'Live Brittany langoustine, gently poached in a 48-hour kombu dashi. Served with a sea urchin emulsion and shaved summer truffle.', origin: 'Brittany, FR', technique: 'Poached / Warm', img: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1200&q=85', bg: '#080c0f' },
+      { num: '03', kicker: 'The Earth', title: 'Pigeon & <em>Ember</em>', desc: 'Dry-aged Bresse pigeon, roasted whole over white binchōtan charcoal. The breast is served with a black garlic and fermented cherry jus.', origin: 'Bresse, FR', technique: 'Binchōtan / Fire', img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=85', bg: '#0f0a08' },
+      { num: '04', kicker: 'The Finale', title: 'Matcha & <em>Yuzu</em>', desc: 'A study in bitterness and acid. Ceremonial Uji matcha mousse, yuzu curd, and a buckwheat sablé. Served with a warm sake kasu ice cream.', origin: 'Uji, JP', technique: 'Pastry / Cold', img: 'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1200&q=85', bg: '#0a0f0a' }
+    ];
+
+    /* =========================================================
+       PRELOADER & CANVAS (Standardized)
+       ========================================================= */
+    const fill = document.getElementById('loaderBarFill');
+    let loadProgress = 0;
+    const progressTimer = setInterval(() => {
+      loadProgress += Math.floor(Math.random() * 20) + 15;
+      if (loadProgress >= 100) {
+        loadProgress = 100; clearInterval(progressTimer);
+        setTimeout(() => {
+          document.body.classList.add('is-loaded');
+          if (typeof triggerIntroBurst === 'function') triggerIntroBurst();
+          document.querySelectorAll('.reveal').forEach((el, i) => setTimeout(() => el.classList.add('in'), i * 80));
+        }, 500);
+      }
+      fill.style.width = loadProgress + '%';
+    }, 100);
+
+    const canvas = document.getElementById('kinetic-canvas');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    let W = 0, H = 0, dpr = 1, points = [];
+    let mouse = { x: -1000, y: -1000 };
+    function resizeCanvas() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.width = Math.floor(window.innerWidth * dpr); H = canvas.height = Math.floor(window.innerHeight * dpr);
+      canvas.style.width = window.innerWidth + 'px'; canvas.style.height = window.innerHeight + 'px'; setupFlowGrid();
+    }
+    class FlowNode {
+      constructor(x, y) { this.x = x * dpr; this.y = y * dpr; this.baseX = this.x; this.baseY = this.y; this.vx = 0; this.vy = 0; this.size = (Math.random() * 1.5 + 0.5) * dpr; this.colorIndex = Math.random() > 0.6 ? 1 : 0; }
+      update() {
+        this.vx += (this.baseX - this.x) * 0.03; this.vy += (this.baseY - this.y) * 0.03;
+        let mdx = (mouse.x * dpr) - this.x, mdy = (mouse.y * dpr) - this.y, dist = Math.hypot(mdx, mdy), forceDist = 150 * dpr;
+        if (dist < forceDist) { let force = (forceDist - dist) / forceDist; this.vx -= (mdx / dist) * force * 3 * dpr; this.vy -= (mdy / dist) * force * 3 * dpr; }
+        this.vx *= 0.88; this.vy *= 0.88; this.x += this.vx; this.y += this.vy;
+      }
+    }
+    function setupFlowGrid() {
+      points = []; const density = window.innerWidth < 768 ? 40 : 28; const xSpacing = window.innerWidth / density, ySpacing = window.innerHeight / density;
+      for (let x = 0; x <= window.innerWidth + xSpacing; x += xSpacing) for (let y = 0; y <= window.innerHeight + ySpacing; y += ySpacing) points.push(new FlowNode(x, y));
+    }
+    function triggerIntroBurst() {
+      const cx = (window.innerWidth / 2) * dpr, cy = (window.innerHeight / 2) * dpr;
+      points.forEach(p => { let dx = p.x - cx, dy = p.y - cy, d = Math.hypot(dx, dy) || 1; p.vx = (dx / d) * 30 * dpr; p.vy = (dy / d) * 30 * dpr; });
+    }
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+    function drawLoop() {
+      ctx.clearRect(0, 0, W, H); const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+      const gold = theme === 'dark' ? 'rgba(222, 194, 133, 0.16)' : 'rgba(156, 120, 50, 0.09)'; const jade = theme === 'dark' ? 'rgba(10, 37, 32, 0.22)' : 'rgba(20, 75, 75, 0.08)';
+      points.forEach(p => { p.update(); ctx.beginPath(); ctx.fillStyle = p.colorIndex === 1 ? gold : jade; ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); });
+      requestAnimationFrame(drawLoop);
+    }
+    drawLoop();
+
+    /* =========================================================
+       SECTION 1: STICKY STACK MAGIC
+       ========================================================= */
+    const stackWrapper = document.getElementById('stackWrapper');
+    
+    // Build Cards
+    ATELIER_COURSES.forEach((course, i) => {
+      const card = document.createElement('div');
+      card.className = 'stack-card';
+      card.style.zIndex = i + 1;
+      card.style.backgroundColor = course.bg;
+      card.innerHTML = `
+        <div class="stack-card-inner">
+          <div class="stack-card-img">
+            <img src="${course.img}" alt="${course.title}">
+          </div>
+          <div class="stack-card-content">
+            <div class="stack-num">${course.num}</div>
+            <div class="stack-kicker">${course.kicker}</div>
+            <h3 class="stack-title">${course.title}</h3>
+            <p class="stack-desc">${course.desc}</p>
+            <div class="stack-meta">
+              <div class="stack-meta-item"><span class="stack-meta-label">Origin</span><span class="stack-meta-val">${course.origin}</span></div>
+              <div class="stack-meta-item"><span class="stack-meta-label">Technique</span><span class="stack-meta-val">${course.technique}</span></div>
+            </div>
+          </div>
+        </div>
+      `;
+      stackWrapper.appendChild(card);
+    });
+
+    // Set wrapper height
+    const cards = document.querySelectorAll('.stack-card');
+    stackWrapper.style.height = `${cards.length * 100}vh`;
+
+    // Scroll Animation for Stack
+    function updateStack() {
+      const scrollTop = window.scrollY;
+      const windowHeight = window.innerHeight;
+
+      cards.forEach((card, i) => {
+        const cardTop = i * windowHeight;
+        const cardBottom = cardTop + windowHeight;
+        
+        // Calculate progress of this card being covered by the next
+        const progress = Math.max(0, Math.min(1, (scrollTop - cardTop) / windowHeight));
+        
+        // Scale down and add border radius as it gets covered
+        const scale = 1 - (progress * 0.1);
+        const radius = progress * 32; // up to 32px radius
+        const opacity = 1 - (progress * 0.2);
+
+        if (scrollTop >= cardTop && scrollTop < cardBottom) {
+          card.style.transform = `scale(${scale})`;
+          card.style.borderRadius = `${radius}px`;
+          card.style.opacity = opacity;
+        } else if (scrollTop >= cardBottom) {
+          card.style.transform = 'scale(0.9)';
+          card.style.borderRadius = '32px';
+          card.style.opacity = 0.8;
+        } else {
+          card.style.transform = 'scale(1)';
+          card.style.borderRadius = '0px';
+          card.style.opacity = 1;
+        }
+      });
+    }
+    window.addEventListener('scroll', updateStack, { passive: true });
+    updateStack();
+
+    /* =========================================================
+       SECTION 2: SLIDING TABS
+       ========================================================= */
+    const tabsNav = document.getElementById('tabsNav');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabSlider = document.getElementById('tabSlider');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    function moveSlider(btn) {
+      tabSlider.style.width = `${btn.offsetWidth}px`;
+      tabSlider.style.transform = `translateX(${btn.offsetLeft - 6}px)`;
+    }
+
+    // Init slider
+    setTimeout(() => moveSlider(tabsNav.querySelector('.tab-btn.active')), 100);
+    window.addEventListener('resize', () => moveSlider(tabsNav.querySelector('.tab-btn.active')));
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        moveSlider(btn);
+
+        const tabId = btn.dataset.tab;
+        tabPanels.forEach(panel => {
+          panel.classList.remove('active');
+          if (panel.id === `panel-${tabId}`) {
+            // Small delay for transition effect
+            setTimeout(() => panel.classList.add('active'), 50);
+          }
+        });
+      });
+    });
+
+    /* =========================================================
+       SCROLL REVEALS & THEME
+       ========================================================= */
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); revealObserver.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(r => revealObserver.observe(r));
+
+    const themeBtn = document.getElementById('themeBtn');
+    function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('ns_theme', t); }
+    themeBtn.addEventListener('click', e => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; applyTheme(next);
+      const r = document.createElement('div');
+      r.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY}px;width:0;height:0;border-radius:50%;background:var(--accent);opacity:.12;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);transition:width 1.2s var(--ease),height 1.2s var(--ease),opacity 1.2s;`;
+      document.body.appendChild(r); requestAnimationFrame(() => { r.style.width = '250vmax'; r.style.height = '250vmax'; r.style.opacity = '0'; }); setTimeout(() => r.remove(), 1200);
+    });
+    const savedTheme = localStorage.getItem('ns_theme'); if (savedTheme) applyTheme(savedTheme);
+
+    /* =========================================================
+       CURSOR & NAV
+       ========================================================= */
+    if (window.matchMedia('(pointer: fine)').matches) {
+      const d = document.getElementById('cursorDot'), r = document.getElementById('cursorRing'), l = document.getElementById('cursorLabel'); r.style.display = 'block';
+      let mx = 0, my = 0, rx = 0, ry = 0;
+      window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; d.style.left = mx+'px'; d.style.top = my+'px'; l.style.left = mx+'px'; l.style.top = my+'px'; }, { passive: true });
+      (function follow() { rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16; r.style.left = rx+'px'; r.style.top = ry+'px'; requestAnimationFrame(follow); })();
+      document.querySelectorAll('[data-cursor], a, button, .stack-card, .drink-item').forEach(el => {
+        el.addEventListener('mouseenter', () => { document.body.classList.add('cursor-on', 'cursor-big'); l.textContent = el.getAttribute('data-cursor') || 'Open'; });
+        el.addEventListener('mouseleave', () => { document.body.classList.remove('cursor-on', 'cursor-big'); });
+      });
+    }
+    window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 12), { passive: true });
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

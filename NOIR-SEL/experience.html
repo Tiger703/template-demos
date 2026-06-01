@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Experience | NOIR & SEL</title>
+  <meta name="description" content="The sensory journey, pacing, and atmosphere of the NOIR & SEL dining experience." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=Syne:wght@400;500;700;800&family=JetBrains+Mono:wght@100;200;300;400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #040707;
+      --bg-rgb: 4, 7, 7;
+      --bg2: #090e0e;
+      --surface: rgba(255, 255, 255, .03);
+      --surface2: rgba(255, 255, 255, .06);
+      --text: #fbf9f5;
+      --text-rgb: 251, 249, 245;
+      --muted: rgba(251, 249, 245, .6);
+      --line: rgba(251, 249, 245, .08);
+
+      --accent: #dec285;
+      --accent-rgb: 222, 194, 133;
+      --accent2: #0a2520;
+      --accent2-rgb: 10, 37, 32;
+
+      --shadow: 0 40px 100px rgba(0, 0, 0, .7);
+      --blur: blur(20px);
+      --ease: cubic-bezier(.16, 1, .3, 1);
+      --ease-strong: cubic-bezier(.85, 0, .15, 1);
+      --radius: 4px;
+      
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+      --serif: "Fraunces", Georgia, serif;
+      --syne: "Syne", sans-serif;
+      --navH: 140px;
+    }
+
+    [data-theme="light"] {
+      --bg: #f9f8f4;
+      --bg-rgb: 249, 248, 244;
+      --bg2: #f0ede4;
+      --surface: rgba(0, 0, 0, .04);
+      --surface2: rgba(0, 0, 0, .07);
+      --text: #0e1212;
+      --text-rgb: 14, 18, 18;
+      --muted: rgba(14, 18, 18, .65);
+      --line: rgba(14, 18, 18, .1);
+      --shadow: 0 35px 90px rgba(14, 18, 18, .08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: var(--serif); color: var(--text);
+      background-color: var(--bg); overflow-x: hidden;
+      transition: background-color .8s var(--ease-strong), color .8s var(--ease-strong);
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    ::selection { background: rgba(var(--accent-rgb), .3); }
+
+    .grain {
+      position: fixed; inset: 0; pointer-events: none; z-index: 998; opacity: .04; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+    }
+
+    #kinetic-canvas {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .9; mix-blend-mode: screen; transition: opacity 1s var(--ease);
+    }
+    [data-theme="light"] #kinetic-canvas { mix-blend-mode: multiply; opacity: .45; }
+
+    /* =========================================================
+       PRELOADER (SHUTTER APERTURE)
+       ========================================================= */
+    #preloader { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; background: transparent; pointer-events: all; }
+    .shutter-blade { position: absolute; width: 100%; height: 50.5%; background: #030606; transition: transform 1.6s var(--ease-strong); }
+    .shutter-blade.top { top: 0; transform-origin: top; }
+    .shutter-blade.bottom { bottom: 0; transform-origin: bottom; }
+    .loader-center-panel { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; transition: opacity 1s var(--ease), transform 1.2s var(--ease); }
+    .loader-mandala { width: 140px; height: 140px; border: 1px solid rgba(var(--accent-rgb), .12); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .loader-mandala-inner { width: 100px; height: 100px; border: 1px dashed var(--accent); border-radius: 50%; animation: spinMandala 20s linear infinite; }
+    .loader-text { position: absolute; font-family: var(--mono); font-size: 11px; letter-spacing: .4em; text-transform: uppercase; color: var(--text); }
+    .loader-progress-bar { width: 220px; height: 1px; background: rgba(var(--text-rgb), .08); position: relative; margin-top: 40px; overflow: hidden; }
+    .loader-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0; background: var(--accent); }
+    @keyframes spinMandala { to { transform: rotate(360deg); } }
+    body.is-loaded #preloader { pointer-events: none; }
+    body.is-loaded .shutter-blade.top { transform: translateY(-100%); }
+    body.is-loaded .shutter-blade.bottom { transform: translateY(100%); }
+    body.is-loaded .loader-center-panel { opacity: 0; transform: scale(0.8) rotate(-5deg); }
+
+    /* =========================================================
+       10-OPTION NAVBAR
+       ========================================================= */
+    .nav-container { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; flex-direction: column; border-bottom: 1px solid var(--line); background: rgba(4, 7, 7, .3); backdrop-filter: var(--blur); transition: background .6s var(--ease), border-color .6s var(--ease); }
+    [data-theme="light"] .nav-container { background: rgba(249, 248, 244, .35); }
+    .nav-container.scrolled { background: rgba(4, 7, 7, .75); }
+    [data-theme="light"] .nav-container.scrolled { background: rgba(249, 248, 244, .78); }
+    .nav-header { display: flex; justify-content: space-between; align-items: center; padding: 24px clamp(20px, 5vw, 64px) 16px; }
+    .nav-brand { font-family: var(--serif); font-size: 24px; font-weight: 700; letter-spacing: -.03em; }
+    .nav-brand span { font-weight: 300; font-style: italic; color: var(--accent); }
+    .nav-ribbon { display: flex; gap: 32px; align-items: center; padding: 0 clamp(20px, 5vw, 64px) 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .nav-ribbon::-webkit-scrollbar { display: none; }
+    .nav-ribbon a { font-family: var(--mono); font-size: 11px; letter-spacing: .25em; text-transform: uppercase; color: var(--muted); position: relative; padding: 6px 0; white-space: nowrap; scroll-snap-align: start; transition: color .4s var(--ease); }
+    .nav-ribbon a:hover, .nav-ribbon a.active { color: var(--text); }
+    .nav-ribbon a::after { content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); transition: width .4s var(--ease); }
+    .nav-ribbon a:hover::after, .nav-ribbon a.active::after { width: 100%; }
+    .theme-btn { border: 1px solid var(--line); background: rgba(255, 255, 255, .02); color: var(--text); padding: 8px 14px; border-radius: 999px; font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; cursor: pointer; transition: all .4s var(--ease); }
+    .theme-btn:hover { border-color: rgba(var(--accent-rgb), .65); background: rgba(var(--accent-rgb), .06); }
+
+    /* =========================================================
+       HERO: SENSORY INTRO
+       ========================================================= */
+    .hero-exp {
+      position: relative; z-index: 1; min-height: 100vh;
+      padding: calc(var(--navH) + 60px) clamp(20px, 5vw, 64px) 80px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    }
+    @media (max-width: 980px) { .hero-exp { grid-template-columns: 1fr; } }
+    .hero-exp-text { max-width: 600px; }
+    .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .kicker::before { content: ""; width: 48px; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); }
+    .h1-exp { font-size: clamp(3.2rem, 7vw, 7rem); line-height: .92; letter-spacing: -.05em; font-weight: 200; margin: 0; }
+    .h1-exp em { font-style: italic; font-weight: 400; color: var(--accent); }
+    .lead-exp { margin-top: 28px; font-size: 1.1rem; line-height: 1.8; color: var(--muted); font-family: system-ui, sans-serif; }
+    
+    .hero-visual { position: relative; height: 650px; }
+    .hero-img-main { position: absolute; inset: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid rgba(255,255,255,.08); box-shadow: var(--shadow); }
+    .hero-img-main img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.05); transition: transform 1.5s var(--ease); }
+    .hero-img-main:hover img { transform: scale(1.0); }
+    
+    /* Floating Sensory Dial UI */
+    .sensory-dial-float {
+      position: absolute; bottom: -40px; left: -40px; z-index: 5;
+      width: 220px; height: 220px; border-radius: 50%;
+      background: rgba(4, 7, 7, .6); backdrop-filter: var(--blur);
+      border: 1px solid rgba(var(--accent-rgb), .3);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: var(--shadow);
+    }
+    [data-theme="light"] .sensory-dial-float { background: rgba(249, 248, 244, .7); }
+    .dial-ring { position: absolute; inset: 10px; border-radius: 50%; border: 1px dashed rgba(var(--accent-rgb), .4); animation: spinMandala 30s linear infinite reverse; }
+    .dial-val { font-family: var(--syne); font-size: 3rem; font-weight: 800; color: var(--accent); line-height: 1; }
+    .dial-label { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+
+    /* =========================================================
+       SECTION 1: HORIZONTAL SCROLL (THE COUNTER JOURNEY)
+       ========================================================= */
+    .h-scroll-wrapper {
+      position: relative; z-index: 1;
+      height: 300vh; /* Scroll height */
+    }
+    .h-scroll-sticky {
+      position: sticky; top: 0; height: 100vh; overflow: hidden;
+      display: flex; align-items: center;
+    }
+    .h-scroll-track {
+      display: flex; gap: 40px; padding: 0 clamp(20px, 5vw, 64px);
+      will-change: transform;
+    }
+    .h-panel {
+      flex: 0 0 80vw; max-width: 1000px; height: 70vh;
+      position: relative; border-radius: var(--radius); overflow: hidden;
+      border: 1px solid rgba(255,255,255,.08); background: var(--surface);
+    }
+    .h-panel img { width: 100%; height: 100%; object-fit: cover; opacity: .6; transition: opacity .8s, transform 1.5s var(--ease); transform: scale(1.05); }
+    .h-panel:hover img { opacity: .9; transform: scale(1.0); }
+    .h-panel-content {
+      position: absolute; inset: 0; padding: 60px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      background: linear-gradient(to top, rgba(0,0,0,.85) 20%, transparent 70%);
+    }
+    .h-panel-num { font-family: var(--syne); font-size: 8rem; font-weight: 800; color: rgba(var(--accent-rgb), .15); line-height: 1; position: absolute; top: 40px; right: 60px; }
+    .h-panel-title { font-size: 3rem; font-weight: 300; color: #fff; margin-bottom: 16px; }
+    .h-panel-title em { color: var(--accent); font-style: italic; font-weight: 400; }
+    .h-panel-desc { font-family: system-ui, sans-serif; font-size: 1.05rem; line-height: 1.7; color: rgba(255,255,255,.7); max-width: 500px; }
+
+    @media (max-width: 980px) {
+      .h-scroll-wrapper { height: auto; }
+      .h-scroll-sticky { position: relative; height: auto; padding: 80px 20px; display: block; }
+      .h-scroll-track { flex-direction: column; padding: 0; gap: 24px; transform: none !important; }
+      .h-panel { flex: none; width: 100%; height: 60vh; max-width: 100%; }
+      .h-panel-num { font-size: 4rem; top: 20px; right: 20px; }
+      .h-panel-content { padding: 30px; }
+      .h-panel-title { font-size: 2rem; }
+    }
+
+    /* =========================================================
+       SECTION 2: THE 9 MOVEMENTS (AUDIO VISUALIZER RHYTHM)
+       ========================================================= */
+    .rhythm-section {
+      position: relative; z-index: 1;
+      padding: 160px clamp(20px, 5vw, 64px);
+      text-align: center;
+    }
+    .h2 { font-size: clamp(2.6rem, 5.5vw, 5.5rem); font-weight: 300; letter-spacing: -.045em; line-height: 1.02; margin: 0 0 28px 0; }
+    .h2 em { font-style: italic; font-weight: 400; color: var(--accent); }
+    .sub { max-width: 76ch; color: var(--muted); font-family: system-ui, sans-serif; line-height: 1.8; margin: 0 auto 80px; font-size: 1.05rem; }
+
+    .visualizer {
+      display: flex; align-items: flex-end; justify-content: center;
+      gap: clamp(8px, 2vw, 24px); height: 400px;
+      padding: 0 20px;
+    }
+    .viz-bar-group { display: flex; flex-direction: column; align-items: center; gap: 16px; flex: 1; max-width: 80px; }
+    .viz-bar {
+      width: 100%; border-radius: 4px 4px 0 0;
+      background: linear-gradient(to top, var(--accent2), var(--accent));
+      height: 20px; /* Base height */
+      transition: height 1.2s var(--ease);
+      position: relative;
+    }
+    .viz-bar::after {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: var(--accent); border-radius: 4px 4px 0 0;
+      box-shadow: 0 0 15px rgba(var(--accent-rgb), .6);
+    }
+    .viz-label {
+      font-family: var(--mono); font-size: 9px; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--muted); writing-mode: vertical-rl; text-orientation: mixed;
+      transform: rotate(180deg); height: 80px; display: flex; align-items: center;
+    }
+    .viz-course { font-family: var(--serif); font-size: 1.2rem; font-style: italic; color: var(--text); margin-top: 12px; }
+
+    /* =========================================================
+       SECTION 3: LIQUID PAIRINGS (GOOEY MORPHING GLASS)
+       ========================================================= */
+    .pairing-section {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh;
+    }
+    @media (max-width: 980px) { .pairing-section { grid-template-columns: 1fr; } }
+    
+    .pairing-liquid {
+      position: sticky; top: 0; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg2); overflow: hidden;
+    }
+    .gooey-container { position: relative; width: 400px; height: 400px; filter: url(#gooey); }
+    .gooey-blob {
+      position: absolute; border-radius: 50%;
+      background: linear-gradient(135deg, rgba(var(--accent-rgb), .4), rgba(var(--accent2-rgb), .6));
+    }
+    .blob-1 { width: 250px; height: 250px; top: 50px; left: 50px; animation: morph1 12s infinite alternate ease-in-out; }
+    .blob-2 { width: 200px; height: 200px; bottom: 50px; right: 50px; animation: morph2 15s infinite alternate ease-in-out; }
+    .blob-3 { width: 150px; height: 150px; top: 150px; right: 100px; animation: morph3 10s infinite alternate ease-in-out; }
+    
+    @keyframes morph1 { 0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: translate(0, 0) rotate(0deg); } 100% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 60%; transform: translate(30px, -30px) rotate(90deg); } }
+    @keyframes morph2 { 0% { border-radius: 50% 60% 40% 70% / 60% 40% 70% 50%; transform: translate(0, 0) rotate(0deg); } 100% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; transform: translate(-40px, 20px) rotate(-90deg); } }
+    @keyframes morph3 { 0% { border-radius: 60% 40% 60% 40% / 40% 60% 40% 60%; transform: translate(0, 0) scale(1); } 100% { border-radius: 40% 60% 40% 60% / 60% 40% 60% 40%; transform: translate(20px, 40px) scale(1.2); } }
+
+    .pairing-text { padding: 15vh clamp(20px, 5vw, 64px); display: flex; flex-direction: column; gap: 50vh; }
+    .pairing-block { max-width: 500px; }
+    .pairing-block h3 { font-size: 2.5rem; font-weight: 300; margin-bottom: 20px; }
+    .pairing-block h3 em { color: var(--accent); font-style: italic; font-weight: 400; }
+    .pairing-block p { font-family: system-ui, sans-serif; font-size: 1.05rem; line-height: 1.8; color: var(--muted); }
+
+    /* =========================================================
+       SECTION 4: THE UNSEEN (INTERACTIVE SVG DIALS)
+       ========================================================= */
+    .unseen-section {
+      position: relative; z-index: 1;
+      padding: 160px clamp(20px, 5vw, 64px);
+    }
+    .dials-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 80px;
+    }
+    @media (max-width: 980px) { .dials-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; } }
+    
+    .dial-card {
+      background: var(--surface); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius);
+      padding: 40px; display: flex; flex-direction: column; align-items: center; text-align: center;
+      transition: border-color .5s var(--ease), transform .5s var(--ease);
+    }
+    .dial-card:hover { border-color: rgba(var(--accent-rgb), .4); transform: translateY(-8px); }
+    
+    .svg-dial { width: 160px; height: 160px; margin-bottom: 30px; position: relative; }
+    .svg-dial svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .dial-bg { fill: none; stroke: rgba(255,255,255,.05); stroke-width: 4; }
+    [data-theme="light"] .dial-bg { stroke: rgba(0,0,0,.05); }
+    .dial-fill { fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 408; stroke-dashoffset: 408; transition: stroke-dashoffset 2s var(--ease); }
+    .dial-center-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .dial-percent { font-family: var(--syne); font-size: 2.5rem; font-weight: 700; color: var(--accent); line-height: 1; }
+    .dial-unit { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    
+    .dial-card h4 { font-size: 1.5rem; font-weight: 400; margin-bottom: 12px; }
+    .dial-card p { font-family: system-ui, sans-serif; font-size: .95rem; line-height: 1.7; color: var(--muted); }
+
+    /* =========================================================
+       FOOTER & UTILITIES
+       ========================================================= */
+    footer { position: relative; z-index: 1; padding: 80px clamp(20px, 5vw, 64px) 40px; border-top: 1px solid var(--line); background: rgba(255, 255, 255, .015); }
+    .foot { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    @media (max-width: 980px) { .foot { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px) { .foot { grid-template-columns: 1fr; } }
+    .foot h3 { margin: 0 0 14px; font-size: 2.6rem; font-weight: 300; letter-spacing: -.04em; }
+    .foot h3 em { color: var(--accent); font-style: italic; font-weight: 700; }
+    .foot p { margin: 0; max-width: 48ch; color: var(--muted); line-height: 1.8; font-family: system-ui, sans-serif; }
+    .col h4 { margin: 10px 0 14px; font-family: var(--mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); }
+    .col a { display: block; padding: 10px 0; color: var(--text); opacity: .9; transition: transform .4s var(--ease), opacity .4s var(--ease); font-family: system-ui, sans-serif; }
+    .col a:hover { transform: translateX(8px); opacity: 1; color: var(--accent); }
+    .bottom { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; }
+
+    .cursor, .cursorLabel { display: none; }
+    @media (pointer: fine) {
+      .cursor, .cursorLabel { display: block; }
+      body { cursor: none; }
+      a, button, .h-panel, .viz-bar-group, .dial-card { cursor: none; }
+      .cursor { position: fixed; left: 0; top: 0; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 1000; transform: translate(-50%, -50%); box-shadow: 0 0 24px rgba(var(--accent-rgb), .35); }
+      .cursorRing { position: fixed; left: 0; top: 0; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(var(--accent-rgb), .35); background: rgba(var(--accent-rgb), .05); pointer-events: none; z-index: 999; transform: translate(-50%, -50%); transition: width .3s, height .3s, background .3s; }
+      .cursorLabel { position: fixed; pointer-events: none; z-index: 1001; font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: #070a0b; background: rgba(var(--accent-rgb), .92); padding: 8px 12px; border-radius: 999px; transform: translate(-50%, 24px); opacity: 0; transition: opacity .25s var(--ease); }
+      body.cursor-on .cursorLabel { opacity: 1; }
+      body.cursor-big .cursorRing { width: 76px; height: 76px; border-color: rgba(var(--accent-rgb), .6); background: rgba(var(--accent-rgb), .1); }
+    }
+
+    .reveal { opacity: 0; transform: translateY(30px); filter: blur(2px); }
+    .reveal.in { opacity: 1; transform: translateY(0); filter: blur(0); transition: opacity 1s var(--ease), transform 1s var(--ease), filter 1s var(--ease); }
+  </style>
+</head>
+
+<body>
+  <!-- SVG Gooey Filter -->
+  <svg style="position: absolute; width: 0; height: 0;">
+    <defs>
+      <filter id="gooey">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="goo" />
+        <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <canvas id="kinetic-canvas"></canvas>
+  <div class="grain"></div>
+
+  <div class="cursor" id="cursorDot"></div>
+  <div class="cursorRing" id="cursorRing" style="display:none"></div>
+  <div class="cursorLabel" id="cursorLabel">View</div>
+
+  <!-- PRELOADER -->
+  <div id="preloader" aria-hidden="true">
+    <div class="shutter-blade top"></div>
+    <div class="shutter-blade bottom"></div>
+    <div class="loader-center-panel">
+      <div class="loader-mandala"><div class="loader-mandala-inner"></div><div class="loader-text">N & S</div></div>
+      <div class="loader-progress-bar"><div class="loader-fill" id="loaderBarFill"></div></div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-container" id="nav">
+    <div class="nav-header">
+      <div class="nav-brand">NOIR <span>& SEL</span></div>
+      <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+    </div>
+    <div class="nav-ribbon" id="navRibbon">
+      <a href="index.html#home">01. Home</a>
+      <a href="maison.html#ethos">02. Maison</a>
+      <a href="#hero" class="active">03. Experience</a>
+      <a href="menu.html#menu">04. Menu</a>
+      <a href="index.html#fire">05. Fire Craft</a>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero-exp" id="hero">
+      <div class="hero-exp-text">
+        <div class="kicker reveal">Chapter 03 — The Experience</div>
+        <h1 class="h1-exp reveal">A symphony of <em>restraint</em> and intensity.</h1>
+        <p class="lead-exp reveal">Dining at NOIR & SEL is not merely eating; it is a sensory recalibration. We control the light, the sound, the pacing, and the temperature to ensure every ingredient speaks with absolute clarity.</p>
+      </div>
+      <div class="hero-visual reveal">
+        <div class="hero-img-main" data-cursor="View">
+          <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1400&q=85" alt="Dining Experience">
+        </div>
+        <div class="sensory-dial-float">
+          <div class="dial-ring"></div>
+          <div class="dial-val">14</div>
+          <div class="dial-label">Intimate Seats</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: HORIZONTAL SCROLL (THE COUNTER) -->
+    <section class="h-scroll-wrapper" id="counter">
+      <div class="h-scroll-sticky">
+        <div class="h-scroll-track" id="hTrack">
+          <div class="h-panel" data-cursor="Explore">
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=85" alt="Arrival">
+            <div class="h-panel-content">
+              <div class="h-panel-num">01</div>
+              <h3 class="h-panel-title">The <em>Arrival</em></h3>
+              <p class="h-panel-desc">You step out of the Parisian noise and into a vacuum of calm. The lighting drops, the acoustic dampening engages, and your palate begins to reset.</p>
+            </div>
+          </div>
+          <div class="h-panel" data-cursor="Explore">
+            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=85" alt="The Pass">
+            <div class="h-panel-content">
+              <div class="h-panel-num">02</div>
+              <h3 class="h-panel-title">The <em>Pass</em></h3>
+              <p class="h-panel-desc">Seated at the ash-wood counter, the kitchen is not hidden. You witness the silent choreography of the brigade, the brushwork, the final seasoning, the precise placement.</p>
+            </div>
+          </div>
+          <div class="h-panel" data-cursor="Explore">
+            <img src="https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=1600&q=85" alt="The Departure">
+            <div class="h-panel-content">
+              <div class="h-panel-num">03</div>
+              <h3 class="h-panel-title">The <em>Silence</em></h3>
+              <p class="h-panel-desc">After the final course, there is no rush. The pacing slows. You are left with the lingering resonance of the meal, a quiet moment to process the journey before returning to the world.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: THE 9 MOVEMENTS (VISUALIZER) -->
+    <section class="rhythm-section" id="rhythm">
+      <div class="kicker reveal" style="justify-content: center;">Chapter 04 — Pacing</div>
+      <h2 class="h2 reveal">The emotional <em>arc</em> of nine courses.</h2>
+      <p class="sub reveal">A tasting menu is not a list of dishes; it is a narrative. We map the intensity, weight, and brightness of each course to create a perfect rhythmic wave.</p>
+      
+      <div class="visualizer reveal" id="visualizer">
+        <div class="viz-bar-group"><div class="viz-bar" data-height="40"></div><div class="viz-course">Amuse</div><div class="viz-label">Awaken</div></div>
+        <div class="viz-bar-group"><div class="viz-bar" data-height="120"></div><div class="viz-course">Raw</div><div class="viz-label">Ocean</div></div>
+        <div class="viz-bar-group"><div class="viz-bar" data-height="180"></div><div class="viz-course">Steam</div><div class="viz-label">Lift</div></div>
+        <div class="viz-bar-group"><div class="viz-bar" data-height="90"></div><div class="viz-course">Palate</div><div class="viz-label">Reset</div></div>
+        <div class="viz-bar-group"><div class="viz-bar" data-height="280"></div><div class="viz-course">Ember</div><div class="viz-label">Depth</div></div>
+        <div class="viz-bar-group"><div class="viz-bar" data-height="340"></div><div class="viz-course">Fire</div><div class="viz-label">Peak</div></div>
+        <div class="viz-bar-group"><div class="viz-bar" data-height="150"></div><div class="viz-course">Cheese</div><div class="viz-label">Bridge</div></div>
+        <div class="viz-bar-group"><div class="viz-bar" data-height="200"></div><div class="viz-course">Pre</div><div class="viz-label">Shift</div></div>
+        <div class="viz-bar-group"><div class="viz-bar" data-height="110"></div><div class="viz-course">Finale</div><div class="viz-label">Bright</div></div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: LIQUID PAIRINGS -->
+    <section class="pairing-section" id="pairings">
+      <div class="pairing-liquid">
+        <div class="gooey-container">
+          <div class="gooey-blob blob-1"></div>
+          <div class="gooey-blob blob-2"></div>
+          <div class="gooey-blob blob-3"></div>
+        </div>
+      </div>
+      <div class="pairing-text">
+        <div class="pairing-block reveal">
+          <div class="kicker">The Cellar</div>
+          <h3>Biodynamic <em>Structure</em></h3>
+          <p>Our wine list rejects the overly manipulated. We seek out growers who farm with intention, producing wines with tension, minerality, and a true sense of place. These are the structural pillars that support the richer courses of the menu.</p>
+        </div>
+        <div class="pairing-block reveal">
+          <div class="kicker">The Ferment</div>
+          <h3>Unpasteurized <em>Purity</em></h3>
+          <p>Japanese sake is not merely an alternative to wine; it is a different lens through which to view the food. We serve rare, unpasteurized (namazake) micro-brews that offer lifted aromatics and a clean, umami-rich finish that wine simply cannot achieve.</p>
+        </div>
+        <div class="pairing-block reveal">
+          <div class="kicker">The Synthesis</div>
+          <h3>The Dual <em>Pairing</em></h3>
+          <p>Guests are encouraged to experience the "Dual Arc"—alternating between a French wine and a Japanese sake throughout the meal. The contrast between the two liquid philosophies creates a third, entirely new flavor profile on the palate.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: THE UNSEEN ELEMENTS (DIALS) -->
+    <section class="unseen-section" id="unseen">
+      <div class="kicker reveal">Chapter 05 — Atmosphere</div>
+      <h2 class="h2 reveal">Engineering the <em>unseen</em>.</h2>
+      <p class="sub reveal">Great food can be ruined by bad lighting or loud acoustics. We obsess over the invisible elements of hospitality to ensure total immersion.</p>
+
+      <div class="dials-grid">
+        <div class="dial-card reveal" data-cursor="Detail">
+          <div class="svg-dial">
+            <svg viewBox="0 0 140 140">
+              <circle class="dial-bg" cx="70" cy="70" r="65" />
+              <circle class="dial-fill" cx="70" cy="70" r="65" data-percent="85" />
+            </svg>
+            <div class="dial-center-text">
+              <div class="dial-percent">85</div>
+              <div class="dial-unit">Dimness</div>
+            </div>
+          </div>
+          <h4>Acoustic Dampening</h4>
+          <p>Hidden micro-perforated panels absorb ambient echo, ensuring conversations remain private and the kitchen sounds are reduced to a gentle, rhythmic hum.</p>
+        </div>
+
+        <div class="dial-card reveal" data-cursor="Detail">
+          <div class="svg-dial">
+            <svg viewBox="0 0 140 140">
+              <circle class="dial-bg" cx="70" cy="70" r="65" />
+              <circle class="dial-fill" cx="70" cy="70" r="65" data-percent="92" />
+            </svg>
+            <div class="dial-center-text">
+              <div class="dial-percent">92</div>
+              <div class="dial-unit">Focus</div>
+            </div>
+          </div>
+          <h4>Pinpoint Lighting</h4>
+          <p>Overhead beams are calibrated to 2700K and angled precisely to illuminate the plate without casting shadows from the guest's hands, leaving the surrounding room in soft darkness.</p>
+        </div>
+
+        <div class="dial-card reveal" data-cursor="Detail">
+          <div class="svg-dial">
+            <svg viewBox="0 0 140 140">
+              <circle class="dial-bg" cx="70" cy="70" r="65" />
+              <circle class="dial-fill" cx="70" cy="70" r="65" data-percent="78" />
+            </svg>
+            <div class="dial-center-text">
+              <div class="dial-percent">78</div>
+              <div class="dial-unit">Balance</div>
+            </div>
+          </div>
+          <h4>Thermal Zoning</h4>
+          <p>The counter surface is gently heated, while the ambient air remains crisp. This thermal contrast ensures hot food stays hot longer and the guest remains comfortably alert.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot">
+      <div><h3>NOIR <em>&</em> SEL</h3><p>French history meets Japanese structural purity. An intentional, quiet culinary transition focused on seasonality, hospitality, and craft.</p></div>
+      <div class="col"><h4>Explore</h4><a href="index.html#menu">Menu Carte</a><a href="index.html#experience">Philosophy</a><a href="index.html#gallery">Visuals</a></div>
+      <div class="col"><h4>Relations</h4><a href="index.html#reserve">Table Request</a><a href="index.html#reviews">Critiques</a><a href="#hero">To the Peak</a></div>
+      <div class="col"><h4>Registry</h4><a href="mailto:bonsoir@noiretsel.fr">bonsoir@noiretsel.fr</a><a href="tel:+33142608814">+33 1 42 60 88 14</a><a href="#">Corporate spaces</a></div>
+    </div>
+    <div class="bottom"><span>© 2026 · NOIR & SEL — Maison Culinaire</span><span>Generative Vector Flow Engine</span></div>
+  </footer>
+
+  <script>
+    /* =========================================================
+       PRELOADER
+       ========================================================= */
+    const fill = document.getElementById('loaderBarFill');
+    let loadProgress = 0;
+    const progressTimer = setInterval(() => {
+      loadProgress += Math.floor(Math.random() * 20) + 15;
+      if (loadProgress >= 100) {
+        loadProgress = 100; clearInterval(progressTimer);
+        setTimeout(() => {
+          document.body.classList.add('is-loaded');
+          if (typeof triggerIntroBurst === 'function') triggerIntroBurst();
+          document.querySelectorAll('.reveal').forEach((el, i) => setTimeout(() => el.classList.add('in'), i * 80));
+        }, 500);
+      }
+      fill.style.width = loadProgress + '%';
+    }, 100);
+
+    /* =========================================================
+       KINETIC CANVAS
+       ========================================================= */
+    const canvas = document.getElementById('kinetic-canvas');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    let W = 0, H = 0, dpr = 1, points = [];
+    let mouse = { x: -1000, y: -1000 };
+    function resizeCanvas() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.width = Math.floor(window.innerWidth * dpr); H = canvas.height = Math.floor(window.innerHeight * dpr);
+      canvas.style.width = window.innerWidth + 'px'; canvas.style.height = window.innerHeight + 'px'; setupFlowGrid();
+    }
+    class FlowNode {
+      constructor(x, y) { this.x = x * dpr; this.y = y * dpr; this.baseX = this.x; this.baseY = this.y; this.vx = 0; this.vy = 0; this.size = (Math.random() * 1.5 + 0.5) * dpr; this.colorIndex = Math.random() > 0.6 ? 1 : 0; }
+      update() {
+        this.vx += (this.baseX - this.x) * 0.03; this.vy += (this.baseY - this.y) * 0.03;
+        let mdx = (mouse.x * dpr) - this.x, mdy = (mouse.y * dpr) - this.y, dist = Math.hypot(mdx, mdy), forceDist = 150 * dpr;
+        if (dist < forceDist) { let force = (forceDist - dist) / forceDist; this.vx -= (mdx / dist) * force * 3 * dpr; this.vy -= (mdy / dist) * force * 3 * dpr; }
+        this.vx *= 0.88; this.vy *= 0.88; this.x += this.vx; this.y += this.vy;
+      }
+    }
+    function setupFlowGrid() {
+      points = []; const density = window.innerWidth < 768 ? 40 : 28; const xSpacing = window.innerWidth / density, ySpacing = window.innerHeight / density;
+      for (let x = 0; x <= window.innerWidth + xSpacing; x += xSpacing) for (let y = 0; y <= window.innerHeight + ySpacing; y += ySpacing) points.push(new FlowNode(x, y));
+    }
+    function triggerIntroBurst() {
+      const cx = (window.innerWidth / 2) * dpr, cy = (window.innerHeight / 2) * dpr;
+      points.forEach(p => { let dx = p.x - cx, dy = p.y - cy, d = Math.hypot(dx, dy) || 1; p.vx = (dx / d) * 30 * dpr; p.vy = (dy / d) * 30 * dpr; });
+    }
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+    function drawLoop() {
+      ctx.clearRect(0, 0, W, H); const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+      const gold = theme === 'dark' ? 'rgba(222, 194, 133, 0.16)' : 'rgba(156, 120, 50, 0.09)'; const jade = theme === 'dark' ? 'rgba(10, 37, 32, 0.22)' : 'rgba(20, 75, 75, 0.08)';
+      points.forEach(p => { p.update(); ctx.beginPath(); ctx.fillStyle = p.colorIndex === 1 ? gold : jade; ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); });
+      requestAnimationFrame(drawLoop);
+    }
+    drawLoop();
+
+    /* =========================================================
+       HORIZONTAL SCROLL MAGIC (Desktop only)
+       ========================================================= */
+    const hWrapper = document.querySelector('.h-scroll-wrapper');
+    const hTrack = document.getElementById('hTrack');
+    
+    function updateHorizontalScroll() {
+      if (window.innerWidth <= 980 || !hWrapper || !hTrack) return;
+      const rect = hWrapper.getBoundingClientRect();
+      const scrollHeight = hWrapper.offsetHeight - window.innerHeight;
+      const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
+      const trackWidth = hTrack.scrollWidth - window.innerWidth + 100;
+      hTrack.style.transform = `translate3d(${-progress * trackWidth}px, 0, 0)`;
+    }
+    window.addEventListener('scroll', updateHorizontalScroll, { passive: true });
+    window.addEventListener('resize', updateHorizontalScroll);
+
+    /* =========================================================
+       VISUALIZER BARS ANIMATION
+       ========================================================= */
+    const vizBars = document.querySelectorAll('.viz-bar');
+    const vizObserver = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        vizBars.forEach((bar, i) => {
+          setTimeout(() => { bar.style.height = bar.dataset.height + 'px'; }, i * 100);
+        });
+      }
+    }, { threshold: 0.3 });
+    if (vizBars.length) vizObserver.observe(vizBars[0].closest('.visualizer'));
+
+    /* =========================================================
+       SVG DIALS ANIMATION
+       ========================================================= */
+    const dialFills = document.querySelectorAll('.dial-fill');
+    const dialObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const circle = entry.target;
+          const percent = circle.dataset.percent;
+          const circumference = 2 * Math.PI * 65; // r=65
+          const offset = circumference - (percent / 100) * circumference;
+          circle.style.strokeDashoffset = offset;
+          dialObserver.unobserve(circle);
+        }
+      });
+    }, { threshold: 0.5 });
+    dialFills.forEach(d => dialObserver.observe(d));
+
+    /* =========================================================
+       SCROLL REVEALS
+       ========================================================= */
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); revealObserver.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(r => revealObserver.observe(r));
+
+    /* =========================================================
+       THEME TOGGLE
+       ========================================================= */
+    const themeBtn = document.getElementById('themeBtn');
+    function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('ns_theme', t); }
+    themeBtn.addEventListener('click', e => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; applyTheme(next);
+      const r = document.createElement('div');
+      r.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY}px;width:0;height:0;border-radius:50%;background:var(--accent);opacity:.12;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);transition:width 1.2s var(--ease),height 1.2s var(--ease),opacity 1.2s;`;
+      document.body.appendChild(r); requestAnimationFrame(() => { r.style.width = '250vmax'; r.style.height = '250vmax'; r.style.opacity = '0'; }); setTimeout(() => r.remove(), 1200);
+    });
+    const savedTheme = localStorage.getItem('ns_theme'); if (savedTheme) applyTheme(savedTheme);
+
+    /* =========================================================
+       CURSOR & MAGNETIC
+       ========================================================= */
+    if (window.matchMedia('(pointer: fine)').matches) {
+      const d = document.getElementById('cursorDot'), r = document.getElementById('cursorRing'), l = document.getElementById('cursorLabel'); r.style.display = 'block';
+      let mx = 0, my = 0, rx = 0, ry = 0;
+      window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; d.style.left = mx+'px'; d.style.top = my+'px'; l.style.left = mx+'px'; l.style.top = my+'px'; }, { passive: true });
+      (function follow() { rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16; r.style.left = rx+'px'; r.style.top = ry+'px'; requestAnimationFrame(follow); })();
+      document.querySelectorAll('[data-cursor], a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => { document.body.classList.add('cursor-on', 'cursor-big'); l.textContent = el.getAttribute('data-cursor') || 'Open'; });
+        el.addEventListener('mouseleave', () => { document.body.classList.remove('cursor-on', 'cursor-big'); });
+      });
+    }
+
+    /* NAV SCROLL STATE */
+    window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 12), { passive: true });
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

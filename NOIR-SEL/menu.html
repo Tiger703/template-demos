@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>The Menu | NOIR & SEL</title>
+  <meta name="description" content="The seasonal tasting menu, supplements, and beverage pairings at NOIR & SEL." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=Syne:wght@400;500;700;800&family=JetBrains+Mono:wght@100;200;300;400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #040707;
+      --bg-rgb: 4, 7, 7;
+      --bg2: #090e0e;
+      --surface: rgba(255, 255, 255, .03);
+      --surface2: rgba(255, 255, 255, .06);
+      --text: #fbf9f5;
+      --text-rgb: 251, 249, 245;
+      --muted: rgba(251, 249, 245, .6);
+      --line: rgba(251, 249, 245, .08);
+
+      --accent: #dec285;
+      --accent-rgb: 222, 194, 133;
+      --accent2: #0a2520;
+      --accent2-rgb: 10, 37, 32;
+
+      --shadow: 0 40px 100px rgba(0, 0, 0, .7);
+      --blur: blur(20px);
+      --ease: cubic-bezier(.16, 1, .3, 1);
+      --ease-strong: cubic-bezier(.85, 0, .15, 1);
+      --radius: 4px;
+      
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+      --serif: "Fraunces", Georgia, serif;
+      --syne: "Syne", sans-serif;
+      --navH: 140px;
+    }
+
+    [data-theme="light"] {
+      --bg: #f9f8f4;
+      --bg-rgb: 249, 248, 244;
+      --bg2: #f0ede4;
+      --surface: rgba(0, 0, 0, .04);
+      --surface2: rgba(0, 0, 0, .07);
+      --text: #0e1212;
+      --text-rgb: 14, 18, 18;
+      --muted: rgba(14, 18, 18, .65);
+      --line: rgba(14, 18, 18, .1);
+      --shadow: 0 35px 90px rgba(14, 18, 18, .08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: var(--serif); color: var(--text);
+      background-color: var(--bg); overflow-x: hidden;
+      transition: background-color .8s var(--ease-strong), color .8s var(--ease-strong);
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    ::selection { background: rgba(var(--accent-rgb), .3); }
+
+    .grain {
+      position: fixed; inset: 0; pointer-events: none; z-index: 998; opacity: .04; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+    }
+
+    #kinetic-canvas {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .9; mix-blend-mode: screen; transition: opacity 1s var(--ease);
+    }
+    [data-theme="light"] #kinetic-canvas { mix-blend-mode: multiply; opacity: .45; }
+
+    /* =========================================================
+       PRELOADER (SHUTTER APERTURE)
+       ========================================================= */
+    #preloader { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; background: transparent; pointer-events: all; }
+    .shutter-blade { position: absolute; width: 100%; height: 50.5%; background: #030606; transition: transform 1.6s var(--ease-strong); }
+    .shutter-blade.top { top: 0; transform-origin: top; }
+    .shutter-blade.bottom { bottom: 0; transform-origin: bottom; }
+    .loader-center-panel { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; transition: opacity 1s var(--ease), transform 1.2s var(--ease); }
+    .loader-mandala { width: 140px; height: 140px; border: 1px solid rgba(var(--accent-rgb), .12); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .loader-mandala-inner { width: 100px; height: 100px; border: 1px dashed var(--accent); border-radius: 50%; animation: spinMandala 20s linear infinite; }
+    .loader-text { position: absolute; font-family: var(--mono); font-size: 11px; letter-spacing: .4em; text-transform: uppercase; color: var(--text); }
+    .loader-progress-bar { width: 220px; height: 1px; background: rgba(var(--text-rgb), .08); position: relative; margin-top: 40px; overflow: hidden; }
+    .loader-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0; background: var(--accent); }
+    @keyframes spinMandala { to { transform: rotate(360deg); } }
+    body.is-loaded #preloader { pointer-events: none; }
+    body.is-loaded .shutter-blade.top { transform: translateY(-100%); }
+    body.is-loaded .shutter-blade.bottom { transform: translateY(100%); }
+    body.is-loaded .loader-center-panel { opacity: 0; transform: scale(0.8) rotate(-5deg); }
+
+    /* =========================================================
+       10-OPTION NAVBAR
+       ========================================================= */
+    .nav-container { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; flex-direction: column; border-bottom: 1px solid var(--line); background: rgba(4, 7, 7, .3); backdrop-filter: var(--blur); transition: background .6s var(--ease), border-color .6s var(--ease); }
+    [data-theme="light"] .nav-container { background: rgba(249, 248, 244, .35); }
+    .nav-container.scrolled { background: rgba(4, 7, 7, .75); }
+    [data-theme="light"] .nav-container.scrolled { background: rgba(249, 248, 244, .78); }
+    .nav-header { display: flex; justify-content: space-between; align-items: center; padding: 24px clamp(20px, 5vw, 64px) 16px; }
+    .nav-brand { font-family: var(--serif); font-size: 24px; font-weight: 700; letter-spacing: -.03em; }
+    .nav-brand span { font-weight: 300; font-style: italic; color: var(--accent); }
+    .nav-ribbon { display: flex; gap: 32px; align-items: center; padding: 0 clamp(20px, 5vw, 64px) 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .nav-ribbon::-webkit-scrollbar { display: none; }
+    .nav-ribbon a { font-family: var(--mono); font-size: 11px; letter-spacing: .25em; text-transform: uppercase; color: var(--muted); position: relative; padding: 6px 0; white-space: nowrap; scroll-snap-align: start; transition: color .4s var(--ease); }
+    .nav-ribbon a:hover, .nav-ribbon a.active { color: var(--text); }
+    .nav-ribbon a::after { content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); transition: width .4s var(--ease); }
+    .nav-ribbon a:hover::after, .nav-ribbon a.active::after { width: 100%; }
+    .theme-btn { border: 1px solid var(--line); background: rgba(255, 255, 255, .02); color: var(--text); padding: 8px 14px; border-radius: 999px; font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; cursor: pointer; transition: all .4s var(--ease); }
+    .theme-btn:hover { border-color: rgba(var(--accent-rgb), .65); background: rgba(var(--accent-rgb), .06); }
+
+    /* =========================================================
+       HERO: EDITORIAL MENU INTRO
+       ========================================================= */
+    .hero-menu {
+      position: relative; z-index: 1; min-height: 100vh;
+      padding: calc(var(--navH) + 80px) clamp(20px, 5vw, 64px) 80px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .hero-menu-grid {
+      display: grid; grid-template-columns: 1.5fr 1fr; gap: 60px; align-items: end;
+    }
+    @media (max-width: 980px) { .hero-menu-grid { grid-template-columns: 1fr; gap: 40px; } }
+    
+    .hero-title-menu {
+      font-size: clamp(4rem, 10vw, 10rem); line-height: .85; letter-spacing: -.06em; font-weight: 200; margin: 0;
+    }
+    .hero-title-menu em { font-style: italic; font-weight: 400; color: var(--accent); }
+    .hero-title-menu .outline {
+      color: transparent; -webkit-text-stroke: 1px var(--text); font-weight: 700; font-style: normal;
+    }
+    
+    .hero-menu-meta {
+      display: flex; flex-direction: column; gap: 24px; padding-bottom: 20px;
+      border-left: 1px solid var(--accent); padding-left: 24px;
+    }
+    .hero-price {
+      font-family: var(--syne); font-size: 3.5rem; font-weight: 800; color: var(--accent); line-height: 1;
+    }
+    .hero-price span { font-size: 1.2rem; font-weight: 400; color: var(--muted); display: block; margin-top: 4px; font-family: var(--mono); letter-spacing: .1em; }
+    .hero-desc-menu { font-family: system-ui, sans-serif; font-size: 1rem; line-height: 1.7; color: var(--muted); max-width: 400px; }
+    
+    .menu-actions { margin-top: 40px; display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 12px; padding: 15px 24px; border-radius: 999px;
+      border: 1px solid var(--line); background: rgba(255,255,255,.02); color: var(--text);
+      font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+      cursor: pointer; transition: all .4s var(--ease); position: relative; overflow: hidden;
+    }
+    .btn::before { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.1) 50%, transparent 65%); transform: translateX(-120%); transition: transform .8s var(--ease); }
+    .btn:hover::before { transform: translateX(120%); }
+    .btn:hover { transform: translateY(-2px); border-color: rgba(var(--accent-rgb), .6); background: rgba(var(--accent-rgb), .06); }
+    .btn.primary { background: linear-gradient(90deg, rgba(var(--accent-rgb), .15), rgba(var(--accent2-rgb), .09)); border-color: rgba(var(--accent-rgb), .4); }
+
+    /* =========================================================
+       SECTION 1: THE TASTING (CINEMATIC ACCORDION)
+       ========================================================= */
+    .tasting-section {
+      position: relative; z-index: 1;
+      padding: 120px clamp(20px, 5vw, 64px);
+    }
+    .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .kicker::before { content: ""; width: 48px; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); }
+    .h2 { font-size: clamp(2.6rem, 5.5vw, 5.5rem); font-weight: 300; letter-spacing: -.045em; line-height: 1.02; margin: 0 0 28px 0; }
+    .h2 em { font-style: italic; font-weight: 400; color: var(--accent); }
+
+    .tasting-layout {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 80px; align-items: start;
+    }
+    @media (max-width: 980px) { .tasting-layout { grid-template-columns: 1fr; gap: 40px; } }
+
+    /* Left: Accordion List */
+    .accordion-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+    .acc-item {
+      border-bottom: 1px solid var(--line); cursor: pointer; transition: background .4s;
+    }
+    .acc-item:hover { background: rgba(var(--accent-rgb), .02); }
+    .acc-header {
+      display: grid; grid-template-columns: 60px 1fr auto; gap: 20px; align-items: center;
+      padding: 28px 0;
+    }
+    .acc-num { font-family: var(--syne); font-size: 1.2rem; font-weight: 700; color: var(--muted); transition: color .4s; }
+    .acc-item.active .acc-num { color: var(--accent); }
+    .acc-name { font-size: 1.6rem; font-weight: 400; transition: color .4s; }
+    .acc-item.active .acc-name { color: var(--accent); }
+    .acc-toggle {
+      width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--muted);
+      transition: all .4s var(--ease);
+    }
+    .acc-item.active .acc-toggle { background: var(--accent); color: var(--bg); border-color: var(--accent); transform: rotate(45deg); }
+    
+    .acc-body {
+      max-height: 0; overflow: hidden; transition: max-height .6s var(--ease), padding .6s var(--ease);
+      padding: 0 0 0 80px;
+    }
+    .acc-item.active .acc-body { max-height: 300px; padding-bottom: 32px; }
+    .acc-desc { font-family: system-ui, sans-serif; font-size: .95rem; line-height: 1.7; color: var(--muted); margin-bottom: 16px; max-width: 500px; }
+    .acc-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .acc-tag {
+      padding: 6px 12px; border-radius: 999px; border: 1px dashed rgba(var(--accent-rgb), .3);
+      font-family: var(--mono); font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent);
+    }
+
+    /* Right: Sticky Image Crossfade */
+    .tasting-visual {
+      position: sticky; top: calc(var(--navH) + 40px);
+      height: 600px; border-radius: var(--radius); overflow: hidden;
+      border: 1px solid rgba(255,255,255,.08); box-shadow: var(--shadow);
+    }
+    @media (max-width: 980px) { .tasting-visual { position: relative; top: 0; height: 400px; } }
+    .tasting-img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      opacity: 0; transform: scale(1.05); transition: opacity .8s var(--ease), transform 1.5s var(--ease);
+    }
+    .tasting-img.active { opacity: 1; transform: scale(1); z-index: 2; }
+    .tasting-visual-overlay {
+      position: absolute; inset: 0; z-index: 3; pointer-events: none;
+      background: linear-gradient(to top, rgba(0,0,0,.6) 10%, transparent 50%);
+    }
+    .tasting-visual-caption {
+      position: absolute; bottom: 32px; left: 32px; z-index: 4;
+      font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--accent);
+    }
+
+    /* =========================================================
+       SECTION 2: SUPPLEMENTS (BENTO GRID)
+       ========================================================= */
+    .supplements-section {
+      position: relative; z-index: 1;
+      padding: 120px clamp(20px, 5vw, 64px);
+      background: var(--bg2);
+    }
+    .bento-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; gap: 16px; margin-top: 60px;
+    }
+    @media (max-width: 980px) { .bento-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; } }
+    @media (max-width: 580px) { .bento-grid { grid-template-columns: 1fr; } }
+
+    .bento-item {
+      position: relative; border-radius: var(--radius); overflow: hidden;
+      border: 1px solid rgba(255,255,255,.08); background: var(--surface);
+      transition: transform .5s var(--ease), border-color .5s var(--ease);
+    }
+    .bento-item:hover { transform: translateY(-6px); border-color: rgba(var(--accent-rgb), .4); }
+    .bento-item.span-2 { grid-column: span 2; }
+    .bento-item.row-2 { grid-row: span 2; }
+    @media (max-width: 980px) { .bento-item.span-2 { grid-column: span 2; } .bento-item.row-2 { grid-row: span 1; } }
+    @media (max-width: 580px) { .bento-item.span-2 { grid-column: span 1; } }
+
+    .bento-item img {
+      width: 100%; height: 100%; object-fit: cover; opacity: .5; transition: opacity .6s, transform 1.2s var(--ease); transform: scale(1.05);
+    }
+    .bento-item:hover img { opacity: .8; transform: scale(1); }
+    .bento-content {
+      position: absolute; inset: 0; padding: 28px; display: flex; flex-direction: column; justify-content: flex-end;
+      background: linear-gradient(to top, rgba(0,0,0,.8) 20%, transparent 70%); z-index: 2;
+    }
+    .bento-title { font-size: 1.5rem; font-weight: 400; color: #fff; margin-bottom: 8px; }
+    .bento-price { font-family: var(--mono); font-size: 12px; letter-spacing: .15em; color: var(--accent); }
+    .bento-desc { font-family: system-ui, sans-serif; font-size: .85rem; color: rgba(255,255,255,.6); margin-top: 8px; display: none; }
+    .bento-item.span-2 .bento-desc, .bento-item.row-2 .bento-desc { display: block; }
+
+    /* =========================================================
+       SECTION 3: PAIRINGS (3D GLASSMORPHISM CARDS)
+       ========================================================= */
+    .pairings-section {
+      position: relative; z-index: 1;
+      padding: 160px clamp(20px, 5vw, 64px);
+    }
+    .pairings-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 80px;
+      perspective: 1200px;
+    }
+    @media (max-width: 980px) { .pairings-grid { grid-template-columns: 1fr; max-width: 500px; margin-left: auto; margin-right: auto; } }
+
+    .glass-card-3d {
+      position: relative; height: 480px; padding: 40px;
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px; backdrop-filter: var(--blur);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      transform-style: preserve-3d; transition: transform .1s ease-out, box-shadow .4s;
+      overflow: hidden;
+    }
+    [data-theme="light"] .glass-card-3d { background: rgba(255,255,255,.5); border-color: rgba(0,0,0,.08); }
+    .glass-card-3d:hover { box-shadow: 0 30px 80px rgba(0,0,0,.4); }
+
+    .card-glare {
+      position: absolute; inset: 0; border-radius: 16px; pointer-events: none;
+      background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255,255,255,.15), transparent 60%);
+      opacity: 0; transition: opacity .4s;
+    }
+    .glass-card-3d:hover .card-glare { opacity: 1; }
+
+    .card-icon-3d {
+      font-size: 4rem; margin-bottom: 24px; transform: translateZ(40px);
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,.3));
+    }
+    .card-title-3d { font-size: 2rem; font-weight: 400; margin-bottom: 12px; transform: translateZ(30px); }
+    .card-title-3d em { color: var(--accent); font-style: italic; }
+    .card-desc-3d { font-family: system-ui, sans-serif; font-size: .95rem; line-height: 1.7; color: var(--muted); transform: translateZ(20px); }
+    .card-price-3d {
+      margin-top: 24px; font-family: var(--mono); font-size: 14px; letter-spacing: .15em; color: var(--accent);
+      transform: translateZ(50px);
+    }
+
+    /* =========================================================
+       SECTION 4: DIETARY MANIFESTO
+       ========================================================= */
+    .manifesto-section {
+      position: relative; z-index: 1;
+      padding: 160px clamp(20px, 5vw, 64px);
+      text-align: center;
+      background: var(--bg2);
+    }
+    .manifesto-text {
+      max-width: 800px; margin: 0 auto;
+      font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 300; line-height: 1.5;
+    }
+    .manifesto-text em { color: var(--accent); font-style: italic; font-weight: 400; }
+    .manifesto-sig {
+      margin-top: 40px; font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+    }
+
+    /* =========================================================
+       FOOTER & UTILITIES
+       ========================================================= */
+    footer { position: relative; z-index: 1; padding: 80px clamp(20px, 5vw, 64px) 40px; border-top: 1px solid var(--line); background: rgba(255, 255, 255, .015); }
+    .foot { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    @media (max-width: 980px) { .foot { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px) { .foot { grid-template-columns: 1fr; } }
+    .foot h3 { margin: 0 0 14px; font-size: 2.6rem; font-weight: 300; letter-spacing: -.04em; }
+    .foot h3 em { color: var(--accent); font-style: italic; font-weight: 700; }
+    .foot p { margin: 0; max-width: 48ch; color: var(--muted); line-height: 1.8; font-family: system-ui, sans-serif; }
+    .col h4 { margin: 10px 0 14px; font-family: var(--mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); }
+    .col a { display: block; padding: 10px 0; color: var(--text); opacity: .9; transition: transform .4s var(--ease), opacity .4s var(--ease); font-family: system-ui, sans-serif; }
+    .col a:hover { transform: translateX(8px); opacity: 1; color: var(--accent); }
+    .bottom { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; }
+
+    .cursor, .cursorLabel { display: none; }
+    @media (pointer: fine) {
+      .cursor, .cursorLabel { display: block; }
+      body { cursor: none; }
+      a, button, .acc-item, .bento-item, .glass-card-3d { cursor: none; }
+      .cursor { position: fixed; left: 0; top: 0; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 1000; transform: translate(-50%, -50%); box-shadow: 0 0 24px rgba(var(--accent-rgb), .35); }
+      .cursorRing { position: fixed; left: 0; top: 0; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(var(--accent-rgb), .35); background: rgba(var(--accent-rgb), .05); pointer-events: none; z-index: 999; transform: translate(-50%, -50%); transition: width .3s, height .3s, background .3s; }
+      .cursorLabel { position: fixed; pointer-events: none; z-index: 1001; font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: #070a0b; background: rgba(var(--accent-rgb), .92); padding: 8px 12px; border-radius: 999px; transform: translate(-50%, 24px); opacity: 0; transition: opacity .25s var(--ease); }
+      body.cursor-on .cursorLabel { opacity: 1; }
+      body.cursor-big .cursorRing { width: 76px; height: 76px; border-color: rgba(var(--accent-rgb), .6); background: rgba(var(--accent-rgb), .1); }
+    }
+
+    .reveal { opacity: 0; transform: translateY(30px); filter: blur(2px); }
+    .reveal.in { opacity: 1; transform: translateY(0); filter: blur(0); transition: opacity 1s var(--ease), transform 1s var(--ease), filter 1s var(--ease); }
+  </style>
+</head>
+
+<body>
+  <canvas id="kinetic-canvas"></canvas>
+  <div class="grain"></div>
+
+  <div class="cursor" id="cursorDot"></div>
+  <div class="cursorRing" id="cursorRing" style="display:none"></div>
+  <div class="cursorLabel" id="cursorLabel">View</div>
+
+  <!-- PRELOADER -->
+  <div id="preloader" aria-hidden="true">
+    <div class="shutter-blade top"></div>
+    <div class="shutter-blade bottom"></div>
+    <div class="loader-center-panel">
+      <div class="loader-mandala"><div class="loader-mandala-inner"></div><div class="loader-text">N & S</div></div>
+      <div class="loader-progress-bar"><div class="loader-fill" id="loaderBarFill"></div></div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-container" id="nav">
+    <div class="nav-header">
+      <div class="nav-brand">NOIR <span>& SEL</span></div>
+      <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+    </div>
+    <div class="nav-ribbon" id="navRibbon">
+      <a href="index.html#home">01. Home</a>
+      <a href="maison.html#ethos">02. Maison</a>
+      <a href="experience.html#hero">03. Experience</a>
+      <a href="#hero" class="active">04. Menu</a>
+      <a href="menu2.html#hero">05. Menu 2</a>
+      <a href="index.html#fire">06. Fire Craft</a>
+      <a href="index.html#wine">07. Wine & Sake</a>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero-menu" id="hero">
+      <div class="hero-menu-grid">
+        <div>
+          <div class="kicker reveal">Chapter 04 — La Carte</div>
+          <h1 class="hero-title-menu reveal">
+            The<br><em>Tasting</em><br><span class="outline">Menu</span>
+          </h1>
+        </div>
+        <div class="hero-menu-meta reveal">
+          <div class="hero-price">
+            €245
+            <span>Per Guest / 9 Courses</span>
+          </div>
+          <p class="hero-desc-menu">
+            A singular, uncompromising narrative composed weekly from the finest coastal and terrestrial ingredients. No substitutions, only absolute clarity.
+          </p>
+          <div class="menu-actions">
+            <a href="index.html#reserve" class="btn primary" data-cursor="Reserve">Reserve Table</a>
+            <button class="btn" id="printMenuBtn" data-cursor="Print">Print Menu</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: THE TASTING ACCORDION -->
+    <section class="tasting-section" id="tasting">
+      <div class="kicker reveal">The Movements</div>
+      <h2 class="h2 reveal">Nine acts of <em>precision</em>.</h2>
+
+      <div class="tasting-layout">
+        <div class="accordion-list reveal" id="accordionList">
+          <!-- Items injected via JS -->
+        </div>
+        <div class="tasting-visual reveal" id="tastingVisual">
+          <!-- Images injected via JS -->
+          <div class="tasting-visual-overlay"></div>
+          <div class="tasting-visual-caption" id="visualCaption">Course 01</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: SUPPLEMENTS BENTO -->
+    <section class="supplements-section" id="supplements">
+      <div class="kicker reveal">Enhancements</div>
+      <h2 class="h2 reveal">Curated <em>supplements</em>.</h2>
+      <p class="sub reveal" style="max-width: 600px; margin-bottom: 0;">Elevate specific movements with rare additions, sourced globally and prepared with the same exacting standards.</p>
+
+      <div class="bento-grid reveal">
+        <div class="bento-item span-2" data-cursor="Add">
+          <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=1200&q=85" alt="Caviar">
+          <div class="bento-content">
+            <h3 class="bento-title">Petrossian Ossetra Caviar</h3>
+            <span class="bento-price">+ €85</span>
+            <p class="bento-desc">30g of pristine Ossetra, served with buckwheat blini and crème fraîche. Adds a profound saline depth to the raw course.</p>
+          </div>
+        </div>
+        <div class="bento-item row-2" data-cursor="Add">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=85" alt="Truffle">
+          <div class="bento-content">
+            <h3 class="bento-title">Alba White Truffle</h3>
+            <span class="bento-price">+ €120</span>
+            <p class="bento-desc">Shaved tableside over the ember course. Priced per gram (approx 5g). An intoxicating, earthy aroma that defines autumn.</p>
+          </div>
+        </div>
+        <div class="bento-item" data-cursor="Add">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=85" alt="Wagyu">
+          <div class="bento-content">
+            <h3 class="bento-title">A5 Miyazaki Wagyu</h3>
+            <span class="bento-price">+ €95</span>
+          </div>
+        </div>
+        <div class="bento-item" data-cursor="Add">
+          <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=800&q=85" alt="Cheese">
+          <div class="bento-content">
+            <h3 class="bento-title">Affineur Selection</h3>
+            <span class="bento-price">+ €45</span>
+          </div>
+        </div>
+        <div class="bento-item span-2" data-cursor="Add">
+          <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=85" alt="Sea Urchin">
+          <div class="bento-content">
+            <h3 class="bento-title">Hokkaido Bafun Uni</h3>
+            <span class="bento-price">+ €65</span>
+            <p class="bento-desc">Grade A sea urchin, flown in twice weekly. Served as an intermezzo with yuzu and shiso. Pure, sweet oceanic richness.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: PAIRINGS (3D GLASS CARDS) -->
+    <section class="pairings-section" id="pairings">
+      <div class="kicker reveal">Liquid Architecture</div>
+      <h2 class="h2 reveal">The <em>pairing</em> arcs.</h2>
+      <p class="sub reveal" style="max-width: 600px; margin-bottom: 0;">Choose your narrative. Each pairing is designed to mirror, contrast, and elevate the nine movements of the tasting menu.</p>
+
+      <div class="pairings-grid reveal">
+        <div class="glass-card-3d" data-cursor="Select">
+          <div class="card-glare"></div>
+          <div class="card-icon-3d">🍷</div>
+          <h3 class="card-title-3d">The <em>Wine</em> Arc</h3>
+          <p class="card-desc-3d">Seven pours of biodynamic and natural wines. Focused on tension, minerality, and old-world structure. From Chablis to aged Barolo.</p>
+          <div class="card-price-3d">+ €145 / Guest</div>
+        </div>
+        <div class="glass-card-3d" data-cursor="Select">
+          <div class="card-glare"></div>
+          <div class="card-icon-3d">🍶</div>
+          <h3 class="card-title-3d">The <em>Sake</em> Arc</h3>
+          <p class="card-desc-3d">Seven pours of rare, unpasteurized (namazake) and aged (koshu) sakes. Clean, umami-rich, and profoundly aromatic.</p>
+          <div class="card-price-3d">+ €125 / Guest</div>
+        </div>
+        <div class="glass-card-3d" data-cursor="Select">
+          <div class="card-glare"></div>
+          <div class="card-icon-3d">✦</div>
+          <h3 class="card-title-3d">The <em>Dual</em> Arc</h3>
+          <p class="card-desc-3d">The ultimate synthesis. Alternating between wine and sake for each course, creating a third, entirely new flavor profile on the palate.</p>
+          <div class="card-price-3d">+ €220 / Guest</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: DIETARY MANIFESTO -->
+    <section class="manifesto-section" id="manifesto">
+      <div class="kicker reveal" style="justify-content: center;">Hospitality</div>
+      <p class="manifesto-text reveal">
+        "We believe that dietary requirements are not an <em>obstacle</em>, but an invitation to <em>create</em>. Whether vegan, gluten-free, or navigating severe allergies, your menu will be crafted with the exact same <em>obsession</em> and <em>beauty</em> as our standard tasting."
+      </p>
+      <p class="manifesto-sig reveal">— The Kitchen Brigade, NOIR & SEL</p>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot">
+      <div><h3>NOIR <em>&</em> SEL</h3><p>French history meets Japanese structural purity. An intentional, quiet culinary transition focused on seasonality, hospitality, and craft.</p></div>
+      <div class="col"><h4>Explore</h4><a href="index.html#menu">Menu Carte</a><a href="experience.html#hero">Experience</a><a href="index.html#gallery">Visuals</a></div>
+      <div class="col"><h4>Relations</h4><a href="index.html#reserve">Table Request</a><a href="index.html#reviews">Critiques</a><a href="#hero">To the Peak</a></div>
+      <div class="col"><h4>Registry</h4><a href="mailto:bonsoir@noiretsel.fr">bonsoir@noiretsel.fr</a><a href="tel:+33142608814">+33 1 42 60 88 14</a><a href="#">Corporate spaces</a></div>
+    </div>
+    <div class="bottom"><span>© 2026 · NOIR & SEL — Maison Culinaire</span><span>Generative Vector Flow Engine</span></div>
+  </footer>
+
+  <script>
+    /* =========================================================
+       DATA
+       ========================================================= */
+    const COURSES = [
+      { num: '01', name: 'Awakening', desc: 'A delicate amuse-bouche of compressed melon, shiso oil, and finger lime. Designed to cleanse the palate and sharpen the senses for the journey ahead.', tags: ['Raw', 'Citrus', 'Vegan'], img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=85' },
+      { num: '02', name: 'The Ocean Floor', desc: 'Wild daurade crudo, aged kombu, and a delicate dashi gelée. Finished with a single drop of cold-pressed pine oil.', tags: ['Sea', 'Raw', 'Signature'], img: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1200&q=85' },
+      { num: '03', name: 'Steam & Earth', desc: 'White asparagus, slowly steamed in kelp, served with a warm koji beurre blanc and toasted hazelnut crumble.', tags: ['Vegetal', 'Warm', 'Seasonal'], img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=85' },
+      { num: '04', name: 'The Intermezzo', desc: 'A palate reset. Yuzu and green apple granita, infused with champagne and a whisper of tarragon.', tags: ['Citrus', 'Cold', 'Reset'], img: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=1200&q=85' },
+      { num: '05', name: 'Ember & Smoke', desc: 'Langoustine, gently roasted over binchōtan charcoal, glazed with a reduction of its own shells, and finished with smoked salt.', tags: ['Sea', 'Fire', 'Signature'], img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=85' },
+      { num: '06', name: 'The Peak', desc: 'A5 Miyazaki Wagyu, seared on white charcoal. Served with a black garlic purée, charred leek, and a 15-year aged sake jus.', tags: ['Land', 'Fire', 'Premium'], img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=1200&q=85' },
+      { num: '07', name: 'The Bridge', desc: 'A selection of three affineur-aged cheeses, served with honeycomb, fig compote, and house-baked charcoal crackers.', tags: ['Dairy', 'Aged', 'Bridge'], img: 'https://images.unsplash.com/photo-1452195100486-9cc805987862?auto=format&fit=crop&w=1200&q=85' },
+      { num: '08', name: 'Pre-Dessert', desc: 'A transition to sweetness. Fermented pear, brown butter ice cream, and a dusting of roasted buckwheat.', tags: ['Sweet', 'Ferment', 'Shift'], img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=1200&q=85' },
+      { num: '09', name: 'The Finale', desc: 'Valrhona chocolate, yuzu curd, and matcha. A study in bitterness, acidity, and umami. Served with petit fours.', tags: ['Sweet', 'Cocoa', 'Finale'], img: 'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1200&q=85' }
+    ];
+
+    /* =========================================================
+       PRELOADER
+       ========================================================= */
+    const fill = document.getElementById('loaderBarFill');
+    let loadProgress = 0;
+    const progressTimer = setInterval(() => {
+      loadProgress += Math.floor(Math.random() * 20) + 15;
+      if (loadProgress >= 100) {
+        loadProgress = 100; clearInterval(progressTimer);
+        setTimeout(() => {
+          document.body.classList.add('is-loaded');
+          if (typeof triggerIntroBurst === 'function') triggerIntroBurst();
+          document.querySelectorAll('.reveal').forEach((el, i) => setTimeout(() => el.classList.add('in'), i * 80));
+        }, 500);
+      }
+      fill.style.width = loadProgress + '%';
+    }, 100);
+
+    /* =========================================================
+       KINETIC CANVAS
+       ========================================================= */
+    const canvas = document.getElementById('kinetic-canvas');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    let W = 0, H = 0, dpr = 1, points = [];
+    let mouse = { x: -1000, y: -1000 };
+    function resizeCanvas() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.width = Math.floor(window.innerWidth * dpr); H = canvas.height = Math.floor(window.innerHeight * dpr);
+      canvas.style.width = window.innerWidth + 'px'; canvas.style.height = window.innerHeight + 'px'; setupFlowGrid();
+    }
+    class FlowNode {
+      constructor(x, y) { this.x = x * dpr; this.y = y * dpr; this.baseX = this.x; this.baseY = this.y; this.vx = 0; this.vy = 0; this.size = (Math.random() * 1.5 + 0.5) * dpr; this.colorIndex = Math.random() > 0.6 ? 1 : 0; }
+      update() {
+        this.vx += (this.baseX - this.x) * 0.03; this.vy += (this.baseY - this.y) * 0.03;
+        let mdx = (mouse.x * dpr) - this.x, mdy = (mouse.y * dpr) - this.y, dist = Math.hypot(mdx, mdy), forceDist = 150 * dpr;
+        if (dist < forceDist) { let force = (forceDist - dist) / forceDist; this.vx -= (mdx / dist) * force * 3 * dpr; this.vy -= (mdy / dist) * force * 3 * dpr; }
+        this.vx *= 0.88; this.vy *= 0.88; this.x += this.vx; this.y += this.vy;
+      }
+    }
+    function setupFlowGrid() {
+      points = []; const density = window.innerWidth < 768 ? 40 : 28; const xSpacing = window.innerWidth / density, ySpacing = window.innerHeight / density;
+      for (let x = 0; x <= window.innerWidth + xSpacing; x += xSpacing) for (let y = 0; y <= window.innerHeight + ySpacing; y += ySpacing) points.push(new FlowNode(x, y));
+    }
+    function triggerIntroBurst() {
+      const cx = (window.innerWidth / 2) * dpr, cy = (window.innerHeight / 2) * dpr;
+      points.forEach(p => { let dx = p.x - cx, dy = p.y - cy, d = Math.hypot(dx, dy) || 1; p.vx = (dx / d) * 30 * dpr; p.vy = (dy / d) * 30 * dpr; });
+    }
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+    function drawLoop() {
+      ctx.clearRect(0, 0, W, H); const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+      const gold = theme === 'dark' ? 'rgba(222, 194, 133, 0.16)' : 'rgba(156, 120, 50, 0.09)'; const jade = theme === 'dark' ? 'rgba(10, 37, 32, 0.22)' : 'rgba(20, 75, 75, 0.08)';
+      points.forEach(p => { p.update(); ctx.beginPath(); ctx.fillStyle = p.colorIndex === 1 ? gold : jade; ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); });
+      requestAnimationFrame(drawLoop);
+    }
+    drawLoop();
+
+    /* =========================================================
+       ACCORDION MENU ENGINE
+       ========================================================= */
+    const accList = document.getElementById('accordionList');
+    const tastingVisual = document.getElementById('tastingVisual');
+    const visualCaption = document.getElementById('visualCaption');
+
+    // Build Images
+    COURSES.forEach((c, i) => {
+      const img = document.createElement('img');
+      img.className = `tasting-img ${i === 0 ? 'active' : ''}`;
+      img.src = c.img;
+      img.alt = c.name;
+      img.dataset.index = i;
+      tastingVisual.insertBefore(img, tastingVisual.firstChild);
+    });
+
+    // Build Accordion
+    COURSES.forEach((c, i) => {
+      const item = document.createElement('div');
+      item.className = `acc-item ${i === 0 ? 'active' : ''}`;
+      item.dataset.index = i;
+      item.innerHTML = `
+        <div class="acc-header">
+          <span class="acc-num">${c.num}</span>
+          <span class="acc-name">${c.name}</span>
+          <div class="acc-toggle">+</div>
+        </div>
+        <div class="acc-body">
+          <p class="acc-desc">${c.desc}</p>
+          <div class="acc-tags">${c.tags.map(t => `<span class="acc-tag">${t}</span>`).join('')}</div>
+        </div>
+      `;
+      accList.appendChild(item);
+    });
+
+    // Accordion Logic
+    accList.addEventListener('click', (e) => {
+      const item = e.target.closest('.acc-item');
+      if (!item) return;
+      const idx = item.dataset.index;
+
+      // Toggle active class
+      document.querySelectorAll('.acc-item').forEach(el => el.classList.remove('active'));
+      item.classList.add('active');
+
+      // Crossfade images
+      document.querySelectorAll('.tasting-img').forEach(img => img.classList.remove('active'));
+      const activeImg = document.querySelector(`.tasting-img[data-index="${idx}"]`);
+      if (activeImg) activeImg.classList.add('active');
+
+      // Update caption
+      visualCaption.textContent = `Course ${COURSES[idx].num}`;
+    });
+
+    // Auto-rotate on hover for desktop
+    if (window.matchMedia('(pointer: fine)').matches) {
+      accList.addEventListener('mouseover', (e) => {
+        const item = e.target.closest('.acc-item');
+        if (item && !item.classList.contains('active')) {
+          item.click();
+        }
+      });
+    }
+
+    /* =========================================================
+       3D GLASS CARDS (PAIRINGS)
+       ========================================================= */
+    const cards3d = document.querySelectorAll('.glass-card-3d');
+    cards3d.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = ((y - centerY) / centerY) * -10;
+        const rotateY = ((x - centerX) / centerX) * 10;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        
+        // Glare effect
+        const glare = card.querySelector('.card-glare');
+        if (glare) {
+          glare.style.setProperty('--glare-x', `${(x / rect.width) * 100}%`);
+          glare.style.setProperty('--glare-y', `${(y / rect.height) * 100}%`);
+        }
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+        card.style.transition = 'transform 0.6s cubic-bezier(.16, 1, .3, 1)';
+      });
+
+      card.addEventListener('mouseenter', () => {
+        card.style.transition = 'none';
+      });
+    });
+
+    /* =========================================================
+       PRINT MENU BUTTON
+       ========================================================= */
+    document.getElementById('printMenuBtn').addEventListener('click', () => {
+      window.print();
+    });
+
+    /* =========================================================
+       SCROLL REVEALS
+       ========================================================= */
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); revealObserver.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(r => revealObserver.observe(r));
+
+    /* =========================================================
+       THEME TOGGLE
+       ========================================================= */
+    const themeBtn = document.getElementById('themeBtn');
+    function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem('ns_theme', t); }
+    themeBtn.addEventListener('click', e => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; applyTheme(next);
+      const r = document.createElement('div');
+      r.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY}px;width:0;height:0;border-radius:50%;background:var(--accent);opacity:.12;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);transition:width 1.2s var(--ease),height 1.2s var(--ease),opacity 1.2s;`;
+      document.body.appendChild(r); requestAnimationFrame(() => { r.style.width = '250vmax'; r.style.height = '250vmax'; r.style.opacity = '0'; }); setTimeout(() => r.remove(), 1200);
+    });
+    const savedTheme = localStorage.getItem('ns_theme'); if (savedTheme) applyTheme(savedTheme);
+
+    /* =========================================================
+       CURSOR & MAGNETIC
+       ========================================================= */
+    if (window.matchMedia('(pointer: fine)').matches) {
+      const d = document.getElementById('cursorDot'), r = document.getElementById('cursorRing'), l = document.getElementById('cursorLabel'); r.style.display = 'block';
+      let mx = 0, my = 0, rx = 0, ry = 0;
+      window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; d.style.left = mx+'px'; d.style.top = my+'px'; l.style.left = mx+'px'; l.style.top = my+'px'; }, { passive: true });
+      (function follow() { rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16; r.style.left = rx+'px'; r.style.top = ry+'px'; requestAnimationFrame(follow); })();
+      document.querySelectorAll('[data-cursor], a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => { document.body.classList.add('cursor-on', 'cursor-big'); l.textContent = el.getAttribute('data-cursor') || 'Open'; });
+        el.addEventListener('mouseleave', () => { document.body.classList.remove('cursor-on', 'cursor-big'); });
+      });
+    }
+
+    /* NAV SCROLL STATE */
+    window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 12), { passive: true });
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>
