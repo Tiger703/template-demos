@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Tourismo Pro | About Us</title>
+    
+    <!-- EXTERNAL LIBRARIES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== CSS VARIABLES (Your Exact Colors) ===== */
+        :root {
+            --primary: #0a74da;
+            --secondary: #ff6b35;
+            --accent: #00c9a7;
+            --dark: #0b1a33;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== UTILITIES ===== */
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .section { padding: 100px 0; }
+        
+        .section-title {
+            font-size: 2.8rem; font-weight: 800; margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            display: inline-block;
+        }
+        
+        .section-subtitle { color: var(--gray); font-size: 1.2rem; margin-bottom: 50px; }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.75);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        nav { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+        
+        .logo {
+            font-size: 1.8rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+
+        .nav-links { display: flex; gap: 32px; list-style: none; }
+        .nav-links a {
+            text-decoration: none; color: var(--dark); font-weight: 500;
+            transition: var(--transition); position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0;
+            width: 0; height: 2px; background: var(--primary); transition: var(--transition);
+        }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+        .hamburger { display: none; flex-direction: column; cursor: pointer; }
+        .hamburger span { width: 25px; height: 3px; background: var(--dark); margin: 3px 0; transition: var(--transition); }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(135deg, var(--dark) 0%, #1e3a5f 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        #particles-js {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 1;
+        }
+
+        .hero-content {
+            position: relative; z-index: 2; max-width: 700px;
+        }
+
+        .hero h1 {
+            font-size: 4rem; font-weight: 800; line-height: 1.2; margin-bottom: 24px;
+            background: linear-gradient(to right, #fff, #a0c8ff);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+
+        .hero p { font-size: 1.2rem; margin-bottom: 40px; opacity: 0.9; }
+
+        /* ===== STATS SECTION ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 40px 20px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        /* ===== TIMELINE ===== */
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 50%;
+            padding: 20px 40px;
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            text-align: right;
+            transform: translateX(-50px);
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            text-align: left;
+            transform: translateX(50px);
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0) translateY(0);
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            right: -50px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            left: -50px;
+            background: var(--secondary);
+        }
+
+        .timeline-year {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        /* ===== VALUES SECTION ===== */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .value-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .value-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .value-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .value-card:hover .value-icon {
+            color: var(--secondary);
+            transform: scale(1.1);
+        }
+
+        /* ===== TEAM SECTION ===== */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .team-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .team-card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .team-img {
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .team-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .team-card:hover .team-img img {
+            transform: scale(1.15);
+        }
+
+        .team-info {
+            padding: 25px;
+        }
+
+        .team-info h4 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .team-info p {
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+
+        .team-social {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .team-social a {
+            width: 40px;
+            height: 40px;
+            background: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .team-social a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* ===== MISSION/VISION ===== */
+        .mission-vision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .mv-card {
+            padding: 50px;
+            border-radius: 30px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .mv-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.2));
+        }
+
+        .mv-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mv-card.mission {
+            background: linear-gradient(135deg, var(--primary), #2b8cff);
+        }
+
+        .mv-card.vision {
+            background: linear-gradient(135deg, var(--secondary), #ff8142);
+        }
+
+        .mv-card i {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .mv-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .mv-card p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-links h4 {
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            font-size: 1.5rem;
+        }
+
+        .social-icons a {
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            color: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #94a3b8;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+
+
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
+    background: var(--light);
+    color: var(--dark);
+}
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: rgba(255,255,255,0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 40px;
+                transition: 0.5s;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(8px, 8px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -7px);
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            /* Timeline Responsive */
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 60px;
+                padding-right: 20px;
+                text-align: left !important;
+                left: 0 !important;
+                transform: translateX(0);
+            }
+
+            .timeline-item:nth-child(odd),
+            .timeline-item:nth-child(even) {
+                text-align: left;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content::before,
+            .timeline-item:nth-child(even) .timeline-content::before {
+                left: -50px;
+                right: auto;
+            }
+
+            .mission-vision-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <nav class="container">
+            <div class="logo">Tourismo<span style="color:var(--secondary);">Pro</span></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="destinations.html">Destinations</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="packages.html">Packages</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div id="particles-js"></div>
+            <div class="container hero-content" data-aos="fade-up">
+                <h1>Our Story</h1>
+                <p>Crafting unforgettable journeys since 2010. Trusted by 50,000+ travelers worldwide. We believe travel transforms lives, connects cultures, and creates memories that last forever.</p>
+                <a href="#team" class="btn btn-primary" style="background: var(--secondary); color: white; margin-top: 20px;">Meet Our Team</a>
+            </div>
+        </section>
+
+        <!-- STATS SECTION -->
+        <section class="section" style="background: var(--light);">
+            <div class="container">
+                <div class="stats-grid" data-aos="fade-up">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-map-marked-alt"></i></div>
+                        <div class="stat-number" data-counter="50" data-unit="+">0</div>
+                        <div class="stat-label">Countries Visited</div>
+                    </div>
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-number" data-counter="50000" data-unit="+">0</div>
+                        <div class="stat-label">Happy Travelers</div>
+                    </div>
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="stat-number" data-counter="500" data-unit="+">0</div>
+                        <div class="stat-label">Tours Completed</div>
+                    </div>
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="stat-icon"><i class="fas fa-star"></i></div>
+                        <div class="stat-number" data-counter="4.9" data-decimals="1">0</div>
+                        <div class="stat-label">Average Rating</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIMELINE SECTION -->
+        <section class="section container">
+            <h2 class="section-title" data-aos="fade-right">Our Journey</h2>
+            <p class="section-subtitle" data-aos="fade-up">From humble beginnings to global leader</p>
+            
+            <div class="timeline">
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2010</div>
+                        <h4>Founded with a Dream</h4>
+                        <p>Started with just 3 destinations and a passion for creating magical travel experiences.</p>
+                    </div>
+                </div>
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2015</div>
+                        <h4>Global Expansion</h4>
+                        <p>Expanded to 30 countries and launched our premium VIP tour packages.</p>
+                    </div>
+                </div>
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2020</div>
+                        <h4>Worldwide Recognition</h4>
+                        <p>Reached 50+ countries and achieved 5-star Trustpilot rating.</p>
+                    </div>
+                </div>
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2025</div>
+                        <h4>Future Vision</h4>
+                        <p>Planning sustainable tourism initiatives and AI-powered personalization.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VALUES SECTION -->
+        <section class="section" style="background: white;">
+            <div class="container">
+                <h2 class="section-title" data-aos="fade-right">Our Core Values</h2>
+                <div class="values-grid">
+                    <div class="value-card" data-aos="flip-left">
+                        <div class="value-icon"><i class="fas fa-heart"></i></div>
+                        <h3>Authenticity</h3>
+                        <p>Real experiences with local guides who share genuine culture and traditions.</p>
+                    </div>
+                    <div class="value-card" data-aos="flip-left" data-aos-delay="100">
+                        <div class="value-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>Safety First</h3>
+                        <p>24/7 support, comprehensive insurance, and strict health protocols.</p>
+                    </div>
+                    <div class="value-card" data-aos="flip-left" data-aos-delay="200">
+                        <div class="value-icon"><i class="fas fa-leaf"></i></div>
+                        <h3>Sustainability</h3>
+                        <p>Responsible tourism that protects our planet for future generations.</p>
+                    </div>
+                    <div class="value-card" data-aos="flip-left" data-aos-delay="300">
+                        <div class="value-icon"><i class="fas fa-magic"></i></div>
+                        <h3>Magic Moments</h3>
+                        <p>Creating memories that last a lifetime through thoughtful planning.</p>
+                    </div>
+                    <div class="value-card" data-aos="flip-left" data-aos-delay="400">
+                        <div class="value-icon"><i class="fas fa-headset"></i></div>
+                        <h3>Personalized</h3>
+                        <p>Tailored experiences based on your preferences and dreams.</p>
+                    </div>
+                    <div class="value-card" data-aos="flip-left" data-aos-delay="500">
+                        <div class="value-icon"><i class="fas fa-clock"></i></div>
+                        <h3>Flexible</h3>
+                        <p>Change plans anytime - no stress, just amazing travel.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TEAM SECTION -->
+        <section class="section container" id="team">
+            <h2 class="section-title" data-aos="fade-right">Meet Our Team</h2>
+            <p class="section-subtitle" data-aos="fade-up">Passionate professionals who live to travel</p>
+            
+            <div class="team-grid">
+                <div class="team-card" data-aos="fade-up">
+                    <div class="team-img">
+                        <img src="https://picsum.photos/id/64/400/400" alt="CEO">
+                    </div>
+                    <div class="team-info">
+                        <h4>Sarah Thompson</h4>
+                        <p>CEO & Founder</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="team-img">
+                        <img src="https://picsum.photos/id/65/400/400" alt="Operations">
+                    </div>
+                    <div class="team-info">
+                        <h4>Michael Chen</h4>
+                        <p>Tour Operations Manager</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="team-img">
+                        <img src="https://picsum.photos/id/91/400/400" alt="Marketing">
+                    </div>
+                    <div class="team-info">
+                        <h4>Emily Rodriguez</h4>
+                        <p>Marketing Director</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MISSION & VISION -->
+        <section class="section container">
+            <div class="mission-vision-grid">
+                <div class="mv-card mission" data-aos="fade-right">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>Our Mission</h3>
+                    <p>To create transformative travel experiences that connect people with cultures, inspire personal growth, and leave lasting memories. We strive to make every journey extraordinary.</p>
+                </div>
+                <div class="mv-card vision" data-aos="fade-left">
+                    <i class="fas fa-eye"></i>
+                    <h3>Our Vision</h3>
+                    <p>To be the world's most trusted partner for meaningful, sustainable, and extraordinary travel experiences that enrich lives and protect our beautiful planet.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA SECTION -->
+        <section class="cta-section">
+            <div class="container" data-aos="zoom-in">
+                <h2>Ready to Join Thousands of Happy Travelers?</h2>
+                <p>Experience the TourismoPro difference</p>
+                <div class="cta-buttons">
+                    <a href="packages.html" class="btn btn-primary">Explore Packages</a>
+                    <a href="contact.html" class="btn btn-outline">Get In Touch</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <h4>TourismoPro</h4>
+                    <p>Creating unforgettable journeys since 2010.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="destinations.html">Destinations</a></li>
+                        <li><a href="packages.html">Packages</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe for exclusive deals</p>
+                    <input type="email" placeholder="Your email" style="padding:12px; border-radius:30px; border:none; width:100%; margin-top:10px;">
+                    <button class="btn btn-primary" style="margin-top:10px; background: var(--primary); color: white;">Subscribe</button>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 TourismoPro. All rights reserved. Designed with ❤️</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- EXTERNAL LIBRARIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // ===== MOBILE MENU =====
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (hamburger) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // ===== HEADER SCROLL EFFECT =====
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.backdropFilter = 'blur(20px)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.75)';
+                header.style.backdropFilter = 'blur(12px)';
+            }
+        });
+
+        // ===== ULTRA COUNTER ANIMATION =====
+        function animateCounter(element) {
+            const target = parseFloat(element.getAttribute('data-counter'));
+            const unit = element.getAttribute('data-unit') || '';
+            const decimals = parseInt(element.getAttribute('data-decimals')) || 0;
+            let start = 0;
+            const duration = 2500;
+            let startTimestamp = null;
+
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const easeProgress = 1 - Math.pow(1 - progress, 4); // Quart ease out
+                const current = start + (target - start) * easeProgress;
+
+                if (decimals > 0) {
+                    element.textContent = current.toFixed(decimals) + unit;
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString() + unit;
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                }
+            };
+
+            requestAnimationFrame(step);
+        }
+
+        // Initialize counters
+        const counters = document.querySelectorAll('[data-counter]');
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                    animateCounter(entry.target);
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, { threshold: 0.7 });
+
+        counters.forEach(counter => counterObserver.observe(counter));
+
+        // ===== TIMELINE ANIMATION =====
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        const timelineObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.3 });
+
+        timelineItems.forEach(item => timelineObserver.observe(item));
+
+        // ===== PARTICLES INIT =====
+        if (document.getElementById('particles-js')) {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: ['#0a74da', '#ff6b35', '#00c9a7'] },
+                    shape: { type: 'circle' },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: { enable: true, distance: 150, color: '#ffffff', opacity: 0.4, width: 1 },
+                    move: { enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out' }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
+                    modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 4 } }
+                },
+                retina_detect: true
+            });
+        }
+
+        // ===== GSAP SCROLL ANIMATIONS =====
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Parallax effect on hero
+            gsap.to('.hero', {
+                backgroundPosition: '50% 100%',
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '.hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            });
+
+            // Fade up sections
+            gsap.utils.toArray('.fade-up').forEach(section => {
+                gsap.from(section, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+        }
+
+        // ===== AOS INIT =====
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // ===== BACK TO TOP =====
+        const backToTop = document.createElement('div');
+        backToTop.innerHTML = '↑';
+        Object.assign(backToTop.style, {
+            position: 'fixed',
+            bottom: '30px',
+            right: '30px',
+            width: '50px',
+            height: '50px',
+            background: 'var(--primary)',
+            color: 'white',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '24px',
+            cursor: 'pointer',
+            opacity: '0',
+            transition: 'all 0.4s ease',
+            zIndex: '999',
+            boxShadow: '0 10px 30px rgba(10, 116, 218, 0.4)'
+        });
+        document.body.appendChild(backToTop);
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTop.style.opacity = '1';
+                backToTop.style.transform = 'translateY(0) scale(1)';
+            } else {
+                backToTop.style.opacity = '0';
+                backToTop.style.transform = 'translateY(20px) scale(0.9)';
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const nav = document.querySelector("nav.container");
+    const hero = document.querySelector(".hero-content");
+
+    // SAFETY: make sure elements exist
+    if (!nav || !hero) {
+        console.log("Elements not found!");
+        return;
+    }
+
+    // Force animation AFTER everything loads
+    setTimeout(() => {
+        nav.classList.add("animate");
+        hero.classList.add("animate");
+    }, 300);
+
+});
+</script>
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+
+
+</body>
+</html>

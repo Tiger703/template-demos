@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Tourismo Pro | Services</title>
+    
+    <!-- EXTERNAL LIBRARIES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== CSS VARIABLES (Your Exact Colors) ===== */
+        :root {
+            --primary: #0a74da;
+            --secondary: #ff6b35;
+            --accent: #00c9a7;
+            --dark: #0b1a33;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== UTILITIES ===== */
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .section { padding: 100px 0; }
+        
+        .section-title {
+            font-size: 2.8rem; font-weight: 800; margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            display: inline-block;
+        }
+        
+        .section-subtitle { color: var(--gray); font-size: 1.2rem; margin-bottom: 50px; }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.75);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        nav { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+        
+        .logo {
+            font-size: 1.8rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+
+        .nav-links { display: flex; gap: 32px; list-style: none; }
+        .nav-links a {
+            text-decoration: none; color: var(--dark); font-weight: 500;
+            transition: var(--transition); position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0;
+            width: 0; height: 2px; background: var(--primary); transition: var(--transition);
+        }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+        .hamburger { display: none; flex-direction: column; cursor: pointer; }
+        .hamburger span { width: 25px; height: 3px; background: var(--dark); margin: 3px 0; transition: var(--transition); }
+
+        /* ===== HERO SECTION ===== */
+       .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(135deg, var(--dark) 0%, #1e3a5f 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        #particles-js {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 1;
+        }
+
+        .hero-content {
+            position: relative; z-index: 2; max-width: 700px;
+        }
+
+        .hero h1 {
+            font-size: 4rem; font-weight: 800; line-height: 1.2; margin-bottom: 24px;
+            background: linear-gradient(to right, #fff, #a0c8ff);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+
+        .hero p { font-size: 1.2rem; margin-bottom: 40px; opacity: 0.9; }
+
+
+        /* ===== SERVICES GRID ===== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            transition: var(--transition);
+        }
+
+        .service-icon i {
+            font-size: 2rem;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(10deg);
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+
+        .service-card:hover h3 {
+            color: var(--primary);
+        }
+
+        .service-card p {
+            color: var(--gray);
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .service-link {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .service-link:hover {
+            gap: 12px;
+            color: var(--secondary);
+        }
+
+        /* ===== SKILLS SECTION ===== */
+        .skills-section {
+            background: var(--light);
+            padding: 100px 0;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .skill-item {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .skill-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .skill-percent {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .skill-bar {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .skill-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 1.5s ease-out;
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 26, 51, 0.9);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            padding: 20px;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            transform: scale(0.8);
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px; right: 25px;
+            font-size: 1.5rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--secondary);
+            transform: rotate(90deg);
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-icon i {
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .modal h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .modal p {
+            color: var(--gray);
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .modal-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .modal-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-features li i {
+            color: var(--accent);
+        }
+
+        .modal-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(10, 116, 218, 0.3);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 20px;
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-links h4 {
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a { color: #cbd5e1; text-decoration: none; transition: var(--transition); }
+        .footer-links a:hover { color: white; padding-left: 5px; }
+
+        .social-icons { display: flex; gap: 15px; font-size: 1.5rem; }
+        .social-icons a { color: white; transition: var(--transition); }
+        .social-icons a:hover { color: var(--secondary); transform: translateY(-3px); }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #94a3b8;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: rgba(255,255,255,0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 40px;
+                transition: 0.5s;
+            }
+            .nav-links.active { left: 0; }
+            .hamburger { display: flex; }
+            .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(8px, 8px); }
+            .hamburger.active span:nth-child(2) { opacity: 0; }
+            .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
+
+            .hero h1 { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+            
+            .services-grid { grid-template-columns: 1fr; }
+            
+            .modal-content {
+                padding: 30px;
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <nav class="container">
+            <div class="logo">Tourismo<span style="color:var(--secondary);">Pro</span></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="destinations.html">Destinations</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="services.html" class="active">Services</a></li>
+                <li><a href="packages.html">Packages</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div id="particles-js"></div>
+            <div class="container hero-content" data-aos="fade-up">
+                <h1>Our Premium Services</h1>
+                <p>World-class travel solutions tailored to your dreams</p>
+            </div>
+        </section>
+
+        <!-- SERVICES SECTION -->
+        <section class="section container">
+            <h2 class="section-title" data-aos="fade-right">What We Offer</h2>
+            <p class="section-subtitle" data-aos="fade-up">Comprehensive travel services for every journey</p>
+
+            <div class="services-grid">
+                <!-- Service 1 -->
+                <div class="service-card" data-aos="fade-up" data-service="flight">
+                    <div class="service-icon"><i class="fas fa-plane-departure"></i></div>
+                    <h3>Flight Booking</h3>
+                    <p>Best deals on domestic and international flights with flexible cancellation policies.</p>
+                    <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="service-card" data-aos="fade-up" data-aos-delay="100" data-service="hotel">
+                    <div class="service-icon"><i class="fas fa-hotel"></i></div>
+                    <h3>Hotel Reservations</h3>
+                    <p>Luxury accommodations from 5-star resorts to boutique hotels worldwide.</p>
+                    <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="service-card" data-aos="fade-up" data-aos-delay="200" data-service="tour">
+                    <div class="service-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <h3>Guided Tours</h3>
+                    <p>Expert-led tours with local insights and exclusive access to hidden gems.</p>
+                    <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="service-card" data-aos="fade-up" data-aos-delay="300" data-service="insurance">
+                    <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Travel Insurance</h3>
+                    <p>Comprehensive coverage for medical emergencies, trip cancellations, and more.</p>
+                    <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <!-- Service 5 -->
+                <div class="service-card" data-aos="fade-up" data-aos-delay="400" data-service="visa">
+                    <div class="service-icon"><i class="fas fa-passport"></i></div>
+                    <h3>Visa Assistance</h3>
+                    <p>Expert guidance on visa applications and documentation for hassle-free travel.</p>
+                    <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <!-- Service 6 -->
+                <div class="service-card" data-aos="fade-up" data-aos-delay="500" data-service="custom">
+                    <div class="service-icon"><i class="fas fa-magic"></i></div>
+                    <h3>Custom Itineraries</h3>
+                    <p>Personalized travel plans crafted to match your interests and budget.</p>
+                    <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS/EXPERTISE SECTION -->
+        <section class="skills-section">
+            <div class="container">
+                <h2 class="section-title" data-aos="fade-right">Our Expertise</h2>
+                <p class="section-subtitle" data-aos="fade-up">Years of experience in creating perfect journeys</p>
+
+                <div class="skills-grid">
+                    <div class="skill-item" data-aos="fade-up">
+                        <div class="skill-header">
+                            <span class="skill-name">Flight Booking</span>
+                            <span class="skill-percent">95%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-fill" data-width="95"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="skill-header">
+                            <span class="skill-name">Hotel Selection</span>
+                            <span class="skill-percent">98%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-fill" data-width="98"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill-item" data-aos="fade-up" data-aos-delay="200">
+                        <div class="skill-header">
+                            <span class="skill-name">Tour Planning</span>
+                            <span class="skill-percent">92%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-fill" data-width="92"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill-item" data-aos="fade-up" data-aos-delay="300">
+                        <div class="skill-header">
+                            <span class="skill-name">Customer Satisfaction</span>
+                            <span class="skill-percent">99%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-fill" data-width="99"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- SERVICE MODAL -->
+    <div class="modal" id="serviceModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-icon" id="modalIcon">
+                <i class="fas fa-plane-departure"></i>
+            </div>
+            <h2 id="modalTitle">Service Title</h2>
+            <p id="modalDesc">Service description goes here.</p>
+            <ul class="modal-features" id="modalFeatures">
+                <!-- Features will be inserted here -->
+            </ul>
+            <button class="modal-btn">Book Now</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <h4>TourismoPro</h4>
+                    <p>Creating unforgettable journeys since 2010.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="destinations.html">Destinations</a></li>
+                        <li><a href="packages.html">Packages</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe for exclusive deals</p>
+                    <input type="email" placeholder="Your email" style="padding:12px; border-radius:30px; border:none; width:100%; margin-top:10px;">
+                    <button style="margin-top:10px; background: var(--primary); color: white; border:none; padding:10px 20px; border-radius:30px; cursor:pointer;">Subscribe</button>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 TourismoPro. All rights reserved. Designed with ❤️</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- EXTERNAL LIBRARIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // ===== MOBILE MENU =====
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (hamburger) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // ===== HEADER SCROLL EFFECT =====
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.backdropFilter = 'blur(20px)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.75)';
+                header.style.backdropFilter = 'blur(12px)';
+            }
+        });
+
+        // ===== SERVICE DATA =====
+        const serviceData = {
+            flight: {
+                title: "Flight Booking",
+                icon: "fa-plane-departure",
+                desc: "Get the best deals on flights with our extensive network of airline partners. We offer flexible booking options, price alerts, and 24/7 support.",
+                features: ["Best Price Guarantee", "Flexible Cancellation", "24/7 Customer Support", "Exclusive Deals"]
+            },
+            hotel: {
+                title: "Hotel Reservations",
+                icon: "fa-hotel",
+                desc: "From luxury resorts to budget-friendly stays, we have the perfect accommodation for every traveler. Enjoy exclusive perks and upgrades.",
+                features: ["5-Star Properties", "Free Cancellation", "Member Discounts", "Room Upgrades"]
+            },
+            tour: {
+                title: "Guided Tours",
+                icon: "fa-map-marked-alt",
+                desc: "Experience destinations like a local with our expert guides. We offer private tours, group excursions, and customized itineraries.",
+                features: ["Expert Local Guides", "Small Groups", "Hidden Gems", "Flexible Schedule"]
+            },
+            insurance: {
+                title: "Travel Insurance",
+                icon: "fa-shield-alt",
+                desc: "Travel with peace of mind knowing you're protected. Our comprehensive plans cover medical emergencies, trip cancellations, and more.",
+                features: ["Medical Coverage", "Trip Cancellation", "Lost Luggage", "24/7 Assistance"]
+            },
+            visa: {
+                title: "Visa Assistance",
+                icon: "fa-passport",
+                desc: "Navigate the visa process with ease. Our experts handle documentation, appointments, and follow-ups for hassle-free travel.",
+                features: ["Document Review", "Application Support", "Appointment Booking", "Status Updates"]
+            },
+            custom: {
+                title: "Custom Itineraries",
+                icon: "fa-magic",
+                desc: "Let us craft your perfect journey. From romantic getaways to adventure trips, we design experiences that match your dreams.",
+                features: ["Personalized Planning", "Budget Options", "Exclusive Access", "24/7 Concierge"]
+            }
+        };
+
+        // ===== SERVICE MODAL =====
+        const modal = document.getElementById('serviceModal');
+        const modalClose = document.querySelector('.modal-close');
+        const serviceCards = document.querySelectorAll('.service-card');
+
+        serviceCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const serviceKey = card.getAttribute('data-service');
+                const service = serviceData[serviceKey];
+                
+                document.getElementById('modalIcon').innerHTML = `<i class="fas ${service.icon}"></i>`;
+                document.getElementById('modalTitle').textContent = service.title;
+                document.getElementById('modalDesc').textContent = service.desc;
+                
+                const featuresList = document.getElementById('modalFeatures');
+                featuresList.innerHTML = '';
+                service.features.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-check-circle"></i> ${feature}`;
+                    featuresList.appendChild(li);
+                });
+                
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        const closeModal = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // ===== 3D TILT EFFECT =====
+        serviceCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+            });
+        });
+
+        // ===== SKILL BARS ANIMATION =====
+        const skillBars = document.querySelectorAll('.skill-fill');
+        const skillObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const width = entry.target.getAttribute('data-width');
+                    entry.target.style.width = width + '%';
+                }
+            });
+        }, { threshold: 0.5 });
+
+        skillBars.forEach(bar => skillObserver.observe(bar));
+
+        // ===== PARTICLES INIT =====
+        if (document.getElementById('particles-js')) {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 60, density: { enable: true, value_area: 800 } },
+                    color: { value: '#ffffff' },
+                    shape: { type: 'circle' },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: { enable: true, distance: 150, color: '#ffffff', opacity: 0.3, width: 1 },
+                    move: { enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out' }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' } },
+                    modes: { grab: { distance: 140, line_linked: { opacity: 1 } }, push: { particles_nb: 3 } }
+                },
+                retina_detect: true
+            });
+        }
+
+        // ===== GSAP SCROLL ANIMATIONS =====
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Hero Parallax
+            gsap.to('.hero', {
+                backgroundPosition: '50% 120%',
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '.hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            });
+        }
+
+        // ===== AOS INIT =====
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const nav = document.querySelector("nav.container");
+    const hero = document.querySelector(".hero-content");
+
+    // SAFETY: make sure elements exist
+    if (!nav || !hero) {
+        console.log("Elements not found!");
+        return;
+    }
+
+    // Force animation AFTER everything loads
+    setTimeout(() => {
+        nav.classList.add("animate");
+        hero.classList.add("animate");
+    }, 300);
+
+});
+</script>
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+
+</body>
+</html>

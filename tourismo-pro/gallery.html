@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Tourismo Pro | Gallery</title>
+    
+    <!-- EXTERNAL LIBRARIES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== CSS VARIABLES (Your Exact Colors) ===== */
+        :root {
+            --primary: #0a74da;
+            --secondary: #ff6b35;
+            --accent: #00c9a7;
+            --dark: #0b1a33;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== UTILITIES ===== */
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .section { padding: 100px 0; }
+        
+        .section-title {
+            font-size: 2.8rem; font-weight: 800; margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            display: inline-block;
+        }
+        
+        .section-subtitle { color: var(--gray); font-size: 1.2rem; margin-bottom: 50px; }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.75);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        nav { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+        
+        .logo {
+            font-size: 1.8rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+
+        .nav-links { display: flex; gap: 32px; list-style: none; }
+        .nav-links a {
+            text-decoration: none; color: var(--dark); font-weight: 500;
+            transition: var(--transition); position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0;
+            width: 0; height: 2px; background: var(--primary); transition: var(--transition);
+        }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+        .hamburger { display: none; flex-direction: column; cursor: pointer; }
+        .hamburger span { width: 25px; height: 3px; background: var(--dark); margin: 3px 0; transition: var(--transition); }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(135deg, var(--dark) 0%, #1e3a5f 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        #particles-js {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 1;
+        }
+
+        .hero-content {
+            position: relative; z-index: 2; max-width: 700px;
+        }
+
+        .hero h1 {
+            font-size: 4rem; font-weight: 800; line-height: 1.2; margin-bottom: 24px;
+            background: linear-gradient(to right, #fff, #a0c8ff);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+
+        .hero p { font-size: 1.2rem; margin-bottom: 40px; opacity: 0.9; }
+
+
+        /* ===== FILTER BAR ===== */
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 12px 28px;
+            border: none;
+            background: white;
+            color: var(--gray);
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(10, 116, 218, 0.3);
+        }
+
+        /* ===== MASONRY GALLERY ===== */
+        .gallery-grid {
+            column-count: 3;
+            column-gap: 25px;
+        }
+
+        .gallery-item {
+            break-inside: avoid;
+            margin-bottom: 25px;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .gallery-item.hidden {
+            display: none;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(11, 26, 51, 0.8), transparent);
+            opacity: 0;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 25px;
+            z-index: 2;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .gallery-overlay p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            transform: translateY(20px);
+            transition: var(--transition);
+            transition-delay: 0.1s;
+        }
+
+        .gallery-item:hover .gallery-overlay h3,
+        .gallery-item:hover .gallery-overlay p {
+            transform: translateY(0);
+        }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 26, 51, 0.95);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            overflow: hidden;
+            transform: scale(0.8);
+            transition: var(--transition);
+        }
+
+        .lightbox.active .lightbox-content {
+            transform: scale(1);
+        }
+
+        .lightbox img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            display: block;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px; right: 30px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10000;
+        }
+
+        .lightbox-close:hover {
+            color: var(--secondary);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-caption {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 20px;
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-links h4 {
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a { color: #cbd5e1; text-decoration: none; transition: var(--transition); }
+        .footer-links a:hover { color: white; padding-left: 5px; }
+
+        .social-icons { display: flex; gap: 15px; font-size: 1.5rem; }
+        .social-icons a { color: white; transition: var(--transition); }
+        .social-icons a:hover { color: var(--secondary); transform: translateY(-3px); }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #94a3b8;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .gallery-grid { column-count: 2; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: rgba(255,255,255,0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 40px;
+                transition: 0.5s;
+            }
+            .nav-links.active { left: 0; }
+            .hamburger { display: flex; }
+            .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(8px, 8px); }
+            .hamburger.active span:nth-child(2) { opacity: 0; }
+            .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
+
+            .hero h1 { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+            
+            .gallery-grid { column-count: 1; }
+            
+            .lightbox img {
+                max-height: 60vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <nav class="container">
+            <div class="logo">Tourismo<span style="color:var(--secondary);">Pro</span></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="destinations.html">Destinations</a></li>
+                <li><a href="gallery.html" class="active">Gallery</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="packages.html">Packages</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+
+                  <section class="hero">
+            <div id="particles-js"></div>
+            <div class="container hero-content" data-aos="fade-up">
+                	
+                	 <h1>Visual Journey</h1>
+
+                   <p>Explore our collection of breathtaking moments</p>
+             
+            </div>
+        </section>
+
+        <!-- GALLERY SECTION -->
+        <section class="section container">
+            <!-- Filter Buttons -->
+            <div class="filter-bar" data-aos="fade-up">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="nature">Nature</button>
+                <button class="filter-btn" data-filter="culture">Culture</button>
+                <button class="filter-btn" data-filter="adventure">Adventure</button>
+                <button class="filter-btn" data-filter="beach">Beach</button>
+            </div>
+
+            <!-- Masonry Grid -->
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Nature -->
+                <div class="gallery-item" data-category="nature" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1018/600/800" alt="Nature 1">
+                    <div class="gallery-overlay">
+                        <h3>Mountain Peaks</h3>
+                        <p>Swiss Alps</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="nature" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1015/600/400" alt="Nature 2">
+                    <div class="gallery-overlay">
+                        <h3>Forest Path</h3>
+                        <p>Pacific Northwest</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="beach" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1016/600/500" alt="Beach 1">
+                    <div class="gallery-overlay">
+                        <h3>Turquoise Waters</h3>
+                        <p>Maldives</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="culture" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1025/600/700" alt="Culture 1">
+                    <div class="gallery-overlay">
+                        <h3>Ancient Temple</h3>
+                        <p>Japan</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="adventure" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1036/600/450" alt="Adventure 1">
+                    <div class="gallery-overlay">
+                        <h3>Patagonia Trek</h3>
+                        <p>Argentina</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="nature" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1040/600/600" alt="Nature 3">
+                    <div class="gallery-overlay">
+                        <h3>Autumn Colors</h3>
+                        <p>Canada</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="beach" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1043/600/400" alt="Beach 2">
+                    <div class="gallery-overlay">
+                        <h3>Island Paradise</h3>
+                        <p>Bali</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="culture" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1047/600/500" alt="Culture 2">
+                    <div class="gallery-overlay">
+                        <h3>City Lights</h3>
+                        <p>New York</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="adventure" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1050/600/750" alt="Adventure 2">
+                    <div class="gallery-overlay">
+                        <h3>Desert Dunes</h3>
+                        <p>Sahara</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="nature" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1056/600/400" alt="Nature 4">
+                    <div class="gallery-overlay">
+                        <h3>Waterfall</h3>
+                        <p>Iceland</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="beach" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1060/600/500" alt="Beach 3">
+                    <div class="gallery-overlay">
+                        <h3>Sunset Beach</h3>
+                        <p>Hawaii</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="culture" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1062/600/650" alt="Culture 3">
+                    <div class="gallery-overlay">
+                        <h3>Market Street</h3>
+                        <p>Thailand</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="adventure" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1067/600/450" alt="Adventure 3">
+                    <div class="gallery-overlay">
+                        <h3>Rock Climbing</h3>
+                        <p>Colorado</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="nature" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1069/600/550" alt="Nature 5">
+                    <div class="gallery-overlay">
+                        <h3>Winter Snow</h3>
+                        <p>Norway</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="beach" data-aos="fade-up">
+                    <img src="https://picsum.photos/id/1074/600/400" alt="Beach 4">
+                    <div class="gallery-overlay">
+                        <h3>Coral Reef</h3>
+                        <p>Great Barrier Reef</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- LIGHTBOX MODAL -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <div class="lightbox-content">
+            <img src="" alt="Lightbox Image" id="lightbox-img">
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <h4>TourismoPro</h4>
+                    <p>Creating unforgettable journeys since 2010.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="destinations.html">Destinations</a></li>
+                        <li><a href="packages.html">Packages</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe for exclusive deals</p>
+                    <input type="email" placeholder="Your email" style="padding:12px; border-radius:30px; border:none; width:100%; margin-top:10px;">
+                    <button style="margin-top:10px; background: var(--primary); color: white; border:none; padding:10px 20px; border-radius:30px; cursor:pointer;">Subscribe</button>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 TourismoPro. All rights reserved. Designed with ❤️</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- EXTERNAL LIBRARIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // ===== MOBILE MENU =====
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (hamburger) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // ===== HEADER SCROLL EFFECT =====
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.backdropFilter = 'blur(20px)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.75)';
+                header.style.backdropFilter = 'blur(12px)';
+            }
+        });
+
+        // ===== GALLERY FILTER =====
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all
+                filterButtons.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked
+                btn.classList.add('active');
+                
+                const filterValue = btn.getAttribute('data-filter');
+                
+                galleryItems.forEach(item => {
+                    const itemCategory = item.getAttribute('data-category');
+                    if (filterValue === 'all' || filterValue === itemCategory) {
+                        item.classList.remove('hidden');
+                        // Re-trigger AOS animation
+                        item.setAttribute('data-aos', 'fade-up');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+                
+                // Refresh AOS
+                AOS.refresh();
+            });
+        });
+
+        // ===== LIGHTBOX FUNCTIONALITY =====
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        const lightboxClose = document.querySelector('.lightbox-close');
+
+        galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const img = item.querySelector('img');
+                const title = item.querySelector('h3').textContent;
+                const location = item.querySelector('p').textContent;
+                
+                lightboxImg.src = img.src;
+                lightboxCaption.textContent = `${title} - ${location}`;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // Close lightbox
+        const closeLightbox = () => {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        // Close with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                closeLightbox();
+            }
+        });
+
+        // ===== PARTICLES INIT =====
+        if (document.getElementById('particles-js')) {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 50, density: { enable: true, value_area: 800 } },
+                    color: { value: '#ffffff' },
+                    shape: { type: 'circle' },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: { enable: true, distance: 150, color: '#ffffff', opacity: 0.3, width: 1 },
+                    move: { enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out' }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' } },
+                    modes: { grab: { distance: 140, line_linked: { opacity: 1 } }, push: { particles_nb: 3 } }
+                },
+                retina_detect: true
+            });
+        }
+
+        // ===== GSAP SCROLL ANIMATIONS =====
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Hero Parallax
+            gsap.to('.hero', {
+                backgroundPosition: '50% 120%',
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '.hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            });
+        }
+
+        // ===== AOS INIT =====
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const nav = document.querySelector("nav.container");
+    const hero = document.querySelector(".hero-content");
+
+    // SAFETY: make sure elements exist
+    if (!nav || !hero) {
+        console.log("Elements not found!");
+        return;
+    }
+
+    // Force animation AFTER everything loads
+    setTimeout(() => {
+        nav.classList.add("animate");
+        hero.classList.add("animate");
+    }, 300);
+
+});
+</script>
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+
+</body>
+</html>
