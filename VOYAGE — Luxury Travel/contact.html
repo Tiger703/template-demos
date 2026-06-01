@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Contact — VOYAGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<style>
+:root{
+  --bg:#04040a;--bg2:#08080f;--fg:#EDEEF2;--muted:#8a909c;
+  --line:rgba(255,255,255,.07);--accent:#C9A84C;--accent2:#e8c96a;
+  --accent3:#f5e0a0;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{background:var(--bg);color:var(--fg);font-family:"Plus Jakarta Sans",system-ui;overflow-x:hidden;-webkit-font-smoothing:antialiased;cursor:none}
+
+/* CURSOR */
+.cursor{position:fixed;top:0;left:0;z-index:9998;pointer-events:none;mix-blend-mode:difference}
+.cursor-dot{width:4px;height:4px;background:#fff;border-radius:50%;transform:translate(-50%,-50%)}
+.cursor-ring{width:36px;height:36px;border:1px solid rgba(255,255,255,.6);border-radius:50%;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s}
+@media (hover:none){.cursor{display:none}}
+
+/* CANVAS */
+#cv{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* NOISE */
+.noise{position:fixed;inset:0;pointer-events:none;opacity:.04;z-index:1;
+  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGZpbHRlcj0idXJsKCNhKSIgZD0iTTAgMGgzMDB2MzAwSDB6Ii8+PC9zdmc+');
+  mix-blend-mode:overlay}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:24px 0;transition:all .4s}
+nav.scrolled{background:rgba(5,5,8,.72);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.ni{display:flex;justify-content:space-between;align-items:center;width:min(1400px,94vw);margin-inline:auto}
+.brand{display:flex;gap:.55rem;align-items:center;font-weight:600;letter-spacing:.2em;font-size:14px;text-decoration:none;color:var(--fg)}
+.bdot{width:7px;height:7px;background:var(--accent);border-radius:50%;box-shadow:0 0 18px var(--accent);animation:dp 3s ease-in-out infinite}
+@keyframes dp{0%,100%{box-shadow:0 0 18px var(--accent)}50%{box-shadow:0 0 32px var(--accent),0 0 60px rgba(201,168,76,.3)}}
+.nl{display:flex;gap:32px;align-items:center}
+.nl a{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;position:relative;text-decoration:none;color:var(--fg);transition:opacity .3s}
+.nl a:hover{opacity:1}
+.nl a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:1px;background:var(--accent);transition:.35s}
+.nl a:hover::after,.nl a.act::after{width:100%}
+.nl a.act{opacity:1}
+.ncta{padding:9px 20px;border:1px solid rgba(201,168,76,.35);border-radius:999px;color:var(--accent)!important;opacity:1!important;transition:all .3s!important}
+.ncta:hover{background:var(--accent)!important;color:#000!important;border-color:var(--accent)!important}
+.ncta::after{display:none!important}
+.burger{display:none;width:38px;height:38px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.03);align-items:center;justify-content:center;cursor:none;color:#fff;font-size:16px}
+@media(max-width:900px){.nl{display:none}.burger{display:flex}}
+.mob-m{position:fixed;inset:0;background:rgba(2,2,8,.97);backdrop-filter:blur(24px);z-index:998;display:grid;place-items:center;transform:translateY(-100%);transition:.6s cubic-bezier(.16,1,.3,1)}
+.mob-m.open{transform:none}
+.mob-m a{font-family:"Cormorant Garamond",serif;font-size:clamp(32px,8vw,60px);display:block;text-align:center;margin:.15em 0;text-decoration:none;color:var(--fg)}
+
+/* HERO */
+.hero{position:relative;z-index:2;min-height:100svh;display:grid;place-items:center;overflow:hidden}
+.hbg{position:absolute;inset:0}
+.hbg img{width:100%;height:100%;object-fit:cover;opacity:.2;filter:saturate(.5)}
+.hbg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--bg) 0%,transparent 28%,transparent 62%,var(--bg) 100%)}
+.hi{position:relative;z-index:2;text-align:center;padding:0 20px}
+.hkick{display:inline-flex;align-items:center;gap:12px;padding:7px 18px;border:1px solid rgba(201,168,76,.25);border-radius:999px;background:rgba(201,168,76,.06);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:28px;backdrop-filter:blur(6px)}
+.hkick::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.hh1{font-family:"Cormorant Garamond",serif;font-size:clamp(58px,11vw,136px);line-height:.82;letter-spacing:-.025em;margin-bottom:22px}
+.hh1 .l1{display:block;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.38)}
+.hh1 .l2{display:block;background:linear-gradient(135deg,#fff 0%,var(--accent3) 40%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hh1 .l3{display:block;font-style:italic;font-weight:300;color:#b3b8c4;font-size:.55em;margin-top:8px}
+.scue{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:44px;animation:fl 2.5s ease-in-out infinite}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+.scue span{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.sarr{width:1px;height:44px;background:linear-gradient(180deg,transparent,var(--accent));position:relative;overflow:hidden}
+.sarr::after{content:"";position:absolute;top:-100%;left:0;width:100%;height:100%;background:linear-gradient(180deg,transparent,rgba(255,255,255,.8),transparent);animation:sa 2s ease-in-out infinite}
+@keyframes sa{to{top:200%}}
+
+/* MAIN */
+.cs{position:relative;z-index:2;padding:0 0 100px}
+.cw{width:min(1400px,94vw);margin-inline:auto}
+
+/* BENTO */
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.bc{border:1px solid var(--line);border-radius:24px;background:rgba(8,8,15,.65);backdrop-filter:blur(14px);overflow:hidden;position:relative;transition:border-color .4s}
+.bc:hover{border-color:rgba(201,168,76,.18)}
+.bi{grid-column:span 5}.bf{grid-column:span 7}
+.bm{grid-column:span 8}.bt{grid-column:span 4}
+.bs1{grid-column:span 4}.bs2{grid-column:span 4}.bs3{grid-column:span 4}
+@media(max-width:1100px){.bi,.bf,.bm,.bt,.bs1,.bs2,.bs3{grid-column:span 12}}
+
+/* INFO CELL */
+.ic{padding:44px 40px;display:flex;flex-direction:column;min-height:590px}
+@media(max-width:700px){.ic{padding:28px 22px;min-height:auto}}
+.ice{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:22px}
+.ice::before{content:"";width:24px;height:1px;background:var(--accent)}
+.ict{font-family:"Cormorant Garamond",serif;font-size:clamp(34px,3.8vw,52px);line-height:.88;margin-bottom:18px;letter-spacing:-.02em}
+.ict em{font-style:italic;color:var(--accent2)}
+.icd{color:#aaafbb;font-size:14px;line-height:1.8;margin-bottom:32px;max-width:330px}
+.cr{display:flex;align-items:center;gap:15px;padding:13px 16px;border:1px solid var(--line);border-radius:15px;margin-bottom:9px;background:rgba(255,255,255,.02);transition:all .35s;position:relative;overflow:hidden}
+.cr::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(201,168,76,.07),transparent);transform:translateX(-100%);transition:.5s}
+.cr:hover::before{transform:translateX(0)}
+.cr:hover{border-color:rgba(201,168,76,.28)}
+.cri{width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:rgba(201,168,76,.07);display:grid;place-items:center;flex-shrink:0;font-size:15px;transition:.3s}
+.cr:hover .cri{background:rgba(201,168,76,.15);border-color:rgba(201,168,76,.3)}
+.crl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.crv{font-size:14px;color:#e8eaf0}
+.sr{display:flex;gap:8px;margin-top:22px}
+.soc{width:38px;height:38px;border:1px solid var(--line);border-radius:11px;display:grid;place-items:center;font-size:11px;color:#909aaa;transition:all .3s;background:rgba(255,255,255,.02);text-decoration:none}
+.soc:hover{border-color:var(--accent);color:var(--accent);background:rgba(201,168,76,.07);transform:translateY(-2px)}
+.ostrip{display:flex;gap:8px;margin-top:auto;padding-top:24px;border-top:1px solid var(--line)}
+.oimg{flex:1;aspect-ratio:4/3;border-radius:12px;overflow:hidden;border:1px solid var(--line);position:relative}
+.oimg img{width:100%;height:100%;object-fit:cover;filter:saturate(.6) brightness(.75);transition:.55s}
+.oimg:hover img{filter:saturate(1) brightness(.95);transform:scale(1.07)}
+.oimg span{position:absolute;bottom:7px;left:8px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#c9cedb;background:rgba(0,0,0,.6);padding:3px 7px;border-radius:6px;backdrop-filter:blur(4px)}
+
+/* FORM CELL */
+.fc{padding:44px;display:flex;flex-direction:column;min-height:590px}
+@media(max-width:700px){.fc{padding:28px 22px}}
+.fh{margin-bottom:30px}
+.fhm{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.fhs{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.fhp{display:flex;gap:5px}
+.fp{height:2px;border-radius:2px;transition:all .5s}
+.fp.d{background:var(--accent);width:32px}
+.fp.c{background:rgba(201,168,76,.5);width:22px}
+.fp.t{background:rgba(255,255,255,.1);width:12px}
+.fht{font-family:"Cormorant Garamond",serif;font-size:clamp(24px,3vw,36px);line-height:1.05}
+.fht em{font-style:italic;color:var(--accent2)}
+
+/* intent */
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.int{border:1px solid var(--line);border-radius:15px;padding:18px 15px;cursor:none;transition:all .35s;background:rgba(255,255,255,.02);position:relative;overflow:hidden}
+.int::after{content:"✓";position:absolute;top:11px;right:13px;font-size:12px;color:var(--accent);opacity:0;transition:.25s}
+.int:hover{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.04)}
+.int.on{border-color:var(--accent);background:rgba(201,168,76,.08)}
+.int.on::after{opacity:1}
+.ini{font-size:20px;margin-bottom:6px}
+.inn{font-size:13px;font-weight:600;margin-bottom:2px}
+.ins{font-size:11px;color:var(--muted);line-height:1.4}
+
+/* fields */
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px}
+.fr.full{grid-template-columns:1fr}
+.f{position:relative}
+.f label{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.f input,.f select,.f textarea{width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:13px 16px;color:#edeef2;font-size:14px;font-family:inherit;outline:none;transition:all .35s}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.03);box-shadow:0 0 0 3px rgba(201,168,76,.07)}
+.f input::placeholder,.f textarea::placeholder{color:rgba(138,144,156,.4)}
+.f select{appearance:none;cursor:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238a909c' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.f select option{background:#0c0c18}
+.f textarea{resize:none;min-height:110px;line-height:1.65}
+.cc{position:absolute;bottom:10px;right:14px;font-size:10px;color:var(--muted);pointer-events:none}
+
+/* pills */
+.dps{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px}
+.dp{padding:7px 14px;border:1px solid var(--line);border-radius:999px;font-size:12px;cursor:none;color:#9aa0b0;transition:all .3s;background:rgba(255,255,255,.02)}
+.dp:hover{border-color:rgba(201,168,76,.35);color:#dde0ea}
+.dp.on{background:rgba(201,168,76,.1);border-color:var(--accent);color:var(--accent2)}
+
+/* budget */
+.bw{margin-bottom:18px}
+.bt2{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px}
+.bl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.bv{font-family:"Cormorant Garamond",serif;font-size:26px;font-style:italic;color:var(--accent2);line-height:1}
+input[type=range]{width:100%;appearance:none;height:2px;border-radius:2px;background:rgba(255,255,255,.1);outline:none;cursor:none}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,var(--accent2),var(--accent));border:2px solid var(--bg);box-shadow:0 0 0 3px rgba(201,168,76,.25),0 4px 16px rgba(201,168,76,.4);transition:.25s}
+input[type=range]::-webkit-slider-thumb:hover{box-shadow:0 0 0 7px rgba(201,168,76,.18),0 4px 20px rgba(201,168,76,.5);transform:scale(1.1)}
+.bticks{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px}
+
+/* buttons */
+.btnrow{display:flex;gap:10px;margin-top:auto;padding-top:22px}
+.bback{padding:13px 20px;border:1px solid var(--line);border-radius:12px;background:transparent;color:#909aaa;font-size:13px;cursor:none;font-family:inherit;transition:all .3s;letter-spacing:.04em}
+.bback:hover{border-color:rgba(255,255,255,.2);color:#fff}
+.bnxt{flex:1;padding:15px 20px;border-radius:12px;border:0;background:linear-gradient(135deg,var(--accent),var(--accent2) 55%,#fffbe8);color:#0a0800;font-weight:700;font-size:14px;cursor:none;font-family:inherit;transition:all .35s;display:flex;align-items:center;justify-content:center;gap:10px;letter-spacing:.05em;position:relative;overflow:hidden}
+.bnxt::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 20%,rgba(255,255,255,.4) 50%,transparent 80%);transform:translateX(-120%);transition:.7s}
+.bnxt:hover::before{transform:translateX(120%)}
+.bnxt:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(201,168,76,.3)}
+.bnxt svg{transition:transform .3s}
+.bnxt:hover svg{transform:translateX(4px)}
+
+/* success */
+.suc{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0;flex:1;padding:20px 0}
+.suc.show{display:flex}
+.sring{width:90px;height:90px;border-radius:50%;border:1px solid var(--accent);display:grid;place-items:center;margin:0 auto 26px;position:relative}
+.sring::before{content:"";position:absolute;inset:-7px;border-radius:50%;border:1px solid rgba(201,168,76,.2);animation:re 2s ease-out infinite}
+@keyframes re{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.3);opacity:0}}
+.sico{font-size:28px}
+.stitle{font-family:"Cormorant Garamond",serif;font-size:clamp(30px,4vw,50px);line-height:.9;margin-bottom:14px}
+.stitle em{font-style:italic;color:var(--accent2)}
+.ssub{color:#aaafbb;font-size:14px;line-height:1.75;max-width:340px;margin:0 auto 26px}
+.sref{display:inline-flex;align-items:center;gap:10px;padding:11px 20px;border:1px solid var(--line);border-radius:12px;font-size:12px;color:var(--muted);background:rgba(255,255,255,.02)}
+.sref strong{color:var(--accent2);font-family:"Cormorant Garamond",serif;font-size:17px;font-weight:400;letter-spacing:.06em}
+.shome{display:inline-flex;align-items:center;gap:8px;margin-top:26px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:3px;text-decoration:none;transition:color .3s}
+.shome:hover{color:var(--accent)}
+
+/* MAP CELL */
+.mc{padding:0;overflow:hidden;position:relative;min-height:250px}
+.mov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,15,.7) 0%,transparent 22%,transparent 78%,rgba(8,8,15,.7) 100%),linear-gradient(180deg,transparent 35%,rgba(4,4,10,1) 100%);z-index:1;pointer-events:none}
+.mbg{width:100%;height:100%;object-fit:cover;opacity:.45;filter:saturate(.35) brightness(.55)}
+.mpl{position:absolute;inset:0;z-index:2}
+.mp{position:absolute;transform:translate(-50%,-50%);cursor:none}
+.mpd{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(201,168,76,.6);animation:pp 2.5s ease-in-out infinite}
+@keyframes pp{0%{box-shadow:0 0 0 0 rgba(201,168,76,.6)}70%{box-shadow:0 0 0 16px rgba(201,168,76,0)}100%{box-shadow:0 0 0 0 rgba(201,168,76,0)}}
+.mpl2{position:absolute;left:50%;top:-32px;transform:translateX(-50%);white-space:nowrap;background:rgba(8,8,15,.88);border:1px solid var(--line);padding:5px 10px;border-radius:8px;font-size:11px;color:#c9cedb;opacity:0;transition:.25s;transform:translateX(-50%) translateY(4px)}
+.mp:hover .mpl2{opacity:1;transform:translateX(-50%) translateY(0)}
+.mcap{position:absolute;bottom:22px;left:28px;z-index:3}
+.mcap strong{color:var(--accent2);font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:400;font-style:italic;display:block;margin-bottom:2px}
+.mcap span{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.rsvg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+
+/* TZ CELL */
+.tzc{padding:30px 26px;display:flex;flex-direction:column;gap:14px;min-height:250px}
+.tzh{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.tzl{display:flex;flex-direction:column;gap:10px;flex:1}
+.tz{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02);transition:.3s}
+.tz:hover{border-color:rgba(201,168,76,.2);background:rgba(201,168,76,.03)}
+.tzleft{display:flex;align-items:center;gap:10px}
+.tzlive{width:6px;height:6px;border-radius:50%;background:#4caf7d;animation:lp2 2s infinite}
+@keyframes lp2{0%{box-shadow:0 0 0 0 rgba(76,175,125,.5)}70%{box-shadow:0 0 0 7px rgba(76,175,125,0)}100%{box-shadow:0 0 0 0 rgba(76,175,125,0)}}
+.tzcity{font-size:13px;color:#c3c7d3}
+.tztime{font-family:"Cormorant Garamond",serif;font-size:22px;color:var(--accent2);letter-spacing:.02em}
+.tzresp{padding:13px 15px;border:1px solid rgba(201,168,76,.15);border-radius:12px;background:rgba(201,168,76,.04)}
+.tzrl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:3px}
+.tzrv{font-family:"Cormorant Garamond",serif;font-size:20px;font-style:italic;color:#e8eaf0}
+
+/* STAT CELLS */
+.stc{padding:26px 24px;display:flex;flex-direction:column;gap:8px}
+.stn{font-family:"Cormorant Garamond",serif;font-size:clamp(38px,5vw,58px);color:var(--accent2);line-height:1;letter-spacing:-.02em}
+.stl{font-size:12px;color:#8a909c;line-height:1.5;max-width:130px}
+.stb{height:2px;background:var(--line);border-radius:2px;margin-top:auto;overflow:hidden}
+.stf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width 1.5s ease}
+
+/* MARQUEE */
+.mq{border-block:1px solid var(--line);background:rgba(255,255,255,.01);overflow:hidden;position:relative;z-index:2}
+.mqt{display:flex;gap:56px;padding:15px 0;animation:mqa 35s linear infinite;white-space:nowrap}
+.mqt span{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:#7a8090;opacity:.8}
+@keyframes mqa{to{transform:translateX(-50%)}}
+
+/* FOOTER */
+footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:48px 0 36px;background:#03030a}
+.fi{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;width:min(1400px,94vw);margin-inline:auto}
+.fbrand{display:flex;gap:.6rem;align-items:center;font-weight:600;letter-spacing:.2em;font-size:14px;text-decoration:none;color:var(--fg)}
+.flinks{display:flex;gap:22px}
+.flinks a{font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.06em;transition:.25s}
+.flinks a:hover{color:#fff}
+.fcopy{font-size:12px;color:#5a6070;letter-spacing:.04em}
+
+[data-r]{opacity:0;transform:translateY(26px)}
+
+#preloader{position:fixed;inset:0;background:#000;z-index:99999;display:grid;place-items:center}
+.pre-inner{text-align:center}
+.pre-logo{font-family:"Cormorant Garamond",serif;font-size:clamp(32px,5vw,56px);letter-spacing:.2em}
+.pre-bar{width:240px;height:1px;background:rgba(255,255,255,.15);margin:24px auto;overflow:hidden;position:relative}
+.pre-bar::after{content:"";position:absolute;left:0;top:0;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));animation:load 1.8s ease forwards}
+.pre-num{font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px}
+@keyframes load{to{width:100%}}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"><div class="cursor-dot"></div><div class="cursor-ring" id="cursorRing"></div></div>
+<canvas id="cv"></canvas>
+<div class="noise"></div>
+
+
+<div id="preloader">
+  <div class="pre-inner">
+    <div class="pre-logo">VOYAGE</div>
+    <div class="pre-bar"></div>
+    <div class="pre-num"><span id="preNum">0</span>%</div>
+  </div>
+</div>
+<!-- NAV -->
+<nav id="nav">
+  <div class="ni">
+    <a href="index.html" class="brand"><span class="bdot"></span> VOYAGE</a>
+    <div class="nl">
+        <a href="destinations.html">Destinations</a>
+      <a href="about.html">About</a>
+       <a href="service.html">Service</a>
+      <a href="story.html">Story</a>
+       <a href="journal.html">Journal</a>
+       <a href="blog.html">Blog</a>
+       <a href="contact.html" class="act">Contact</a>
+      <a href="#book" class="nav-cta">Book a Trip</a>
+    </div>
+    <button class="burger" id="burger">☰</button>
+  </div>
+</nav>
+<div class="mob-m" id="mob">
+  <div>
+    <a href="index.html">Home</a>
+    <a href="destinations.html">Destinations</a>
+    <a href="about.html">About</a>
+    <a href="service.html">Service</a>
+    <a href="story.html">Story</a>
+    <a href="journal.html">Journal</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html">Contact</a>
+  
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hbg">
+    <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2000&auto=format&fit=crop" alt="">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,var(--bg) 0%,transparent 28%,transparent 62%,var(--bg) 100%)"></div>
+  </div>
+  <div class="hi">
+    <div class="hkick">Begin your journey</div>
+    <h1 class="hh1">
+      <span class="l1" id="l1">SPEAK</span>
+      <span class="l2" id="l2">TO US</span>
+      <span class="l3" id="l3">we design extraordinary journeys</span>
+    </h1>
+    <div class="scue">
+      <span>Tell us your dream</span>
+      <div class="sarr"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN / BENTO -->
+<section class="cs">
+  <div class="cw">
+    <div class="bento">
+
+      <!-- INFO CELL -->
+      <div class="bc bi" data-r>
+        <div class="ic">
+          <p class="ice">Our studios</p>
+          <h2 class="ict">Let's craft<br><em>something</em><br>remarkable.</h2>
+          <p class="icd">Every inquiry is handled by a senior concierge — never a bot, never a form letter. Tell us what you're dreaming of, and we'll make it real.</p>
+          <div class="cr"><div class="cri">✉</div><div><p class="crl">Email</p><p class="crv">hello@voyage.studio</p></div></div>
+          <div class="cr"><div class="cri">☎</div><div><p class="crl">Phone (24/7)</p><p class="crv">+1 (555) 019-9000</p></div></div>
+          <div class="cr"><div class="cri">◎</div><div><p class="crl">Studios</p><p class="crv">New York · London · Tokyo</p></div></div>
+          <div class="sr">
+            <a href="#" class="soc">ig</a>
+            <a href="#" class="soc">tw</a>
+            <a href="#" class="soc">in</a>
+            <a href="#" class="soc">pt</a>
+          </div>
+          <div class="ostrip">
+            <div class="oimg"><img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=600&auto=format&fit=crop" alt="NY"><span>New York</span></div>
+            <div class="oimg"><img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=600&auto=format&fit=crop" alt="London"><span>London</span></div>
+            <div class="oimg"><img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=600&auto=format&fit=crop" alt="Tokyo"><span>Tokyo</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM CELL -->
+      <div class="bc bf" data-r>
+        <div class="fc">
+          <div class="fh" id="fh">
+            <div class="fhm">
+              <span class="fhs" id="fstep">Step 1 of 3</span>
+              <div class="fhp" id="fhp">
+                <div class="fp c"></div><div class="fp t"></div><div class="fp t"></div>
+              </div>
+            </div>
+            <h3 class="fht" id="ftitle">What kind of journey are <em>you imagining?</em></h3>
+          </div>
+
+          <!-- S1 -->
+          <div id="s1" style="display:flex;flex-direction:column;flex:1">
+            <div class="ig">
+              <div class="int" onclick="sel(this)"><div class="ini">✦</div><p class="inn">Bespoke Journey</p><p class="ins">Fully tailored itinerary built around you</p></div>
+              <div class="int" onclick="sel(this)"><div class="ini">◈</div><p class="inn">Group & Family</p><p class="ins">Private groups, families, multi-gen</p></div>
+              <div class="int" onclick="sel(this)"><div class="ini">◇</div><p class="inn">Honeymoon</p><p class="ins">Romantic escapes, no detail too small</p></div>
+              <div class="int" onclick="sel(this)"><div class="ini">○</div><p class="inn">Enquiry</p><p class="ins">Press, partnerships or questions</p></div>
+            </div>
+            <div class="fr"><div class="f"><label>First name</label><input type="text" placeholder="Eleanor" id="fn"></div><div class="f"><label>Last name</label><input type="text" placeholder="Ashford" id="ln"></div></div>
+            <div class="fr full"><div class="f"><label>Email address</label><input type="email" placeholder="eleanor@ashford.com" id="em"></div></div>
+            <div class="fr full"><div class="f"><label>Phone (optional)</label><input type="tel" placeholder="+1 (555) 000-0000"></div></div>
+            <div class="btnrow">
+              <button class="bnxt" onclick="gn(1)">Continue — Destination <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+          </div>
+
+          <!-- S2 -->
+          <div id="s2" style="display:none;flex-direction:column;flex:1">
+            <p style="font-size:12px;color:var(--muted);letter-spacing:.04em;margin-bottom:12px">Select destinations — choose all that inspire you</p>
+            <div class="dps">
+              <span class="dp" onclick="td(this)">🇲🇻 Maldives</span><span class="dp" onclick="td(this)">🇮🇸 Iceland</span>
+              <span class="dp" onclick="td(this)">🇯🇵 Japan</span><span class="dp" onclick="td(this)">🇨🇭 Swiss Alps</span>
+              <span class="dp" onclick="td(this)">🇦🇷 Patagonia</span><span class="dp" onclick="td(this)">🇮🇩 Bali</span>
+              <span class="dp" onclick="td(this)">🇫🇷 France</span><span class="dp" onclick="td(this)">🇦🇪 UAE</span>
+              <span class="dp" onclick="td(this)">🌍 Africa</span><span class="dp" onclick="td(this)">✦ Surprise me</span>
+            </div>
+            <div class="fr"><div class="f"><label>Departure date</label><input type="date" id="dd"></div><div class="f"><label>Duration</label><select><option>3–5 days</option><option>1 week</option><option>2 weeks</option><option>3+ weeks</option><option>Open-ended</option></select></div></div>
+            <div class="fr"><div class="f"><label>Party size</label><select><option>Solo</option><option>2 Adults</option><option>Family (3–5)</option><option>Group (6+)</option></select></div><div class="f"><label>Travel class</label><select><option>Business Class</option><option>First Class</option><option>Private Jet</option></select></div></div>
+            <div class="bw">
+              <div class="bt2"><span class="bl">Per-person budget</span><span class="bv" id="bval">$5,000</span></div>
+              <input type="range" min="1000" max="50000" step="500" value="5000" oninput="ub(this.value)">
+              <div class="bticks"><span>$1k</span><span>$25k</span><span>$50k+</span></div>
+            </div>
+            <div class="btnrow"><button class="bback" onclick="gb(2)">← Back</button><button class="bnxt" onclick="gn(2)">Continue — Details <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+          </div>
+
+          <!-- S3 -->
+          <div id="s3" style="display:none;flex-direction:column;flex:1">
+            <div class="fr full" style="flex:1"><div class="f" style="position:relative"><label>Describe your dream journey</label><textarea id="msg" placeholder="The atmosphere, the pace, must-have experiences, things to avoid, inspirations... The more you share, the more personal we can be." style="min-height:120px" oninput="uc(this)" maxlength="500"></textarea><span class="cc" id="cc">0 / 500</span></div></div>
+            <div class="fr" style="margin-top:11px">
+              <div class="f"><label>Best time to contact</label><select><option>Morning (8am–12pm)</option><option>Afternoon (12–5pm)</option><option>Evening (5–8pm)</option><option>Anytime</option></select></div>
+              <div class="f"><label>How did you find us?</label><select><option>Instagram</option><option>Google</option><option>Friend referral</option><option>Press / Media</option><option>Returning client</option></select></div>
+            </div>
+            <div style="padding:13px 15px;border:1px solid rgba(201,168,76,.15);border-radius:12px;background:rgba(201,168,76,.03);margin:10px 0">
+              <p style="font-size:12px;color:#aaafbb;line-height:1.7">A senior VOYAGE concierge will review your request personally and respond within <strong style="color:#edeef2">24 hours</strong>. No automated replies. No sales pressure.</p>
+            </div>
+            <div class="btnrow"><button class="bback" onclick="gb(3)">← Back</button><button class="bnxt" onclick="sub()" style="background:linear-gradient(135deg,#b08020,var(--accent),var(--accent2),#fffbe6)">Send Request ✦</button></div>
+          </div>
+
+          <!-- SUCCESS -->
+          <div class="suc" id="suc">
+            <div class="sring"><span class="sico">✦</span></div>
+            <h2 class="stitle">Request<br><em>received.</em></h2>
+            <p class="ssub">Your inquiry has been assigned to a senior concierge matching your profile. A personal reply will arrive within 24 hours.</p>
+            <div class="sref">Reference: <strong id="refn">—</strong></div>
+            <a href="index.html" class="shome">← Return to homepage</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAP CELL -->
+      <div class="bc bm" data-r style="padding:0">
+        <div class="mc">
+          <img class="mbg" src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1800&auto=format&fit=crop" alt="">
+          <div class="mov"></div>
+          <svg class="rsvg" viewBox="0 0 800 260" preserveAspectRatio="xMidYMid slice">
+            <path d="M110 115 Q240 75 360 105 Q475 135 575 95 Q655 70 700 110" stroke="rgba(201,168,76,.3)" stroke-width="1" fill="none" stroke-dasharray="5 7"/>
+            <path d="M95 155 Q210 185 320 162 Q440 138 545 162 Q645 188 718 152" stroke="rgba(201,168,76,.15)" stroke-width="1" fill="none" stroke-dasharray="5 9"/>
+          </svg>
+          <div class="mpl">
+            <div class="mp" style="left:13%;top:44%"><div class="mpd"></div><div class="mpl2">New York</div></div>
+            <div class="mp" style="left:44%;top:36%"><div class="mpd"></div><div class="mpl2">London</div></div>
+            <div class="mp" style="left:50%;top:42%"><div class="mpd"></div><div class="mpl2">Swiss Alps</div></div>
+            <div class="mp" style="left:76%;top:44%"><div class="mpd"></div><div class="mpl2">Tokyo</div></div>
+            <div class="mp" style="left:65%;top:62%"><div class="mpd"></div><div class="mpl2">Bali</div></div>
+            <div class="mp" style="left:19%;top:70%"><div class="mpd"></div><div class="mpl2">Patagonia</div></div>
+            <div class="mp" style="left:19%;top:32%"><div class="mpd"></div><div class="mpl2">Reykjavik</div></div>
+          </div>
+          <div class="mcap"><strong>6 continents</strong><span>We go where you dream of</span></div>
+        </div>
+      </div>
+
+      <!-- TZ CELL -->
+      <div class="bc bt" data-r>
+        <div class="tzc">
+          <p class="tzh">Live studio hours</p>
+          <div class="tzl">
+            <div class="tz"><div class="tzleft"><span class="tzlive"></span><span class="tzcity">New York</span></div><span class="tztime" id="tzNY">—</span></div>
+            <div class="tz"><div class="tzleft"><span class="tzlive"></span><span class="tzcity">London</span></div><span class="tztime" id="tzLN">—</span></div>
+            <div class="tz"><div class="tzleft"><span class="tzlive"></span><span class="tzcity">Tokyo</span></div><span class="tztime" id="tzTK">—</span></div>
+          </div>
+          <div class="tzresp"><p class="tzrl">Response time</p><p class="tzrv">Within 24 hours</p></div>
+        </div>
+      </div>
+
+      <!-- STAT CELLS -->
+      <div class="bc bs1" data-r><div class="stc"><p style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">Est. since</p><div class="stn">2014</div><p class="stl">Over a decade crafting private journeys</p><div class="stb"><div class="stf" data-w="90"></div></div></div></div>
+      <div class="bc bs2" data-r><div class="stc"><p style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">Destinations</p><div class="stn" id="cntD">0</div><p class="stl">Countries and territories in our portfolio</p><div class="stb"><div class="stf" data-w="75"></div></div></div></div>
+      <div class="bc bs3" data-r><div class="stc"><p style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">Satisfaction</p><div class="stn">98%</div><p class="stl">Client satisfaction across all journeys</p><div class="stb"><div class="stf" data-w="98"></div></div></div></div>
+
+    </div>
+  </div>
+</section>
+
+<div class="mq"><div class="mqt"><span>Bespoke •</span><span>Private •</span><span>Luxury •</span><span>Curated •</span><span>Seamless •</span><span>Extraordinary •</span><span>Bespoke •</span><span>Private •</span><span>Luxury •</span><span>Curated •</span><span>Seamless •</span><span>Extraordinary •</span></div></div>
+
+<footer>
+  <div class="fi">
+    <a href="index.html" class="fbrand"><span class="bdot"></span> VOYAGE</a>
+    <div class="flinks"><a href="index.html">Home</a><a href="destinations.html">Destinations</a><a href="blog.html">Blog</a><a href="contact.html">Contact</a></div>
+    <span class="fcopy">© 2025 VOYAGE · All rights reserved</span>
+  </div>
+</footer>
+
+<script>
+let p=0, preNum=document.getElementById('preNum');
+const int=setInterval(()=>{p+=Math.random()*12; if(p>=100){p=100;clearInterval(int);gsap.to('#preloader',{autoAlpha:0,duration:.7,delay:.2,onComplete:()=>document.getElementById('preloader').remove()})}; preNum.textContent=Math.floor(p)},90);
+
+
+const lenis=new Lenis({lerp:.08});function raf(t){lenis.raf(t);requestAnimationFrame(raf)}requestAnimationFrame(raf);
+const nav=document.getElementById('nav');lenis.on('scroll',()=>window.scrollY>20?nav.classList.add('scrolled'):nav.classList.remove('scrolled'));
+
+document.getElementById('burger').onclick=()=>document.getElementById('mob').classList.toggle('open');
+document.querySelectorAll('.mob-m a').forEach(a=>a.addEventListener('click',()=>document.getElementById('mob').classList.remove('open')));
+
+/* CURSOR */
+
+
+const cursor=document.getElementById('cursor'), ring=document.getElementById('cursorRing');
+let cx=0,cy=0,tx=0,ty=0; window.addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY});
+function loop(){cx+=(tx-cx)*.15;cy+=(ty-cy)*.15;cursor.style.transform=`translate(${cx}px,${cy}px)`;requestAnimationFrame(loop)}loop();
+document.querySelectorAll('a,.btn,.card,.pin').forEach(el=>{el.addEventListener('mouseenter',()=>{ring.style.width='56px';ring.style.height='56px';ring.style.borderColor='var(--accent)'});el.addEventListener('mouseleave',()=>{ring.style.width='36px';ring.style.height='36px';ring.style.borderColor='rgba(255,255,255,.6)'})})
+
+
+/* CANVAS */
+const canvas=document.getElementById('cv'),ctx=canvas.getContext('2d');
+let W,H,pts=[];
+function rs(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+rs();window.addEventListener('resize',rs);
+class P{constructor(){this.reset()}reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.sz=Math.random()*.7+.2;this.a=Math.random()*.45+.08;this.vx=(Math.random()-.5)*.11;this.vy=(Math.random()-.5)*.11}update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W||this.y<0||this.y>H)this.reset()}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.sz,0,Math.PI*2);ctx.fillStyle=`rgba(201,168,76,${this.a})`;ctx.fill()}}
+for(let i=0;i<80;i++)pts.push(new P());
+const orbs=[{x:.12,y:.18,r:360,c:'rgba(201,168,76,.08)',dx:.0003,dy:.00014},{x:.78,y:.62,r:260,c:'rgba(70,40,160,.07)',dx:-.0004,dy:.0003},{x:.5,y:.88,r:180,c:'rgba(201,168,76,.05)',dx:.0002,dy:-.0003}];
+let tt=0;
+(function df(){ctx.clearRect(0,0,W,H);tt+=.5;
+  orbs.forEach(o=>{o.x+=Math.sin(tt*o.dx)*.0008;o.y+=Math.cos(tt*o.dy)*.0008;const g=ctx.createRadialGradient(o.x*W,o.y*H,0,o.x*W,o.y*H,o.r);g.addColorStop(0,o.c);g.addColorStop(1,'transparent');ctx.beginPath();ctx.arc(o.x*W,o.y*H,o.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill()});
+  pts.forEach(p=>{p.update();p.draw()});requestAnimationFrame(df)})();
+
+/* HERO */
+gsap.from('#l1',{y:80,opacity:0,duration:1.2,ease:'power3.out',delay:.25});
+gsap.from('#l2',{y:60,opacity:0,duration:1.1,ease:'power3.out',delay:.45});
+gsap.from('#l3',{y:40,opacity:0,duration:1,ease:'power3.out',delay:.65});
+
+/* REVEALS */
+gsap.utils.toArray('[data-r]').forEach((el,i)=>{gsap.to(el,{scrollTrigger:{trigger:el,start:'top 84%'},y:0,opacity:1,duration:.85,ease:'power2.out',delay:i*.07})});
+
+/* STATS */
+ScrollTrigger.create({trigger:'.bento',start:'top 72%',once:true,onEnter(){
+  let n=0;const el=document.getElementById('cntD');
+  const it=setInterval(()=>{n+=2;el.textContent=n;if(n>=64){el.textContent='64+';clearInterval(it)}},28);
+  document.querySelectorAll('.stf').forEach(b=>gsap.to(b,{width:b.dataset.w+'%',duration:1.4,ease:'power2.out',delay:.2}));
+}});
+
+/* TZ */
+function fmt(tz){return new Date().toLocaleTimeString('en-US',{timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:true})}
+function ut(){document.getElementById('tzNY').textContent=fmt('America/New_York');document.getElementById('tzLN').textContent=fmt('Europe/London');document.getElementById('tzTK').textContent=fmt('Asia/Tokyo')}
+ut();setInterval(ut,30000);
+
+/* FORM */
+const TITLES=['What kind of journey are <em>you imagining?</em>','Where do you <em>want to go?</em>','Tell us your <em>story.</em>'];
+const STEPS=['Step 1 of 3','Step 2 of 3','Step 3 of 3'];
+const PROG=[['c','t','t'],['d','c','t'],['d','d','c']];
+
+function showS(n){
+  [1,2,3].forEach(i=>document.getElementById('s'+i).style.display='none');
+  const el=document.getElementById('s'+n);el.style.display='flex';
+  gsap.from(el,{x:18,opacity:0,duration:.38,ease:'power2.out'});
+  document.getElementById('fstep').textContent=STEPS[n-1];
+  document.getElementById('ftitle').innerHTML=TITLES[n-1];
+  const fps=document.querySelectorAll('.fp');PROG[n-1].forEach((s,i)=>fps[i].className='fp '+s);
+}
+
+function gn(from){
+  if(from===1&&(!document.getElementById('fn').value.trim()||!document.getElementById('em').value.trim())){
+    gsap.fromTo('#s1',{x:-5},{x:0,duration:.45,ease:'elastic.out(1,.4)',repeat:3,yoyo:true});return;
+  }
+  showS(from+1);
+}
+function gb(from){showS(from-1)}
+function sel(el){document.querySelectorAll('.int').forEach(e=>e.classList.remove('on'));el.classList.add('on')}
+function td(el){el.classList.toggle('on')}
+function ub(v){const n=parseInt(v);document.getElementById('bval').textContent=n>=50000?'$50,000+':'$'+n.toLocaleString()}
+function uc(ta){document.getElementById('cc').textContent=ta.value.length+' / 500'}
+
+function sub(){
+  const ref='VYG-'+Math.random().toString(36).substr(2,6).toUpperCase();
+  document.getElementById('refn').textContent=ref;
+  ['s1','s2','s3'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('fh').style.display='none';
+  const sc=document.getElementById('suc');sc.classList.add('show');
+  gsap.from(sc,{y:28,opacity:0,duration:.75,ease:'power3.out'});
+}
+</script>
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

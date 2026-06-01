@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VOYAGE — About</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://unpkg.com/split-type"></script>
+
+<style>
+:root{--bg:#050508;--bg2:#0B0B12;--fg:#EDEEF2;--muted:#9AA0AC;--line:rgba(255,255,255,.08);--accent:#D4AF37;--accent2:#f0d98c}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:"Plus Jakarta Sans",system-ui;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;width:100%;height:100%;object-fit:cover}
+a{color:inherit;text-decoration:none}
+.container{width:min(1280px,92vw);margin-inline:auto}
+.noise{position:fixed;inset:0;pointer-events:none;opacity:.035;z-index:9999;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGZpbHRlcj0idXJsKCNhKSIgdD0iTSIgZD0iTTAgMGgzMDB2MzAwSDB6Ii8+PC9zdmc+');mix-blend-mode:soft-light}
+
+/* CURSOR */
+.cursor{position:fixed;top:0;left:0;z-index:9998;pointer-events:none;mix-blend-mode:difference}
+.cursor-dot{width:4px;height:4px;background:#fff;border-radius:50%;transform:translate(-50%,-50%)}
+.cursor-ring{width:36px;height:36px;border:1px solid rgba(255,255,255,.6);border-radius:50%;transform:translate(-50%,-50%);transition:.2s}
+@media (hover:none){.cursor{display:none}}
+
+/* PRELOADER */
+#preloader{position:fixed;inset:0;background:#000;z-index:99999;display:grid;place-items:center}
+.pre-logo{font-family:"Cormorant Garamond",serif;font-size:clamp(32px,5vw,56px);letter-spacing:.2em}
+.pre-bar{width:240px;height:1px;background:rgba(255,255,255,.15);margin:24px auto;overflow:hidden;position:relative}
+.pre-bar::after{content:"";position:absolute;left:0;top:0;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));animation:load 1.2s ease forwards}
+@keyframes load{to{width:100%}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:20px 0;transition:.3s}
+nav.scrolled{background:rgba(5,5,8,.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav-inner{display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;gap:.6rem;align-items:center;font-weight:600;letter-spacing:.18em}
+.brand .dot{width:8px;height:8px;background:var(--accent);border-radius:50%;box-shadow:0 0 16px var(--accent)}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-size:13px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;position:relative}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--accent);transition:.3s}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.burger{display:none;width:40px;height:40px;border:1px solid var(--line);border-radius:12px;place-items:center;background:rgba(255,255,255,.03)}
+@media(max-width:900px){.nav-links{display:none}.burger{display:grid}}
+.mobile{position:fixed;inset:0;background:rgba(3,3,6,.96);backdrop-filter:blur(20px);z-index:999;display:grid;place-items:center;transform:translateY(-100%);transition:.5s}
+.mobile.open{transform:none}
+.mobile a{font-family:"Cormorant Garamond",serif;font-size:clamp(28px,7vw,52px);margin:.15em 0;display:block}
+
+/* HERO */
+.about-hero{position:relative;height:88vh;min-height:620px;overflow:hidden;display:grid;align-items:end}
+.about-hero img{position:absolute;inset:0;transform:scale(1.12);will-change:transform}
+.about-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.7) 55%,var(--bg) 95%)}
+.hero-inner{position:relative;z-index:2;padding-bottom:12vh}
+.kicker{display:inline-flex;gap:8px;align-items:center;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+.a-title{font-family:"Cormorant Garamond",serif;font-size:clamp(52px,11vw,140px);line-height:.82;margin-top:16px}
+.a-title .line{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.8)}
+.a-sub{max-width:640px;color:#cbd0dc;margin-top:14px;font-size:clamp(15px,1.5vw,18px)}
+
+/* INTRO */
+.intro{padding:90px 0;display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:start}
+.intro-big{font-family:"Cormorant Garamond",serif;font-size:clamp(26px,3vw,38px);line-height:1.3}
+.intro-big::first-letter{font-size:1.8em;line-height:.8;margin-right:6px;color:var(--accent2)}
+.intro-side{border:1px solid var(--line);border-radius:20px;padding:22px;background:rgba(255,255,255,.03)}
+.intro-side p{color:#b7bdc9}
+@media(max-width:900px){.intro{grid-template-columns:1fr}}
+
+/* TIMELINE */
+section{padding:70px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:22px;gap:16px}
+.sec-title{font-family:"Cormorant Garamond",serif;font-size:clamp(28px,4.5vw,56px)}
+.timeline{position:relative}
+.t-rail{display:flex;gap:20px;overflow:auto;scroll-snap-type:x mandatory;padding:8px 2px 24px}
+.t-rail::-webkit-scrollbar{display:none}
+.t-item{min-width:min(82vw,340px);scroll-snap-align:start;border:1px solid var(--line);border-radius:22px;padding:24px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));position:relative}
+.t-year{font-size:12px;letter-spacing:.22em;color:var(--accent);margin-bottom:10px}
+.t-item h4{font-size:20px;margin-bottom:6px}
+.t-item p{color:#b9bfd0;font-size:14px}
+
+/* PRINCIPLES */
+.principles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.principle{border:1px solid var(--line);border-radius:22px;padding:24px;background:#0a0a12;transition:.3s;transform-style:preserve-3d}
+.principle:hover{border-color:rgba(212,175,55,.45);transform:translateY(-4px)}
+.principle .n{color:var(--muted);font-size:12px;margin-bottom:10px}
+.principle h4{font-size:20px;margin-bottom:8px}
+.principle p{color:#b7bdc9;font-size:14px}
+@media(max-width:1000px){.principles{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.principles{grid-template-columns:1fr}}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.stat{border:1px solid var(--line);border-radius:22px;padding:28px;text-align:center;background:radial-gradient(500px 140px at 50% -20%,rgba(212,175,55,.12),transparent),rgba(255,255,255,.02)}
+.stat .num{font-family:"Cormorant Garamond",serif;font-size:clamp(42px,6vw,74px);line-height:1}
+.stat .lab{color:#aab0bd;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-top:6px}
+@media(max-width:900px){.stats{grid-template-columns:1fr 1fr}}
+
+/* TEAM */
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.member{position:relative;border-radius:24px;overflow:hidden;border:1px solid var(--line);aspect-ratio:4/5;background:#0c0c14}
+.member img{transition:transform .7s,filter .4s}
+.member:hover img{transform:scale(1.06);filter:brightness(.75)}
+.member .info{position:absolute;inset:auto 0 0 0;padding:18px;background:linear-gradient(transparent,rgba(0,0,0,.88));transform:translateY(30%);opacity:0;transition:.35s}
+.member:hover .info{transform:none;opacity:1}
+.member h5{font-size:18px}
+.member span{font-size:12px;color:#c5cad6}
+.member .tag{position:absolute;top:12px;left:12px;padding:6px 10px;font-size:11px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.55);backdrop-filter:blur(6px)}
+@media(max-width:1000px){.team-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.team-grid{grid-template-columns:1fr}}
+
+/* MANIFESTO */
+.manifesto{padding:100px 0;border-block:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+.m-text{font-family:"Cormorant Garamond",serif;font-size:clamp(28px,4.6vw,60px);line-height:1.12;max-width:1100px}
+.m-text em{font-style:normal;color:var(--accent)}
+
+/* PRESS */
+.press{padding:30px 0;overflow:hidden;border-bottom:1px solid var(--line)}
+.press-track{display:flex;gap:70px;align-items:center;white-space:nowrap;animation:mar 28s linear infinite}
+.press-track span{font-size:14px;letter-spacing:.28em;text-transform:uppercase;color:#8e94a3}
+@keyframes mar{to{transform:translateX(-50%)}}
+
+/* CTA */
+.cta{padding:80px 0}
+.cta-box{border:1px solid var(--line);border-radius:28px;padding:44px;background:radial-gradient(600px 200px at 85% 0%,rgba(212,175,55,.14),transparent),#0a0a12;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.cta-box h3{font-family:"Cormorant Garamond",serif;font-size:clamp(28px,4vw,46px)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.05);backdrop-filter:blur(8px);cursor:pointer;transition:.2s}
+.btn-primary{background:var(--accent);color:#000;border-color:transparent;font-weight:700}
+.btn:hover{transform:translateY(-2px)}
+
+/* FOOTER */
+footer{padding:50px 0 30px;background:#06060a;color:#9aa0ac;border-top:1px solid var(--line)}
+.foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+/* REVEALS */
+[data-reveal]{opacity:0;transform:translateY(24px)}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="cursor" id="cursor"><div class="cursor-dot"></div><div class="cursor-ring" id="cursorRing"></div></div>
+<div id="preloader"><div style="text-align:center"><div class="pre-logo">VOYAGE</div><div class="pre-bar"></div></div></div>
+
+<nav id="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="brand"><span class="dot"></span> VOYAGE</a>
+    <div class="nav-links">
+   <a href="destinations.html">Destinations</a>
+      <a href="about.html" class="active">About</a>
+       <a href="service.html">Service</a>
+      <a href="story.html">Story</a>
+       <a href="journal.html">Journal</a>
+       <a href="blog.html">Blog</a>
+       <a href="contact.html">Contact</a>
+      <a href="#book" class="nav-cta">Book a Trip</a>
+    </div>
+    <button class="burger" id="burger">☰</button>
+  </div>
+</nav>
+<div class="mobile" id="mobile"><div>    
+  <a href="index.html">Home</a>
+    <a href="destinations.html">Destinations</a>
+    <a href="about.html">About</a>
+    <a href="service.html">Service</a>
+    <a href="story.html">Story</a>
+    <a href="journal.html">Journal</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html">Contact</a>
+   </div></div>
+
+<main id="smooth-wrapper"><div id="smooth-content">
+
+<header class="about-hero">
+  <img id="heroImg" src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?q=80&w=2070&auto=format&fit=crop" alt="">
+  <div class="container hero-inner">
+    <span class="kicker">• Since 2014</span>
+    <h1 class="a-title" id="aTitle"><span class="line">WE DON'T SELL</span><br>TRIPS</h1>
+    <p class="a-sub">We design private worlds. A studio of strategists, fixers, and local insiders building journeys with zero friction and maximum soul.</p>
+  </div>
+</header>
+
+<section class="intro container">
+  <div data-reveal>
+    <p class="intro-big">Voyage began with a simple frustration: luxury travel felt templated. We wanted journeys that move at your pace, open doors that stay closed, and leave room for serendipity. Twelve years later, that's still the brief.</p>
+  </div>
+  <aside class="intro-side" data-reveal>
+    <h4 style="margin-bottom:8px">Founder’s note</h4>
+    <p>“Travel is the only investment that makes you richer in stories. Our job is to remove logistics, add meaning, and protect your time.” — <em style="color:#fff">A. Rivera, Founder</em></p>
+    <div style="margin-top:14px;display:flex;gap:10px">
+      <a class="btn" data-magnetic href="destinations.html">See our work</a>
+      <a class="btn btn-primary" data-magnetic href="index.html#book">Start a trip</a>
+    </div>
+  </aside>
+</section>
+
+<section class="container timeline">
+  <div class="sec-head">
+    <h2 class="sec-title" data-reveal>How we got here</h2>
+    <span style="color:var(--muted)">Drag to explore →</span>
+  </div>
+  <div class="t-rail" id="trail">
+    <article class="t-item"><div class="t-year">2014</div><h4>The garage year</h4><p>First three clients, hand-drawn itineraries, 24/7 WhatsApp concierge.</p></article>
+    <article class="t-item"><div class="t-year">2016</div><h4>Local insiders</h4><p>Built our fixer network across Japan, Iceland, Patagonia.</p></article>
+    <article class="t-item"><div class="t-year">2018</div><h4>Private collection</h4><p>We added villas, riads, and chalets you won't find online.</p></article>
+    <article class="t-item"><div class="t-year">2020</div><h4>Borderless service</h4><p>Global re-routes, credits, and zero-stress changes.</p></article>
+    <article class="t-item"><div class="t-year">2023</div><h4>Design studio</h4><p>Every trip storyboarded: pace, light, food, and flow.</p></article>
+    <article class="t-item"><div class="t-year">2025</div><h4>Now</h4><p>12 regions, 47 partners, one promise: travel, perfected.</p></article>
+  </div>
+</section>
+
+<section class="container">
+  <div class="sec-head"><h2 class="sec-title" data-reveal>Principles we never break</h2></div>
+  <div class="principles">
+    <div class="principle" data-reveal data-tilt><div class="n">01</div><h4>Human-first</h4><p>Tech speeds us up, humans make it magic. A real person answers in minutes.</p></div>
+    <div class="principle" data-reveal data-tilt><div class="n">02</div><h4>Less, better</h4><p>Fewer stops, deeper stays. We design for memory density, not checklist.</p></div>
+    <div class="principle" data-reveal data-tilt><div class="n">03</div><h4>Local truth</h4><p>We work with locals, pay fairly, and open doors respectfully.</p></div>
+    <div class="principle" data-reveal data-tilt><div class="n">04</div><h4>Zero friction</h4><p>Flights, transfers, tables, guides — one thread, zero tabs.</p></div>
+  </div>
+</section>
+
+<section class="container">
+  <div class="stats">
+    <div class="stat" data-reveal><div class="num" data-target="12">0</div><div class="lab">Years Crafting</div></div>
+    <div class="stat" data-reveal><div class="num" data-target="47">0</div><div class="lab">Local Partners</div></div>
+    <div class="stat" data-reveal><div class="num" data-target="6">0</div><div class="lab">Continents</div></div>
+    <div class="stat" data-reveal><div class="num" data-target="98">0</div><div class="lab">% Repeat Rate</div></div>
+  </div>
+</section>
+
+<section class="container">
+  <div class="sec-head"><h2 class="sec-title" data-reveal>The humans behind it</h2></div>
+  <div class="team-grid">
+    <div class="member" data-reveal><span class="tag">Founder</span><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop"><div class="info"><h5>Ava Rivera</h5><span>Strategy & Story</span></div></div>
+    <div class="member" data-reveal><span class="tag">Head of Design</span><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800&auto=format&fit=crop"><div class="info"><h5>Mina Park</h5><span>Itinerary Architecture</span></div></div>
+    <div class="member" data-reveal><span class="tag">Lead Guide</span><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop"><div class="info"><h5>Jonas Hall</h5><span>Polar & Alps</span></div></div>
+    <div class="member" data-reveal><span class="tag">Operations</span><img src="https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=800&auto=format&fit=crop"><div class="info"><h5>Sofia Demir</h5><span>24/7 Concierge</span></div></div>
+  </div>
+</section>
+
+<section class="manifesto">
+  <div class="container">
+    <p class="m-text" data-reveal>We believe the best journeys are <em>unhurried</em>, deeply local, and a little unpredictable. If it can be googled, we won't sell it. If it takes a key, a cousin, or a captain — that's our work.</p>
+  </div>
+</section>
+
+<div class="press">
+  <div class="press-track">
+    <span>FEATURED IN — CONDÉ NAST • TRAVEL + LEISURE • MONOCLE • AFAR •</span>
+    <span>FEATURED IN — CONDÉ NAST • TRAVEL + LEISURE • MONOCLE • AFAR •</span>
+  </div>
+</div>
+
+<section class="cta">
+  <div class="container">
+    <div class="cta-box" data-reveal>
+      <h3>Ready to design yours?</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn btn-primary" data-magnetic href="index.html#book">Start a trip</a>
+        <a class="btn" data-magnetic href="destinations.html">Browse destinations</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container foot">
+    <div><strong style="color:#fff;letter-spacing:.18em">VOYAGE</strong><br>© 2025</div>
+    <div style="display:flex;gap:18px"><a href="#">Privacy</a><a href="#">Terms</a><a href="mailto:hello@voyage.studio">hello@voyage.studio</a></div>
+  </div>
+</footer>
+
+</div></main>
+
+<script>
+// PRELOAD
+setTimeout(()=>gsap.to('#preloader',{autoAlpha:0,duration:.6,onComplete:()=>preloader.remove()}),1100);
+
+// LENIS
+const lenis=new Lenis({lerp:.08});function raf(t){lenis.raf(t);requestAnimationFrame(raf)}requestAnimationFrame(raf);
+const nav=document.getElementById('nav');lenis.on('scroll',()=>window.scrollY>20?nav.classList.add('scrolled'):nav.classList.remove('scrolled'));
+
+// MOBILE
+const burger=document.getElementById('burger'),mobile=document.getElementById('mobile');
+burger.onclick=()=>mobile.classList.toggle('open');mobile.onclick=e=>e.target.tagName==='A'&&mobile.classList.remove('open');
+
+// CURSOR
+const cursor=document.getElementById('cursor');let cx=0,cy=0,tx=0,ty=0;addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY});(function loop(){cx+=(tx-cx)*.15;cy+=(ty-cy)*.15;cursor.style.transform=`translate(${cx}px,${cy}px)`;requestAnimationFrame(loop)})();
+
+// HERO PARALLAX + TITLE
+gsap.registerPlugin(ScrollTrigger);
+gsap.to('#heroImg',{yPercent:15,ease:'none',scrollTrigger:{trigger:'.about-hero',start:'top top',end:'bottom top',scrub:true}});
+new SplitType('#aTitle',{types:'words'});gsap.from('#aTitle .word',{y:70,opacity:0,stagger:.04,duration:1,ease:'power3.out',delay:.2});
+
+// REVEALS
+gsap.utils.toArray('[data-reveal]').forEach(el=>gsap.to(el,{scrollTrigger:{trigger:el,start:'top 82%'},y:0,opacity:1,duration:.9,ease:'power2.out'}));
+
+// MAGNETIC
+document.querySelectorAll('[data-magnetic]').forEach(b=>{b.addEventListener('mousemove',e=>{const r=b.getBoundingClientRect();gsap.to(b,{x:(e.clientX-r.left-r.width/2)*.2,y:(e.clientY-r.top-r.height/2)*.2,duration:.3})});b.addEventListener('mouseleave',()=>gsap.to(b,{x:0,y:0,duration:.4,ease:'elastic.out(1,.4)'}))});
+
+// TILT
+document.querySelectorAll('[data-tilt]').forEach(c=>{c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(900px) rotateY(${x*5}deg) rotateX(${-y*5}deg)`});c.addEventListener('mouseleave',()=>c.style.transform='')});
+
+// TIMELINE DRAG
+const trail=document.getElementById('trail');let down=false,sx=0,sl=0;
+trail.addEventListener('pointerdown',e=>{down=true;sx=e.clientX;sl=trail.scrollLeft;trail.setPointerCapture(e.pointerId)});
+trail.addEventListener('pointermove',e=>{if(!down)return;trail.scrollLeft=sl-(e.clientX-sx)*1.2});
+['pointerup','pointerleave'].forEach(ev=>trail.addEventListener(ev,()=>down=false));
+
+// COUNTERS
+gsap.utils.toArray('.num').forEach(el=>{
+  const target=+el.dataset.target;
+  ScrollTrigger.create({trigger:el,start:'top 85%',once:true,onEnter:()=>{
+    gsap.to({v:0},{v:target,duration:1.8,ease:'power1.out',onUpdate:function(){el.textContent=Math.floor(this.targets()[0].v).toLocaleString()+(el.parentElement.textContent.includes('%')?'%':'')}})
+  }})
+});
+</script>
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

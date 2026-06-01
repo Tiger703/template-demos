@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VOYAGE — Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://unpkg.com/split-type"></script>
+
+<style>
+:root{--bg:#050508;--bg2:#0B0B12;--fg:#EDEEF2;--muted:#9AA0AC;--line:rgba(255,255,255,.08);--accent:#D4AF37;--accent2:#f0d98c}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:"Plus Jakarta Sans",system-ui;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;width:100%;height:100%;object-fit:cover}
+a{color:inherit;text-decoration:none}
+.container{width:min(1280px,92vw);margin-inline:auto}
+.noise{position:fixed;inset:0;pointer-events:none;opacity:.035;z-index:9999;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGZpbHRlcj0idXJsKCNhKSIgdD0iTSIgZD0iTTAgMGgzMDB2MzAwSDB6Ii8+PC9zdmc+');mix-blend-mode:soft-light}
+
+/* CURSOR */
+.cursor{position:fixed;top:0;left:0;z-index:9998;pointer-events:none;mix-blend-mode:difference}
+.cursor-dot{width:4px;height:4px;background:#fff;border-radius:50%;transform:translate(-50%,-50%)}
+.cursor-ring{width:36px;height:36px;border:1px solid rgba(255,255,255,.6);border-radius:50%;transform:translate(-50%,-50%);transition:.2s}
+@media (hover:none){.cursor{display:none}}
+
+/* PRELOADER */
+#preloader{position:fixed;inset:0;background:#000;z-index:99999;display:grid;place-items:center}
+.pre-logo{font-family:"Cormorant Garamond",serif;font-size:clamp(32px,5vw,56px);letter-spacing:.2em}
+.pre-bar{width:240px;height:1px;background:rgba(255,255,255,.15);margin:24px auto;overflow:hidden;position:relative}
+.pre-bar::after{content:"";position:absolute;left:0;top:0;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));animation:load 1.2s ease forwards}
+@keyframes load{to{width:100%}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:20px 0;transition:.3s}
+nav.scrolled{background:rgba(5,5,8,.72);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav-inner{display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;gap:.6rem;align-items:center;font-weight:600;letter-spacing:.18em}
+.brand .dot{width:8px;height:8px;background:var(--accent);border-radius:50%;box-shadow:0 0 16px var(--accent)}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-size:13px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;position:relative}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--accent);transition:.3s}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-cta{padding:10px 18px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.04)}
+.burger{display:none;width:40px;height:40px;border:1px solid var(--line);border-radius:12px;place-items:center;background:rgba(255,255,255,.03)}
+@media(max-width:900px){.nav-links{display:none}.burger{display:grid}}
+.mobile{position:fixed;inset:0;background:rgba(3,3,6,.96);backdrop-filter:blur(20px);z-index:999;display:grid;place-items:center;transform:translateY(-100%);transition:.5s}
+.mobile.open{transform:none}
+.mobile a{font-family:"Cormorant Garamond",serif;font-size:clamp(28px,7vw,52px);margin:.15em 0;display:block}
+
+/* HERO */
+.svc-hero{position:relative;height:84vh;min-height:600px;overflow:hidden;display:grid;align-items:end}
+.svc-hero img{position:absolute;inset:0;transform:scale(1.12);will-change:transform}
+.svc-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.3),rgba(0,0,0,.7) 60%,var(--bg) 95%)}
+.hero-inner{position:relative;z-index:2;padding-bottom:11vh}
+.kicker{display:inline-flex;gap:8px;align-items:center;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.42);backdrop-filter:blur(8px);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+.svc-title{font-family:"Cormorant Garamond",serif;font-size:clamp(52px,11vw,130px);line-height:.84;margin-top:14px}
+.svc-title .line{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.8)}
+.svc-sub{max-width:640px;color:#cbd0dc;margin-top:12px}
+
+/* PILLARS */
+.pillars{padding:70px 0}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pillar{border:1px solid var(--line);border-radius:24px;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));position:relative;overflow:hidden;transform-style:preserve-3d}
+.pillar::after{content:"";position:absolute;inset:-1px;background:radial-gradient(400px 120px at 80% -20%,rgba(212,175,55,.18),transparent);pointer-events:none}
+.pillar h3{font-size:24px;margin:10px 0 8px}
+.pillar p{color:#b8bfd0}
+.pillar .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.06);border:1px solid var(--line)}
+@media(max-width:900px){.three{grid-template-columns:1fr}}
+
+/* SERVICES GRID */
+section{padding:66px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:20px}
+.sec-title{font-family:"Cormorant Garamond",serif;font-size:clamp(28px,4.5vw,56px)}
+.s-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.s-card{display:grid;grid-template-columns:120px 1fr;gap:16px;border:1px solid var(--line);border-radius:22px;padding:14px;background:#0a0a12;align-items:center;transition:.3s}
+.s-card:hover{transform:translateY(-3px);border-color:rgba(212,175,55,.4)}
+.s-thumb{width:120px;height:90px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.s-card h4{font-size:18px;margin-bottom:4px}
+.s-card p{color:#aeb4c1;font-size:13px}
+.s-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.chip{font-size:11px;padding:4px 8px;border:1px solid var(--line);border-radius:999px;color:#c6cbd7;background:rgba(255,255,255,.03)}
+@media(max-width:1000px){.s-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.s-grid{grid-template-columns:1fr}.s-card{grid-template-columns:1fr}.s-thumb{width:100%;height:160px}}
+
+/* PROCESS */
+.process-rail{display:flex;gap:16px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:8px}
+.process-rail::-webkit-scrollbar{display:none}
+.step{min-width:min(84vw,360px);scroll-snap-align:start;border:1px solid var(--line);border-radius:22px;padding:22px;background:linear-gradient(180deg,#0b0b13,#08080e);position:relative}
+.step .n{position:absolute;top:14px;right:14px;color:var(--muted);font-size:12px}
+.step h4{font-size:20px;margin-bottom:6px}
+.step p{color:#b7bdc9;font-size:14px}
+.step .bar{height:2px;background:rgba(255,255,255,.08);margin-top:14px;overflow:hidden;border-radius:2px}
+.step .bar i{display:block;height:100%;width:40%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+
+/* COMPARE */
+.compare{border:1px solid var(--line);border-radius:24px;overflow:hidden;background:#080810}
+.compare-head{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:0;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)}
+.compare-head div{padding:16px;font-weight:600}
+.compare-row{display:grid;grid-template-columns:1.2fr 1fr 1fr;border-bottom:1px solid var(--line)}
+.compare-row div{padding:14px;color:#c2c7d3;font-size:14px}
+.badge-yes{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.35);color:#f0d98c;font-size:12px}
+.badge-no{opacity:.5}
+@media(max-width:800px){.compare-head,.compare-row{grid-template-columns:1fr 1fr 1fr}}
+
+/* ESTIMATOR */
+.est{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:stretch}
+.est-card{border:1px solid var(--line);border-radius:24px;padding:22px;background:radial-gradient(500px 140px at 90% -20%,rgba(212,175,55,.12),transparent),#0a0a12}
+.field{display:grid;gap:6px;margin-bottom:12px}
+.field label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.field select,.field input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);color:#fff;padding:12px 12px;border-radius:12px;outline:0}
+.est-out{display:grid;place-items:center;text-align:center;border:1px dashed rgba(255,255,255,.18);border-radius:20px;padding:24px;background:rgba(255,255,255,.02)}
+.price-big{font-family:"Cormorant Garamond",serif;font-size:clamp(42px,7vw,80px);line-height:1}
+.price-sub{color:#aeb4c1;margin-top:6px}
+@media(max-width:900px){.est{grid-template-columns:1fr}}
+
+/* FAQ */
+.faq{max-width:900px;margin-inline:auto}
+.f-item{border:1px solid var(--line);border-radius:16px;margin-bottom:10px;overflow:hidden;background:#0a0a12}
+.f-q{width:100%;text-align:left;padding:16px;background:none;border:0;color:#fff;font-weight:600;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.f-a{max-height:0;overflow:hidden;transition:max-height .4s ease;border-top:1px solid var(--line)}
+.f-a.open{max-height:240px}
+.f-a p{padding:14px;color:#b9bfd0}
+
+/* CTA */
+.cta{padding:80px 0}
+.cta-box{border:1px solid var(--line);border-radius:28px;padding:44px;background:radial-gradient(600px 200px at 85% 0%,rgba(212,175,55,.14),transparent),#0a0a12;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.cta-box h3{font-family:"Cormorant Garamond",serif;font-size:clamp(28px,4vw,46px)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.05);backdrop-filter:blur(8px);cursor:pointer;transition:.2s}
+.btn-primary{background:var(--accent);color:#000;border-color:transparent;font-weight:700}
+.btn:hover{transform:translateY(-2px)}
+
+/* FOOTER */
+footer{padding:50px 0 30px;background:#06060a;color:#9aa0ac;border-top:1px solid var(--line)}
+.foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+/* REVEALS */
+[data-reveal]{opacity:0;transform:translateY(22px)}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="cursor" id="cursor"><div class="cursor-dot"></div><div class="cursor-ring"></div></div>
+<div id="preloader"><div style="text-align:center"><div class="pre-logo">VOYAGE</div><div class="pre-bar"></div></div></div>
+
+<nav id="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="brand"><span class="dot"></span> VOYAGE</a>
+    <div class="nav-links">
+    <a href="destinations.html">Destinations</a>
+      <a href="about.html">About</a>
+       <a href="service.html" class="active">Service</a>
+      <a href="story.html">Story</a>
+       <a href="journal.html" class="act">Journal</a>
+       <a href="blog.html">Blog</a>
+       <a href="contact.html">Contact</a>
+      <a href="#book" class="nav-cta">Book a Trip</a>
+    </div>
+    <button class="burger" id="burger">☰</button>
+  </div>
+</nav>
+<div class="mobile" id="mobile"><div>    <a href="index.html">Home</a>
+    <a href="destinations.html">Destinations</a>
+    <a href="about.html">About</a>
+    <a href="service.html">Service</a>
+    <a href="story.html">Story</a>
+    <a href="journal.html">Journal</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html">Contact</a>
+    </div></div>
+
+<main id="smooth-wrapper"><div id="smooth-content">
+
+<header class="svc-hero">
+  <img id="heroImg" src="https://images.unsplash.com/photo-1526779259212-939e64788e3c?q=80&w=2070&auto=format&fit=crop" alt="">
+  <div class="container hero-inner">
+    <span class="kicker">• White-glove travel studio</span>
+    <h1 class="svc-title" id="svcTitle"><span class="line">END-TO-END</span><br>LUXURY</h1>
+    <p class="svc-sub">Strategy, bookings, access, and 24/7 care. We design the journey, handle every detail, and stay with you until you're home.</p>
+  </div>
+</header>
+
+<section class="pillars">
+  <div class="container three">
+    <article class="pillar" data-reveal data-tilt><div class="ico">✦</div><h3>Design</h3><p>Bespoke itineraries built around your pace, taste, and calendar. No templates, no crowds.</p></article>
+    <article class="pillar" data-reveal data-tilt><div class="ico">◆</div><h3>Book</h3><p>Flights, stays, transfers, tables, guides — one thread, zero tabs. We hold the confirmations.</p></article>
+    <article class="pillar" data-reveal data-tilt><div class="ico">◉</div><h3>Care</h3><p>Real human on WhatsApp, 24/7. Re-routes, upgrades, and last-minute magic.</p></article>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="sec-head"><h2 class="sec-title" data-reveal>What we do best</h2></div>
+    <div class="s-grid">
+      <article class="s-card" data-reveal><div class="s-thumb"><img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=800"></div><div><h4>Bespoke Itineraries</h4><p>Story-first planning with local insiders in 12 regions.</p><div class="s-meta"><span class="chip">Private</span><span class="chip">Slow Travel</span></div></div></article>
+      <article class="s-card" data-reveal><div class="s-thumb"><img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800"></div><div><h4>Private Stays</h4><p>Villas, riads, chalets — places you won't find online.</p><div class="s-meta"><span class="chip">Vetted</span><span class="chip">Exclusive</span></div></div></article>
+      <article class="s-card" data-reveal><div class="s-thumb"><img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=800"></div><div><h4>Insider Access</h4><p>Chefs, artists, captains. Doors open because we know people.</p><div class="s-meta"><span class="chip">Backstage</span></div></div></article>
+      <article class="s-card" data-reveal><div class="s-thumb"><img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=800"></div><div><h4>Seamless Logistics</h4><p>Flights, fast-tracks, transfers, luggage — choreographed.</p><div class="s-meta"><span class="chip">Zero Friction</span></div></div></article>
+      <article class="s-card" data-reveal><div class="s-thumb"><img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=800"></div><div><h4>On-Trip Concierge</h4><p>Live changes, restaurant pivots, weather plans — handled.</p><div class="s-meta"><span class="chip">24/7</span></div></div></article>
+      <article class="s-card" data-reveal><div class="s-thumb"><img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=800"></div><div><h4>Travel Protection</h4><p>Insurance, medical, and backup plans. Travel with confidence.</p><div class="s-meta"><span class="chip">Peace of Mind</span></div></div></article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="sec-head"><h2 class="sec-title" data-reveal>How it works</h2><span style="color:var(--muted)">Drag →</span></div>
+    <div class="process-rail" id="proc">
+      <div class="step"><span class="n">01</span><h4>Brief</h4><p>15-min call. Goals, dates, budget, style. We listen first.</p><div class="bar"><i></i></div></div>
+      <div class="step"><span class="n">02</span><h4>Design</h4><p>We propose 2–3 routes with stays, pacing, and signature moments.</p><div class="bar"><i style="width:60%"></i></div></div>
+      <div class="step"><span class="n">03</span><h4>Confirm</h4><p>You choose. We lock everything, share a single trip hub.</p><div class="bar"><i style="width:80%"></i></div></div>
+      <div class="step"><span class="n">04</span><h4>Travel</h4><p>We’re on WhatsApp the whole way. Changes? We handle it.</p><div class="bar"><i style="width:100%"></i></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="sec-head"><h2 class="sec-title" data-reveal>Why Voyage</h2></div>
+    <div class="compare" data-reveal>
+      <div class="compare-head"><div>Feature</div><div>Voyage</div><div>Typical Agency</div></div>
+      <div class="compare-row"><div>Bespoke, no templates</div><div><span class="badge-yes">✓ Included</span></div><div class="badge-no">Limited</div></div>
+      <div class="compare-row"><div>Private stays network</div><div><span class="badge-yes">✓ 47 partners</span></div><div class="badge-no">Public inventory</div></div>
+      <div class="compare-row"><div>24/7 human concierge</div><div><span class="badge-yes">✓ WhatsApp</span></div><div class="badge-no">Business hours</div></div>
+      <div class="compare-row"><div>Single trip hub</div><div><span class="badge-yes">✓ App + PDF</span></div><div class="badge-no">Email thread</div></div>
+      <div class="compare-row"><div>Insider access</div><div><span class="badge-yes">✓ Yes</span></div><div class="badge-no">Rare</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container est">
+    <div class="est-card" data-reveal>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:32px;margin-bottom:10px">Instant estimate</h3>
+      <p style="color:#b8bfd0;margin-bottom:16px">Ballpark per person, excluding international flights. Final quote after brief.</p>
+      <div class="field"><label>Region</label><select id="e-region"><option>Islands</option><option>Europe</option><option>Asia</option><option>Mountains</option><option>Africa</option><option>Americas</option></select></div>
+      <div class="field"><label>Days</label><input id="e-days" type="range" min="4" max="12" value="7"><div style="display:flex;justify-content:space-between;color:#9aa0ac;font-size:12px"><span>4</span><span id="e-days-v">7</span><span>12</span></div></div>
+      <div class="field"><label>Tier</label><select id="e-tier"><option value="1">Essential</option><option value="1.3" selected>Signature</option><option value="1.8">Private</option></select></div>
+      <button class="btn btn-primary" id="e-btn" data-magnetic>Get estimate</button>
+    </div>
+    <div class="est-out" data-reveal>
+      <div>
+        <div class="price-big" id="e-price">$2,400</div>
+        <div class="price-sub" id="e-sub">Signature • 7 days • Islands</div>
+        <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <span class="chip">Hotels</span><span class="chip">Transfers</span><span class="chip">Experiences</span><span class="chip">Concierge</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container faq">
+    <div class="sec-head"><h2 class="sec-title" data-reveal>FAQs</h2></div>
+    <div class="f-item" data-reveal><button class="f-q">Do you charge planning fees? <span>+</span></button><div class="f-a"><p>Yes, a fully-credited design fee ($250–$500) that goes toward your trip. It lets us hold top properties while we design.</p></div></div>
+    <div class="f-item" data-reveal><button class="f-q">Can you work with points/miles? <span>+</span></button><div class="f-a"><p>Absolutely. We’ll optimize cabins and advise on best redemptions, then build the ground experience around it.</p></div></div>
+    <div class="f-item" data-reveal><button class="f-q">What if plans change mid-trip? <span>+</span></button><div class="f-a"><p>We re-route in real time. That’s why clients stay with us — 24/7 human support, no bots.</p></div></div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="container">
+    <div class="cta-box" data-reveal>
+      <h3>Let’s design something unforgettable</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn btn-primary" data-magnetic href="index.html#book">Start with a brief</a>
+        <a class="btn" data-magnetic href="destinations.html">Explore destinations</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container foot">
+    <div><strong style="color:#fff;letter-spacing:.18em">VOYAGE</strong><br>© 2025</div>
+    <div style="display:flex;gap:18px"><a href="#">Privacy</a><a href="#">Terms</a><a href="mailto:hello@voyage.studio">hello@voyage.studio</a></div>
+  </div>
+</footer>
+
+</div></main>
+
+<script>
+// PRELOADER
+setTimeout(()=>gsap.to('#preloader',{autoAlpha:0,duration:.6,onComplete:()=>preloader.remove()}),1100);
+
+// LENIS
+const lenis=new Lenis({lerp:.08});function raf(t){lenis.raf(t);requestAnimationFrame(raf)}requestAnimationFrame(raf);
+const nav=document.getElementById('nav');lenis.on('scroll',()=>window.scrollY>20?nav.classList.add('scrolled'):nav.classList.remove('scrolled'));
+
+// MOBILE
+const burger=document.getElementById('burger'),mobile=document.getElementById('mobile');
+burger.onclick=()=>mobile.classList.toggle('open');mobile.onclick=e=>e.target.tagName==='A'&&mobile.classList.remove('open');
+
+// CURSOR
+const cursor=document.getElementById('cursor');let cx=0,cy=0,tx=0,ty=0;addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY});(function loop(){cx+=(tx-cx)*.15;cy+=(ty-cy)*.15;cursor.style.transform=`translate(${cx}px,${cy}px)`;requestAnimationFrame(loop)})();
+
+// HERO
+gsap.registerPlugin(ScrollTrigger);
+gsap.to('#heroImg',{yPercent:18,ease:'none',scrollTrigger:{trigger:'.svc-hero',start:'top top',end:'bottom top',scrub:true}});
+new SplitType('#svcTitle',{types:'words'});gsap.from('#svcTitle .word',{y:70,opacity:0,stagger:.05,duration:1,ease:'power3.out',delay:.2});
+
+// REVEALS
+gsap.utils.toArray('[data-reveal]').forEach(el=>gsap.to(el,{scrollTrigger:{trigger:el,start:'top 84%'},y:0,opacity:1,duration:.9}));
+
+// MAGNETIC
+document.querySelectorAll('[data-magnetic]').forEach(b=>{b.addEventListener('mousemove',e=>{const r=b.getBoundingClientRect();gsap.to(b,{x:(e.clientX-r.left-r.width/2)*.18,y:(e.clientY-r.top-r.height/2)*.18,duration:.3})});b.addEventListener('mouseleave',()=>gsap.to(b,{x:0,y:0,duration:.4,ease:'elastic.out(1,.4)'}))});
+
+// TILT
+document.querySelectorAll('[data-tilt]').forEach(c=>{c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(900px) rotateY(${x*5}deg) rotateX(${-y*5}deg)`});c.addEventListener('mouseleave',()=>c.style.transform='')});
+
+// PROCESS DRAG
+const proc=document.getElementById('proc');let down=false,sx=0,sl=0;
+proc.addEventListener('pointerdown',e=>{down=true;sx=e.clientX;sl=proc.scrollLeft;proc.setPointerCapture(e.pointerId)});
+proc.addEventListener('pointermove',e=>{if(!down)return;proc.scrollLeft=sl-(e.clientX-sx)*1.2});
+['pointerup','pointerleave'].forEach(ev=>proc.addEventListener(ev,()=>down=false));
+
+// ESTIMATOR
+const base={Islands:2400,Europe:2100,Asia:2000,Mountains:2300,Africa:3200,Americas:2600};
+const eRegion=document.getElementById('e-region'), eDays=document.getElementById('e-days'), eDaysV=document.getElementById('e-days-v'), eTier=document.getElementById('e-tier'), ePrice=document.getElementById('e-price'), eSub=document.getElementById('e-sub');
+function calc(){const r=eRegion.value;const d=+eDays.value;const t=+eTier.value;eDaysV.textContent=d;const val=Math.round(base[r]*(d/7)*t/50)*50;ePrice.textContent='$'+val.toLocaleString();eSub.textContent=`${eTier.options[eTier.selectedIndex].text} • ${d} days • ${r}`;gsap.fromTo(ePrice,{y:8,opacity:.6},{y:0,opacity:1,duration:.3})}
+['change','input'].forEach(ev=>{eRegion.addEventListener(ev,calc);eDays.addEventListener(ev,calc);eTier.addEventListener(ev,calc)});
+document.getElementById('e-btn').onclick=calc; calc();
+
+// FAQ
+document.querySelectorAll('.f-q').forEach(btn=>btn.onclick=()=>{const a=btn.nextElementSibling;const open=a.classList.contains('open');document.querySelectorAll('.f-a').forEach(x=>x.classList.remove('open'));document.querySelectorAll('.f-q span').forEach(s=>s.textContent='+');if(!open){a.classList.add('open');btn.querySelector('span').textContent='−'}});
+</script>
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

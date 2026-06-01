@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VOYAGE — Destinations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://unpkg.com/split-type"></script>
+
+<style>
+:root{--bg:#050508;--bg2:#0B0B12;--fg:#EDEEF2;--muted:#9AA0AC;--line:rgba(255,255,255,.08);--accent:#D4AF37;--accent2:#f0d98c;--glass:rgba(255,255,255,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:"Plus Jakarta Sans",system-ui;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;width:100%;height:100%;object-fit:cover}
+a{color:inherit;text-decoration:none}
+.container{width:min(1280px,92vw);margin-inline:auto}
+.noise{position:fixed;inset:0;pointer-events:none;opacity:.035;z-index:9999;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGZpbHRlcj0idXJsKCNhKSIgdD0iTSIgZD0iTTAgMGgzMDB2MzAwSDB6Ii8+PC9zdmc+');mix-blend-mode:soft-light}
+
+/* CURSOR */
+.cursor{position:fixed;top:0;left:0;z-index:9998;pointer-events:none;mix-blend-mode:difference}
+.cursor-dot{width:4px;height:4px;background:#fff;border-radius:50%;transform:translate(-50%,-50%)}
+.cursor-ring{width:36px;height:36px;border:1px solid rgba(255,255,255,.6);border-radius:50%;transform:translate(-50%,-50%);transition:.2s}
+@media (hover:none){.cursor{display:none}}
+
+/* PRELOADER */
+#preloader{position:fixed;inset:0;background:#000;z-index:99999;display:grid;place-items:center}
+.pre-logo{font-family:"Cormorant Garamond",serif;font-size:clamp(32px,5vw,56px);letter-spacing:.2em}
+.pre-bar{width:240px;height:1px;background:rgba(255,255,255,.15);margin:24px auto;overflow:hidden;position:relative}
+.pre-bar::after{content:"";position:absolute;left:0;top:0;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));animation:load 1.4s ease forwards}
+@keyframes load{to{width:100%}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:20px 0;transition:.3s}
+nav.scrolled{background:rgba(5,5,8,.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav-inner{display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;gap:.6rem;align-items:center;font-weight:600;letter-spacing:.18em}
+.brand .dot{width:8px;height:8px;background:var(--accent);border-radius:50%;box-shadow:0 0 16px var(--accent)}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-size:13px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;position:relative}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--accent);transition:.3s}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-cta{padding:10px 18px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.04)}
+.burger{display:none;width:40px;height:40px;border:1px solid var(--line);border-radius:12px;place-items:center;background:rgba(255,255,255,.03)}
+@media(max-width:900px){.nav-links{display:none}.burger{display:grid}}
+.mobile{position:fixed;inset:0;background:rgba(3,3,6,.96);backdrop-filter:blur(20px);z-index:999;display:grid;place-items:center;transform:translateY(-100%);transition:.5s}
+.mobile.open{transform:none}
+.mobile a{font-family:"Cormorant Garamond",serif;font-size:clamp(28px,7vw,52px);margin:.15em 0;display:block}
+
+/* PAGE HERO */
+.page-hero{position:relative;height:72vh;min-height:520px;overflow:hidden;display:grid;align-items:end}
+.page-hero img{position:absolute;inset:0;transform:scale(1.1)}
+.page-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.2),rgba(0,0,0,.7) 60%,var(--bg) 95%)}
+.hero-inner{position:relative;z-index:2;padding-bottom:10vh}
+.kicker{display:inline-flex;gap:8px;align-items:center;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+.h-title{font-family:"Cormorant Garamond",serif;font-size:clamp(48px,10vw,120px);line-height:.85;margin-top:16px}
+.h-title .thin{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.75)}
+.h-sub{max-width:620px;color:#c8ccd6;margin-top:14px}
+
+/* FILTERS */
+.filters{z-index:50;background:rgba(5,5,8,.6);backdrop-filter:blur(14px);border-block:1px solid var(--line)}
+.filters-inner{display:grid;grid-template-columns:1fr auto;gap:14px;padding:14px 0}
+.search{position:relative}
+.search input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);color:#fff;padding:14px 44px 14px 14px;border-radius:14px;outline:0}
+.search svg{position:absolute;right:12px;top:50%;transform:translateY(-50%);opacity:.6}
+.chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.03);font-size:13px;cursor:pointer;user-select:none;white-space:nowrap;transition:.2s}
+.chip.active{background:var(--accent);color:#000;border-color:transparent;font-weight:600}
+.sort select{background:rgba(255,255,255,.04);border:1px solid var(--line);color:#fff;padding:12px 14px;border-radius:12px}
+@media(max-width:900px){.filters-inner{grid-template-columns:1fr}.chips{overflow:auto;padding-bottom:4px}}
+
+/* FEATURED RAIL */
+section{padding:70px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:22px}
+.sec-title{font-family:"Cormorant Garamond",serif;font-size:clamp(28px,4.5vw,52px)}
+.hrail{display:flex;gap:16px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:8px}
+.hrail::-webkit-scrollbar{display:none}
+.f-card{min-width:min(78vw,340px);aspect-ratio:4/5;border-radius:22px;overflow:hidden;position:relative;border:1px solid var(--line);scroll-snap-align:start}
+.f-card img{transition:transform .7s}
+.f-card:hover img{transform:scale(1.06)}
+.f-meta{position:absolute;inset:auto 0 0 0;padding:16px;background:linear-gradient(transparent,rgba(0,0,0,.8));display:flex;justify-content:space-between;align-items:end}
+.badge{position:absolute;top:12px;left:12px;padding:6px 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:rgba(0,0,0,.55);border:1px solid var(--line);border-radius:999px;backdrop-filter:blur(6px)}
+
+/* GRID */
+.d-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
+.card{position:relative;border-radius:22px;overflow:hidden;background:#0a0a12;border:1px solid var(--line);cursor:pointer;transform-style:preserve-3d}
+.card-media{aspect-ratio:4/3;overflow:hidden}
+.card-media img{transition:transform .6s}
+.card:hover .card-media img{transform:scale(1.07)}
+.card-body{padding:14px 14px 16px}
+.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.loc{font-size:12px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.price{font-variant-numeric:tabular-nums;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid var(--line);font-size:13px}
+.card h3{font-size:20px;font-weight:600}
+.card-actions{position:absolute;top:10px;right:10px;display:flex;gap:8px}
+.icon-btn{width:36px;height:36px;display:grid;place-items:center;border-radius:12px;background:rgba(0,0,0,.5);border:1px solid var(--line);backdrop-filter:blur(6px);transition:.2s}
+.icon-btn:hover{background:rgba(0,0,0,.7);transform:translateY(-2px)}
+.icon-btn.active{background:var(--accent);color:#000;border-color:transparent}
+.mini-tags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.mini-tags span{font-size:11px;padding:4px 8px;border:1px solid var(--line);border-radius:999px;color:#b8bfd0;background:rgba(255,255,255,.03)}
+
+/* SHEET */
+#sheetOverlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);z-index:2000;opacity:0;pointer-events:none;transition:.3s}
+#sheetOverlay.show{opacity:1;pointer-events:auto}
+#sheet{position:fixed;top:0;right:0;height:100dvh;width:min(560px,100vw);background:#07070c;border-left:1px solid var(--line);z-index:2001;transform:translateX(100%);display:flex;flex-direction:column}
+.sheet-head{position:sticky;top:0;background:linear-gradient(180deg,#07070c,rgba(7,7,12,.8));backdrop-filter:blur(10px);padding:16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.sheet-body{overflow:auto;padding:0 0 40px}
+.s-cover{aspect-ratio:16/10;position:relative;overflow:hidden}
+.s-cover img{position:absolute;inset:0;opacity:0;transition:opacity .6s}
+.s-cover img.active{opacity:1}
+.s-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.s-dots span{width:20px;height:3px;background:rgba(255,255,255,.3);border-radius:2px;overflow:hidden}
+.s-dots span i{display:block;height:100%;width:0;background:#fff}
+.s-content{padding:18px}
+.s-title{font-family:"Cormorant Garamond",serif;font-size:36px;line-height:1.1}
+.s-meta{display:flex;gap:14px;color:var(--muted);font-size:13px;margin:8px 0 14px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.pill{padding:6px 10px;border:1px solid var(--line);border-radius:999px;font-size:12px;background:rgba(255,255,255,.04)}
+.acc{border-top:1px solid var(--line);margin-top:18px}
+.acc-item{border-bottom:1px solid var(--line)}
+.acc-btn{width:100%;text-align:left;padding:14px 0;background:none;border:0;color:#fff;font-weight:600;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.acc-panel{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.acc-panel.open{max-height:400px}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.tier{border:1px solid var(--line);border-radius:16px;padding:14px;background:rgba(255,255,255,.03)}
+.tier h4{font-size:14px;margin-bottom:6px}
+.tier .pr{font-size:22px;font-weight:700;color:var(--accent2)}
+.s-cta{display:flex;gap:10px;margin-top:18px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);cursor:pointer}
+.btn-primary{background:var(--accent);color:#000;border-color:transparent;font-weight:700}
+
+/* COMPARE */
+#compareTray{position:fixed;left:50%;bottom:18px;transform:translate(-50%,140%);z-index:1500;background:rgba(10,10,16,.9);border:1px solid var(--line);backdrop-filter:blur(12px);padding:12px;border-radius:16px;display:flex;gap:10px;align-items:center;transition:.4s;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#compareTray.show{transform:translate(-50%,0)}
+.c-item{width:64px;height:48px;border-radius:10px;overflow:hidden;border:1px solid var(--line);position:relative}
+.c-item button{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#000;border:1px solid var(--line);color:#fff;font-size:12px;line-height:18px}
+
+/* FOOTER */
+footer{padding:50px 0 30px;border-top:1px solid var(--line);background:#06060a;color:#9aa0ac}
+.foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+/* REVEAL */
+[data-reveal]{opacity:0;transform:translateY(20px)}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="cursor" id="cursor"><div class="cursor-dot"></div><div class="cursor-ring" id="cursorRing"></div></div>
+<div id="preloader"><div style="text-align:center"><div class="pre-logo">VOYAGE</div><div class="pre-bar"></div></div></div>
+
+<nav id="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="brand"><span class="dot"></span> VOYAGE</a>
+    <div class="nav-links">
+    <a href="destinations.html" class="active">Destinations</a>
+      <a href="about.html">About</a>
+       <a href="service.html">Service</a>
+      <a href="story.html">Story</a>
+       <a href="journal.html" class="act">Journal</a>
+       <a href="blog.html">Blog</a>
+       <a href="contact.html">Contact</a>
+      <a href="#book" class="nav-cta">Book a Trip</a>
+    </div>
+    <button class="burger" id="burger">☰</button>
+  </div>
+</nav>
+<div class="mobile" id="mobile"><div>    <a href="index.html">Home</a>
+    <a href="destinations.html">Destinations</a>
+    <a href="about.html">About</a>
+    <a href="service.html">Service</a>
+    <a href="story.html">Story</a>
+    <a href="journal.html">Journal</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html">Contact</a>
+    </div></div>
+
+<main id="smooth-wrapper"><div id="smooth-content">
+
+<header class="page-hero">
+  <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop" alt="">
+  <div class="container hero-inner">
+    <span class="kicker">• 12 Curated Regions</span>
+    <h1 class="h-title" id="destTitle"><span class="thin">CHOOSE YOUR</span><br>WORLD</h1>
+    <p class="h-sub">From overwater villas to alpine chalets. Filter by mood, compare side-by-side, and open for full itineraries.</p>
+  </div>
+</header>
+
+<div class="filters">
+  <div class="container filters-inner">
+    <div class="search">
+      <input id="q" placeholder="Search Maldives, Japan, Alps..."/>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="chips" id="regionChips"></div>
+      <div class="sort"><select id="sort"><option value="pop">Most Popular</option><option value="low">Price: Low to High</option><option value="high">Price: High to Low</option></select></div>
+    </div>
+  </div>
+  <div class="container" style="padding:0 0 12px"><div class="chips" id="moodChips"></div></div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="sec-head"><h2 class="sec-title" data-reveal>Featured Right Now</h2></div>
+    <div class="hrail" id="hrail"></div>
+  </div>
+</section>
+
+<section style="padding-top:20px">
+  <div class="container">
+    <div class="sec-head"><h2 class="sec-title" data-reveal>All Destinations</h2><span id="count" style="color:var(--muted)"></span></div>
+    <div class="d-grid" id="grid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container foot">
+    <div><strong style="color:#fff;letter-spacing:.18em">VOYAGE</strong><br>© 2025</div>
+    <div style="display:flex;gap:18px"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a></div>
+  </div>
+</footer>
+
+</div></main>
+
+<div id="sheetOverlay"></div>
+<aside id="sheet">
+  <div class="sheet-head">
+    <strong id="s-name">Destination</strong>
+    <button class="icon-btn" id="s-close">✕</button>
+  </div>
+  <div class="sheet-body">
+    <div class="s-cover" id="s-cover"></div>
+    <div class="s-content">
+      <h2 class="s-title" id="s-title"></h2>
+      <div class="s-meta"><span id="s-country"></span>•<span id="s-best"></span>•<span id="s-rating"></span></div>
+      <p id="s-desc" style="color:#c7cbd6"></p>
+      <div class="pills" id="s-pills"></div>
+      
+      <div class="acc" id="s-acc"></div>
+
+      <h3 style="margin-top:22px;font-size:18px">Choose your tier</h3>
+      <div class="tiers" id="s-tiers"></div>
+
+      <div class="s-cta">
+        <button class="btn btn-primary" id="s-book">Request Quote</button>
+        <button class="btn" id="s-wish">♡ Wishlist</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div id="compareTray">
+  <span style="font-size:13px;color:#cbd0dc;margin-right:6px">Compare:</span>
+  <div id="c-list" style="display:flex;gap:8px"></div>
+  <button class="btn" id="c-clear" style="padding:8px 12px">Clear</button>
+  <button class="btn btn-primary" id="c-go" style="padding:8px 12px">Compare</button>
+</div>
+
+<script>
+// PRELOADER
+setTimeout(()=>gsap.to('#preloader',{autoAlpha:0,duration:.6,onComplete:()=>preloader.remove()}),1200);
+
+// LENIS
+const lenis=new Lenis({lerp:.08});function raf(t){lenis.raf(t);requestAnimationFrame(raf)}requestAnimationFrame(raf);
+const nav=document.getElementById('nav');lenis.on('scroll',()=>{window.scrollY>20?nav.classList.add('scrolled'):nav.classList.remove('scrolled')});
+
+// MOBILE
+burger.onclick=()=>mobile.classList.toggle('open');mobile.onclick=e=>e.target.tagName==='A'&&mobile.classList.remove('open')
+
+// CURSOR
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');let cx=0,cy=0,tx=0,ty=0;addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY});(function loop(){cx+=(tx-cx)*.15;cy+=(ty-cy)*.15;cursor.style.transform=`translate(${cx}px,${cy}px)`;requestAnimationFrame(loop)})();
+
+// TITLE SPLIT
+new SplitType('#destTitle',{types:'words'});gsap.from('#destTitle .word',{y:60,opacity:0,stagger:.05,duration:.9,ease:'power3.out',delay:.2})
+
+// DATA
+const DESTINATIONS=[
+{id:'maldives',name:'Vaavu Atoll',country:'Maldives',region:'Islands',mood:['Relax','Luxury'],price:2400,days:7,rating:4.9,best:'Nov–Apr',img:'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1200&auto=format&fit=crop',gallery:['https://images.unsplash.com/photo-1514282401047-d79a71a590e8?q=80&w=1200','https://images.unsplash.com/photo-1505761671935-60b3a7427bad?q=80&w=1200','https://images.unsplash.com/photo-1573843981267-be1999ff37cd?q=80&w=1200'],highlights:['Overwater villa','Private sandbank dinner','Manta snorkel'],desc:'Turquoise lagoons, house reefs, zero crowds. Your villa, your rhythm.'},
+{id:'iceland',name:'South Coast',country:'Iceland',region:'Polar',mood:['Adventure','Nature'],price:1900,days:6,rating:4.8,best:'Sep–Mar',img:'https://images.unsplash.com/photo-1500043357865-c6b8827edf10?q=80&w=1200',gallery:['https://images.unsplash.com/photo-1521292270410-a8c4d716d518?q=80&w=1200','https://images.unsplash.com/photo-1476610182048-b716b8518aae?q=80&w=1200','https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200'],highlights:['Ice cave','Black sand beach','Northern Lights'],desc:'Glaciers, waterfalls, and aurora. Guided in super-jeeps.'},
+{id:'kyoto',name:'Kyoto',country:'Japan',region:'Asia',mood:['Culture','Relax'],price:2100,days:7,rating:4.9,best:'Mar–May',img:'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=1200',gallery:['https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=1200','https://images.unsplash.com/photo-1558862107-d49ef2a04d72?q=80&w=1200','https://images.unsplash.com/photo-1524413840807-0c3cb6fa9be8?q=80&w=1200'],highlights:['Tea ceremony','Arashiyama bamboo','Kaiseki dinner'],desc:'Temples at dawn, gardens, and hidden machiya stays.'},
+{id:'zermatt',name:'Zermatt',country:'Swiss Alps',region:'Mountains',mood:['Adventure','Luxury'],price:2650,days:5,rating:4.8,best:'Dec–Mar',img:'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?q=80&w=1200',gallery:['https://images.unsplash.com/photo-1531366936337-7c912a4589a7?q=80&w=1200','https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200','https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1200'],highlights:['Matterhorn view','Heliski','Alpine spa'],desc:'Car-free village, chalet living, serious skiing.'},
+{id:'patagonia',name:'Torres del Paine',country:'Chile',region:'Americas',mood:['Adventure','Nature'],price:3100,days:8,rating:4.9,best:'Nov–Feb',img:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200',gallery:['https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?q=80&w=1200','https://images.unsplash.com/photo-1500534623283-312aade485b7?q=80&w=1200','https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=1200'],highlights:['W Trek','Puma tracking','Estancia stay'],desc:'Wind, granite towers, and endless horizons.'},
+{id:'santorini',name:'Santorini',country:'Greece',region:'Europe',mood:['Relax','Culture'],price:1800,days:5,rating:4.7,best:'May–Oct',img:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?q=80&w=1200',gallery:['https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?q=80&w=1200','https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200','https://images.unsplash.com/photo-1516483638261-f4dbaf036963?q=80&w=1200'],highlights:['Caldera suite','Sunset sail','Volcanic wine'],desc:'Whitewashed cliffs, blue domes, slow days.'},
+{id:'banff',name:'Banff',country:'Canada',region:'Mountains',mood:['Nature','Adventure'],price:2200,days:6,rating:4.8,best:'Jun–Sep',img:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1200',gallery:['https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200','https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1200','https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200'],highlights:['Lake Louise','Moraine canoe','Wildlife'],desc:'Turquoise lakes framed by Rockies.'},
+{id:'serengeti',name:'Serengeti',country:'Tanzania',region:'Africa',mood:['Adventure','Nature','Luxury'],price:4200,days:7,rating:4.9,best:'Jun–Oct',img:'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200',gallery:['https://images.unsplash.com/photo-1523805009345-7448845a9e53?q=80&w=1200','https://images.unsplash.com/photo-1505142468610-359e7d316be0?q=80&w=1200','https://images.unsplash.com/photo-1484406566174-9da000fda645?q=80&w=1200'],highlights:['Great Migration','Hot air balloon','Bush dinner'],desc:'Endless plains, big cats, starlit camps.'},
+{id:'amalfi',name:'Amalfi Coast',country:'Italy',region:'Europe',mood:['Relax','Culture','Luxury'],price:2500,days:6,rating:4.8,best:'Apr–Jun',img:'https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=1200',gallery:['https://images.unsplash.com/photo-1516483638261-f4dbaf036963?q=80&w=1200','https://images.unsplash.com/photo-1529260830199-42c24126f198?q=80&w=1200','https://images.unsplash.com/photo-1499678329028-101435549a4e?q=80&w=1200'],highlights:['Positano stay','Ravello concert','Boat to Capri'],desc:'Lemons, cliffs, and slow lunches.'},
+{id:'dubai',name:'Al Marmoom',country:'UAE',region:'Desert',mood:['Luxury','Adventure'],price:1900,days:4,rating:4.6,best:'Nov–Mar',img:'https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=1200',gallery:['https://images.unsplash.com/photo-1580674684081-7617fbf3d745?q=80&w=1200','https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1200','https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?q=80&w=1200'],highlights:['Dune dinner','Falconry','Stargazing'],desc:'Silence, stars, and Bedouin hospitality.'},
+{id:'ubud',name:'Ubud',country:'Bali',region:'Asia',mood:['Culture','Relax','Nature'],price:1600,days:7,rating:4.7,best:'Apr–Oct',img:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=1200',gallery:['https://images.unsplash.com/photo-1555400038-63f5ba517a47?q=80&w=1200','https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=1200','https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?q=80&w=1200'],highlights:['Jungle pool','Healer visit','Rice terraces'],desc:'Wellness, craft, and green valleys.'},
+{id:'queenstown',name:'Queenstown',country:'New Zealand',region:'Oceania',mood:['Adventure','Nature'],price:2800,days:7,rating:4.8,best:'Dec–Feb',img:'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?q=80&w=1200',gallery:['https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?q=80&w=1200','https://images.unsplash.com/photo-1507699622108-4be3abd695ad?q=80&w=1200','https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200'],highlights:['Milford Sound','Bungy','Wine trail'],desc:'Adrenaline by day, lakeside by night.'},
+];
+
+const regions=['All','Islands','Asia','Europe','Mountains','Americas','Africa','Oceania','Polar','Desert'];
+const moods=['Adventure','Relax','Culture','Luxury','Nature'];
+let state={q:'',region:'All',mood:'All',sort:'pop'};
+const wish=JSON.parse(localStorage.getItem('voyage_wish')||'[]');
+const compare=[];
+
+// CHIPS
+const rc=document.getElementById('regionChips');regions.forEach(r=>{const b=document.createElement('button');b.className='chip'+(r==='All'?' active':'');b.textContent=r;b.onclick=()=>{state.region=r;document.querySelectorAll('#regionChips .chip').forEach(c=>c.classList.remove('active'));b.classList.add('active');render()};rc.appendChild(b)});
+const mc=document.getElementById('moodChips');['All',...moods].forEach(m=>{const b=document.createElement('button');b.className='chip'+(m==='All'?' active':'');b.textContent=m;b.onclick=()=>{state.mood=m;document.querySelectorAll('#moodChips .chip').forEach(c=>c.classList.remove('active'));b.classList.add('active');render()};mc.appendChild(b)});
+document.getElementById('q').oninput=e=>{state.q=e.target.value.toLowerCase();render()};
+document.getElementById('sort').onchange=e=>{state.sort=e.target.value;render()};
+
+// RENDER FEATURED
+const hrail=document.getElementById('hrail');
+DESTINATIONS.slice(0,6).forEach(d=>{hrail.innerHTML+=`<article class="f-card" data-id="${d.id}"><img src="${d.img}" alt=""><span class="badge">${d.region}</span><div class="f-meta"><div><h3 style="font-size:20px">${d.name}</h3><div style="color:#b9bfd0;font-size:12px">${d.country}</div></div><span class="price">from $${d.price}</span></div></article>`});
+hrail.addEventListener('click',e=>{const c=e.target.closest('.f-card');if(c)openSheet(c.dataset.id)});
+
+// GRID
+const grid=document.getElementById('grid'),count=document.getElementById('count');
+function render(){
+  let list=[...DESTINATIONS];
+  if(state.q) list=list.filter(d=>(d.name+d.country+d.region).toLowerCase().includes(state.q));
+  if(state.region!=='All') list=list.filter(d=>d.region===state.region);
+  if(state.mood!=='All') list=list.filter(d=>d.mood.includes(state.mood));
+  if(state.sort==='low') list.sort((a,b)=>a.price-b.price);
+  if(state.sort==='high') list.sort((a,b)=>b.price-a.price);
+  count.textContent=`${list.length} places`;
+  grid.innerHTML='';
+  list.forEach(d=>{
+    const isW=wish.includes(d.id);const isC=compare.includes(d.id);
+    grid.innerHTML+=`<article class="card" data-id="${d.id}" data-reveal>
+      <div class="card-media"><img loading="lazy" src="${d.img}" alt=""></div>
+      <div class="card-actions">
+        <button class="icon-btn w" title="Wishlist">${isW?'♥':'♡'}</button>
+        <button class="icon-btn c" title="Compare">${isC?'✓':'+'}</button>
+      </div>
+      <div class="card-body">
+        <div class="card-top"><span class="loc">${d.country} • ${d.region}</span><span class="price">$${d.price}</span></div>
+        <h3>${d.name}</h3>
+        <div class="mini-tags">${d.mood.map(m=>`<span>${m}</span>`).join('')}</div>
+      </div>
+    </article>`
+  });
+  gsap.utils.toArray('[data-reveal]').forEach(el=>gsap.to(el,{scrollTrigger:{trigger:el,start:'top 85%'},y:0,opacity:1,duration:.7}))
+  // tilt desktop
+  if(matchMedia('(hover:hover)').matches){document.querySelectorAll('.card').forEach(card=>{card.onmousemove=e=>{const r=card.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;card.style.transform=`perspective(900px) rotateY(${x*6}deg) rotateX(${-y*6}deg)`};card.onmouseleave=()=>card.style.transform=''})}
+}
+render();
+
+// GRID EVENTS
+grid.addEventListener('click',e=>{
+  const card=e.target.closest('.card');if(!card)return;
+  if(e.target.closest('.w')){toggleWish(card.dataset.id,e.target);return}
+  if(e.target.closest('.c')){toggleCompare(card.dataset.id);return}
+  openSheet(card.dataset.id);
+});
+
+function toggleWish(id,btn){const i=wish.indexOf(id);if(i>-1){wish.splice(i,1);btn.textContent='♡';btn.classList.remove('active')}else{wish.push(id);btn.textContent='♥';btn.classList.add('active');toast('Saved to wishlist')}localStorage.setItem('voyage_wish',JSON.stringify(wish))}
+function toggleCompare(id){const i=compare.indexOf(id);if(i>-1)compare.splice(i,1);else{if(compare.length>=3){toast('Max 3 to compare');return}compare.push(id)}updateCompare();render()}
+
+function updateCompare(){const tray=document.getElementById('compareTray'),list=document.getElementById('c-list');list.innerHTML='';compare.forEach(id=>{const d=DESTINATIONS.find(x=>x.id===id);list.innerHTML+=`<div class="c-item"><img src="${d.img}"><button data-id="${id}">×</button></div>`});tray.classList.toggle('show',compare.length>0)}
+document.getElementById('c-clear').onclick=()=>{compare.length=0;updateCompare();render()}
+document.getElementById('c-go').onclick=()=>toast('Compare view coming soon');
+document.getElementById('c-list').onclick=e=>{if(e.target.tagName==='BUTTON'){toggleCompare(e.target.dataset.id)}}
+
+// SHEET
+const sheet=document.getElementById('sheet'),overlay=document.getElementById('sheetOverlay');
+let slideTimer;
+function openSheet(id){
+  const d=DESTINATIONS.find(x=>x.id===id);
+  document.getElementById('s-name').textContent=d.name;
+  document.getElementById('s-title').textContent=d.name;
+  document.getElementById('s-country').textContent=`${d.country} • ${d.days} days`;
+  document.getElementById('s-best').textContent=`Best ${d.best}`;
+  document.getElementById('s-rating').textContent=`★ ${d.rating}`;
+  document.getElementById('s-desc').textContent=d.desc;
+  document.getElementById('s-pills').innerHTML=d.mood.map(m=>`<span class="pill">${m}</span>`).join('')+d.highlights.map(h=>`<span class="pill">${h}</span>`).join('');
+  // cover
+  const cover=document.getElementById('s-cover');cover.innerHTML='';[...d.gallery,d.img].slice(0,4).forEach((src,i)=>{cover.innerHTML+=`<img src="${src}" class="${i===0?'active':''}">`});cover.innerHTML+=`<div class="s-dots">${[...Array(4)].map((_,i)=>`<span><i></i></span>`).join('')}</div>`;
+  let si=0;clearInterval(slideTimer);slideTimer=setInterval(()=>{const imgs=cover.querySelectorAll('img'),dots=cover.querySelectorAll('.s-dots i');imgs[si].classList.remove('active');dots[si].style.width='0%';si=(si+1)%imgs.length;imgs[si].classList.add('active');gsap.to(dots[si],{width:'100%',duration:3.5,ease:'none'})},3800);
+  // accordion
+  document.getElementById('s-acc').innerHTML=['Overview','Sample 7-Day Itinerary','What’s Included'].map((t,i)=>`<div class="acc-item"><button class="acc-btn">${t}<span>+</span></button><div class="acc-panel"><p style="color:#b8bfd0;padding:0 0 14px">${i===0?d.desc:i===1?'Day 1 Arrival • Day 2 Explore • Day 3 Adventure • Day 4 Culture • Day 5 Relax • Day 6 Hidden gem • Day 7 Depart':'Hotels, private transfers, experiences, 24/7 concierge.'}</p></div></div>`).join('');
+  document.querySelectorAll('.acc-btn').forEach(b=>b.onclick=()=>{const p=b.nextElementSibling;p.classList.toggle('open');b.querySelector('span').textContent=p.classList.contains('open')?'−':'+';});
+  // tiers
+  document.getElementById('s-tiers').innerHTML=['Essential','Signature','Private'].map((t,i)=>`<div class="tier"><h4>${t}</h4><div class="pr">$${d.price + i*600}</div><div style="color:#9aa0ac;font-size:12px;margin-top:6px">${['Boutique stays','Luxury lodges','Villa + heli'][i]}</div></div>`).join('');
+  document.getElementById('s-wish').onclick=()=>{toggleWish(d.id,{});toast(wish.includes(d.id)?'Added to wishlist':'Removed')}
+  document.getElementById('s-book').onclick=()=>toast('Request sent for '+d.name);
+
+  overlay.classList.add('show');gsap.to(sheet,{x:0,duration:.5,ease:'power3.out'});lenis.stop();
+}
+function closeSheet(){gsap.to(sheet,{x:'100%',duration:.4,ease:'power3.in'});overlay.classList.remove('show');lenis.start();clearInterval(slideTimer)}
+document.getElementById('s-close').onclick=closeSheet;overlay.onclick=closeSheet;addEventListener('keydown',e=>e.key==='Escape'&&closeSheet());
+
+// TOAST
+function toast(msg){const t=document.createElement('div');t.textContent=msg;Object.assign(t.style,{position:'fixed',bottom:'24px',left:'50%',transform:'translateX(-50%)',background:'#0f1117',border:'1px solid var(--line)',padding:'12px 16px',borderRadius:'12px',zIndex:9999});document.body.appendChild(t);gsap.from(t,{y:20,opacity:0,duration:.3});setTimeout(()=>gsap.to(t,{y:10,opacity:0,duration:.3,onComplete:()=>t.remove()}),2200)}
+</script>
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>
