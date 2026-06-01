@@ -1,0 +1,6195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#0a0a0f">
+<title>OBSIDIAN | Ultra Premium Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg: #0a0a0f;
+  --bg-2: #14141c;
+  --bg-3: #1a1a24;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-2: rgba(255, 255, 255, 0.08);
+  --ink: #ffffff;
+  --soft: #d4d4dc;
+  --muted: #888894;
+  --dim: #555560;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  --acid: #d4ff3a;
+  --hot: #ff3366;
+  --electric: #00d4ff;
+  --plum: #b768ff;
+  --tangerine: #ff8a3d;
+  --mint: #00ffa3;
+
+  --grad-main: linear-gradient(135deg, #d4ff3a 0%, #00ffa3 100%);
+  --grad-hot: linear-gradient(135deg, #ff3366 0%, #b768ff 100%);
+  --grad-cool: linear-gradient(135deg, #00d4ff 0%, #b768ff 100%);
+
+  --shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  --shadow-acid: 0 0 60px rgba(212, 255, 58, 0.3);
+  --shadow-hot: 0 0 60px rgba(255, 51, 102, 0.3);
+
+  --font-body: 'Inter', sans-serif;
+  --font-display: 'Instrument Serif', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: auto;
+  -webkit-text-size-adjust: 100%;
+}
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Animated grain texture */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* Aurora background */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.aurora::before, .aurora::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.3;
+  animation: auroraFloat 28s ease-in-out infinite;
+}
+
+.aurora::before {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, var(--acid), transparent 70%);
+  top: -200px; left: -200px;
+}
+
+.aurora::after {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, var(--plum), transparent 70%);
+  bottom: -200px; right: -200px;
+  animation-delay: -14s;
+}
+
+@keyframes auroraFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(150px, 100px) scale(1.1); }
+  66% { transform: translate(-100px, 150px) scale(0.95); }
+}
+
+#particles {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+img { width: 100%; display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+
+.container {
+  width: min(1320px, calc(100% - 32px));
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+
+.section { padding: 110px 0; position: relative; z-index: 5; }
+.section-sm { padding: 70px 0; }
+
+.page { display: none; min-height: 100vh; }
+.page.active { display: block; animation: fadeIn 0.7s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Typography */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--acid);
+  margin-bottom: 24px;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 30px;
+  height: 1px;
+  background: var(--acid);
+  flex-shrink: 0;
+}
+
+h1, h2, h3, h4 { color: var(--ink); }
+
+.display, .section-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.italic { font-style: italic; }
+
+.lead {
+  color: var(--soft);
+  font-size: 1.1rem;
+  line-height: 1.75;
+  max-width: 620px;
+}
+
+.center { text-align: center; }
+.center-block { margin-left: auto; margin-right: auto; }
+
+/* Buttons */
+.btn-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 36px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 28px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.93rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(.16,1,.3,1);
+  white-space: nowrap;
+  font-family: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-acid {
+  background: var(--acid);
+  color: var(--bg);
+}
+
+.btn-acid:hover {
+  background: var(--mint);
+  box-shadow: var(--shadow-acid);
+  transform: translateY(-2px);
+}
+
+.btn-hot {
+  background: var(--hot);
+  color: #fff;
+}
+
+.btn-hot:hover {
+  background: var(--plum);
+  box-shadow: var(--shadow-hot);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: var(--surface);
+  border-color: var(--line-strong);
+  color: var(--ink);
+  backdrop-filter: blur(20px);
+}
+
+.btn-ghost:hover {
+  background: var(--surface-2);
+  border-color: var(--acid);
+  color: var(--acid);
+  transform: translateY(-2px);
+}
+
+.btn svg { width: 16px; height: 16px; flex-shrink: 0; transition: transform 0.3s ease; }
+.btn:hover svg { transform: translateX(4px); }
+
+/* Preloader */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+}
+
+.preloader-inner { text-align: center; }
+
+.preloader-logo {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(3rem, 12vw, 5rem);
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+  background: var(--grad-main);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.preloader-bar {
+  width: 240px;
+  max-width: 80vw;
+  height: 2px;
+  background: var(--line);
+  overflow: hidden;
+  margin: 0 auto;
+  border-radius: 99px;
+}
+
+.preloader-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--grad-main);
+  box-shadow: var(--shadow-acid);
+}
+
+.preloader-percent {
+  margin-top: 14px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+}
+
+/* Page transition */
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  display: flex;
+  pointer-events: none;
+}
+
+.page-transition span {
+  flex: 1;
+  background: var(--acid);
+  transform: scaleY(0);
+  transform-origin: bottom;
+}
+
+/* ============================================
+   NAVBAR WITH DROPDOWNS
+============================================ */
+.navbar {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1380px, calc(100% - 32px));
+  z-index: 9999;
+  background: rgba(10, 10, 15, 0.7);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 12px 10px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  top: 8px;
+  background: rgba(10, 10, 15, 0.9);
+  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.4);
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.55rem;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 12px var(--acid);
+  flex-shrink: 0;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.4); }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 38px;
+  padding: 0 11px;
+  border-radius: 99px;
+  color: var(--soft);
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--acid);
+  background: var(--surface);
+}
+
+.nav-link-arrow {
+  width: 10px;
+  height: 10px;
+  opacity: 0.5;
+  transition: transform 0.3s ease;
+}
+
+.nav-item.open .nav-link-arrow { transform: rotate(180deg); }
+
+.nav-cta {
+  background: var(--acid) !important;
+  color: var(--bg) !important;
+  padding: 0 18px !important;
+  height: 38px !important;
+  font-weight: 600 !important;
+}
+
+.nav-cta:hover {
+  background: var(--mint) !important;
+  box-shadow: var(--shadow-acid);
+}
+
+/* Dropdown */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  min-width: 280px;
+  background: rgba(20, 20, 28, 0.95);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid var(--line-strong);
+  border-radius: 20px;
+  padding: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.35s cubic-bezier(.16,1,.3,1);
+  box-shadow: var(--shadow);
+}
+
+.nav-item.open .dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.dropdown::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: rgba(20, 20, 28, 0.95);
+  border-left: 1px solid var(--line-strong);
+  border-top: 1px solid var(--line-strong);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  color: var(--soft);
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.dropdown-item:hover {
+  background: var(--surface-2);
+  color: var(--acid);
+  transform: translateX(4px);
+}
+
+.dropdown-item-num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+  width: 28px;
+}
+
+.dropdown-item-text {
+  flex: 1;
+}
+
+.dropdown-item-title {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.dropdown-item-sub {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.dropdown-item:hover .dropdown-item-sub { color: var(--soft); }
+
+.dropdown-item-arrow {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.dropdown-item:hover .dropdown-item-arrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--acid);
+}
+
+/* Mobile toggle */
+.nav-toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--acid);
+  color: var(--bg);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 16px;
+  height: 2px;
+  background: var(--bg);
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.nav-toggle.active span:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+.nav-toggle.active span:nth-child(2) { opacity: 0; }
+.nav-toggle.active span:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+
+/* Mobile menu */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(10, 10, 15, 0.98);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  padding: 90px 20px 30px;
+  overflow-y: auto;
+}
+
+.mobile-menu.active { opacity: 1; visibility: visible; }
+
+.mobile-menu-inner {
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.mobile-nav-item {
+  border-bottom: 1px solid var(--line);
+}
+
+.mobile-nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.mobile-nav-header.has-dropdown::after {
+  content: '+';
+  font-size: 1.6rem;
+  color: var(--acid);
+  font-family: var(--font-mono);
+  transition: transform 0.3s ease;
+}
+
+.mobile-nav-item.open .mobile-nav-header.has-dropdown::after {
+  transform: rotate(45deg);
+}
+
+.mobile-nav-item.open .mobile-nav-header { color: var(--acid); font-style: italic; }
+
+.mobile-dropdown {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.mobile-nav-item.open .mobile-dropdown { max-height: 500px; padding-bottom: 14px; }
+
+.mobile-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  color: var(--soft);
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.mobile-dropdown-item:hover { color: var(--acid); }
+
+.mobile-dropdown-item-num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  width: 32px;
+}
+
+.mobile-cta {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 28px;
+  background: var(--acid);
+  color: var(--bg) !important;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  font-style: normal;
+  border-bottom: 0;
+}
+
+.mobile-cta:hover { background: var(--mint); }
+
+/* ============================================
+   HERO LAYOUTS (each variant unique)
+============================================ */
+.page-hero {
+  padding-top: 130px;
+  padding-bottom: 70px;
+  position: relative;
+}
+
+/* ===== HOME VARIANTS ===== */
+
+/* HOME-1: Editorial split */
+.home1-hero {
+  padding-top: 110px;
+  padding-bottom: 80px;
+  position: relative;
+  background-image:
+    linear-gradient(135deg, rgba(10, 10, 15, 0.7), rgba(10, 10, 15, 0.4)),
+    url("https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+  background-position: center;
+}
+
+.home1-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.home1-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin-bottom: 30px;
+}
+
+.home1-hero h1 em {
+  font-style: italic;
+  background: var(--grad-main);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.home1-hero-img {
+  height: 600px;
+  border-radius: 32px;
+  overflow: hidden;
+  background-image: url("https://images.unsplash.com/photo-1617791160505-6f00504e3519?auto=format&fit=crop&w=1100&q=85");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.home1-hero-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(212, 255, 58, 0.2), transparent);
+  mix-blend-mode: overlay;
+}
+
+/* HOME-2: Bento dashboard */
+.home2-hero {
+  padding-top: 110px;
+  padding-bottom: 50px;
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.85), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.home2-bento {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 300px 240px;
+  gap: 16px;
+}
+
+.home2-bento-item {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  transition: all 0.4s ease;
+}
+
+.home2-bento-item:hover {
+  border-color: var(--acid);
+  background: var(--surface-2);
+}
+
+.home2-bento-main {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-image:
+    linear-gradient(135deg, rgba(212, 255, 58, 0.1), rgba(10, 10, 15, 0.6)),
+    url("https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=1100&q=85");
+  background-size: cover;
+  background-position: center;
+}
+
+.home2-bento-main h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.home2-bento-main h1 em {
+  font-style: italic;
+  color: var(--acid);
+}
+
+.home2-bento-stat strong {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  color: var(--acid);
+  display: block;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+
+.home2-bento-stat span {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.home2-bento-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--surface);
+  border-radius: 99px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.home2-bento-tag::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 8px var(--acid);
+}
+
+/* HOME-3: Centered minimal */
+.home3-hero {
+  padding-top: 130px;
+  padding-bottom: 100px;
+  text-align: center;
+  position: relative;
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.75), rgba(10, 10, 15, 0.92)),
+    url("https://images.unsplash.com/photo-1505506874110-6a7a69069a08?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+  background-position: center;
+}
+
+.home3-hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 99px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 36px;
+  color: var(--soft);
+  backdrop-filter: blur(20px);
+}
+
+.home3-hero-tag::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--hot);
+  box-shadow: 0 0 8px var(--hot);
+}
+
+.home3-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 9rem);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  margin-bottom: 40px;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home3-hero h1 em {
+  font-style: italic;
+  background: var(--grad-hot);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.home3-hero-img {
+  margin-top: 80px;
+  height: 540px;
+  border-radius: 32px;
+  overflow: hidden;
+  background-image: url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=85");
+  background-size: cover;
+  background-position: center;
+}
+
+/* ===== ABOUT VARIANTS ===== */
+
+/* ABOUT-1: Story with image collage */
+.about1-hero {
+  padding-top: 130px;
+  padding-bottom: 80px;
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.8), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.about1-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about1-content h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 7vw, 5.6rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  margin-bottom: 24px;
+}
+
+.about1-content h1 em {
+  font-style: italic;
+  background: var(--grad-main);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.about1-collage {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  margin-top: 70px;
+}
+
+.about1-collage-img {
+  border-radius: 22px;
+  overflow: hidden;
+  height: 320px;
+  background-size: cover;
+  background-position: center;
+}
+
+.about1-collage-img:nth-child(2) { transform: translateY(60px); }
+.about1-collage-img:nth-child(1) { background-image: url("https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=600&q=85"); }
+.about1-collage-img:nth-child(2) { background-image: url("https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=600&q=85"); }
+.about1-collage-img:nth-child(3) { background-image: url("https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=85"); }
+
+/* ABOUT-2: Manifesto */
+.about2-hero {
+  padding-top: 130px;
+  padding-bottom: 100px;
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.8), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.about2-manifesto {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.about2-manifesto-num {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  color: var(--hot);
+  margin-bottom: 30px;
+}
+
+.about2-manifesto h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  margin-bottom: 50px;
+}
+
+.about2-manifesto h1 em {
+  font-style: italic;
+  color: var(--hot);
+}
+
+.about2-manifesto-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-top: 60px;
+}
+
+.about2-pillar {
+  padding: 36px;
+  border-left: 2px solid var(--hot);
+  background: var(--surface);
+  border-radius: 0 18px 18px 0;
+  backdrop-filter: blur(20px);
+}
+
+.about2-pillar-num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 2.4rem;
+  color: var(--hot);
+  margin-bottom: 14px;
+  line-height: 1;
+}
+
+.about2-pillar h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.about2-pillar p {
+  color: var(--soft);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* ABOUT-3: Founders profiles */
+.about3-hero {
+  padding-top: 130px;
+  padding-bottom: 80px;
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.about3-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.about3-grid h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 6.5vw, 5rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  margin-bottom: 24px;
+}
+
+.about3-grid h1 em {
+  font-style: italic;
+  background: var(--grad-cool);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.about3-founders {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+}
+
+.about3-founder {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  height: 360px;
+  cursor: pointer;
+  transition: transform 0.5s ease;
+}
+
+.about3-founder:hover { transform: translateY(-8px); }
+.about3-founder:nth-child(2) { transform: translateY(40px); }
+.about3-founder:nth-child(2):hover { transform: translateY(32px); }
+
+.about3-founder img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.about3-founder::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(10, 10, 15, 0.95));
+}
+
+.about3-founder-info {
+  position: absolute;
+  bottom: 22px;
+  left: 22px;
+  right: 22px;
+  z-index: 2;
+  color: var(--ink);
+}
+
+.about3-founder-info strong {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.about3-founder-info span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--electric);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ===== SERVICES VARIANTS ===== */
+
+/* SERVICES-1: Numbered cards */
+.services1-hero {
+  padding-top: 130px;
+  padding-bottom: 70px;
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.8), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.services1-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.6rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  margin-bottom: 24px;
+  max-width: 900px;
+}
+
+.services1-hero h1 em {
+  font-style: italic;
+  background: var(--grad-main);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.services1-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 80px;
+}
+
+.services1-card {
+  padding: 50px 40px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  backdrop-filter: blur(20px);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.services1-card:hover {
+  border-color: var(--acid);
+  transform: translateY(-6px);
+  background: var(--surface-2);
+}
+
+.services1-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, var(--acid), transparent 70%);
+  opacity: 0;
+  filter: blur(40px);
+  transition: opacity 0.5s ease;
+}
+
+.services1-card:hover::before { opacity: 0.4; }
+
+.services1-card-num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 5rem;
+  color: var(--acid);
+  line-height: 0.8;
+  margin-bottom: 30px;
+  opacity: 0.6;
+}
+
+.services1-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  margin-bottom: 14px;
+}
+
+.services1-card p {
+  color: var(--soft);
+  line-height: 1.75;
+  margin-bottom: 24px;
+}
+
+.services1-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.services1-tags span {
+  padding: 6px 12px;
+  background: rgba(212, 255, 58, 0.1);
+  border: 1px solid rgba(212, 255, 58, 0.2);
+  border-radius: 99px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--acid);
+  letter-spacing: 0.08em;
+}
+
+/* SERVICES-2: List + image */
+.services2-hero {
+  padding-top: 130px;
+  padding-bottom: 80px;
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.services2-content {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.services2-sticky {
+  position: sticky;
+  top: 100px;
+}
+
+.services2-content h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  margin-bottom: 24px;
+}
+
+.services2-content h1 em {
+  font-style: italic;
+  color: var(--hot);
+}
+
+.services2-img {
+  margin-top: 40px;
+  height: 280px;
+  border-radius: 22px;
+  overflow: hidden;
+  background-image: url("https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=85");
+  background-size: cover;
+}
+
+.services2-list {
+  display: grid;
+  gap: 0;
+}
+
+.services2-item {
+  padding: 36px 0;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 80px 1fr 50px;
+  gap: 24px;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.services2-item:hover {
+  padding-left: 16px;
+}
+
+.services2-item:hover h3 { color: var(--hot); }
+.services2-item:hover .services2-arrow { background: var(--hot); color: var(--ink); border-color: var(--hot); transform: translateX(6px); }
+
+.services2-num {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--hot);
+  letter-spacing: 0.1em;
+}
+
+.services2-item h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  transition: color 0.3s ease;
+}
+
+.services2-item p {
+  color: var(--muted);
+  font-size: 0.88rem;
+  margin-top: 6px;
+  line-height: 1.6;
+}
+
+.services2-arrow {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+  color: var(--soft);
+  transition: all 0.4s ease;
+  justify-self: end;
+}
+
+/* SERVICES-3: Process flow */
+.services3-hero {
+  padding-top: 130px;
+  padding-bottom: 80px;
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.8), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.services3-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 7vw, 5.4rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  margin-bottom: 24px;
+  max-width: 800px;
+}
+
+.services3-hero h1 em {
+  font-style: italic;
+  background: var(--grad-cool);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.services3-flow {
+  margin-top: 70px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  position: relative;
+}
+
+.services3-card {
+  padding: 36px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  backdrop-filter: blur(20px);
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.services3-card:hover {
+  border-color: var(--electric);
+  transform: translateY(-6px);
+}
+
+.services3-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--grad-cool);
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+  margin-bottom: 24px;
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+}
+
+.services3-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+
+.services3-card p {
+  color: var(--soft);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* ===== GENERIC PAGE STYLES (other pages) ===== */
+.generic-hero {
+  padding-top: 130px;
+  padding-bottom: 80px;
+  text-align: center;
+}
+
+.generic-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.6rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  margin-bottom: 24px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.generic-hero h1 em {
+  font-style: italic;
+  background: var(--grad-main);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Products grids — 3 variants */
+.products1-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.products1-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 60px;
+}
+
+.products1-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  transition: all 0.4s ease;
+}
+
+.products1-card:hover {
+  border-color: var(--acid);
+  transform: translateY(-6px);
+}
+
+.products1-img {
+  height: 260px;
+  overflow: hidden;
+  position: relative;
+}
+
+.products1-img img {
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s ease;
+}
+
+.products1-card:hover .products1-img img { transform: scale(1.08); }
+
+.products1-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  padding: 5px 11px;
+  background: var(--acid);
+  color: var(--bg);
+  border-radius: 99px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.products1-content { padding: 24px; }
+
+.products1-content h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.products1-content p {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.products1-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.products1-price {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--acid);
+}
+
+.products1-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+/* Products 2 — Featured large */
+.products2-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.products2-featured {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 40px;
+  margin-top: 60px;
+  padding: 50px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  backdrop-filter: blur(20px);
+  align-items: center;
+}
+
+.products2-featured-img {
+  height: 480px;
+  border-radius: 22px;
+  overflow: hidden;
+  background-image: url("https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=1100&q=85");
+  background-size: cover;
+}
+
+.products2-featured h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 18px;
+}
+
+.products2-featured h2 em { font-style: italic; color: var(--hot); }
+
+.products2-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 60px;
+}
+
+/* Products 3 — Catalog list */
+.products3-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.products3-list {
+  margin-top: 60px;
+  border-top: 1px solid var(--line);
+}
+
+.products3-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr 120px 50px;
+  gap: 30px;
+  padding: 30px 0;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.products3-row:hover {
+  padding-left: 16px;
+  background: var(--surface);
+}
+
+.products3-row img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.products3-row h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+}
+
+.products3-row p {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.products3-row .price {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--acid);
+}
+
+.products3-row .arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  display: grid;
+  place-items: center;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.products3-row:hover .arrow {
+  background: var(--acid);
+  color: var(--bg);
+  border-color: var(--acid);
+  transform: translateX(4px);
+}
+
+/* Collection 3 variants */
+.collection1-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.collection1-mason {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.collection1-item {
+  cursor: pointer;
+}
+
+.collection1-item:nth-child(odd) { margin-top: 60px; }
+
+.collection1-img {
+  height: 520px;
+  border-radius: 22px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: var(--bg-2);
+}
+
+.collection1-img img {
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s ease;
+}
+
+.collection1-item:hover img { transform: scale(1.06); }
+
+.collection1-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.collection1-meta h3 {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  margin-bottom: 4px;
+}
+
+.collection1-meta p {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.collection1-num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 2.2rem;
+  color: var(--acid);
+}
+
+/* Collection 2 — Carousel grid */
+.collection2-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.collection2-grid {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.collection2-card {
+  position: relative;
+  height: 380px;
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.5s ease;
+}
+
+.collection2-card:hover { transform: translateY(-8px); }
+
+.collection2-card img {
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s ease;
+}
+
+.collection2-card:hover img { transform: scale(1.08); }
+
+.collection2-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(10, 10, 15, 0.9));
+}
+
+.collection2-info {
+  position: absolute;
+  bottom: 22px;
+  left: 22px;
+  right: 22px;
+  z-index: 2;
+  color: var(--ink);
+}
+
+.collection2-info span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--acid);
+}
+
+.collection2-info h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  margin-top: 6px;
+}
+
+/* Collection 3 — Editorial spread */
+.collection3-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.collection3-spread {
+  margin-top: 60px;
+  display: grid;
+  gap: 80px;
+}
+
+.collection3-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.collection3-row:nth-child(even) {
+  grid-template-columns: 1fr 1fr;
+}
+
+.collection3-row:nth-child(even) .collection3-img { order: 2; }
+
+.collection3-img {
+  height: 460px;
+  border-radius: 22px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.collection3-row h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 18px;
+}
+
+.collection3-row h3 em { font-style: italic; color: var(--plum); }
+
+.collection3-row p {
+  color: var(--soft);
+  line-height: 1.8;
+  margin-bottom: 22px;
+}
+
+.collection3-meta {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+/* Portfolio variants */
+.portfolio1-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.portfolio1-bento {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 260px;
+  gap: 18px;
+}
+
+.portfolio1-item {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.5s ease;
+}
+
+.portfolio1-item:hover { transform: translateY(-6px); }
+.portfolio1-item img { height: 100%; object-fit: cover; transition: transform 1s ease; }
+.portfolio1-item:hover img { transform: scale(1.06); }
+
+.portfolio1-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(10, 10, 15, 0.88));
+}
+
+.portfolio1-overlay {
+  position: absolute;
+  bottom: 22px;
+  left: 22px;
+  right: 22px;
+  z-index: 2;
+}
+
+.portfolio1-overlay span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--acid);
+}
+
+.portfolio1-overlay h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  margin-top: 6px;
+}
+
+.bento-big { grid-column: span 2; grid-row: span 2; }
+.bento-wide { grid-column: span 2; }
+.bento-tall { grid-row: span 2; }
+
+/* Portfolio 2 — Case studies */
+.portfolio2-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.portfolio2-list {
+  margin-top: 60px;
+  display: grid;
+  gap: 80px;
+}
+
+.portfolio2-case {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.portfolio2-case:nth-child(even) {
+  grid-template-columns: 1fr 1.3fr;
+}
+
+.portfolio2-case:nth-child(even) .portfolio2-img { order: 2; }
+
+.portfolio2-img {
+  height: 460px;
+  border-radius: 24px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.portfolio2-num {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--hot);
+  letter-spacing: 0.14em;
+  margin-bottom: 16px;
+}
+
+.portfolio2-case h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 18px;
+}
+
+.portfolio2-case h3 em { font-style: italic; color: var(--hot); }
+
+.portfolio2-case p {
+  color: var(--soft);
+  line-height: 1.8;
+  margin-bottom: 22px;
+}
+
+.portfolio2-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.portfolio2-tags span {
+  padding: 6px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--soft);
+}
+
+/* Portfolio 3 — Grid */
+.portfolio3-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.portfolio3-grid {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.portfolio3-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+.portfolio3-card:hover {
+  border-color: var(--electric);
+  transform: translateY(-6px);
+}
+
+.portfolio3-img {
+  height: 280px;
+  overflow: hidden;
+}
+
+.portfolio3-img img {
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s ease;
+}
+
+.portfolio3-card:hover .portfolio3-img img { transform: scale(1.06); }
+
+.portfolio3-info { padding: 26px; }
+
+.portfolio3-info span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--electric);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.portfolio3-info h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin-top: 8px;
+}
+
+/* Pricing 3 variants */
+.pricing1-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.pricing1-grid {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.pricing1-card {
+  padding: 44px 36px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.pricing1-card.featured {
+  background: var(--acid);
+  color: var(--bg);
+  border-color: var(--acid);
+  transform: scale(1.04);
+  box-shadow: var(--shadow-acid);
+}
+
+.pricing1-card.featured h3, .pricing1-card.featured .price { color: var(--bg); }
+.pricing1-card.featured .price-list li { color: rgba(10, 10, 15, 0.85); }
+.pricing1-card.featured .price-list li::before { color: var(--bg); }
+.pricing1-card.featured .price-sub { color: rgba(10, 10, 15, 0.65); }
+
+.pricing1-card:not(.featured):hover {
+  border-color: var(--acid);
+  transform: translateY(-6px);
+}
+
+.pricing1-badge {
+  position: absolute;
+  top: -12px;
+  left: 36px;
+  padding: 5px 12px;
+  background: var(--bg);
+  color: var(--acid);
+  border-radius: 99px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.pricing-name {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.pricing1-card.featured .pricing-name { color: rgba(10, 10, 15, 0.65); }
+
+.price {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.price em { font-style: italic; color: var(--acid); }
+
+.price-sub {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 32px;
+}
+
+.price-list {
+  list-style: none;
+  display: grid;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.price-list li {
+  display: flex;
+  gap: 12px;
+  align-items: start;
+  font-size: 0.93rem;
+  line-height: 1.5;
+  color: var(--soft);
+}
+
+.price-list li::before {
+  content: '→';
+  color: var(--acid);
+  font-weight: 600;
+}
+
+/* Pricing 2 — Comparison table */
+.pricing2-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.pricing2-table {
+  margin-top: 60px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+}
+
+.pricing2-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 22px 30px;
+  border-bottom: 1px solid var(--line);
+  align-items: center;
+}
+
+.pricing2-row:last-child { border-bottom: 0; }
+
+.pricing2-row.header {
+  background: var(--surface-2);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-style: italic;
+}
+
+.pricing2-row .feature-name {
+  color: var(--soft);
+}
+
+.pricing2-row .feature-check {
+  text-align: center;
+  color: var(--acid);
+  font-size: 1.2rem;
+}
+
+.pricing2-row .feature-x {
+  text-align: center;
+  color: var(--dim);
+}
+
+.pricing2-row .col-price {
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--acid);
+}
+
+/* Pricing 3 — Calculator */
+.pricing3-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.pricing3-calc {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.pricing3-options {
+  display: grid;
+  gap: 18px;
+}
+
+.pricing3-option {
+  padding: 26px 28px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  backdrop-filter: blur(20px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pricing3-option:hover, .pricing3-option.selected {
+  border-color: var(--acid);
+  background: var(--surface-2);
+}
+
+.pricing3-option h4 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+}
+
+.pricing3-option p {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.pricing3-option .price-tag {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--acid);
+}
+
+.pricing3-summary {
+  padding: 36px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  backdrop-filter: blur(20px);
+  position: sticky;
+  top: 100px;
+}
+
+.pricing3-summary h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.pricing3-summary-total {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 3rem;
+  color: var(--acid);
+  margin: 24px 0;
+  line-height: 1;
+}
+
+/* Process variants */
+.process1-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.process1-list {
+  margin-top: 80px;
+  display: grid;
+  gap: 0;
+}
+
+.process1-step {
+  padding: 50px 0;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.process1-step:last-child { border-bottom: 1px solid var(--line); }
+
+.process1-step-num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(4rem, 8vw, 6rem);
+  color: var(--acid);
+  line-height: 0.8;
+}
+
+.process1-step h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 400;
+  margin-bottom: 18px;
+  letter-spacing: -0.02em;
+}
+
+.process1-step p {
+  color: var(--soft);
+  line-height: 1.8;
+  margin-bottom: 22px;
+}
+
+.process1-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.process1-tags span {
+  padding: 6px 12px;
+  background: rgba(212, 255, 58, 0.1);
+  border: 1px solid rgba(212, 255, 58, 0.2);
+  border-radius: 99px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--acid);
+  letter-spacing: 0.08em;
+}
+
+/* Process 2 — Cards */
+.process2-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.process2-grid {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.process2-card {
+  padding: 40px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  backdrop-filter: blur(20px);
+  transition: all 0.4s ease;
+}
+
+.process2-card:hover {
+  border-color: var(--hot);
+  transform: translateY(-6px);
+}
+
+.process2-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--grad-hot);
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  margin-bottom: 24px;
+  box-shadow: 0 0 30px rgba(255, 51, 102, 0.3);
+}
+
+.process2-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.process2-card p {
+  color: var(--soft);
+  line-height: 1.7;
+}
+
+/* Process 3 — Timeline */
+.process3-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.process3-timeline {
+  margin-top: 60px;
+  position: relative;
+  padding-left: 40px;
+}
+
+.process3-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 30px;
+  bottom: 30px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--acid), var(--plum));
+}
+
+.process3-step {
+  padding: 40px 0;
+  position: relative;
+}
+
+.process3-step::before {
+  content: '';
+  position: absolute;
+  left: -47px;
+  top: 50px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--acid);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 16px var(--acid);
+}
+
+.process3-step h3 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+}
+
+.process3-step p {
+  color: var(--soft);
+  line-height: 1.7;
+}
+
+.process3-step-meta {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--acid);
+  letter-spacing: 0.14em;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+/* Team 3 variants */
+.team1-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.team1-grid {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.team1-card {
+  cursor: pointer;
+  transition: transform 0.4s ease;
+}
+
+.team1-card:hover { transform: translateY(-6px); }
+
+.team1-img {
+  height: 380px;
+  border-radius: 22px;
+  overflow: hidden;
+  margin-bottom: 18px;
+  background: var(--bg-2);
+}
+
+.team1-img img {
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 1s ease;
+  filter: grayscale(20%);
+}
+
+.team1-card:hover .team1-img img {
+  transform: scale(1.06);
+  filter: grayscale(0);
+}
+
+.team1-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+}
+
+.team1-card .role {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--acid);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Team 2 — Big cards */
+.team2-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.team2-grid {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.team2-card {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 28px;
+  padding: 30px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  backdrop-filter: blur(20px);
+  transition: all 0.4s ease;
+}
+
+.team2-card:hover {
+  border-color: var(--hot);
+  transform: translateY(-4px);
+}
+
+.team2-img {
+  height: 200px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.team2-img img {
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.team2-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+}
+
+.team2-card .role {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--hot);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.team2-card p {
+  color: var(--soft);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+.team2-socials {
+  display: flex;
+  gap: 8px;
+}
+
+.team2-socials a {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  display: grid;
+  place-items: center;
+  color: var(--soft);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.team2-socials a:hover {
+  background: var(--hot);
+  border-color: var(--hot);
+  color: var(--ink);
+}
+
+/* Team 3 — Departments */
+.team3-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.team3-dept {
+  margin-top: 60px;
+  display: grid;
+  gap: 60px;
+}
+
+.team3-dept-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 20px;
+}
+
+.team3-dept-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-style: italic;
+  color: var(--electric);
+}
+
+.team3-dept-head span {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+}
+
+.team3-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.team3-member {
+  text-align: center;
+}
+
+.team3-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 14px;
+  border: 2px solid var(--line-strong);
+  transition: all 0.4s ease;
+}
+
+.team3-member:hover .team3-avatar {
+  border-color: var(--electric);
+  transform: scale(1.05);
+}
+
+.team3-avatar img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.team3-member h4 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.team3-member span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Press 3 variants */
+.press1-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1565841327798-694bc2074076?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.press1-grid {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.press1-card {
+  padding: 36px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  backdrop-filter: blur(20px);
+  transition: all 0.4s ease;
+}
+
+.press1-card:hover {
+  border-color: var(--tangerine);
+  transform: translateY(-6px);
+}
+
+.press1-source {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--tangerine);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.press1-card .quote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.3rem;
+  line-height: 1.4;
+  margin-bottom: 24px;
+}
+
+.press1-date {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* Press 2 — Awards table */
+.press2-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1532117364869-e22acb3cdd11?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.press2-list {
+  margin-top: 60px;
+  border-top: 1px solid var(--line);
+}
+
+.press2-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 200px 100px;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.press2-row:hover { padding-left: 16px; }
+
+.press2-row .year {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.6rem;
+  color: var(--acid);
+}
+
+.press2-row .name {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+}
+
+.press2-row .category {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.press2-row .link {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--acid);
+}
+
+/* Press 3 — Logos */
+.press3-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1554224155-1696413565d3?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.press3-logos {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.press3-logo {
+  padding: 50px 30px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  backdrop-filter: blur(20px);
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+.press3-logo:hover {
+  border-color: var(--plum);
+  transform: translateY(-4px);
+  background: var(--surface-2);
+}
+
+.press3-logo strong {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+
+.press3-logo span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+}
+
+/* Journal 3 variants */
+.journal1-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.journal1-grid {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.journal1-card {
+  cursor: pointer;
+  transition: transform 0.4s ease;
+}
+
+.journal1-card:hover { transform: translateY(-6px); }
+
+.journal1-img {
+  height: 280px;
+  border-radius: 22px;
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+
+.journal1-img img {
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s ease;
+}
+
+.journal1-card:hover .journal1-img img { transform: scale(1.06); }
+
+.journal1-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--plum);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.journal1-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  transition: color 0.3s ease;
+}
+
+.journal1-card:hover h3 { color: var(--plum); }
+
+.journal1-card p {
+  color: var(--muted);
+  line-height: 1.65;
+  font-size: 0.92rem;
+  margin-bottom: 14px;
+}
+
+.journal1-meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* Journal 2 — Featured + list */
+.journal2-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.journal2-featured {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 40px;
+  align-items: center;
+  padding: 40px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  backdrop-filter: blur(20px);
+}
+
+.journal2-featured-img {
+  height: 400px;
+  border-radius: 20px;
+  overflow: hidden;
+  background-image: url("https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1100&q=85");
+  background-size: cover;
+}
+
+.journal2-featured h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 18px 0 18px;
+  letter-spacing: -0.02em;
+}
+
+.journal2-featured h2 em { font-style: italic; color: var(--hot); }
+
+.journal2-list {
+  margin-top: 60px;
+  display: grid;
+  gap: 0;
+}
+
+.journal2-item {
+  padding: 30px 0;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 80px 1fr 220px;
+  gap: 30px;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.journal2-item:hover { padding-left: 16px; }
+
+.journal2-item .num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 2rem;
+  color: var(--hot);
+}
+
+.journal2-item h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+  transition: color 0.3s ease;
+}
+
+.journal2-item:hover h3 { color: var(--hot); }
+
+.journal2-item p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.journal2-item .meta {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* Journal 3 — Magazine */
+.journal3-hero {
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1542435503-956c469947f6?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.journal3-mag {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+}
+
+.journal3-main {
+  display: grid;
+  gap: 30px;
+}
+
+.journal3-main-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.journal3-main-card:hover {
+  border-color: var(--electric);
+  transform: translateY(-4px);
+}
+
+.journal3-main-img {
+  height: 220px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.journal3-main-img img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.journal3-main-content { padding: 10px 0; }
+
+.journal3-main-content span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--electric);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.journal3-main-content h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin: 8px 0 12px;
+  line-height: 1.2;
+}
+
+.journal3-main-content p {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.journal3-side {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+  position: sticky;
+  top: 100px;
+}
+
+.journal3-side-card {
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  backdrop-filter: blur(20px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.journal3-side-card:hover {
+  border-color: var(--electric);
+}
+
+.journal3-side-card span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--electric);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.journal3-side-card h4 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  margin: 6px 0;
+  line-height: 1.3;
+}
+
+.journal3-side-card .meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+/* Contact */
+.contact-hero {
+  padding-top: 130px;
+  padding-bottom: 80px;
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.78), rgba(10, 10, 15, 0.95)),
+    url("https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 50px;
+  align-items: start;
+}
+
+.contact-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 7vw, 5rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  margin-bottom: 24px;
+}
+
+.contact-hero h1 em {
+  font-style: italic;
+  background: var(--grad-main);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.contact-info {
+  display: grid;
+  gap: 0;
+  margin-top: 40px;
+  border-top: 1px solid var(--line);
+}
+
+.contact-info-item {
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.contact-info-item h4 {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--acid);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.contact-info-item p, .contact-info-item a {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.contact-info-item a:hover { color: var(--acid); }
+
+.contact-form-box {
+  padding: 40px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+}
+
+.contact-form-box h2 {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.contact-form-box h2 em { font-style: italic; color: var(--acid); }
+
+.contact-form-box > p {
+  color: var(--muted);
+  margin-bottom: 30px;
+  font-size: 0.94rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.form-group { margin-bottom: 18px; }
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 14px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-bottom-color: var(--acid);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--dim); }
+
+.form-group textarea { min-height: 100px; resize: vertical; }
+.form-group select option { background: var(--bg-2); color: var(--ink); }
+
+.submit-btn {
+  width: 100%;
+  margin-top: 14px;
+  padding: 16px 28px;
+  background: var(--acid);
+  color: var(--bg);
+  border: 0;
+  border-radius: 99px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  background: var(--mint);
+  box-shadow: var(--shadow-acid);
+  transform: translateY(-2px);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99000;
+  background: rgba(5, 5, 10, 0.85);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+  overflow-y: auto;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  width: 100%;
+  max-width: 640px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: var(--bg-2);
+  border: 1px solid var(--line-strong);
+  border-radius: 28px;
+  padding: 0;
+  box-shadow: var(--shadow);
+  transform: scale(0.85) translateY(20px);
+  transition: transform 0.5s cubic-bezier(.16,1,.3,1);
+}
+
+.modal-overlay.active .modal {
+  transform: scale(1) translateY(0);
+}
+
+.modal-img {
+  height: 240px;
+  border-radius: 28px 28px 0 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.modal-img img { height: 100%; object-fit: cover; }
+
+.modal-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent, rgba(20, 20, 28, 0.95));
+}
+
+.modal-body { padding: 36px; }
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(20, 20, 28, 0.9);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  z-index: 10;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: var(--acid);
+  color: var(--bg);
+  border-color: var(--acid);
+  transform: rotate(90deg);
+}
+
+.modal h2 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.modal h2 em { font-style: italic; color: var(--acid); }
+
+.modal p {
+  color: var(--soft);
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.modal-grid div span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--acid);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.modal-grid div strong {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--ink);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99500;
+  padding: 14px 20px;
+  background: var(--bg-2);
+  border: 1px solid var(--acid);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform: translateX(calc(100% + 40px));
+  transition: transform 0.5s cubic-bezier(.16,1,.3,1);
+  box-shadow: var(--shadow-acid);
+  max-width: calc(100% - 40px);
+}
+
+.toast.active { transform: translateX(0); }
+
+.toast-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--acid);
+  color: var(--bg);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.toast strong { display: block; font-size: 0.88rem; margin-bottom: 2px; }
+.toast span { color: var(--muted); font-size: 0.78rem; }
+
+/* Scroll progress */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--acid);
+  z-index: 9999;
+  width: 0%;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 12px var(--acid);
+}
+
+/* Back to top */
+.back-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--acid);
+  color: var(--bg);
+  border: 0;
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+  z-index: 9990;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+  box-shadow: var(--shadow-acid);
+}
+
+.back-top.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+/* Footer */
+.footer {
+  padding: 80px 0 30px;
+  background: var(--bg-2);
+  border-top: 1px solid var(--line);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(4, 1fr);
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.8rem;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer p {
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 340px;
+  font-size: 0.92rem;
+}
+
+.footer h4 {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  color: var(--acid);
+}
+
+.footer ul {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.footer a {
+  color: var(--muted);
+  font-size: 0.88rem;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover { color: var(--acid); }
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--dim);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  flex-wrap: wrap;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE
+============================================ */
+@media (max-width: 1100px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: flex; }
+
+  .home1-hero-grid, .home2-bento, .about3-grid,
+  .services2-content, .pricing3-calc, .products2-featured,
+  .journal2-featured, .journal3-mag, .contact-grid,
+  .process1-step {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .home2-bento { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+  .home2-bento-main { grid-column: 1 / -1; grid-row: auto; }
+
+  .home1-hero-img, .products2-featured-img, .journal2-featured-img,
+  .collection3-img, .portfolio2-img, .process2-card { height: 380px; }
+
+  .services1-grid, .products1-grid, .pricing1-grid, .press1-grid,
+  .journal1-grid, .portfolio3-grid, .services3-flow, .about1-collage,
+  .team2-grid, .process2-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .team1-grid, .team3-list, .press3-logos, .collection2-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .portfolio1-bento { grid-template-columns: repeat(2, 1fr); }
+  .bento-big, .bento-wide, .bento-tall { grid-column: span 1; grid-row: span 1; }
+
+  .pricing1-card.featured { transform: none; }
+
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .collection1-item:nth-child(odd), .about1-collage-img:nth-child(2),
+  .about3-founder:nth-child(2) { margin-top: 0; transform: none; }
+
+  .collection3-row, .collection3-row:nth-child(even),
+  .portfolio2-case, .portfolio2-case:nth-child(even) {
+    grid-template-columns: 1fr;
+  }
+
+  .collection3-row:nth-child(even) .collection3-img,
+  .portfolio2-case:nth-child(even) .portfolio2-img { order: 0; }
+
+  .section { padding: 80px 0; }
+
+  .pricing2-row { grid-template-columns: 2fr 1fr 1fr 1fr; }
+}
+
+@media (max-width: 760px) {
+  .container { width: min(100% - 20px, 1320px); }
+  .section { padding: 60px 0; }
+
+  .navbar { padding: 8px 10px 8px 16px; top: 10px; width: calc(100% - 20px); }
+  .logo { font-size: 1.3rem; }
+  .nav-toggle { width: 38px; height: 38px; }
+
+  .grid-1, .grid-2, .grid-3, .grid-4,
+  .services1-grid, .products1-grid, .pricing1-grid, .press1-grid,
+  .journal1-grid, .portfolio3-grid, .services3-flow, .about1-collage,
+  .team2-grid, .process2-grid, .team1-grid, .team3-list, .press3-logos,
+  .collection2-grid, .collection1-mason, .portfolio1-bento,
+  .products2-grid, .home2-bento, .form-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .home1-hero, .home2-hero, .home3-hero, .about1-hero, .about2-hero,
+  .about3-hero, .services1-hero, .services2-hero, .services3-hero,
+  .products1-hero, .products2-hero, .products3-hero,
+  .collection1-hero, .collection2-hero, .collection3-hero,
+  .portfolio1-hero, .portfolio2-hero, .portfolio3-hero,
+  .pricing1-hero, .pricing2-hero, .pricing3-hero,
+  .process1-hero, .process2-hero, .process3-hero,
+  .team1-hero, .team2-hero, .team3-hero,
+  .press1-hero, .press2-hero, .press3-hero,
+  .journal1-hero, .journal2-hero, .journal3-hero,
+  .contact-hero { padding-top: 100px; padding-bottom: 50px; }
+
+  .home1-hero-img { height: 340px; border-radius: 20px; }
+  .home3-hero-img { height: 280px; margin-top: 40px; }
+
+  .home2-bento-item { padding: 28px; }
+  .home2-bento-main { min-height: 360px; padding: 32px; }
+
+  .about1-collage-img { height: 220px; }
+  .about3-founder { height: 280px; }
+
+  .services1-card { padding: 36px 28px; }
+  .services1-card-num { font-size: 3.6rem; margin-bottom: 20px; }
+
+  .services2-item { grid-template-columns: 50px 1fr 36px; gap: 14px; padding: 26px 0; }
+  .services2-img { height: 220px; }
+
+  .services3-card, .process2-card { padding: 28px 24px; }
+
+  .pricing1-card { padding: 32px 26px; }
+  .pricing2-table { font-size: 0.86rem; }
+  .pricing2-row { grid-template-columns: 1fr 1fr; padding: 16px 20px; gap: 10px; }
+  .pricing2-row.header { font-size: 1rem; }
+  .pricing2-row > *:nth-child(4) { display: none; }
+  .pricing3-summary { position: static; }
+
+  .products2-featured { padding: 28px; gap: 24px; }
+  .products2-featured-img { height: 280px; }
+
+  .products3-row { grid-template-columns: 70px 1fr; gap: 14px; padding: 18px 0; }
+  .products3-row img { width: 60px; height: 60px; }
+  .products3-row > *:nth-child(3),
+  .products3-row > *:nth-child(4),
+  .products3-row > *:nth-child(5) { display: none; }
+
+  .collection1-img { height: 380px; }
+
+  .portfolio1-bento { grid-auto-rows: 240px; }
+
+  .portfolio2-img, .collection3-img, .process2-card { height: 280px; }
+
+  .process1-step { padding: 36px 0; gap: 20px; }
+  .process1-step-num { font-size: 3.6rem; }
+
+  .team1-img { height: 280px; }
+  .team2-card { grid-template-columns: 1fr; padding: 24px; }
+  .team2-img { height: 240px; }
+  .team3-avatar { width: 100px; height: 100px; }
+
+  .press2-row { grid-template-columns: 60px 1fr 100px; gap: 14px; padding: 18px 0; }
+  .press2-row .link { display: none; }
+  .press2-row .year { font-size: 1.3rem; }
+
+  .journal2-item { grid-template-columns: 50px 1fr; gap: 16px; }
+  .journal2-item .meta { display: none; }
+
+  .journal3-main-card { grid-template-columns: 1fr; }
+  .journal3-main-img { height: 200px; }
+
+  .contact-form-box { padding: 28px 22px; }
+  .contact-info-item p, .contact-info-item a { font-size: 1.1rem; }
+
+  .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+  .footer-bottom { flex-direction: column; text-align: center; gap: 10px; }
+
+  .modal-img { height: 180px; }
+  .modal-body { padding: 28px 22px; }
+  .modal h2 { font-size: 1.5rem; }
+  .modal-grid { grid-template-columns: 1fr; }
+
+  .toast { bottom: 14px; right: 14px; left: 14px; padding: 12px 16px; }
+  .back-top { bottom: 80px; right: 14px; }
+
+  .btn-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn { width: 100%; }
+
+  .home2-bento-stat strong { font-size: 2.2rem; }
+}
+
+@media (max-width: 480px) {
+  .container { width: min(100% - 16px, 1320px); }
+
+  .navbar { padding: 6px 8px 6px 14px; }
+  .logo { font-size: 1.15rem; }
+  .nav-toggle { width: 36px; height: 36px; }
+
+  .home1-hero h1, .home3-hero h1, .home2-bento-main h1,
+  .about1-content h1, .about2-manifesto h1, .about3-grid h1,
+  .services1-hero h1, .services2-content h1, .services3-hero h1,
+  .generic-hero h1, .contact-hero h1 {
+    font-size: clamp(2.2rem, 9vw, 3.4rem);
+  }
+
+  .home1-hero-img { height: 280px; }
+  .home3-hero-img { height: 220px; }
+
+  .services1-card { padding: 30px 22px; }
+  .services1-card-num { font-size: 3rem; }
+
+  .pricing1-card { padding: 28px 22px; }
+
+  .modal-body { padding: 24px 18px; }
+  .modal h2 { font-size: 1.3rem; }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .nav-item.open .dropdown { display: none; }
+  *:hover { transform: none !important; }
+  .btn:active { transform: scale(0.97) !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Background layers -->
+<div class="aurora"></div>
+<div class="grain"></div>
+<canvas id="particles"></canvas>
+
+<!-- Scroll progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Preloader -->
+<div class="preloader" id="preloader">
+  <div class="preloader-inner">
+    <div class="preloader-logo">Obsidian</div>
+    <div class="preloader-bar"><div class="preloader-fill" id="preloaderFill"></div></div>
+    <div class="preloader-percent" id="preloaderPercent">0%</div>
+  </div>
+</div>
+
+<!-- Page transition -->
+<div class="page-transition" id="pageTransition">
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<!-- Back to top -->
+<button class="back-top" id="backTop" aria-label="Top">↑</button>
+
+<!-- ============================================
+     NAVBAR WITH DROPDOWNS
+============================================ -->
+<header class="navbar" id="navbar">
+  <a href="#" class="logo" data-page="home">
+    <span class="logo-dot"></span>
+    <span>Obsidian</span>
+  </a>
+
+  <ul class="nav-links">
+    <li class="nav-item" data-has-dropdown>
+      <span class="nav-link active" data-page="home">
+        Home
+        <svg class="nav-link-arrow" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <div class="dropdown">
+        <a class="dropdown-item" data-page="home">
+          <span class="dropdown-item-num">01</span>
+          <div class="dropdown-item-text">
+            <span class="dropdown-item-title">Editorial Split</span>
+            <span class="dropdown-item-sub">Magazine-style hero layout</span>
+          </div>
+          <svg class="dropdown-item-arrow" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+        <a class="dropdown-item" data-page="home2">
+          <span class="dropdown-item-num">02</span>
+          <div class="dropdown-item-text">
+            <span class="dropdown-item-title">Bento Dashboard</span>
+            <span class="dropdown-item-sub">Modern bento grid hero</span>
+          </div>
+          <svg class="dropdown-item-arrow" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+        <a class="dropdown-item" data-page="home3">
+          <span class="dropdown-item-num">03</span>
+          <div class="dropdown-item-text">
+            <span class="dropdown-item-title">Centered Minimal</span>
+            <span class="dropdown-item-sub">Big bold centered hero</span>
+          </div>
+          <svg class="dropdown-item-arrow" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </div>
+    </li>
+
+    <li class="nav-item" data-has-dropdown>
+      <span class="nav-link" data-page="about">
+        About
+        <svg class="nav-link-arrow" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <div class="dropdown">
+        <a class="dropdown-item" data-page="about">
+          <span class="dropdown-item-num">01</span>
+          <div class="dropdown-item-text">
+            <span class="dropdown-item-title">Story & Collage</span>
+            <span class="dropdown-item-sub">Visual storytelling layout</span>
+          </div>
+          <svg class="dropdown-item-arrow" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+        <a class="dropdown-item" data-page="about2">
+          <span class="dropdown-item-num">02</span>
+          <div class="dropdown-item-text">
+            <span class="dropdown-item-title">Manifesto</span>
+            <span class="dropdown-item-sub">Bold pillars & principles</span>
+          </div>
+          <svg class="dropdown-item-arrow" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+        <a class="dropdown-item" data-page="about3">
+          <span class="dropdown-item-num">03</span>
+          <div class="dropdown-item-text">
+            <span class="dropdown-item-title">Founders</span>
+            <span class="dropdown-item-sub">Team-led profile layout</span>
+          </div>
+          <svg class="dropdown-item-arrow" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </div>
+    </li>
+
+    <li class="nav-item" data-has-dropdown>
+      <span class="nav-link" data-page="services">
+        Services
+        <svg class="nav-link-arrow" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <div class="dropdown">
+        <a class="dropdown-item" data-page="services">
+          <span class="dropdown-item-num">01</span>
+          <div class="dropdown-item-text">
+            <span class="dropdown-item-title">Numbered Cards</span>
+            <span class="dropdown-item-sub">Premium service cards</span>
+          </div>
+          <svg class="dropdown-item-arrow" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+        <a class="dropdown-item" data-page="services2">
+          <span class="dropdown-item-num">02</span>
+          <div class="dropdown-item-text">
+            <span class="dropdown-item-title">Service List</span>
+            <span class="dropdown-item-sub">Editorial row layout</span>
+          </div>
+          <svg class="dropdown-item-arrow" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+        <a class="dropdown-item" data-page="services3">
+          <span class="dropdown-item-num">03</span>
+          <div class="dropdown-item-text">
+            <span class="dropdown-item-title">Process Flow</span>
+            <span class="dropdown-item-sub">Icon-led service grid</span>
+          </div>
+          <svg class="dropdown-item-arrow" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </div>
+    </li>
+
+    <li class="nav-item" data-has-dropdown>
+      <span class="nav-link" data-page="products">
+        Products
+        <svg class="nav-link-arrow" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <div class="dropdown">
+        <a class="dropdown-item" data-page="products"><span class="dropdown-item-num">01</span><div class="dropdown-item-text"><span class="dropdown-item-title">Product Grid</span><span class="dropdown-item-sub">Classic e-commerce style</span></div></a>
+        <a class="dropdown-item" data-page="products2"><span class="dropdown-item-num">02</span><div class="dropdown-item-text"><span class="dropdown-item-title">Featured + Grid</span><span class="dropdown-item-sub">Highlight your hero product</span></div></a>
+        <a class="dropdown-item" data-page="products3"><span class="dropdown-item-num">03</span><div class="dropdown-item-text"><span class="dropdown-item-title">Catalog List</span><span class="dropdown-item-sub">Compact list view</span></div></a>
+      </div>
+    </li>
+
+    <li class="nav-item" data-has-dropdown>
+      <span class="nav-link" data-page="collection">
+        Collection
+        <svg class="nav-link-arrow" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <div class="dropdown">
+        <a class="dropdown-item" data-page="collection"><span class="dropdown-item-num">01</span><div class="dropdown-item-text"><span class="dropdown-item-title">Mason Grid</span><span class="dropdown-item-sub">Offset masonry layout</span></div></a>
+        <a class="dropdown-item" data-page="collection2"><span class="dropdown-item-num">02</span><div class="dropdown-item-text"><span class="dropdown-item-title">Card Grid</span><span class="dropdown-item-sub">Uniform 4-column showcase</span></div></a>
+        <a class="dropdown-item" data-page="collection3"><span class="dropdown-item-num">03</span><div class="dropdown-item-text"><span class="dropdown-item-title">Editorial</span><span class="dropdown-item-sub">Magazine-style spread</span></div></a>
+      </div>
+    </li>
+
+    <li class="nav-item" data-has-dropdown>
+      <span class="nav-link" data-page="portfolio">
+        Portfolio
+        <svg class="nav-link-arrow" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <div class="dropdown">
+        <a class="dropdown-item" data-page="portfolio"><span class="dropdown-item-num">01</span><div class="dropdown-item-text"><span class="dropdown-item-title">Bento Grid</span><span class="dropdown-item-sub">Mixed-size showcase</span></div></a>
+        <a class="dropdown-item" data-page="portfolio2"><span class="dropdown-item-num">02</span><div class="dropdown-item-text"><span class="dropdown-item-title">Case Studies</span><span class="dropdown-item-sub">Long-form alternating layout</span></div></a>
+        <a class="dropdown-item" data-page="portfolio3"><span class="dropdown-item-num">03</span><div class="dropdown-item-text"><span class="dropdown-item-title">Clean Grid</span><span class="dropdown-item-sub">Uniform card portfolio</span></div></a>
+      </div>
+    </li>
+
+    <li class="nav-item" data-has-dropdown>
+      <span class="nav-link" data-page="pricing">
+        Pricing
+        <svg class="nav-link-arrow" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <div class="dropdown">
+        <a class="dropdown-item" data-page="pricing"><span class="dropdown-item-num">01</span><div class="dropdown-item-text"><span class="dropdown-item-title">3 Tier Cards</span><span class="dropdown-item-sub">Classic pricing layout</span></div></a>
+        <a class="dropdown-item" data-page="pricing2"><span class="dropdown-item-num">02</span><div class="dropdown-item-text"><span class="dropdown-item-title">Comparison Table</span><span class="dropdown-item-sub">Feature comparison grid</span></div></a>
+        <a class="dropdown-item" data-page="pricing3"><span class="dropdown-item-num">03</span><div class="dropdown-item-text"><span class="dropdown-item-title">Calculator</span><span class="dropdown-item-sub">Build-your-own pricing</span></div></a>
+      </div>
+    </li>
+
+    <li class="nav-item" data-has-dropdown>
+      <span class="nav-link" data-page="process">
+        Process
+        <svg class="nav-link-arrow" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <div class="dropdown">
+        <a class="dropdown-item" data-page="process"><span class="dropdown-item-num">01</span><div class="dropdown-item-text"><span class="dropdown-item-title">Numbered Steps</span><span class="dropdown-item-sub">Editorial step list</span></div></a>
+        <a class="dropdown-item" data-page="process2"><span class="dropdown-item-num">02</span><div class="dropdown-item-text"><span class="dropdown-item-title">Step Cards</span><span class="dropdown-item-sub">Icon-led grid</span></div></a>
+        <a class="dropdown-item" data-page="process3"><span class="dropdown-item-num">03</span><div class="dropdown-item-text"><span class="dropdown-item-title">Timeline</span><span class="dropdown-item-sub">Vertical milestone path</span></div></a>
+      </div>
+    </li>
+
+    <li class="nav-item" data-has-dropdown>
+      <span class="nav-link" data-page="team">
+        Team
+        <svg class="nav-link-arrow" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <div class="dropdown">
+        <a class="dropdown-item" data-page="team"><span class="dropdown-item-num">01</span><div class="dropdown-item-text"><span class="dropdown-item-title">Portrait Grid</span><span class="dropdown-item-sub">Clean 4-col grid</span></div></a>
+        <a class="dropdown-item" data-page="team2"><span class="dropdown-item-num">02</span><div class="dropdown-item-text"><span class="dropdown-item-title">Big Profile Cards</span><span class="dropdown-item-sub">2-col with bios</span></div></a>
+        <a class="dropdown-item" data-page="team3"><span class="dropdown-item-num">03</span><div class="dropdown-item-text"><span class="dropdown-item-title">By Department</span><span class="dropdown-item-sub">Organized by team</span></div></a>
+      </div>
+    </li>
+
+    <li class="nav-item" data-has-dropdown>
+      <span class="nav-link" data-page="press">
+        Press
+        <svg class="nav-link-arrow" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <div class="dropdown">
+        <a class="dropdown-item" data-page="press"><span class="dropdown-item-num">01</span><div class="dropdown-item-text"><span class="dropdown-item-title">Quote Cards</span><span class="dropdown-item-sub">Press quote grid</span></div></a>
+        <a class="dropdown-item" data-page="press2"><span class="dropdown-item-num">02</span><div class="dropdown-item-text"><span class="dropdown-item-title">Awards List</span><span class="dropdown-item-sub">Editorial table</span></div></a>
+        <a class="dropdown-item" data-page="press3"><span class="dropdown-item-num">03</span><div class="dropdown-item-text"><span class="dropdown-item-title">Featured Logos</span><span class="dropdown-item-sub">Logo wall grid</span></div></a>
+      </div>
+    </li>
+
+    <li class="nav-item" data-has-dropdown>
+      <span class="nav-link" data-page="journal">
+        Journal
+        <svg class="nav-link-arrow" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      <div class="dropdown">
+        <a class="dropdown-item" data-page="journal"><span class="dropdown-item-num">01</span><div class="dropdown-item-text"><span class="dropdown-item-title">3 Column Grid</span><span class="dropdown-item-sub">Clean blog grid</span></div></a>
+        <a class="dropdown-item" data-page="journal2"><span class="dropdown-item-num">02</span><div class="dropdown-item-text"><span class="dropdown-item-title">Featured + List</span><span class="dropdown-item-sub">Hero post + archive</span></div></a>
+        <a class="dropdown-item" data-page="journal3"><span class="dropdown-item-num">03</span><div class="dropdown-item-text"><span class="dropdown-item-title">Magazine</span><span class="dropdown-item-sub">Main + sidebar layout</span></div></a>
+      </div>
+    </li>
+
+    <li><a class="nav-link nav-cta" data-page="contact">Contact →</a></li>
+  </ul>
+
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ============================================
+     MOBILE MENU WITH ACCORDIONS
+============================================ -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <div class="mobile-nav-item">
+      <div class="mobile-nav-header has-dropdown">Home</div>
+      <div class="mobile-dropdown">
+        <a class="mobile-dropdown-item" data-page="home"><span class="mobile-dropdown-item-num">01</span> Editorial Split</a>
+        <a class="mobile-dropdown-item" data-page="home2"><span class="mobile-dropdown-item-num">02</span> Bento Dashboard</a>
+        <a class="mobile-dropdown-item" data-page="home3"><span class="mobile-dropdown-item-num">03</span> Centered Minimal</a>
+      </div>
+    </div>
+
+    <div class="mobile-nav-item">
+      <div class="mobile-nav-header has-dropdown">About</div>
+      <div class="mobile-dropdown">
+        <a class="mobile-dropdown-item" data-page="about"><span class="mobile-dropdown-item-num">01</span> Story & Collage</a>
+        <a class="mobile-dropdown-item" data-page="about2"><span class="mobile-dropdown-item-num">02</span> Manifesto</a>
+        <a class="mobile-dropdown-item" data-page="about3"><span class="mobile-dropdown-item-num">03</span> Founders</a>
+      </div>
+    </div>
+
+    <div class="mobile-nav-item">
+      <div class="mobile-nav-header has-dropdown">Services</div>
+      <div class="mobile-dropdown">
+        <a class="mobile-dropdown-item" data-page="services"><span class="mobile-dropdown-item-num">01</span> Numbered Cards</a>
+        <a class="mobile-dropdown-item" data-page="services2"><span class="mobile-dropdown-item-num">02</span> Service List</a>
+        <a class="mobile-dropdown-item" data-page="services3"><span class="mobile-dropdown-item-num">03</span> Process Flow</a>
+      </div>
+    </div>
+
+    <div class="mobile-nav-item">
+      <div class="mobile-nav-header has-dropdown">Products</div>
+      <div class="mobile-dropdown">
+        <a class="mobile-dropdown-item" data-page="products"><span class="mobile-dropdown-item-num">01</span> Product Grid</a>
+        <a class="mobile-dropdown-item" data-page="products2"><span class="mobile-dropdown-item-num">02</span> Featured + Grid</a>
+        <a class="mobile-dropdown-item" data-page="products3"><span class="mobile-dropdown-item-num">03</span> Catalog List</a>
+      </div>
+    </div>
+
+    <div class="mobile-nav-item">
+      <div class="mobile-nav-header has-dropdown">Collection</div>
+      <div class="mobile-dropdown">
+        <a class="mobile-dropdown-item" data-page="collection"><span class="mobile-dropdown-item-num">01</span> Mason Grid</a>
+        <a class="mobile-dropdown-item" data-page="collection2"><span class="mobile-dropdown-item-num">02</span> Card Grid</a>
+        <a class="mobile-dropdown-item" data-page="collection3"><span class="mobile-dropdown-item-num">03</span> Editorial</a>
+      </div>
+    </div>
+
+    <div class="mobile-nav-item">
+      <div class="mobile-nav-header has-dropdown">Portfolio</div>
+      <div class="mobile-dropdown">
+        <a class="mobile-dropdown-item" data-page="portfolio"><span class="mobile-dropdown-item-num">01</span> Bento Grid</a>
+        <a class="mobile-dropdown-item" data-page="portfolio2"><span class="mobile-dropdown-item-num">02</span> Case Studies</a>
+        <a class="mobile-dropdown-item" data-page="portfolio3"><span class="mobile-dropdown-item-num">03</span> Clean Grid</a>
+      </div>
+    </div>
+
+    <div class="mobile-nav-item">
+      <div class="mobile-nav-header has-dropdown">Pricing</div>
+      <div class="mobile-dropdown">
+        <a class="mobile-dropdown-item" data-page="pricing"><span class="mobile-dropdown-item-num">01</span> 3 Tier Cards</a>
+        <a class="mobile-dropdown-item" data-page="pricing2"><span class="mobile-dropdown-item-num">02</span> Comparison Table</a>
+        <a class="mobile-dropdown-item" data-page="pricing3"><span class="mobile-dropdown-item-num">03</span> Calculator</a>
+      </div>
+    </div>
+
+    <div class="mobile-nav-item">
+      <div class="mobile-nav-header has-dropdown">Process</div>
+      <div class="mobile-dropdown">
+        <a class="mobile-dropdown-item" data-page="process"><span class="mobile-dropdown-item-num">01</span> Numbered Steps</a>
+        <a class="mobile-dropdown-item" data-page="process2"><span class="mobile-dropdown-item-num">02</span> Step Cards</a>
+        <a class="mobile-dropdown-item" data-page="process3"><span class="mobile-dropdown-item-num">03</span> Timeline</a>
+      </div>
+    </div>
+
+    <div class="mobile-nav-item">
+      <div class="mobile-nav-header has-dropdown">Team</div>
+      <div class="mobile-dropdown">
+        <a class="mobile-dropdown-item" data-page="team"><span class="mobile-dropdown-item-num">01</span> Portrait Grid</a>
+        <a class="mobile-dropdown-item" data-page="team2"><span class="mobile-dropdown-item-num">02</span> Big Profile Cards</a>
+        <a class="mobile-dropdown-item" data-page="team3"><span class="mobile-dropdown-item-num">03</span> By Department</a>
+      </div>
+    </div>
+
+    <div class="mobile-nav-item">
+      <div class="mobile-nav-header has-dropdown">Press</div>
+      <div class="mobile-dropdown">
+        <a class="mobile-dropdown-item" data-page="press"><span class="mobile-dropdown-item-num">01</span> Quote Cards</a>
+        <a class="mobile-dropdown-item" data-page="press2"><span class="mobile-dropdown-item-num">02</span> Awards List</a>
+        <a class="mobile-dropdown-item" data-page="press3"><span class="mobile-dropdown-item-num">03</span> Featured Logos</a>
+      </div>
+    </div>
+
+    <div class="mobile-nav-item">
+      <div class="mobile-nav-header has-dropdown">Journal</div>
+      <div class="mobile-dropdown">
+        <a class="mobile-dropdown-item" data-page="journal"><span class="mobile-dropdown-item-num">01</span> 3 Column Grid</a>
+        <a class="mobile-dropdown-item" data-page="journal2"><span class="mobile-dropdown-item-num">02</span> Featured + List</a>
+        <a class="mobile-dropdown-item" data-page="journal3"><span class="mobile-dropdown-item-num">03</span> Magazine</a>
+      </div>
+    </div>
+
+    <a class="mobile-cta" data-page="contact">Start a Project →</a>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✓</div>
+  <div>
+    <strong id="toastTitle">Success</strong>
+    <span id="toastMsg">Action completed</span>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">×</button>
+    <div class="modal-img"><img id="modalImage" src="" alt=""></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ========= HOME 1 ========= -->
+<main class="page active" id="page-home">
+  <section class="home1-hero">
+    <div class="container">
+      <div class="home1-hero-grid">
+        <div>
+          <div class="eyebrow">Vol 24 · Issue One</div>
+          <h1>Where bold ideas meet <em>refined</em> execution.</h1>
+          <p class="lead">A multi-disciplinary studio crafting brand experiences, products, and stories for ambitious companies worldwide.</p>
+          <div class="btn-row">
+            <button class="btn btn-acid" data-modal="hello">Start a Project →</button>
+            <a class="btn btn-ghost" data-page="portfolio">View Work</a>
+          </div>
+        </div>
+        <div class="home1-hero-img"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center;">Why Obsidian</div>
+      <h2 class="display center" style="font-size: clamp(2rem, 5vw, 3.6rem); max-width: 900px; margin: 0 auto 60px;">We bring <em class="italic" style="color: var(--acid);">craft</em>, clarity, and the kind of polish that makes brands unforgettable.</h2>
+    </div>
+  </section>
+</main>
+
+<!-- ========= HOME 2 ========= -->
+<main class="page" id="page-home2">
+  <section class="home2-hero">
+    <div class="container">
+      <div class="home2-bento">
+        <div class="home2-bento-item home2-bento-main">
+          <div>
+            <span class="home2-bento-tag">Live · Q1 2025</span>
+          </div>
+          <h1>Design that <em>moves</em> the needle.</h1>
+        </div>
+        <div class="home2-bento-item">
+          <div class="home2-bento-stat">
+            <strong>240+</strong>
+            <span>Projects shipped</span>
+          </div>
+        </div>
+        <div class="home2-bento-item">
+          <div class="home2-bento-stat">
+            <strong>11yr</strong>
+            <span>In business</span>
+          </div>
+        </div>
+        <div class="home2-bento-item">
+          <div class="home2-bento-stat">
+            <strong>98%</strong>
+            <span>Client retention</span>
+          </div>
+        </div>
+        <div class="home2-bento-item">
+          <div class="home2-bento-stat">
+            <strong>56</strong>
+            <span>Awards won</span>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top: 40px;">
+        <a class="btn btn-acid" data-page="portfolio">View Portfolio →</a>
+        <a class="btn btn-ghost" data-page="contact">Contact Us</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= HOME 3 ========= -->
+<main class="page" id="page-home3">
+  <section class="home3-hero">
+    <div class="container">
+      <span class="home3-hero-tag">Now Accepting Q2 Projects</span>
+      <h1>The world's most <em>iconic</em> brands start here.</h1>
+      <p class="lead center center-block">An independent studio creating brand identities, websites, and digital experiences that age beautifully.</p>
+      <div class="btn-row" style="justify-content:center;">
+        <a class="btn btn-hot" data-page="contact">Start Project →</a>
+        <a class="btn btn-ghost" data-page="portfolio">View Selected Work</a>
+      </div>
+      <div class="home3-hero-img"></div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= ABOUT 1 ========= -->
+<main class="page" id="page-about">
+  <section class="about1-hero">
+    <div class="container">
+      <div class="about1-content">
+        <div class="eyebrow center" style="justify-content:center;">About</div>
+        <h1>A studio of makers, thinkers, <em>and storytellers</em>.</h1>
+        <p class="lead center center-block">For over a decade we've helped brands across fashion, tech, hospitality, and the arts find their voice and tell their story.</p>
+      </div>
+      <div class="about1-collage">
+        <div class="about1-collage-img"></div>
+        <div class="about1-collage-img"></div>
+        <div class="about1-collage-img"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= ABOUT 2 ========= -->
+<main class="page" id="page-about2">
+  <section class="about2-hero">
+    <div class="container">
+      <div class="about2-manifesto">
+        <div class="about2-manifesto-num">A · MANIFESTO</div>
+        <h1>We make <em>fewer things</em>, but make them count.</h1>
+        <p class="lead">Three core principles guide everything we do — and everything we say no to.</p>
+
+        <div class="about2-manifesto-grid">
+          <div class="about2-pillar">
+            <div class="about2-pillar-num">01</div>
+            <h3>Craft over speed</h3>
+            <p>We'd rather ship one extraordinary thing than ten ordinary ones. Every project gets the time it deserves.</p>
+          </div>
+          <div class="about2-pillar">
+            <div class="about2-pillar-num">02</div>
+            <h3>Substance over style</h3>
+            <p>Beautiful design that works hard. We focus on outcomes, not trends or vanity metrics.</p>
+          </div>
+          <div class="about2-pillar">
+            <div class="about2-pillar-num">03</div>
+            <h3>Honesty over hype</h3>
+            <p>We tell clients what they need to hear, not what they want. Always with kindness and respect.</p>
+          </div>
+          <div class="about2-pillar">
+            <div class="about2-pillar-num">04</div>
+            <h3>Relationships over transactions</h3>
+            <p>Most of our clients come back. We're playing the long game and we build for the long term.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= ABOUT 3 ========= -->
+<main class="page" id="page-about3">
+  <section class="about3-hero">
+    <div class="container">
+      <div class="about3-grid">
+        <div>
+          <div class="eyebrow">Founders</div>
+          <h1>Meet the three minds behind <em>Obsidian</em>.</h1>
+          <p class="lead">Founded in 2014, we're a tight-knit team of designers, technologists, and writers.</p>
+        </div>
+        <div class="about3-founders">
+          <div class="about3-founder">
+            <img src="https://i.pravatar.cc/700?img=12" alt="">
+            <div class="about3-founder-info">
+              <strong>Alex Carter</strong>
+              <span>Creative Director</span>
+            </div>
+          </div>
+          <div class="about3-founder">
+            <img src="https://i.pravatar.cc/700?img=47" alt="">
+            <div class="about3-founder-info">
+              <strong>Maya Chen</strong>
+              <span>Design Director</span>
+            </div>
+          </div>
+          <div class="about3-founder">
+            <img src="https://i.pravatar.cc/700?img=32" alt="">
+            <div class="about3-founder-info">
+              <strong>James Wilson</strong>
+              <span>Tech Director</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= SERVICES 1 ========= -->
+<main class="page" id="page-services">
+  <section class="services1-hero">
+    <div class="container">
+      <div class="eyebrow">Services</div>
+      <h1>Six services. One <em>obsessive</em> studio.</h1>
+      <p class="lead">From brand strategy to launch — every service is delivered with the same care, depth, and craft.</p>
+
+      <div class="services1-grid">
+        <article class="services1-card">
+          <div class="services1-card-num">01</div>
+          <h3>Brand Identity</h3>
+          <p>Logos, color systems, typography, and visual guidelines that build recognition across every touchpoint.</p>
+          <div class="services1-tags"><span>Logo</span><span>Typography</span><span>Guidelines</span></div>
+        </article>
+        <article class="services1-card">
+          <div class="services1-card-num">02</div>
+          <h3>Web Design & Build</h3>
+          <p>Beautiful, fast, scrollable websites with editorial typography and refined motion design.</p>
+          <div class="services1-tags"><span>Design</span><span>Code</span><span>Motion</span></div>
+        </article>
+        <article class="services1-card">
+          <div class="services1-card-num">03</div>
+          <h3>Product Design</h3>
+          <p>User interfaces and digital products that combine usability with beautiful aesthetics.</p>
+          <div class="services1-tags"><span>UI</span><span>UX</span><span>Systems</span></div>
+        </article>
+        <article class="services1-card">
+          <div class="services1-card-num">04</div>
+          <h3>Editorial Design</h3>
+          <p>Magazines, books, annual reports, and printed matter with editorial precision.</p>
+          <div class="services1-tags"><span>Print</span><span>Layout</span><span>Type</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= SERVICES 2 ========= -->
+<main class="page" id="page-services2">
+  <section class="services2-hero">
+    <div class="container">
+      <div class="services2-content">
+        <div class="services2-sticky">
+          <div class="eyebrow" style="color: var(--hot); --acid: var(--hot);">Services List</div>
+          <h1>Everything you need, <em>nothing you don't</em>.</h1>
+          <p class="lead">A focused offering. Each service is its own deep practice — not a checkbox.</p>
+          <div class="services2-img"></div>
+        </div>
+
+        <div class="services2-list">
+          <article class="services2-item">
+            <div class="services2-num">01</div>
+            <div>
+              <h3>Brand Identity</h3>
+              <p>Visual systems that build recognition</p>
+            </div>
+            <div class="services2-arrow">→</div>
+          </article>
+          <article class="services2-item">
+            <div class="services2-num">02</div>
+            <div>
+              <h3>Web Design</h3>
+              <p>Beautiful, performant websites</p>
+            </div>
+            <div class="services2-arrow">→</div>
+          </article>
+          <article class="services2-item">
+            <div class="services2-num">03</div>
+            <div>
+              <h3>Product Design</h3>
+              <p>Interfaces that delight</p>
+            </div>
+            <div class="services2-arrow">→</div>
+          </article>
+          <article class="services2-item">
+            <div class="services2-num">04</div>
+            <div>
+              <h3>Editorial</h3>
+              <p>Print with precision</p>
+            </div>
+            <div class="services2-arrow">→</div>
+          </article>
+          <article class="services2-item">
+            <div class="services2-num">05</div>
+            <div>
+              <h3>Packaging</h3>
+              <p>Memorable unboxing experiences</p>
+            </div>
+            <div class="services2-arrow">→</div>
+          </article>
+          <article class="services2-item">
+            <div class="services2-num">06</div>
+            <div>
+              <h3>Art Direction</h3>
+              <p>Cohesive campaign vision</p>
+            </div>
+            <div class="services2-arrow">→</div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= SERVICES 3 ========= -->
+<main class="page" id="page-services3">
+  <section class="services3-hero">
+    <div class="container">
+      <div class="eyebrow" style="color: var(--electric); --acid: var(--electric);">Process Flow</div>
+      <h1>Three phases. Six services. <em>Endless possibilities</em>.</h1>
+      <p class="lead">From strategy to launch — here's how we move work forward.</p>
+
+      <div class="services3-flow">
+        <article class="services3-card">
+          <div class="services3-icon">💡</div>
+          <h3>Strategy</h3>
+          <p>Research, positioning, and roadmap. Every project starts with clarity.</p>
+        </article>
+        <article class="services3-card">
+          <div class="services3-icon">🎨</div>
+          <h3>Design</h3>
+          <p>Visual systems, interfaces, and editorial work. Crafted with care.</p>
+        </article>
+        <article class="services3-card">
+          <div class="services3-icon">🚀</div>
+          <h3>Launch</h3>
+          <p>Production, testing, and a confident launch. Plus support after go-live.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PRODUCTS 1 ========= -->
+<main class="page" id="page-products">
+  <section class="generic-hero products1-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center;">In-House Collection</div>
+      <h1>Beautifully made, <em>thoughtfully</em> sold.</h1>
+      <p class="lead center center-block">A curated collection of physical and digital products designed by our studio.</p>
+
+      <div class="products1-grid">
+        <article class="products1-card">
+          <div class="products1-img"><span class="products1-badge">New</span><img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=900&q=85" alt=""></div>
+          <div class="products1-content">
+            <h3>The Studio Journal</h3>
+            <p>Letterpress notebook with handsewn binding.</p>
+            <div class="products1-meta"><span class="products1-price">$48</span><span class="products1-tag">Print</span></div>
+          </div>
+        </article>
+        <article class="products1-card">
+          <div class="products1-img"><img src="https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=900&q=85" alt=""></div>
+          <div class="products1-content">
+            <h3>Type Library Vol 1</h3>
+            <p>8 custom typefaces from our design team.</p>
+            <div class="products1-meta"><span class="products1-price">$285</span><span class="products1-tag">Digital</span></div>
+          </div>
+        </article>
+        <article class="products1-card">
+          <div class="products1-img"><span class="products1-badge">Limited</span><img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=900&q=85" alt=""></div>
+          <div class="products1-content">
+            <h3>Print Set No. 02</h3>
+            <p>6 limited-edition letterpress prints.</p>
+            <div class="products1-meta"><span class="products1-price">$120</span><span class="products1-tag">Print</span></div>
+          </div>
+        </article>
+        <article class="products1-card">
+          <div class="products1-img"><img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=900&q=85" alt=""></div>
+          <div class="products1-content">
+            <h3>Brand Template Kit</h3>
+            <p>Figma template for brand guidelines.</p>
+            <div class="products1-meta"><span class="products1-price">$95</span><span class="products1-tag">Digital</span></div>
+          </div>
+        </article>
+        <article class="products1-card">
+          <div class="products1-img"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=900&q=85" alt=""></div>
+          <div class="products1-content">
+            <h3>Studio Tote</h3>
+            <p>Heavyweight canvas tote, hand-screen-printed.</p>
+            <div class="products1-meta"><span class="products1-price">$34</span><span class="products1-tag">Apparel</span></div>
+          </div>
+        </article>
+        <article class="products1-card">
+          <div class="products1-img"><span class="products1-badge">Bestseller</span><img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=900&q=85" alt=""></div>
+          <div class="products1-content">
+            <h3>The Studio Book</h3>
+            <p>240-page hardcover retrospective.</p>
+            <div class="products1-meta"><span class="products1-price">$65</span><span class="products1-tag">Print</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PRODUCTS 2 ========= -->
+<main class="page" id="page-products2">
+  <section class="generic-hero products2-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--hot); --acid: var(--hot);">Featured Product</div>
+      <h1>Our latest <em>obsession</em>.</h1>
+
+      <div class="products2-featured">
+        <div class="products2-featured-img"></div>
+        <div>
+          <span style="font-family: var(--font-mono); font-size: 0.74rem; color: var(--hot); letter-spacing: 0.14em; text-transform: uppercase;">Issue 04 · Just Released</span>
+          <h2>The <em>Studio Quarterly</em> magazine.</h2>
+          <p style="color: var(--soft); line-height: 1.7; margin-bottom: 24px;">A printed magazine made by us, twice a year. Issue 04 explores craft, slow design, and the case for making fewer things.</p>
+          <div style="display: flex; gap: 24px; margin-bottom: 28px;">
+            <div><strong style="font-family: var(--font-display); font-style: italic; font-size: 2rem; color: var(--hot); display: block;">$24</strong><span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em;">PER ISSUE</span></div>
+            <div><strong style="font-family: var(--font-display); font-style: italic; font-size: 2rem; color: var(--hot); display: block;">160pg</strong><span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em;">PRINTED</span></div>
+          </div>
+          <div class="btn-row" style="margin: 0;">
+            <button class="btn btn-hot">Order Issue 04 →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PRODUCTS 3 ========= -->
+<main class="page" id="page-products3">
+  <section class="generic-hero products3-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center;">Full Catalog</div>
+      <h1>Every product, <em>at a glance</em>.</h1>
+
+      <div class="products3-list">
+        <div class="products3-row">
+          <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=300&q=85" alt="">
+          <div><h3>The Studio Journal</h3><p>Letterpress notebook · 240 pages</p></div>
+          <div>Notebooks</div>
+          <div class="price">$48</div>
+          <div class="arrow">→</div>
+        </div>
+        <div class="products3-row">
+          <img src="https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=300&q=85" alt="">
+          <div><h3>Type Library Vol 1</h3><p>8 custom typefaces · OTF/TTF</p></div>
+          <div>Typography</div>
+          <div class="price">$285</div>
+          <div class="arrow">→</div>
+        </div>
+        <div class="products3-row">
+          <img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=300&q=85" alt="">
+          <div><h3>Print Set No. 02</h3><p>Letterpress prints · Limited edition</p></div>
+          <div>Prints</div>
+          <div class="price">$120</div>
+          <div class="arrow">→</div>
+        </div>
+        <div class="products3-row">
+          <img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=300&q=85" alt="">
+          <div><h3>The Studio Book</h3><p>240-page hardcover · Numbered</p></div>
+          <div>Books</div>
+          <div class="price">$65</div>
+          <div class="arrow">→</div>
+        </div>
+        <div class="products3-row">
+          <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=300&q=85" alt="">
+          <div><h3>Studio Tote</h3><p>Canvas tote · Hand-printed</p></div>
+          <div>Apparel</div>
+          <div class="price">$34</div>
+          <div class="arrow">→</div>
+        </div>
+        <div class="products3-row">
+          <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=300&q=85" alt="">
+          <div><h3>Brand Template Kit</h3><p>Figma file · Documentation</p></div>
+          <div>Digital</div>
+          <div class="price">$95</div>
+          <div class="arrow">→</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= COLLECTION 1 ========= -->
+<main class="page" id="page-collection">
+  <section class="generic-hero collection1-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center;">Vol 24 Collection</div>
+      <h1>Quiet. Considered. <em>Deeply made</em>.</h1>
+      <p class="lead center center-block">A curated showcase of recent studio work. 12 pieces. Winter 2025.</p>
+
+      <div class="collection1-mason">
+        <article class="collection1-item">
+          <div class="collection1-img"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=85" alt=""></div>
+          <div class="collection1-meta"><div><h3>Maison de Lyon</h3><p>Brand Identity</p></div><div class="collection1-num">N°01</div></div>
+        </article>
+        <article class="collection1-item">
+          <div class="collection1-img"><img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=900&q=85" alt=""></div>
+          <div class="collection1-meta"><div><h3>Atelier Bloom</h3><p>Packaging Design</p></div><div class="collection1-num">N°02</div></div>
+        </article>
+        <article class="collection1-item">
+          <div class="collection1-img"><img src="https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=900&q=85" alt=""></div>
+          <div class="collection1-meta"><div><h3>Studio Quarterly</h3><p>Editorial Design</p></div><div class="collection1-num">N°03</div></div>
+        </article>
+        <article class="collection1-item">
+          <div class="collection1-img"><img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=900&q=85" alt=""></div>
+          <div class="collection1-meta"><div><h3>Nordic Coffee</h3><p>Brand & Packaging</p></div><div class="collection1-num">N°04</div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= COLLECTION 2 ========= -->
+<main class="page" id="page-collection2">
+  <section class="generic-hero collection2-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center;">Card Collection</div>
+      <h1>Eight pieces. One <em>cohesive</em> story.</h1>
+
+      <div class="collection2-grid">
+        <article class="collection2-card">
+          <img src="https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="collection2-info"><span>Identity</span><h3>Halo Studio</h3></div>
+        </article>
+        <article class="collection2-card">
+          <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="collection2-info"><span>Web</span><h3>Verse</h3></div>
+        </article>
+        <article class="collection2-card">
+          <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="collection2-info"><span>Editorial</span><h3>Periodical</h3></div>
+        </article>
+        <article class="collection2-card">
+          <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="collection2-info"><span>Brand</span><h3>Cipher Co.</h3></div>
+        </article>
+        <article class="collection2-card">
+          <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="collection2-info"><span>Print</span><h3>Studio Book</h3></div>
+        </article>
+        <article class="collection2-card">
+          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="collection2-info"><span>Web</span><h3>Aurora Audio</h3></div>
+        </article>
+        <article class="collection2-card">
+          <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="collection2-info"><span>Identity</span><h3>Atelier Bloom</h3></div>
+        </article>
+        <article class="collection2-card">
+          <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="collection2-info"><span>Web</span><h3>Bloom Botanicals</h3></div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= COLLECTION 3 ========= -->
+<main class="page" id="page-collection3">
+  <section class="generic-hero collection3-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--plum); --acid: var(--plum);">Editorial Spread</div>
+      <h1>The studio's <em>greatest hits</em>.</h1>
+
+      <div class="collection3-spread">
+        <div class="collection3-row">
+          <div class="collection3-img" style="background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1100&q=85');"></div>
+          <div>
+            <div class="collection3-meta">N°01 · Hospitality</div>
+            <h3>Maison de Lyon — A complete <em>rebrand</em>.</h3>
+            <p>From identity to interior signage, we crafted a refined brand world for one of Paris's most beloved hotels.</p>
+            <button class="btn btn-ghost" data-modal="case1">View Case →</button>
+          </div>
+        </div>
+
+        <div class="collection3-row">
+          <div class="collection3-img" style="background-image: url('https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=1100&q=85');"></div>
+          <div>
+            <div class="collection3-meta">N°02 · Hospitality</div>
+            <h3>Nordic Coffee — Brand and <em>packaging</em>.</h3>
+            <p>A premium specialty coffee brand needed a story as rich as their roasts. We delivered identity, packaging, and a flagship store experience.</p>
+            <button class="btn btn-ghost" data-modal="case2">View Case →</button>
+          </div>
+        </div>
+
+        <div class="collection3-row">
+          <div class="collection3-img" style="background-image: url('https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=1100&q=85');"></div>
+          <div>
+            <div class="collection3-meta">N°03 · Editorial</div>
+            <h3>Studio Quarterly — Our own <em>magazine</em>.</h3>
+            <p>A printed magazine we publish twice a year. 160 pages of essays, photography, and craft conversations.</p>
+            <button class="btn btn-ghost" data-modal="case3">View Case →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PORTFOLIO 1 ========= -->
+<main class="page" id="page-portfolio">
+  <section class="generic-hero portfolio1-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center;">Bento Portfolio</div>
+      <h1>Selected work, <em>arranged</em> with care.</h1>
+
+      <div class="portfolio1-bento">
+        <article class="portfolio1-item bento-big">
+          <img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=1200&q=85" alt="">
+          <div class="portfolio1-overlay"><span>Brand</span><h3>Nordic Coffee Co.</h3></div>
+        </article>
+        <article class="portfolio1-item">
+          <img src="https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="portfolio1-overlay"><span>Web</span><h3>Halo Studio</h3></div>
+        </article>
+        <article class="portfolio1-item">
+          <img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="portfolio1-overlay"><span>Product</span><h3>Silvern</h3></div>
+        </article>
+        <article class="portfolio1-item bento-tall">
+          <img src="https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="portfolio1-overlay"><span>Editorial</span><h3>Quarterly</h3></div>
+        </article>
+        <article class="portfolio1-item">
+          <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="portfolio1-overlay"><span>Brand</span><h3>Maison de Lyon</h3></div>
+        </article>
+        <article class="portfolio1-item bento-wide">
+          <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=85" alt="">
+          <div class="portfolio1-overlay"><span>Web</span><h3>Verse Architecture</h3></div>
+        </article>
+        <article class="portfolio1-item">
+          <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="portfolio1-overlay"><span>Product</span><h3>Atelier Bloom</h3></div>
+        </article>
+        <article class="portfolio1-item">
+          <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=600&q=85" alt="">
+          <div class="portfolio1-overlay"><span>Editorial</span><h3>The Studio Book</h3></div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PORTFOLIO 2 ========= -->
+<main class="page" id="page-portfolio2">
+  <section class="generic-hero portfolio2-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--hot); --acid: var(--hot);">Case Studies</div>
+      <h1>Long-form looks at <em>recent work</em>.</h1>
+
+      <div class="portfolio2-list">
+        <article class="portfolio2-case">
+          <div class="portfolio2-img" style="background-image: url('https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=1100&q=85');"></div>
+          <div>
+            <div class="portfolio2-num">CASE 01 / 2024</div>
+            <h3>Nordic Coffee Co. — Brand <em>reinvention</em>.</h3>
+            <p>From outdated visual identity to award-winning rebrand. We helped Nordic Coffee become one of Scandinavia's most distinctive specialty brands.</p>
+            <div class="portfolio2-tags"><span>Identity</span><span>Packaging</span><span>Web</span></div>
+            <button class="btn btn-ghost" data-modal="case1">View Case Study →</button>
+          </div>
+        </article>
+
+        <article class="portfolio2-case">
+          <div class="portfolio2-img" style="background-image: url('https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1100&q=85');"></div>
+          <div>
+            <div class="portfolio2-num">CASE 02 / 2024</div>
+            <h3>Verse Architecture — A digital <em>headquarters</em>.</h3>
+            <p>A complete website redesign for one of the most respected architecture firms in the country. Editorial photography, refined typography.</p>
+            <div class="portfolio2-tags"><span>Web</span><span>Photography</span><span>Editorial</span></div>
+            <button class="btn btn-ghost" data-modal="case2">View Case Study →</button>
+          </div>
+        </article>
+
+        <article class="portfolio2-case">
+          <div class="portfolio2-img" style="background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1100&q=85');"></div>
+          <div>
+            <div class="portfolio2-num">CASE 03 / 2024</div>
+            <h3>Maison de Lyon — Hospitality <em>identity</em>.</h3>
+            <p>A complete brand world for one of Paris's most beloved hotels — from logo to interior signage and menus.</p>
+            <div class="portfolio2-tags"><span>Brand</span><span>Print</span><span>Signage</span></div>
+            <button class="btn btn-ghost" data-modal="case3">View Case Study →</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PORTFOLIO 3 ========= -->
+<main class="page" id="page-portfolio3">
+  <section class="generic-hero portfolio3-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--electric); --acid: var(--electric);">Clean Grid</div>
+      <h1>Every project, one <em>uniform</em> view.</h1>
+
+      <div class="portfolio3-grid">
+        <article class="portfolio3-card">
+          <div class="portfolio3-img"><img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="portfolio3-info"><span>Brand</span><h3>Nordic Coffee Co.</h3></div>
+        </article>
+        <article class="portfolio3-card">
+          <div class="portfolio3-img"><img src="https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="portfolio3-info"><span>Web</span><h3>Halo Studio</h3></div>
+        </article>
+        <article class="portfolio3-card">
+          <div class="portfolio3-img"><img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="portfolio3-info"><span>Product</span><h3>Silvern Wines</h3></div>
+        </article>
+        <article class="portfolio3-card">
+          <div class="portfolio3-img"><img src="https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="portfolio3-info"><span>Editorial</span><h3>Quarterly Magazine</h3></div>
+        </article>
+        <article class="portfolio3-card">
+          <div class="portfolio3-img"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="portfolio3-info"><span>Brand</span><h3>Maison de Lyon</h3></div>
+        </article>
+        <article class="portfolio3-card">
+          <div class="portfolio3-img"><img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="portfolio3-info"><span>Web</span><h3>Verse</h3></div>
+        </article>
+        <article class="portfolio3-card">
+          <div class="portfolio3-img"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="portfolio3-info"><span>Editorial</span><h3>The Studio Book</h3></div>
+        </article>
+        <article class="portfolio3-card">
+          <div class="portfolio3-img"><img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="portfolio3-info"><span>Product</span><h3>Atelier Bloom</h3></div>
+        </article>
+        <article class="portfolio3-card">
+          <div class="portfolio3-img"><img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="portfolio3-info"><span>Web</span><h3>Bloom Botanicals</h3></div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PRICING 1 ========= -->
+<main class="page" id="page-pricing">
+  <section class="generic-hero pricing1-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center;">Pricing</div>
+      <h1>Honest pricing for <em>real work</em>.</h1>
+      <p class="lead center center-block">Three tiers. No surprises. Pick the one that fits your scope.</p>
+
+      <div class="pricing1-grid">
+        <article class="pricing1-card">
+          <div class="pricing-name">Essentials</div>
+          <div class="price">$<em>4,500</em></div>
+          <div class="price-sub">STARTING FROM</div>
+          <ul class="price-list">
+            <li>Brand identity essentials</li>
+            <li>Logo & 2 variations</li>
+            <li>Color & typography</li>
+            <li>Basic guidelines</li>
+            <li>2-week delivery</li>
+          </ul>
+          <button class="btn btn-ghost" style="width: 100%;" data-page="contact">Get Started</button>
+        </article>
+
+        <article class="pricing1-card featured">
+          <div class="pricing1-badge">Recommended</div>
+          <div class="pricing-name">Signature</div>
+          <div class="price">$12,500</div>
+          <div class="price-sub">STARTING FROM</div>
+          <ul class="price-list">
+            <li>Complete brand system</li>
+            <li>Logo system & marks</li>
+            <li>Full visual identity</li>
+            <li>Website design & build</li>
+            <li>4-week delivery</li>
+            <li>Unlimited revisions</li>
+          </ul>
+          <button class="btn" style="width: 100%; background: var(--bg); color: var(--acid);" data-page="contact">Get Started →</button>
+        </article>
+
+        <article class="pricing1-card">
+          <div class="pricing-name">Bespoke</div>
+          <div class="price">Custom</div>
+          <div class="price-sub">BY CONSULTATION</div>
+          <ul class="price-list">
+            <li>Fully bespoke engagement</li>
+            <li>Brand strategy</li>
+            <li>Complete identity</li>
+            <li>Multi-page website</li>
+            <li>Print collateral</li>
+            <li>Dedicated team</li>
+          </ul>
+          <button class="btn btn-ghost" style="width: 100%;" data-page="contact">Talk to Us</button>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PRICING 2 ========= -->
+<main class="page" id="page-pricing2">
+  <section class="generic-hero pricing2-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--hot); --acid: var(--hot);">Compare Plans</div>
+      <h1>See exactly <em>what's included</em>.</h1>
+
+      <div class="pricing2-table">
+        <div class="pricing2-row header">
+          <div>Feature</div>
+          <div style="text-align: center;">Essentials</div>
+          <div style="text-align: center;">Signature</div>
+          <div style="text-align: center;">Bespoke</div>
+        </div>
+        <div class="pricing2-row">
+          <div class="feature-name">Brand identity</div>
+          <div class="feature-check">✓</div>
+          <div class="feature-check">✓</div>
+          <div class="feature-check">✓</div>
+        </div>
+        <div class="pricing2-row">
+          <div class="feature-name">Brand guidelines</div>
+          <div class="feature-x">Basic</div>
+          <div class="feature-x">Full</div>
+          <div class="feature-x">Bespoke</div>
+        </div>
+        <div class="pricing2-row">
+          <div class="feature-name">Website design</div>
+          <div class="feature-x">—</div>
+          <div class="feature-check">✓</div>
+          <div class="feature-check">✓</div>
+        </div>
+        <div class="pricing2-row">
+          <div class="feature-name">Print collateral</div>
+          <div class="feature-x">—</div>
+          <div class="feature-x">—</div>
+          <div class="feature-check">✓</div>
+        </div>
+        <div class="pricing2-row">
+          <div class="feature-name">Dedicated team</div>
+          <div class="feature-x">—</div>
+          <div class="feature-x">—</div>
+          <div class="feature-check">✓</div>
+        </div>
+        <div class="pricing2-row">
+          <div class="feature-name">Timeline</div>
+          <div class="feature-x">2 weeks</div>
+          <div class="feature-x">4 weeks</div>
+          <div class="feature-x">8+ weeks</div>
+        </div>
+        <div class="pricing2-row">
+          <div class="feature-name" style="font-family: var(--font-display); font-style: italic; font-size: 1.2rem;">Starting price</div>
+          <div class="col-price">$4,500</div>
+          <div class="col-price">$12,500</div>
+          <div class="col-price">Custom</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PRICING 3 ========= -->
+<main class="page" id="page-pricing3">
+  <section class="generic-hero pricing3-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--electric); --acid: var(--electric);">Build Your Quote</div>
+      <h1>Pick what you need. <em>Get a price</em>.</h1>
+
+      <div class="pricing3-calc">
+        <div class="pricing3-options">
+          <div class="pricing3-option selected" data-price="2500">
+            <div>
+              <h4>Brand Identity Basics</h4>
+              <p>Logo + 2 variations + color & type</p>
+            </div>
+            <span class="price-tag">$2,500</span>
+          </div>
+          <div class="pricing3-option" data-price="3500">
+            <div>
+              <h4>Extended Brand Guidelines</h4>
+              <p>40-page brand book with examples</p>
+            </div>
+            <span class="price-tag">$3,500</span>
+          </div>
+          <div class="pricing3-option" data-price="6500">
+            <div>
+              <h4>Website (up to 5 pages)</h4>
+              <p>Design + responsive build + CMS</p>
+            </div>
+            <span class="price-tag">$6,500</span>
+          </div>
+          <div class="pricing3-option" data-price="3500">
+            <div>
+              <h4>Packaging Design</h4>
+              <p>3 SKUs, ready for production</p>
+            </div>
+            <span class="price-tag">$3,500</span>
+          </div>
+          <div class="pricing3-option" data-price="2000">
+            <div>
+              <h4>Photography Direction</h4>
+              <p>Style frames + shot list + onsite direction</p>
+            </div>
+            <span class="price-tag">$2,000</span>
+          </div>
+        </div>
+
+        <div class="pricing3-summary">
+          <h3>Your <em class="italic" style="color: var(--acid); font-family: var(--font-display);">estimate</em></h3>
+          <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); letter-spacing: 0.1em;">SELECTED ITEMS</div>
+          <div class="pricing3-summary-total" id="totalDisplay">$2,500</div>
+          <button class="btn btn-acid" style="width: 100%;" data-modal="quote">Request Quote →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PROCESS 1 ========= -->
+<main class="page" id="page-process">
+  <section class="generic-hero process1-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center;">Our Process</div>
+      <h1>Five stages, <em>built on trust</em>.</h1>
+
+      <div class="process1-list">
+        <div class="process1-step">
+          <div class="process1-step-num">01</div>
+          <div>
+            <h3>Discovery</h3>
+            <p>We start with workshops, interviews, and a thorough audit of your brand, audience, and competitive landscape.</p>
+            <div class="process1-tags"><span>Workshops</span><span>Research</span><span>Audit</span></div>
+          </div>
+        </div>
+        <div class="process1-step">
+          <div class="process1-step-num">02</div>
+          <div>
+            <h3>Strategy</h3>
+            <p>We define positioning, narrative, and visual direction with a clear roadmap for what's ahead.</p>
+            <div class="process1-tags"><span>Positioning</span><span>Narrative</span><span>Roadmap</span></div>
+          </div>
+        </div>
+        <div class="process1-step">
+          <div class="process1-step-num">03</div>
+          <div>
+            <h3>Design</h3>
+            <p>We craft the full visual system collaboratively, with regular reviews and rapid iteration.</p>
+            <div class="process1-tags"><span>Identity</span><span>System</span><span>Prototypes</span></div>
+          </div>
+        </div>
+        <div class="process1-step">
+          <div class="process1-step-num">04</div>
+          <div>
+            <h3>Production</h3>
+            <p>We refine and prepare every asset — from print files to production-ready code.</p>
+            <div class="process1-tags"><span>Build</span><span>Refine</span><span>Test</span></div>
+          </div>
+        </div>
+        <div class="process1-step">
+          <div class="process1-step-num">05</div>
+          <div>
+            <h3>Launch & Beyond</h3>
+            <p>We support launch and stay involved through care, refinements, and ongoing brand evolution.</p>
+            <div class="process1-tags"><span>Launch</span><span>Support</span><span>Evolution</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PROCESS 2 ========= -->
+<main class="page" id="page-process2">
+  <section class="generic-hero process2-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--hot); --acid: var(--hot);">Process Cards</div>
+      <h1>The way <em>we work</em>.</h1>
+
+      <div class="process2-grid">
+        <div class="process2-card">
+          <div class="process2-icon">🔍</div>
+          <h3>Discover</h3>
+          <p>Workshops, research, and the kind of deep questions that shape great work.</p>
+        </div>
+        <div class="process2-card">
+          <div class="process2-icon">💡</div>
+          <h3>Define</h3>
+          <p>Positioning, narrative, and clear direction before we touch a pixel.</p>
+        </div>
+        <div class="process2-card">
+          <div class="process2-icon">🎨</div>
+          <h3>Design</h3>
+          <p>Visual systems, interfaces, and editorial work — crafted with care.</p>
+        </div>
+        <div class="process2-card">
+          <div class="process2-icon">⚙️</div>
+          <h3>Build</h3>
+          <p>Production-ready files, performant code, and tested deliverables.</p>
+        </div>
+        <div class="process2-card">
+          <div class="process2-icon">🚀</div>
+          <h3>Launch</h3>
+          <p>Confident launch with QA, deployment, and 30-day post-launch support.</p>
+        </div>
+        <div class="process2-card">
+          <div class="process2-icon">📈</div>
+          <h3>Grow</h3>
+          <p>Ongoing care and brand evolution. Most clients stay for years.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PROCESS 3 ========= -->
+<main class="page" id="page-process3">
+  <section class="generic-hero process3-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--electric); --acid: var(--electric);">Timeline View</div>
+      <h1>From kickoff to <em>launch day</em>.</h1>
+
+      <div class="process3-timeline">
+        <div class="process3-step">
+          <div class="process3-step-meta">WEEK 1 · DISCOVERY</div>
+          <h3>Kickoff & Workshops</h3>
+          <p>We meet your team, run discovery workshops, and dive deep into your brand and goals.</p>
+        </div>
+        <div class="process3-step">
+          <div class="process3-step-meta">WEEK 2 · STRATEGY</div>
+          <h3>Strategic Direction</h3>
+          <p>We present strategic recommendations, positioning, and creative direction options.</p>
+        </div>
+        <div class="process3-step">
+          <div class="process3-step-meta">WEEKS 3-5 · DESIGN</div>
+          <h3>Design Sprints</h3>
+          <p>We craft the visual system through 3 design sprints with regular reviews and refinements.</p>
+        </div>
+        <div class="process3-step">
+          <div class="process3-step-meta">WEEKS 6-7 · PRODUCTION</div>
+          <h3>Build & Refine</h3>
+          <p>Every file, asset, and deliverable is prepared, tested, and ready for launch.</p>
+        </div>
+        <div class="process3-step">
+          <div class="process3-step-meta">WEEK 8 · LAUNCH</div>
+          <h3>Go Live</h3>
+          <p>Confident launch day, plus 30 days of post-launch support to ensure a smooth transition.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= TEAM 1 ========= -->
+<main class="page" id="page-team">
+  <section class="generic-hero team1-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center;">The Team</div>
+      <h1>The people behind <em>the work</em>.</h1>
+
+      <div class="team1-grid">
+        <article class="team1-card">
+          <div class="team1-img"><img src="https://i.pravatar.cc/700?img=12" alt=""></div>
+          <h3>Alex Carter</h3>
+          <div class="role">Creative Director</div>
+        </article>
+        <article class="team1-card">
+          <div class="team1-img"><img src="https://i.pravatar.cc/700?img=47" alt=""></div>
+          <h3>Maya Chen</h3>
+          <div class="role">Design Director</div>
+        </article>
+        <article class="team1-card">
+          <div class="team1-img"><img src="https://i.pravatar.cc/700?img=32" alt=""></div>
+          <h3>James Wilson</h3>
+          <div class="role">Tech Director</div>
+        </article>
+        <article class="team1-card">
+          <div class="team1-img"><img src="https://i.pravatar.cc/700?img=5" alt=""></div>
+          <h3>Sarah Kim</h3>
+          <div class="role">Lead Designer</div>
+        </article>
+        <article class="team1-card">
+          <div class="team1-img"><img src="https://i.pravatar.cc/700?img=14" alt=""></div>
+          <h3>David Park</h3>
+          <div class="role">Strategist</div>
+        </article>
+        <article class="team1-card">
+          <div class="team1-img"><img src="https://i.pravatar.cc/700?img=44" alt=""></div>
+          <h3>Emily Ross</h3>
+          <div class="role">Type Designer</div>
+        </article>
+        <article class="team1-card">
+          <div class="team1-img"><img src="https://i.pravatar.cc/700?img=18" alt=""></div>
+          <h3>Lucas Martin</h3>
+          <div class="role">Art Director</div>
+        </article>
+        <article class="team1-card">
+          <div class="team1-img"><img src="https://i.pravatar.cc/700?img=49" alt=""></div>
+          <h3>Olivia Nash</h3>
+          <div class="role">Studio Manager</div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= TEAM 2 ========= -->
+<main class="page" id="page-team2">
+  <section class="generic-hero team2-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--hot); --acid: var(--hot);">Profiles</div>
+      <h1>Get to <em>know us</em>.</h1>
+
+      <div class="team2-grid">
+        <article class="team2-card">
+          <div class="team2-img"><img src="https://i.pravatar.cc/700?img=12" alt=""></div>
+          <div>
+            <h3>Alex Carter</h3>
+            <div class="role">Creative Director · Brooklyn</div>
+            <p>Founder of Obsidian. Leads creative direction across all projects since 2014.</p>
+            <div class="team2-socials"><a>Li</a><a>X</a><a>Dr</a></div>
+          </div>
+        </article>
+        <article class="team2-card">
+          <div class="team2-img"><img src="https://i.pravatar.cc/700?img=47" alt=""></div>
+          <div>
+            <h3>Maya Chen</h3>
+            <div class="role">Design Director · Brooklyn</div>
+            <p>Leads visual identity and brand systems. Previously at Apple and Airbnb.</p>
+            <div class="team2-socials"><a>Li</a><a>Be</a><a>Ig</a></div>
+          </div>
+        </article>
+        <article class="team2-card">
+          <div class="team2-img"><img src="https://i.pravatar.cc/700?img=32" alt=""></div>
+          <div>
+            <h3>James Wilson</h3>
+            <div class="role">Tech Director · London</div>
+            <p>Engineering lead for all digital products. React expert and open source contributor.</p>
+            <div class="team2-socials"><a>Gh</a><a>Li</a><a>X</a></div>
+          </div>
+        </article>
+        <article class="team2-card">
+          <div class="team2-img"><img src="https://i.pravatar.cc/700?img=5" alt=""></div>
+          <div>
+            <h3>Sarah Kim</h3>
+            <div class="role">Design Lead · Tokyo</div>
+            <p>Brings editorial precision to every project. Type-obsessed and detail-oriented.</p>
+            <div class="team2-socials"><a>Li</a><a>Be</a><a>Ig</a></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= TEAM 3 ========= -->
+<main class="page" id="page-team3">
+  <section class="generic-hero team3-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--electric); --acid: var(--electric);">By Department</div>
+      <h1>Organized by <em>craft</em>.</h1>
+
+      <div class="team3-dept">
+        <div>
+          <div class="team3-dept-head"><h2>Design</h2><span>5 members</span></div>
+          <div class="team3-list">
+            <div class="team3-member"><div class="team3-avatar"><img src="https://i.pravatar.cc/300?img=12" alt=""></div><h4>Alex Carter</h4><span>Creative Director</span></div>
+            <div class="team3-member"><div class="team3-avatar"><img src="https://i.pravatar.cc/300?img=47" alt=""></div><h4>Maya Chen</h4><span>Design Director</span></div>
+            <div class="team3-member"><div class="team3-avatar"><img src="https://i.pravatar.cc/300?img=5" alt=""></div><h4>Sarah Kim</h4><span>Lead Designer</span></div>
+            <div class="team3-member"><div class="team3-avatar"><img src="https://i.pravatar.cc/300?img=44" alt=""></div><h4>Emily Ross</h4><span>Type Designer</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="team3-dept-head"><h2>Engineering</h2><span>3 members</span></div>
+          <div class="team3-list">
+            <div class="team3-member"><div class="team3-avatar"><img src="https://i.pravatar.cc/300?img=32" alt=""></div><h4>James Wilson</h4><span>Tech Director</span></div>
+            <div class="team3-member"><div class="team3-avatar"><img src="https://i.pravatar.cc/300?img=15" alt=""></div><h4>Tom Bradley</h4><span>Lead Engineer</span></div>
+            <div class="team3-member"><div class="team3-avatar"><img src="https://i.pravatar.cc/300?img=22" alt=""></div><h4>Rachel Green</h4><span>Frontend Dev</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="team3-dept-head"><h2>Strategy</h2><span>2 members</span></div>
+          <div class="team3-list">
+            <div class="team3-member"><div class="team3-avatar"><img src="https://i.pravatar.cc/300?img=14" alt=""></div><h4>David Park</h4><span>Strategist</span></div>
+            <div class="team3-member"><div class="team3-avatar"><img src="https://i.pravatar.cc/300?img=49" alt=""></div><h4>Olivia Nash</h4><span>Studio Manager</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PRESS 1 ========= -->
+<main class="page" id="page-press">
+  <section class="generic-hero press1-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--tangerine); --acid: var(--tangerine);">In the Press</div>
+      <h1>Words about <em>our work</em>.</h1>
+
+      <div class="press1-grid">
+        <article class="press1-card">
+          <div class="press1-source">It's Nice That</div>
+          <p class="quote">"Obsidian's work has a quiet confidence that puts most studios to shame."</p>
+          <div class="press1-date">December 2024</div>
+        </article>
+        <article class="press1-card">
+          <div class="press1-source">Eye Magazine</div>
+          <p class="quote">"A masterclass in editorial restraint and quiet beauty."</p>
+          <div class="press1-date">October 2024</div>
+        </article>
+        <article class="press1-card">
+          <div class="press1-source">Creative Review</div>
+          <p class="quote">"They make brands feel like books — considered, refined, lasting."</p>
+          <div class="press1-date">August 2024</div>
+        </article>
+        <article class="press1-card">
+          <div class="press1-source">Brand New</div>
+          <p class="quote">"Easily one of the most distinctive studios working today."</p>
+          <div class="press1-date">June 2024</div>
+        </article>
+        <article class="press1-card">
+          <div class="press1-source">Print Magazine</div>
+          <p class="quote">"Obsidian shows the value of slow, careful design."</p>
+          <div class="press1-date">April 2024</div>
+        </article>
+        <article class="press1-card">
+          <div class="press1-source">Wallpaper*</div>
+          <p class="quote">"A studio that treats every project like a love letter."</p>
+          <div class="press1-date">January 2024</div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PRESS 2 ========= -->
+<main class="page" id="page-press2">
+  <section class="generic-hero press2-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center;">Awards Archive</div>
+      <h1>42 awards. <em>11 years</em>.</h1>
+
+      <div class="press2-list">
+        <div class="press2-row">
+          <div class="year">2024</div>
+          <div class="name">Site of the Year</div>
+          <div class="category">Awwwards · Web</div>
+          <div class="link">View →</div>
+        </div>
+        <div class="press2-row">
+          <div class="year">2024</div>
+          <div class="name">Best Brand Identity</div>
+          <div class="category">D&AD · Brand</div>
+          <div class="link">View →</div>
+        </div>
+        <div class="press2-row">
+          <div class="year">2023</div>
+          <div class="name">Editorial Excellence</div>
+          <div class="category">Type Directors Club</div>
+          <div class="link">View →</div>
+        </div>
+        <div class="press2-row">
+          <div class="year">2023</div>
+          <div class="name">Packaging Gold</div>
+          <div class="category">Brand New · Packaging</div>
+          <div class="link">View →</div>
+        </div>
+        <div class="press2-row">
+          <div class="year">2022</div>
+          <div class="name">Studio of the Year</div>
+          <div class="category">Print Magazine</div>
+          <div class="link">View →</div>
+        </div>
+        <div class="press2-row">
+          <div class="year">2021</div>
+          <div class="name">Design Excellence</div>
+          <div class="category">Communication Arts</div>
+          <div class="link">View →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= PRESS 3 ========= -->
+<main class="page" id="page-press3">
+  <section class="generic-hero press3-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--plum); --acid: var(--plum);">Featured In</div>
+      <h1>Trusted by the <em>best</em>.</h1>
+
+      <div class="press3-logos">
+        <div class="press3-logo"><strong>Wallpaper*</strong><span>Magazine</span></div>
+        <div class="press3-logo"><strong>Eye</strong><span>Magazine</span></div>
+        <div class="press3-logo"><strong>It's Nice That</strong><span>Publication</span></div>
+        <div class="press3-logo"><strong>Creative Review</strong><span>Magazine</span></div>
+        <div class="press3-logo"><strong>Brand New</strong><span>Blog</span></div>
+        <div class="press3-logo"><strong>Print</strong><span>Magazine</span></div>
+        <div class="press3-logo"><strong>Communication Arts</strong><span>Annual</span></div>
+        <div class="press3-logo"><strong>D&AD</strong><span>Awards</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= JOURNAL 1 ========= -->
+<main class="page" id="page-journal">
+  <section class="generic-hero journal1-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--plum); --acid: var(--plum);">Journal</div>
+      <h1>Field notes from <em>the studio</em>.</h1>
+
+      <div class="journal1-grid">
+        <article class="journal1-card">
+          <div class="journal1-img"><img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="journal1-tag">Design</div>
+          <h3>The case for slow design</h3>
+          <p>Why slowness is the most modern thing we can offer in an industry obsessed with speed.</p>
+          <div class="journal1-meta">By Alex Carter · 8 min read</div>
+        </article>
+        <article class="journal1-card">
+          <div class="journal1-img"><img src="https://images.unsplash.com/photo-1561070791-2526d30994b8?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="journal1-tag">Typography</div>
+          <h3>On the craft of type</h3>
+          <p>Why type matters more than ever, and how we choose typefaces for brand work.</p>
+          <div class="journal1-meta">By Maya Chen · 5 min read</div>
+        </article>
+        <article class="journal1-card">
+          <div class="journal1-img"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="journal1-tag">Strategy</div>
+          <h3>50 brand projects later</h3>
+          <p>Reflections on a decade of brand work — what worked, what didn't, what we'd do differently.</p>
+          <div class="journal1-meta">By David Park · 9 min read</div>
+        </article>
+        <article class="journal1-card">
+          <div class="journal1-img"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="journal1-tag">Print</div>
+          <h3>Why we still believe in print</h3>
+          <p>In an all-digital world, print remains our favorite medium. Here's why.</p>
+          <div class="journal1-meta">By Lucas Martin · 6 min read</div>
+        </article>
+        <article class="journal1-card">
+          <div class="journal1-img"><img src="https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="journal1-tag">Branding</div>
+          <h3>Designing for trust</h3>
+          <p>How visual design shapes credibility — and the small details that make brands feel premium.</p>
+          <div class="journal1-meta">By Sarah Kim · 8 min read</div>
+        </article>
+        <article class="journal1-card">
+          <div class="journal1-img"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=700&q=85" alt=""></div>
+          <div class="journal1-tag">Behind the scenes</div>
+          <h3>The studio book project</h3>
+          <p>Behind the scenes of making our 240-page studio retrospective book over 18 months.</p>
+          <div class="journal1-meta">By Olivia Nash · 11 min read</div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= JOURNAL 2 ========= -->
+<main class="page" id="page-journal2">
+  <section class="generic-hero journal2-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--hot); --acid: var(--hot);">Featured + Archive</div>
+      <h1>Latest essays & <em>field notes</em>.</h1>
+
+      <div class="journal2-featured">
+        <div class="journal2-featured-img"></div>
+        <div>
+          <span style="font-family: var(--font-mono); font-size: 0.74rem; color: var(--hot); letter-spacing: 0.14em; text-transform: uppercase;">FEATURED ESSAY</span>
+          <h2>The case for <em>slow design</em> in a fast world.</h2>
+          <p style="color: var(--soft); line-height: 1.7; margin-bottom: 22px;">In an industry obsessed with speed and scale, we've found freedom in slowness.</p>
+          <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); letter-spacing: 0.08em;">BY ALEX CARTER · 8 MIN READ · DEC 2024</div>
+        </div>
+      </div>
+
+      <div class="journal2-list">
+        <article class="journal2-item">
+          <div class="num">02</div>
+          <div>
+            <h3>On the craft of typography</h3>
+            <p>Why type matters more than ever in modern brand work.</p>
+          </div>
+          <div class="meta">By Maya Chen<br>NOV 2024 · 5 MIN</div>
+        </article>
+        <article class="journal2-item">
+          <div class="num">03</div>
+          <div>
+            <h3>Lessons from 50 brand projects</h3>
+            <p>A decade of brand work distilled into honest observations.</p>
+          </div>
+          <div class="meta">By Alex Carter<br>OCT 2024 · 9 MIN</div>
+        </article>
+        <article class="journal2-item">
+          <div class="num">04</div>
+          <div>
+            <h3>Editorial design rules</h3>
+            <p>The quiet principles that make printed matter sing.</p>
+          </div>
+          <div class="meta">By Sarah Kim<br>SEP 2024 · 7 MIN</div>
+        </article>
+        <article class="journal2-item">
+          <div class="num">05</div>
+          <div>
+            <h3>Why we still believe in print</h3>
+            <p>Print remains our favorite medium. Here's why we'll never stop.</p>
+          </div>
+          <div class="meta">By Lucas Martin<br>AUG 2024 · 6 MIN</div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= JOURNAL 3 ========= -->
+<main class="page" id="page-journal3">
+  <section class="generic-hero journal3-hero">
+    <div class="container">
+      <div class="eyebrow center" style="justify-content:center; color: var(--electric); --acid: var(--electric);">Magazine Layout</div>
+      <h1>Read like a <em>magazine</em>.</h1>
+
+      <div class="journal3-mag">
+        <div class="journal3-main">
+          <article class="journal3-main-card">
+            <div class="journal3-main-img"><img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=700&q=85" alt=""></div>
+            <div class="journal3-main-content">
+              <span>Featured · Essay</span>
+              <h3>The case for slow design</h3>
+              <p>Why slowness is the most modern thing we can offer in 2025.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); margin-top: 12px;">8 MIN · ALEX CARTER</div>
+            </div>
+          </article>
+          <article class="journal3-main-card">
+            <div class="journal3-main-img"><img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=700&q=85" alt=""></div>
+            <div class="journal3-main-content">
+              <span>Typography</span>
+              <h3>The craft of choosing type</h3>
+              <p>Why typography matters more than ever in modern brand design.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); margin-top: 12px;">5 MIN · MAYA CHEN</div>
+            </div>
+          </article>
+          <article class="journal3-main-card">
+            <div class="journal3-main-img"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=700&q=85" alt=""></div>
+            <div class="journal3-main-content">
+              <span>Strategy</span>
+              <h3>Lessons from 50 projects</h3>
+              <p>A decade of work distilled into honest observations.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); margin-top: 12px;">9 MIN · DAVID PARK</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="journal3-side">
+          <div class="journal3-side-card">
+            <span>Latest</span>
+            <h4>Designing for trust</h4>
+            <div class="meta">SARAH KIM · 8 MIN</div>
+          </div>
+          <div class="journal3-side-card">
+            <span>Print</span>
+            <h4>Why we still believe in print</h4>
+            <div class="meta">LUCAS MARTIN · 6 MIN</div>
+          </div>
+          <div class="journal3-side-card">
+            <span>Behind the Scenes</span>
+            <h4>The studio book project</h4>
+            <div class="meta">OLIVIA NASH · 11 MIN</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========= CONTACT ========= -->
+<main class="page" id="page-contact">
+  <section class="contact-hero">
+    <div class="container">
+      <div class="contact-grid">
+        <div>
+          <div class="eyebrow">Contact</div>
+          <h1>Tell us about your <em>project</em>.</h1>
+          <p class="lead">We're currently accepting work for Q2 2025. Send us a note and we'll respond within 24 hours.</p>
+
+          <div class="contact-info">
+            <div class="contact-info-item">
+              <h4>Project inquiries</h4>
+              <p><a href="mailto:hello@obsidian.studio">hello@obsidian.studio</a></p>
+            </div>
+            <div class="contact-info-item">
+              <h4>Press & speaking</h4>
+              <p><a href="mailto:press@obsidian.studio">press@obsidian.studio</a></p>
+            </div>
+            <div class="contact-info-item">
+              <h4>Brooklyn studio</h4>
+              <p>132 Greenpoint Avenue<br>Brooklyn, NY 11222</p>
+            </div>
+            <div class="contact-info-item">
+              <h4>Follow along</h4>
+              <p><a href="#">Instagram</a> · <a href="#">Are.na</a> · <a href="#">LinkedIn</a></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form-box">
+          <h2>Start a <em>project</em>.</h2>
+          <p>Fill out the form and we'll respond within 24 hours.</p>
+          <form id="contactForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Your name</label>
+                <input type="text" placeholder="First & last name" required>
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="you@company.com" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Company</label>
+                <input type="text" placeholder="Brand or company">
+              </div>
+              <div class="form-group">
+                <label>Project type</label>
+                <select required>
+                  <option value="">Select one</option>
+                  <option>Brand Identity</option>
+                  <option>Website</option>
+                  <option>Product Design</option>
+                  <option>Editorial</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Budget range</label>
+              <select required>
+                <option value="">Select range</option>
+                <option>$5k - $15k</option>
+                <option>$15k - $40k</option>
+                <option>$40k - $80k</option>
+                <option>$80k+</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Tell us about your project</label>
+              <textarea placeholder="Brief description, goals, timeline..."></textarea>
+            </div>
+
+            <button class="submit-btn" type="submit">Send Message →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo"><span class="logo-dot"></span>Obsidian</div>
+        <p>A multi-disciplinary design studio crafting brands, websites, and editorial work with care.</p>
+      </div>
+      <div>
+        <h4>Studio</h4>
+        <ul>
+          <li><a data-page="about">About</a></li>
+          <li><a data-page="services">Services</a></li>
+          <li><a data-page="team">Team</a></li>
+          <li><a data-page="press">Press</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Work</h4>
+        <ul>
+          <li><a data-page="portfolio">Portfolio</a></li>
+          <li><a data-page="collection">Collection</a></li>
+          <li><a data-page="products">Products</a></li>
+          <li><a data-page="process">Process</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Layouts</h4>
+        <ul>
+          <li><a data-page="home2">Home Variants</a></li>
+          <li><a data-page="services2">Service Layouts</a></li>
+          <li><a data-page="pricing3">Pricing Calculator</a></li>
+          <li><a data-page="journal3">Magazine Style</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Connect</h4>
+        <ul>
+          <li><a data-page="contact">Contact</a></li>
+          <li><a data-page="journal">Journal</a></li>
+          <li><a>Instagram</a></li>
+          <li><a>Are.na</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Obsidian Studio · Brooklyn · London · Tokyo</span>
+      <span>Made with care</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+const isMobile = window.innerWidth < 768;
+
+const lenis = new Lenis({
+  duration: 1.15,
+  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  smoothWheel: true,
+  touchMultiplier: 1.6
+});
+
+lenis.on("scroll", ScrollTrigger.update);
+gsap.ticker.add(time => lenis.raf(time * 1000));
+gsap.ticker.lagSmoothing(0);
+
+// PRELOADER
+const preloader = document.getElementById("preloader");
+const preloaderFill = document.getElementById("preloaderFill");
+const preloaderPercent = document.getElementById("preloaderPercent");
+
+let progress = 0;
+const loaderInterval = setInterval(() => {
+  progress += Math.random() * 18 + 8;
+  if (progress > 100) progress = 100;
+  preloaderFill.style.width = progress + "%";
+  preloaderPercent.textContent = Math.round(progress) + "%";
+
+  if (progress === 100) {
+    clearInterval(loaderInterval);
+    setTimeout(() => {
+      gsap.to(preloader, {
+        yPercent: -100,
+        duration: 1,
+        ease: "power4.inOut",
+        onComplete: () => {
+          preloader.style.display = "none";
+          initParticles();
+          initPageAnimations();
+        }
+      });
+    }, 300);
+  }
+}, 90);
+
+// PARTICLES
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+function initParticles() {
+  particles = [];
+  const count = isMobile ? 30 : 60;
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 2 + 0.5,
+      sx: (Math.random() - 0.5) * 0.4,
+      sy: (Math.random() - 0.5) * 0.4,
+      o: Math.random() * 0.5 + 0.2,
+      c: ['#d4ff3a', '#ff3366', '#00d4ff', '#b768ff'][Math.floor(Math.random() * 4)]
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.sx;
+      p.y += p.sy;
+      if (p.x < 0 || p.x > canvas.width) p.sx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.sy *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = p.c;
+      ctx.globalAlpha = p.o;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = p.c;
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// NAVBAR
+const navbar = document.getElementById("navbar");
+const scrollProgress = document.getElementById("scrollProgress");
+const backTop = document.getElementById("backTop");
+
+window.addEventListener("scroll", () => {
+  navbar.classList.toggle("scrolled", window.scrollY > 30);
+  backTop.classList.toggle("active", window.scrollY > 600);
+  const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  scrollProgress.style.width = scrolled + "%";
+});
+
+backTop.addEventListener("click", () => lenis.scrollTo(0));
+
+// DROPDOWN NAVIGATION (Desktop)
+document.querySelectorAll(".nav-item[data-has-dropdown]").forEach(item => {
+  let timeout;
+
+  item.addEventListener("mouseenter", () => {
+    clearTimeout(timeout);
+    document.querySelectorAll(".nav-item.open").forEach(other => {
+      if (other !== item) other.classList.remove("open");
+    });
+    item.classList.add("open");
+  });
+
+  item.addEventListener("mouseleave", () => {
+    timeout = setTimeout(() => item.classList.remove("open"), 100);
+  });
+});
+
+// Close dropdowns on outside click
+document.addEventListener("click", e => {
+  if (!e.target.closest(".nav-item[data-has-dropdown]")) {
+    document.querySelectorAll(".nav-item.open").forEach(item => item.classList.remove("open"));
+  }
+});
+
+// MOBILE MENU
+const navToggle = document.getElementById("navToggle");
+const mobileMenu = document.getElementById("mobileMenu");
+
+navToggle.addEventListener("click", function(e) {
+  e.stopPropagation();
+  this.classList.toggle("active");
+  mobileMenu.classList.toggle("active");
+  document.body.style.overflow = mobileMenu.classList.contains("active") ? "hidden" : "";
+});
+
+// Mobile accordion
+document.querySelectorAll(".mobile-nav-header.has-dropdown").forEach(header => {
+  header.addEventListener("click", function(e) {
+    e.stopPropagation();
+    const item = this.parentElement;
+    document.querySelectorAll(".mobile-nav-item.open").forEach(other => {
+      if (other !== item) other.classList.remove("open");
+    });
+    item.classList.toggle("open");
+  });
+});
+
+// PAGE NAVIGATION
+let currentPage = "home";
+const transitionPanels = document.querySelectorAll("#pageTransition span");
+
+function setActiveLinks(pageName) {
+  document.querySelectorAll("[data-page]").forEach(link => {
+    link.classList.toggle("active", link.dataset.page === pageName);
+  });
+}
+
+function navigateToPage(pageName) {
+  if (!pageName) return;
+
+  // Close all menus
+  mobileMenu.classList.remove("active");
+  navToggle.classList.remove("active");
+  document.body.style.overflow = "";
+  document.querySelectorAll(".nav-item.open").forEach(item => item.classList.remove("open"));
+  document.querySelectorAll(".mobile-nav-item.open").forEach(item => item.classList.remove("open"));
+
+  if (pageName === currentPage) {
+    lenis.scrollTo(0);
+    return;
+  }
+
+  // Check if page exists
+  const newPage = document.getElementById("page-" + pageName);
+  if (!newPage) return;
+
+  const tl = gsap.timeline();
+  tl.set(transitionPanels, { transformOrigin: "bottom" })
+    .to(transitionPanels, {
+      scaleY: 1, duration: 0.5, stagger: 0.05, ease: "power4.inOut",
+      onComplete: () => {
+        ScrollTrigger.getAll().forEach(t => t.kill());
+        document.getElementById("page-" + currentPage).classList.remove("active");
+        newPage.classList.add("active");
+        currentPage = pageName;
+        setActiveLinks(pageName);
+        window.scrollTo(0, 0);
+        lenis.scrollTo(0, { immediate: true });
+        initPageAnimations();
+      }
+    })
+    .set(transitionPanels, { transformOrigin: "top" })
+    .to(transitionPanels, { scaleY: 0, duration: 0.5, stagger: 0.05, ease: "power4.inOut" });
+}
+
+document.addEventListener("click", e => {
+  const trigger = e.target.closest("[data-page]");
+  if (trigger && !trigger.classList.contains("nav-link")) {
+    e.preventDefault();
+    navigateToPage(trigger.dataset.page);
+  }
+});
+
+// Direct nav links (no dropdown)
+document.querySelectorAll(".nav-link.nav-cta, .logo").forEach(link => {
+  link.addEventListener("click", e => {
+    e.preventDefault();
+    navigateToPage(link.dataset.page);
+  });
+});
+
+// ANIMATIONS
+function initPageAnimations() {
+  const page = document.querySelector(".page.active");
+  if (!page) return;
+
+  const h1 = page.querySelector("h1");
+  if (h1) {
+    gsap.fromTo(h1, { y: 60, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 1.1, ease: "power4.out", delay: 0.1
+    });
+  }
+
+  const leads = page.querySelectorAll(".lead");
+  leads.forEach((el, i) => {
+    gsap.fromTo(el, { y: 30, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 0.8, delay: 0.3 + (i * 0.1), ease: "power3.out"
+    });
+  });
+
+  const items = page.querySelectorAll(`
+    .home2-bento-item, .home-feature, .home1-hero-img,
+    .about1-collage-img, .about2-pillar, .about3-founder,
+    .services1-card, .services2-item, .services3-card,
+    .products1-card, .products2-featured, .products3-row,
+    .collection1-item, .collection2-card, .collection3-row,
+    .portfolio1-item, .portfolio2-case, .portfolio3-card,
+    .pricing1-card, .pricing2-row, .pricing3-option,
+    .process1-step, .process2-card, .process3-step,
+    .team1-card, .team2-card, .team3-member,
+    .press1-card, .press2-row, .press3-logo,
+    .journal1-card, .journal2-item, .journal3-main-card, .journal3-side-card,
+    .contact-form-box, .contact-info-item
+  `);
+
+  items.forEach((el, i) => {
+    gsap.fromTo(el, { y: 40, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 0.8, ease: "power3.out",
+      delay: (i % 6) * 0.05,
+      scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none reverse" }
+    });
+  });
+
+  ScrollTrigger.refresh();
+}
+
+// PRICING CALCULATOR
+const totalDisplay = document.getElementById("totalDisplay");
+
+document.addEventListener("click", e => {
+  const option = e.target.closest(".pricing3-option");
+  if (!option) return;
+  option.classList.toggle("selected");
+  updateTotal();
+});
+
+function updateTotal() {
+  if (!totalDisplay) return;
+  let total = 0;
+  document.querySelectorAll(".pricing3-option.selected").forEach(opt => {
+    total += parseInt(opt.dataset.price || 0);
+  });
+  totalDisplay.textContent = "$" + total.toLocaleString();
+}
+
+// MODAL
+const modalOverlay = document.getElementById("modalOverlay");
+const modalImage = document.getElementById("modalImage");
+const modalBody = document.getElementById("modalBody");
+const modalClose = document.getElementById("modalClose");
+
+const modalContent = {
+  hello: {
+    image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1100&q=85",
+    title: "Hello there 👋",
+    body: `<p>Thanks for stopping by. We're currently accepting projects for Q2 2025.</p>
+    <p>Tell us about your project below and we'll get back to you within 24 hours with a tailored proposal.</p>
+    <div class="modal-grid">
+      <div><span>Response Time</span><strong>24 hours</strong></div>
+      <div><span>Starting From</span><strong>$4,500</strong></div>
+      <div><span>Timeline</span><strong>2-12 weeks</strong></div>
+      <div><span>Availability</span><strong>Q2 2025</strong></div>
+    </div>`
+  },
+  case1: {
+    image: "https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=1100&q=85",
+    title: "Nordic Coffee Co.",
+    body: `<p>A complete brand reinvention for one of Scandinavia's most respected specialty coffee brands.</p>
+    <p>We delivered a new identity, packaging system, and flagship store experience over 6 months of close collaboration.</p>
+    <div class="modal-grid">
+      <div><span>Year</span><strong>2024</strong></div>
+      <div><span>Scope</span><strong>Brand + Packaging</strong></div>
+      <div><span>Duration</span><strong>6 months</strong></div>
+      <div><span>Awards</span><strong>3 won</strong></div>
+    </div>`
+  },
+  case2: {
+    image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1100&q=85",
+    title: "Verse Architecture",
+    body: `<p>A complete website redesign for one of the most respected architecture firms in the country.</p>
+    <p>The new site features editorial photography direction, refined typography, and a clean content management system.</p>
+    <div class="modal-grid">
+      <div><span>Year</span><strong>2024</strong></div>
+      <div><span>Scope</span><strong>Web + Photography</strong></div>
+      <div><span>Duration</span><strong>4 months</strong></div>
+      <div><span>Pages</span><strong>14</strong></div>
+    </div>`
+  },
+  case3: {
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1100&q=85",
+    title: "Maison de Lyon",
+    body: `<p>A complete brand world for one of Paris's most beloved boutique hotels.</p>
+    <p>From the logo and identity system to interior signage, menus, and welcome books — every touchpoint considered.</p>
+    <div class="modal-grid">
+      <div><span>Year</span><strong>2024</strong></div>
+      <div><span>Scope</span><strong>Identity + Print</strong></div>
+      <div><span>Duration</span><strong>8 months</strong></div>
+      <div><span>Touchpoints</span><strong>50+</strong></div>
+    </div>`
+  },
+  quote: {
+    image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1100&q=85",
+    title: "Your <em>custom quote</em>",
+    body: `<p>Thanks for using our pricing calculator. We'll prepare a detailed proposal with timeline and deliverables based on your selections.</p>
+    <p>Send us a quick note below with your contact info and we'll respond within 24 hours.</p>
+    <div class="modal-grid">
+      <div><span>Estimate</span><strong id="modalTotal">$2,500</strong></div>
+      <div><span>Timeline</span><strong>4-8 weeks</strong></div>
+      <div><span>Response</span><strong>24 hours</strong></div>
+      <div><span>Includes</span><strong>Full proposal</strong></div>
+    </div>`
+  }
+};
+
+document.addEventListener("click", e => {
+  const trigger = e.target.closest("[data-modal]");
+  if (!trigger) return;
+  e.preventDefault();
+  const data = modalContent[trigger.dataset.modal];
+  if (!data) return;
+
+  modalImage.src = data.image;
+  modalBody.innerHTML = `<h2>${data.title}</h2>${data.body}`;
+
+  modalOverlay.classList.add("active");
+  document.body.style.overflow = "hidden";
+  lenis.stop();
+});
+
+modalClose.addEventListener("click", closeModal);
+modalOverlay.addEventListener("click", e => {
+  if (e.target === modalOverlay) closeModal();
+});
+
+function closeModal() {
+  modalOverlay.classList.remove("active");
+  document.body.style.overflow = "";
+  lenis.start();
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && modalOverlay.classList.contains("active")) closeModal();
+});
+
+// TOAST
+const toast = document.getElementById("toast");
+const toastTitle = document.getElementById("toastTitle");
+const toastMsg = document.getElementById("toastMsg");
+let toastTimer;
+
+function showToast(title, msg) {
+  toastTitle.textContent = title;
+  toastMsg.textContent = msg;
+  toast.classList.add("active");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("active"), 3500);
+}
+
+// CONTACT FORM
+const contactForm = document.getElementById("contactForm");
+contactForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const btn = contactForm.querySelector(".submit-btn");
+  const original = btn.textContent;
+  btn.textContent = "Sending...";
+  btn.style.opacity = "0.7";
+
+  setTimeout(() => {
+    btn.textContent = "Sent ✓";
+    btn.style.background = "var(--mint)";
+    btn.style.opacity = "1";
+    showToast("Message Sent!", "We'll reply within 24 hours.");
+
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.style.background = "";
+      contactForm.reset();
+    }, 2800);
+  }, 1200);
+});
+
+// RESIZE
+let resizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 250);
+});
+</script>
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

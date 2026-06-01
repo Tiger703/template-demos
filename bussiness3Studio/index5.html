@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#fdfbf5">
+<title>VESPER | Full Studio Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+--cream:#fdfbf5;--cream-2:#f5efe0;--cream-3:#ebe3d0;--white:#fff;
+--ink:#1c1814;--ink-2:#3d3833;--mute:#7a7165;--dim:#b8af9e;
+--line:rgba(28,24,20,.08);--line-s:rgba(28,24,20,.18);
+--c-1:#d4571a;--c-2:#5a7d2a;--c-3:#1e5fa8;--c-4:#a82850;
+--c-5:#946b2c;--c-6:#871e2a;--c-7:#2a6b3d;--c-8:#5c2d8c;
+--c-9:#d4641f;--c-10:#0d5e63;--c-11:#a82654;--c-12:#3d3380;
+--sh:0 24px 60px rgba(28,24,20,.1);--sh-s:0 10px 30px rgba(28,24,20,.06);
+--ff:'Manrope',sans-serif;--fd:'DM Serif Display',serif;--fm:'IBM Plex Mono',monospace;
+}
+html{background:var(--cream);scroll-behavior:auto;-webkit-text-size-adjust:100%}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{font-family:var(--ff);color:var(--ink);background:var(--cream);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{width:100%;display:block;max-width:100%}
+a{color:inherit;text-decoration:none;cursor:pointer}
+button{font-family:inherit;cursor:pointer}
+.wrap{width:min(1340px,calc(100% - 32px));margin:0 auto}
+.sec{padding:90px 0;position:relative}
+.sec-sm{padding:60px 0}
+.page{display:none;min-height:100vh}
+.page.on{display:block;animation:fi .6s ease}
+@keyframes fi{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* Typography */
+.tag{display:inline-flex;align-items:center;gap:10px;font-family:var(--fm);font-size:.72rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--acc,var(--c-1));margin-bottom:22px}
+.tag::before{content:'';width:28px;height:1px;background:currentColor;flex-shrink:0}
+.tag.ctr{justify-content:center}
+.disp,.t-sec{font-family:var(--fd);font-weight:400;line-height:1.02;letter-spacing:-.02em}
+.it{font-style:italic}
+.lead{color:var(--ink-2);font-size:1.08rem;line-height:1.75;max-width:620px}
+.ctr{text-align:center}
+.cb{margin-left:auto;margin-right:auto}
+
+/* Buttons */
+.btns{display:flex;gap:14px;flex-wrap:wrap;margin-top:32px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 26px;border:1px solid transparent;border-radius:99px;font-weight:500;font-size:.92rem;cursor:pointer;transition:all .4s cubic-bezier(.16,1,.3,1);white-space:nowrap;font-family:inherit}
+.btn-d{background:var(--ink);color:var(--cream)}
+.btn-d:hover{background:var(--acc,var(--c-1));transform:translateY(-2px)}
+.btn-a{background:var(--acc,var(--c-1));color:var(--cream)}
+.btn-a:hover{background:var(--ink);transform:translateY(-2px)}
+.btn-o{background:transparent;border-color:var(--ink);color:var(--ink)}
+.btn-o:hover{background:var(--ink);color:var(--cream);transform:translateY(-2px)}
+
+/* Preloader */
+.pre{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:var(--cream)}
+.pre-in{text-align:center}
+.pre-lg{font-family:var(--fd);font-style:italic;font-size:clamp(2.6rem,11vw,4.5rem);letter-spacing:-.04em;margin-bottom:24px;color:var(--ink)}
+.pre-bar{width:240px;max-width:80vw;height:1px;background:var(--line);overflow:hidden;margin:0 auto}
+.pre-fl{width:0%;height:100%;background:var(--ink)}
+.pre-pc{margin-top:12px;color:var(--mute);font-family:var(--fm);font-size:.78rem;letter-spacing:.2em}
+
+/* Transition */
+.tr{position:fixed;inset:0;z-index:99998;display:flex;pointer-events:none}
+.tr span{flex:1;background:var(--ink);transform:scaleY(0);transform-origin:bottom}
+
+/* NAVBAR */
+.nv{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:min(1400px,calc(100% - 28px));z-index:9999;background:rgba(253,251,245,.85);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid var(--line);border-radius:99px;padding:10px 12px 10px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:all .3s ease;box-shadow:0 8px 30px rgba(28,24,20,.06)}
+.nv.scr{top:6px;background:rgba(253,251,245,.96);box-shadow:0 14px 50px rgba(28,24,20,.1)}
+.lg{font-family:var(--fd);font-style:italic;font-size:1.6rem;letter-spacing:-.03em;color:var(--ink);flex-shrink:0;display:flex;align-items:center;gap:8px}
+.lg-dt{width:8px;height:8px;border-radius:50%;background:var(--c-1);flex-shrink:0;animation:pls 2s ease-in-out infinite}
+@keyframes pls{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.nl{display:flex;align-items:center;gap:0;list-style:none}
+.ni{position:relative}
+.nlk{display:inline-flex;align-items:center;gap:5px;height:36px;padding:0 11px;border-radius:99px;color:var(--ink-2);font-size:.8rem;font-weight:500;transition:all .3s ease;cursor:pointer;white-space:nowrap}
+.nlk:hover,.nlk.on{color:var(--c-1);background:var(--cream-2)}
+.nl-ar{width:10px;height:10px;opacity:.5;transition:transform .3s ease}
+.ni.op .nl-ar{transform:rotate(180deg)}
+.nv-c{background:var(--ink)!important;color:var(--cream)!important;padding:0 18px!important;height:36px!important;font-weight:500!important}
+.nv-c:hover{background:var(--c-1)!important;color:var(--cream)!important}
+.dd{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%) translateY(-10px);min-width:280px;background:var(--cream);border:1px solid var(--line-s);border-radius:20px;padding:10px;opacity:0;visibility:hidden;transition:all .35s cubic-bezier(.16,1,.3,1);box-shadow:var(--sh)}
+.ni.op .dd{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.dd::before{content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%) rotate(45deg);width:12px;height:12px;background:var(--cream);border-left:1px solid var(--line-s);border-top:1px solid var(--line-s)}
+.dd-i{display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:14px;color:var(--ink-2);font-size:.86rem;transition:all .3s ease}
+.dd-i:hover{background:var(--cream-2);color:var(--c-1);transform:translateX(4px)}
+.dd-n{font-family:var(--fm);font-size:.7rem;color:var(--mute);letter-spacing:.1em;flex-shrink:0;width:28px}
+.dd-tx{flex:1}
+.dd-tt{display:block;font-weight:500;margin-bottom:2px;color:var(--ink)}
+.dd-i:hover .dd-tt{color:var(--c-1)}
+.dd-sb{display:block;font-size:.72rem;color:var(--mute);font-weight:400}
+
+/* Mobile */
+.nv-tg{display:none;width:40px;height:40px;border:0;border-radius:50%;background:var(--ink);color:var(--cream);align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;flex-shrink:0;transition:all .3s ease}
+.nv-tg span{display:block;width:16px;height:2px;background:var(--cream);transition:all .3s ease;border-radius:2px}
+.nv-tg.on{background:var(--c-1)}
+.nv-tg.on span:nth-child(1){transform:translateY(5px) rotate(45deg)}
+.nv-tg.on span:nth-child(2){opacity:0}
+.nv-tg.on span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+.mm{position:fixed;inset:0;z-index:9998;background:var(--cream);opacity:0;visibility:hidden;transition:opacity .4s ease,visibility .4s ease;padding:90px 20px 30px;overflow-y:auto}
+.mm.on{opacity:1;visibility:visible}
+.mm-in{max-width:460px;margin:0 auto}
+.mn-i{border-bottom:1px solid var(--line)}
+.mn-h{display:flex;align-items:center;justify-content:space-between;padding:18px 0;font-family:var(--fd);font-size:1.5rem;color:var(--ink);cursor:pointer;font-weight:400}
+.mn-h.dr::after{content:'+';font-size:1.6rem;color:var(--c-1);font-family:var(--fm);transition:transform .3s ease}
+.mn-i.op .mn-h.dr::after{transform:rotate(45deg)}
+.mn-i.op .mn-h{color:var(--c-1);font-style:italic}
+.mdd{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.mn-i.op .mdd{max-height:500px;padding-bottom:14px}
+.md-i{display:flex;align-items:center;gap:12px;padding:10px 0;color:var(--ink-2);font-size:.95rem;transition:color .3s ease}
+.md-i:hover{color:var(--c-1)}
+.md-n{font-family:var(--fm);font-size:.7rem;color:var(--mute);letter-spacing:.1em;width:32px}
+.m-c{margin-top:28px;display:flex;align-items:center;justify-content:center;padding:18px 28px;background:var(--ink);color:var(--cream)!important;border-radius:99px;font-weight:600;font-size:1rem;border-bottom:0;font-style:normal}
+.m-c:hover{background:var(--c-1)}
+
+/* HERO BG with image */
+.hr{padding-top:130px;padding-bottom:80px;position:relative;background-size:cover;background-position:center}
+.hr-1{background-image:linear-gradient(180deg,rgba(253,251,245,.55),rgba(253,251,245,.85)),url("https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=2200&q=85")}
+.hr-2{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.9)),url("https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2200&q=85")}
+.hr-3{background-image:linear-gradient(180deg,rgba(253,251,245,.5),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1505506874110-6a7a69069a08?auto=format&fit=crop&w=2200&q=85")}
+.hr-4{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.93)),url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2200&q=85")}
+.hr-5{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=2200&q=85")}
+.hr-6{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.93)),url("https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=2200&q=85")}
+.hr-7{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2200&q=85")}
+.hr-8{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=2200&q=85")}
+.hr-9{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=2200&q=85")}
+.hr-10{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2200&q=85")}
+.hr-11{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=2200&q=85")}
+.hr-12{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=2200&q=85")}
+.hr-13{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=2200&q=85")}
+.hr-14{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=2200&q=85")}
+.hr-15{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=2200&q=85")}
+.hr-16{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=2200&q=85")}
+.hr-17{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=2200&q=85")}
+.hr-18{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=2200&q=85")}
+.hr-19{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2200&q=85")}
+.hr-20{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=2200&q=85")}
+.hr-21{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=2200&q=85")}
+.hr-22{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1565841327798-694bc2074076?auto=format&fit=crop&w=2200&q=85")}
+.hr-23{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1532117364869-e22acb3cdd11?auto=format&fit=crop&w=2200&q=85")}
+.hr-24{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1554224155-1696413565d3?auto=format&fit=crop&w=2200&q=85")}
+.hr-25{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=2200&q=85")}
+.hr-26{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=2200&q=85")}
+.hr-27{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1542435503-956c469947f6?auto=format&fit=crop&w=2200&q=85")}
+.hr-28{background-image:linear-gradient(180deg,rgba(253,251,245,.7),rgba(253,251,245,.95)),url("https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=2200&q=85")}
+
+.hr h1{font-family:var(--fd);font-size:clamp(2.5rem,7vw,5.4rem);font-weight:400;line-height:1;letter-spacing:-.035em;margin-bottom:22px}
+.hr h1 em{font-style:italic;color:var(--acc,var(--c-1))}
+
+/* CONTENT SECTIONS */
+.s-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:50px 0;border-block:1px solid var(--line)}
+.st-it{padding:0 30px;border-right:1px solid var(--line)}
+.st-it:last-child{border-right:0}
+.st-it strong{display:block;font-family:var(--fd);font-size:clamp(2.2rem,5vw,3.4rem);color:var(--acc,var(--c-1));line-height:1;margin-bottom:8px;font-weight:400}
+.st-it span{font-family:var(--fm);font-size:.72rem;color:var(--mute);letter-spacing:.1em;text-transform:uppercase}
+
+.s-split{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.s-split img{height:540px;border-radius:24px;object-fit:cover;box-shadow:var(--sh)}
+.s-split h2{font-family:var(--fd);font-size:clamp(2rem,4.5vw,3.4rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:20px;font-weight:400}
+.s-split h2 em{font-style:italic;color:var(--acc,var(--c-1))}
+.s-split p{color:var(--ink-2);line-height:1.8;margin-bottom:16px;font-size:1.02rem}
+
+.s-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.s-card{padding:36px;background:var(--cream);border:1px solid var(--line);border-radius:22px;transition:all .4s ease;box-shadow:var(--sh-s)}
+.s-card:hover{border-color:var(--acc,var(--c-1));transform:translateY(-4px);box-shadow:var(--sh)}
+.s-card .ic{width:50px;height:50px;border-radius:14px;background:var(--cream-2);display:grid;place-items:center;font-size:1.4rem;margin-bottom:22px}
+.s-card h3{font-family:var(--fd);font-size:1.4rem;font-weight:400;margin-bottom:10px;line-height:1.2}
+.s-card p{color:var(--ink-2);line-height:1.7;font-size:.94rem}
+
+.s-mq{padding:32px 0;background:var(--ink);overflow:hidden}
+.s-mq .tk{display:flex;width:max-content;gap:50px;animation:mq 30s linear infinite}
+.s-mq span{font-family:var(--fd);font-style:italic;font-size:clamp(1.5rem,3vw,2.4rem);color:var(--cream);white-space:nowrap}
+.s-mq span::after{content:'✦';margin-left:50px;color:var(--c-1);font-style:normal}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+.s-cta{padding:80px 0;text-align:center;background:var(--cream-2);border-radius:32px;margin:0 16px}
+.s-cta h2{font-family:var(--fd);font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:18px;font-weight:400;max-width:800px;margin-left:auto;margin-right:auto}
+.s-cta h2 em{font-style:italic;color:var(--acc,var(--c-1))}
+.s-cta p{color:var(--ink-2);font-size:1.05rem;line-height:1.7;max-width:560px;margin:0 auto 28px}
+
+.s-feat{display:grid;grid-template-columns:repeat(2,1fr);gap:30px}
+.s-feat-i{padding:34px;background:var(--cream);border:1px solid var(--line);border-radius:20px;display:grid;grid-template-columns:60px 1fr;gap:20px;align-items:start;box-shadow:var(--sh-s);transition:all .4s ease}
+.s-feat-i:hover{border-color:var(--acc,var(--c-1));transform:translateY(-3px)}
+.s-feat-i .num{font-family:var(--fd);font-style:italic;font-size:2.4rem;color:var(--acc,var(--c-1));line-height:1}
+.s-feat-i h4{font-family:var(--fd);font-size:1.3rem;margin-bottom:10px;font-weight:400}
+.s-feat-i p{color:var(--ink-2);line-height:1.7;font-size:.93rem}
+
+.s-img-big{height:520px;border-radius:32px;overflow:hidden;box-shadow:var(--sh);position:relative}
+.s-img-big img{height:100%;object-fit:cover}
+.s-img-cap{position:absolute;bottom:28px;left:28px;right:28px;padding:20px 24px;background:rgba(253,251,245,.95);backdrop-filter:blur(20px);border-radius:18px}
+.s-img-cap strong{font-family:var(--fd);font-size:1.2rem;display:block;margin-bottom:4px;font-weight:400}
+.s-img-cap span{color:var(--mute);font-size:.86rem}
+
+.s-tm{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.s-tm-c{cursor:pointer;transition:transform .4s ease}
+.s-tm-c:hover{transform:translateY(-4px)}
+.s-tm-c .img{height:280px;border-radius:18px;overflow:hidden;margin-bottom:14px}
+.s-tm-c .img img{height:100%;object-fit:cover;object-position:center top;transition:transform 1s ease}
+.s-tm-c:hover .img img{transform:scale(1.06)}
+.s-tm-c h4{font-family:var(--fd);font-size:1.1rem;margin-bottom:4px;font-weight:400}
+.s-tm-c .rl{font-family:var(--fm);font-size:.72rem;color:var(--acc,var(--c-1));letter-spacing:.1em;text-transform:uppercase}
+
+.s-fq{max-width:820px;margin:0 auto;display:grid;gap:12px}
+.fq-i{padding:24px 28px;background:var(--cream);border:1px solid var(--line);border-radius:16px;cursor:pointer;transition:all .3s ease}
+.fq-i.op{border-color:var(--acc,var(--c-1));background:var(--cream-2)}
+.fq-q{display:flex;align-items:center;justify-content:space-between;font-family:var(--fd);font-size:1.1rem;font-weight:400}
+.fq-q::after{content:'+';font-family:var(--fm);font-size:1.3rem;color:var(--acc,var(--c-1));transition:transform .3s ease}
+.fq-i.op .fq-q::after{transform:rotate(45deg)}
+.fq-a{max-height:0;overflow:hidden;transition:max-height .4s ease;color:var(--ink-2);line-height:1.7}
+.fq-i.op .fq-a{max-height:200px;padding-top:14px}
+
+.s-quote{text-align:center;max-width:900px;margin:0 auto}
+.s-quote .mk{font-family:var(--fd);font-style:italic;font-size:6rem;color:var(--acc,var(--c-1));line-height:.4;margin-bottom:24px}
+.s-quote p{font-family:var(--fd);font-style:italic;font-size:clamp(1.5rem,3vw,2.4rem);line-height:1.4;margin-bottom:30px;color:var(--ink)}
+.s-quote .au{font-family:var(--fm);font-size:.8rem;letter-spacing:.12em;color:var(--mute);text-transform:uppercase}
+
+.s-list{margin-top:40px;border-top:1px solid var(--line)}
+.s-list-r{display:grid;grid-template-columns:80px 1fr 1fr 100px;gap:30px;padding:26px 0;align-items:center;border-bottom:1px solid var(--line);transition:all .3s ease;cursor:pointer}
+.s-list-r:hover{padding-left:14px}
+.s-list-r .n{font-family:var(--fm);font-size:.78rem;color:var(--acc,var(--c-1));letter-spacing:.12em}
+.s-list-r h4{font-family:var(--fd);font-size:1.3rem;font-weight:400;margin-bottom:4px}
+.s-list-r p{color:var(--mute);font-size:.86rem}
+.s-list-r .cat{font-family:var(--fm);font-size:.74rem;color:var(--mute);letter-spacing:.1em;text-transform:uppercase}
+.s-list-r .ar{justify-self:end;width:38px;height:38px;border-radius:50%;border:1px solid var(--line-s);display:grid;place-items:center;font-size:.9rem;transition:all .3s ease}
+.s-list-r:hover .ar{background:var(--acc,var(--c-1));color:var(--cream);border-color:var(--acc,var(--c-1))}
+
+.s-hd{display:flex;justify-content:space-between;align-items:end;margin-bottom:40px;gap:30px;flex-wrap:wrap}
+.s-hd > div{flex:1 1 auto;min-width:0}
+.s-hd h2{font-family:var(--fd);font-size:clamp(1.8rem,4.5vw,3rem);font-weight:400;line-height:1.05;letter-spacing:-.025em}
+.s-hd h2 em{font-style:italic;color:var(--acc,var(--c-1))}
+
+.s-prod{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.pr-c{background:var(--cream);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:all .4s ease;cursor:pointer;box-shadow:var(--sh-s)}
+.pr-c:hover{border-color:var(--acc,var(--c-1));transform:translateY(-5px);box-shadow:var(--sh)}
+.pr-c .img{height:240px;overflow:hidden;position:relative}
+.pr-c .img img{height:100%;object-fit:cover;transition:transform .8s ease}
+.pr-c:hover .img img{transform:scale(1.08)}
+.pr-c .bd{position:absolute;top:12px;left:12px;z-index:2;padding:5px 10px;background:var(--acc,var(--c-1));color:var(--cream);border-radius:99px;font-family:var(--fm);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.pr-c .ct{padding:22px}
+.pr-c h4{font-family:var(--fd);font-size:1.2rem;margin-bottom:6px;font-weight:400}
+.pr-c .ds{color:var(--mute);font-size:.86rem;line-height:1.6;margin-bottom:14px}
+.pr-c .mt{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--line)}
+.pr-c .pc{font-family:var(--fd);font-style:italic;font-size:1.3rem;color:var(--acc,var(--c-1))}
+.pr-c .tg{font-family:var(--fm);font-size:.7rem;color:var(--mute);letter-spacing:.08em}
+
+.s-ftr{padding-bottom:0!important}
+.fr{padding:70px 0 30px;background:var(--cream-2);border-top:1px solid var(--line);margin-top:60px}
+.fr-g{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:40px;margin-bottom:40px}
+.fr-lg{font-family:var(--fd);font-style:italic;font-size:1.7rem;margin-bottom:14px;letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+.fr p{color:var(--ink-2);line-height:1.7;max-width:340px;font-size:.9rem}
+.fr h4{font-family:var(--fm);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:18px;color:var(--c-1)}
+.fr ul{list-style:none;display:grid;gap:9px}
+.fr a{color:var(--ink-2);font-size:.86rem;transition:color .3s ease}
+.fr a:hover{color:var(--c-1)}
+.fr-bt{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-top:22px;border-top:1px solid var(--line);color:var(--mute);font-family:var(--fm);font-size:.74rem;flex-wrap:wrap}
+
+/* PAGE-SPECIFIC SECTIONS */
+
+/* HOME 1 - Editorial */
+.h1-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.h1-img{height:580px;border-radius:24px;overflow:hidden;background:url("https://images.unsplash.com/photo-1617791160505-6f00504e3519?auto=format&fit=crop&w=1100&q=85") center/cover;box-shadow:var(--sh)}
+
+/* HOME 2 - Bento */
+.h2-bn{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:280px 220px;gap:14px}
+.h2-bi{background:var(--cream);border:1px solid var(--line);border-radius:22px;padding:28px;position:relative;overflow:hidden;transition:all .4s ease;box-shadow:var(--sh-s)}
+.h2-bi:hover{border-color:var(--c-1);transform:translateY(-3px)}
+.h2-mn{grid-column:1/2;grid-row:1/3;display:flex;flex-direction:column;justify-content:space-between;background-image:linear-gradient(135deg,rgba(212,87,26,.88),rgba(212,87,26,.65)),url("https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=1100&q=85");background-size:cover;color:var(--cream);border:0}
+.h2-mn h1{font-family:var(--fd);font-size:clamp(2rem,4.5vw,3.6rem);font-weight:400;line-height:1;color:var(--cream)}
+.h2-mn h1 em{font-style:italic;color:var(--cream-2)}
+.h2-tg{display:inline-flex;align-items:center;gap:8px;padding:5px 11px;background:rgba(253,251,245,.2);border-radius:99px;font-family:var(--fm);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;width:fit-content;backdrop-filter:blur(10px)}
+.h2-tg::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cream)}
+.h2-st strong{font-family:var(--fd);font-size:2.2rem;color:var(--c-1);display:block;margin-bottom:4px;line-height:1;font-weight:400}
+.h2-st span{font-family:var(--fm);font-size:.7rem;color:var(--mute);letter-spacing:.1em;text-transform:uppercase}
+
+/* HOME 3 - Centered */
+.h3-pl{display:inline-flex;align-items:center;gap:10px;padding:7px 16px;border:1px solid var(--line-s);border-radius:99px;background:var(--cream);font-family:var(--fm);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:30px;color:var(--ink-2);box-shadow:var(--sh-s)}
+.h3-pl::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--c-4);animation:pls 2s ease-in-out infinite}
+.h3-bi{margin-top:60px;height:520px;border-radius:24px;overflow:hidden;background:url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=85") center/cover;box-shadow:var(--sh)}
+
+/* ABOUT 1 - Collage */
+.a1-co{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:50px}
+.a1-im{height:340px;border-radius:20px;overflow:hidden;background-size:cover;background-position:center;box-shadow:var(--sh-s)}
+.a1-im:nth-child(2){transform:translateY(50px)}
+
+/* ABOUT 2 - Manifesto */
+.a2-gr{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:50px}
+.a2-pl{padding:32px;border-left:3px solid var(--c-2);background:var(--cream);border-radius:0 18px 18px 0;box-shadow:var(--sh-s)}
+.a2-nm{font-family:var(--fd);font-style:italic;font-size:2.2rem;color:var(--c-2);margin-bottom:12px;line-height:1}
+.a2-pl h3{font-family:var(--fd);font-size:1.3rem;margin-bottom:10px;font-weight:400}
+.a2-pl p{color:var(--ink-2);line-height:1.7;font-size:.93rem}
+
+/* ABOUT 3 - Founders */
+.a3-fg{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
+.a3-fd{position:relative;border-radius:22px;overflow:hidden;height:380px;cursor:pointer;transition:transform .5s ease;box-shadow:var(--sh-s)}
+.a3-fd:hover{transform:translateY(-6px)}
+.a3-fd:nth-child(2){transform:translateY(40px)}
+.a3-fd:nth-child(2):hover{transform:translateY(32px)}
+.a3-fd img{height:100%;object-fit:cover}
+.a3-fd::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(28,24,20,.9))}
+.a3-fi{position:absolute;bottom:20px;left:20px;right:20px;z-index:2;color:var(--cream)}
+.a3-fi strong{font-family:var(--fd);font-size:1.3rem;display:block;margin-bottom:4px;font-weight:400}
+.a3-fi span{font-family:var(--fm);font-size:.7rem;color:var(--cream-3);letter-spacing:.1em;text-transform:uppercase}
+
+/* SERVICES 1 - Numbered Cards */
+.sv1-gr{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:50px}
+.sv1-c{padding:40px 32px;background:var(--cream);border:1px solid var(--line);border-radius:22px;transition:all .4s ease;box-shadow:var(--sh-s)}
+.sv1-c:hover{border-color:var(--c-3);transform:translateY(-5px);box-shadow:var(--sh)}
+.sv1-n{font-family:var(--fd);font-style:italic;font-size:4.2rem;color:var(--c-3);line-height:.8;margin-bottom:22px;opacity:.7}
+.sv1-c h3{font-family:var(--fd);font-size:1.6rem;margin-bottom:12px;font-weight:400}
+.sv1-c p{color:var(--ink-2);line-height:1.7;margin-bottom:18px}
+.sv1-tg{display:flex;flex-wrap:wrap;gap:8px}
+.sv1-tg span{padding:5px 11px;background:var(--cream-2);border-radius:99px;font-family:var(--fm);font-size:.68rem;color:var(--c-3);letter-spacing:.08em}
+
+/* SERVICES 2 - List */
+.sv2-co{display:grid;grid-template-columns:1fr 1.3fr;gap:60px;align-items:start;margin-top:50px}
+.sv2-sk{position:sticky;top:100px}
+.sv2-im{margin-top:30px;height:260px;border-radius:20px;overflow:hidden;background:url("https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=85") center/cover;box-shadow:var(--sh-s)}
+.sv2-it{padding:28px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:60px 1fr 44px;gap:20px;align-items:center;cursor:pointer;transition:all .4s ease}
+.sv2-it:hover{padding-left:12px}
+.sv2-it:hover h3{color:var(--c-4)}
+.sv2-it:hover .ar{background:var(--c-4);color:var(--cream);border-color:var(--c-4);transform:translateX(6px)}
+.sv2-it .nm{font-family:var(--fm);font-size:.8rem;color:var(--c-4);letter-spacing:.1em}
+.sv2-it h3{font-family:var(--fd);font-size:clamp(1.3rem,2.8vw,1.8rem);font-weight:400;letter-spacing:-.015em;transition:color .3s ease}
+.sv2-it p{color:var(--mute);font-size:.86rem;margin-top:5px}
+.sv2-it .ar{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-s);display:grid;place-items:center;font-size:.95rem;color:var(--ink);transition:all .4s ease;justify-self:end}
+
+/* SERVICES 3 - Process Flow */
+.sv3-fl{margin-top:50px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.sv3-c{padding:38px 30px;background:var(--cream);border:1px solid var(--line);border-radius:22px;transition:all .4s ease;text-align:center;box-shadow:var(--sh-s)}
+.sv3-c:hover{border-color:var(--c-10);transform:translateY(-5px)}
+.sv3-i{width:60px;height:60px;border-radius:18px;background:var(--cream-2);display:grid;place-items:center;font-size:1.5rem;margin:0 auto 22px;border:1px solid var(--line)}
+.sv3-c h3{font-family:var(--fd);font-size:1.3rem;margin-bottom:10px;font-weight:400}
+.sv3-c p{color:var(--ink-2);line-height:1.65;font-size:.93rem}
+
+/* PRODUCTS 2 - Featured */
+.p2-ft{display:grid;grid-template-columns:1.4fr 1fr;gap:36px;margin-top:40px;padding:40px;background:var(--cream);border:1px solid var(--line);border-radius:24px;align-items:center;box-shadow:var(--sh-s)}
+.p2-fi{height:440px;border-radius:18px;overflow:hidden;background:url("https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=1100&q=85") center/cover}
+.p2-ft h2{font-family:var(--fd);font-size:clamp(1.7rem,3.5vw,2.8rem);font-weight:400;line-height:1.05;letter-spacing:-.025em;margin-bottom:16px}
+.p2-ft h2 em{font-style:italic;color:var(--c-4)}
+.p2-st{display:flex;gap:22px;margin-bottom:24px}
+.p2-st strong{font-family:var(--fd);font-style:italic;font-size:1.7rem;color:var(--c-4);display:block;font-weight:400}
+.p2-st span{font-family:var(--fm);font-size:.68rem;color:var(--mute);letter-spacing:.1em}
+
+/* PRODUCTS 3 - Catalog */
+.p3-ls{margin-top:40px;border-top:1px solid var(--line)}
+.p3-rw{display:grid;grid-template-columns:90px 1fr 1fr 90px 44px;gap:24px;padding:22px 0;align-items:center;border-bottom:1px solid var(--line);transition:all .3s ease;cursor:pointer}
+.p3-rw:hover{padding-left:12px;background:var(--cream-2)}
+.p3-rw img{width:74px;height:74px;object-fit:cover;border-radius:10px}
+.p3-rw h3{font-family:var(--fd);font-size:1.25rem;margin-bottom:4px;font-weight:400}
+.p3-rw p{color:var(--mute);font-size:.82rem}
+.p3-rw .pc{font-family:var(--fd);font-style:italic;font-size:1.25rem;color:var(--c-7)}
+.p3-rw .ar{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-s);display:grid;place-items:center;font-size:.88rem;transition:all .3s ease}
+.p3-rw:hover .ar{background:var(--c-7);color:var(--cream);border-color:var(--c-7)}
+
+/* COLLECTION 1 - Masonry */
+.c1-ms{margin-top:50px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.c1-it{cursor:pointer}
+.c1-it:nth-child(odd){margin-top:50px}
+.c1-im{height:460px;border-radius:20px;overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-s)}
+.c1-im img{height:100%;object-fit:cover;transition:transform 1s ease}
+.c1-it:hover .c1-im img{transform:scale(1.06)}
+.c1-mt{display:flex;justify-content:space-between;align-items:end}
+.c1-mt h3{font-family:var(--fd);font-size:1.5rem;margin-bottom:4px;font-weight:400}
+.c1-mt p{font-family:var(--fm);font-size:.72rem;color:var(--mute);letter-spacing:.12em;text-transform:uppercase}
+.c1-nm{font-family:var(--fd);font-style:italic;font-size:2rem;color:var(--c-8)}
+
+/* COLLECTION 2 - Card Grid */
+.c2-gr{margin-top:50px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.c2-c{position:relative;height:340px;border-radius:20px;overflow:hidden;cursor:pointer;transition:transform .5s ease;box-shadow:var(--sh-s)}
+.c2-c:hover{transform:translateY(-6px)}
+.c2-c img{height:100%;object-fit:cover;transition:transform 1s ease}
+.c2-c:hover img{transform:scale(1.08)}
+.c2-c::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(28,24,20,.85))}
+.c2-in{position:absolute;bottom:18px;left:18px;right:18px;z-index:2;color:var(--cream)}
+.c2-in span{font-family:var(--fm);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-3)}
+.c2-in h3{font-family:var(--fd);font-size:1.2rem;margin-top:6px;color:var(--cream);font-weight:400}
+
+/* COLLECTION 3 - Editorial Spread */
+.c3-sp{margin-top:50px;display:grid;gap:60px}
+.c3-rw{display:grid;grid-template-columns:1fr 1fr;gap:46px;align-items:center}
+.c3-rw:nth-child(even) .c3-im{order:2}
+.c3-im{height:420px;border-radius:20px;overflow:hidden;background-size:cover;background-position:center;box-shadow:var(--sh-s)}
+.c3-rw h3{font-family:var(--fd);font-size:clamp(1.6rem,3.8vw,2.6rem);font-weight:400;line-height:1.05;letter-spacing:-.025em;margin-bottom:16px}
+.c3-rw h3 em{font-style:italic;color:var(--c-2)}
+.c3-rw p{color:var(--ink-2);line-height:1.8;margin-bottom:20px}
+.c3-mt{font-family:var(--fm);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:12px}
+
+/* PORTFOLIO 1 - Bento */
+.po1-bn{margin-top:50px;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:240px;gap:16px}
+.po1-i{position:relative;border-radius:20px;overflow:hidden;cursor:pointer;transition:transform .5s ease;box-shadow:var(--sh-s)}
+.po1-i:hover{transform:translateY(-5px)}
+.po1-i img{height:100%;object-fit:cover;transition:transform 1s ease}
+.po1-i:hover img{transform:scale(1.06)}
+.po1-i::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(28,24,20,.85))}
+.po1-o{position:absolute;bottom:18px;left:18px;right:18px;z-index:2;color:var(--cream)}
+.po1-o span{font-family:var(--fm);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-3)}
+.po1-o h3{font-family:var(--fd);font-size:1.2rem;margin-top:6px;color:var(--cream);font-weight:400}
+.bg{grid-column:span 2;grid-row:span 2}
+.wd{grid-column:span 2}
+.tl{grid-row:span 2}
+
+/* PORTFOLIO 2 - Case Studies */
+.po2-ls{margin-top:50px;display:grid;gap:60px}
+.po2-cs{display:grid;grid-template-columns:1.3fr 1fr;gap:46px;align-items:center}
+.po2-cs:nth-child(even) .po2-im{order:2}
+.po2-im{height:420px;border-radius:20px;overflow:hidden;background-size:cover;background-position:center;box-shadow:var(--sh-s)}
+.po2-nm{font-family:var(--fm);font-size:.72rem;color:var(--c-6);letter-spacing:.14em;margin-bottom:12px}
+.po2-cs h3{font-family:var(--fd);font-size:clamp(1.6rem,3.8vw,2.6rem);font-weight:400;line-height:1.05;letter-spacing:-.025em;margin-bottom:16px}
+.po2-cs h3 em{font-style:italic;color:var(--c-6)}
+.po2-cs p{color:var(--ink-2);line-height:1.8;margin-bottom:20px}
+.po2-tg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.po2-tg span{padding:5px 11px;background:var(--cream-2);border-radius:99px;font-family:var(--fm);font-size:.66rem;letter-spacing:.1em;color:var(--ink-2)}
+
+/* PORTFOLIO 3 - Clean Grid */
+.po3-gr{margin-top:50px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.po3-c{background:var(--cream);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:all .4s ease;cursor:pointer;box-shadow:var(--sh-s)}
+.po3-c:hover{border-color:var(--c-3);transform:translateY(-5px);box-shadow:var(--sh)}
+.po3-im{height:240px;overflow:hidden}
+.po3-im img{height:100%;object-fit:cover;transition:transform 1s ease}
+.po3-c:hover .po3-im img{transform:scale(1.06)}
+.po3-in{padding:22px}
+.po3-in span{font-family:var(--fm);font-size:.7rem;color:var(--c-3);letter-spacing:.12em;text-transform:uppercase}
+.po3-in h3{font-family:var(--fd);font-size:1.3rem;margin-top:6px;font-weight:400}
+
+/* PRICING 1 - 3 Tier */
+.pr1-gr{margin-top:50px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pr1-c{padding:38px 30px;background:var(--cream);border:1px solid var(--line);border-radius:22px;transition:all .4s ease;position:relative;box-shadow:var(--sh-s)}
+.pr1-c.ft{background:var(--ink);color:var(--cream);border-color:var(--ink);transform:scale(1.03);box-shadow:var(--sh)}
+.pr1-c.ft h3,.pr1-c.ft .pc,.pr1-c.ft .ls li{color:var(--cream)}
+.pr1-c.ft .ls li::before{color:var(--c-7)}
+.pr1-c.ft .nm{color:var(--cream-3)}
+.pr1-c.ft .sb{color:var(--dim)}
+.pr1-c:not(.ft):hover{border-color:var(--c-7);transform:translateY(-4px);box-shadow:var(--sh)}
+.pr1-bd{position:absolute;top:-11px;left:30px;padding:4px 11px;background:var(--c-7);color:var(--cream);border-radius:99px;font-family:var(--fm);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+.pr1-c .nm{font-family:var(--fm);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin-bottom:16px}
+.pr1-c .pc{font-family:var(--fd);font-size:clamp(2.2rem,4.5vw,3rem);font-weight:400;letter-spacing:-.03em;line-height:1;margin-bottom:8px}
+.pr1-c .pc em{font-style:italic;color:var(--c-7)}
+.pr1-c .sb{font-family:var(--fm);font-size:.72rem;color:var(--mute);letter-spacing:.08em;margin-bottom:28px}
+.pr1-c .ls{list-style:none;display:grid;gap:11px;margin-bottom:26px}
+.pr1-c .ls li{display:flex;gap:11px;align-items:start;font-size:.9rem;line-height:1.5;color:var(--ink-2)}
+.pr1-c .ls li::before{content:'✓';color:var(--c-7);font-weight:600}
+
+/* PRICING 2 - Table */
+.pr2-tb{margin-top:50px;background:var(--cream);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--sh-s)}
+.pr2-rw{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:18px;padding:18px 26px;border-bottom:1px solid var(--line);align-items:center}
+.pr2-rw:last-child{border-bottom:0}
+.pr2-rw.hd{background:var(--cream-2);font-family:var(--fd);font-size:1.15rem;font-style:italic;font-weight:400}
+.pr2-rw .nm{color:var(--ink-2)}
+.pr2-rw .ck{text-align:center;color:var(--c-12);font-size:1.15rem}
+.pr2-rw .xx{text-align:center;color:var(--dim)}
+.pr2-rw .pc{text-align:center;font-family:var(--fd);font-style:italic;color:var(--c-12)}
+
+/* PRICING 3 - Calculator */
+.pr3-ca{margin-top:50px;display:grid;grid-template-columns:1.5fr 1fr;gap:32px;align-items:start}
+.pr3-op{display:grid;gap:14px}
+.pr3-o{padding:22px 24px;background:var(--cream);border:1px solid var(--line);border-radius:16px;cursor:pointer;transition:all .3s ease;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--sh-s)}
+.pr3-o:hover,.pr3-o.sl{border-color:var(--c-1);background:var(--cream-2)}
+.pr3-o h4{font-family:var(--fd);font-size:1.1rem;margin-bottom:5px;font-weight:400}
+.pr3-o p{color:var(--mute);font-size:.82rem}
+.pr3-o .pt{font-family:var(--fd);font-style:italic;font-size:1.25rem;color:var(--c-1)}
+.pr3-sm{padding:32px;background:var(--ink);color:var(--cream);border-radius:20px;position:sticky;top:100px;box-shadow:var(--sh)}
+.pr3-sm h3{font-family:var(--fd);font-size:1.3rem;margin-bottom:16px;color:var(--cream);font-weight:400}
+.pr3-sl{font-family:var(--fm);font-size:.72rem;color:var(--cream-3);letter-spacing:.12em}
+.pr3-tt{font-family:var(--fd);font-style:italic;font-size:2.6rem;color:var(--c-1);margin:18px 0 26px;line-height:1;font-weight:400}
+
+/* PROCESS 1 - Numbered Steps */
+.pc1-ls{margin-top:60px}
+.pc1-st{padding:44px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1.5fr;gap:50px;align-items:start}
+.pc1-st:last-child{border-bottom:1px solid var(--line)}
+.pc1-nm{font-family:var(--fd);font-style:italic;font-size:clamp(3.6rem,7vw,5.4rem);color:var(--c-5);line-height:.8;font-weight:400}
+.pc1-st h3{font-family:var(--fd);font-size:clamp(1.4rem,2.8vw,2rem);font-weight:400;margin-bottom:16px;letter-spacing:-.015em}
+.pc1-st p{color:var(--ink-2);line-height:1.8;margin-bottom:20px}
+.pc1-tg{display:flex;flex-wrap:wrap;gap:8px}
+.pc1-tg span{padding:6px 11px;background:var(--cream-2);border-radius:99px;font-family:var(--fm);font-size:.68rem;color:var(--c-5);letter-spacing:.08em}
+
+/* PROCESS 2 - Icon Cards */
+.pc2-gr{margin-top:50px;display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.pc2-c{padding:32px;background:var(--cream);border:1px solid var(--line);border-radius:20px;transition:all .4s ease;box-shadow:var(--sh-s)}
+.pc2-c:hover{border-color:var(--c-4);transform:translateY(-3px);box-shadow:var(--sh)}
+.pc2-i{width:48px;height:48px;border-radius:14px;background:var(--cream-2);display:grid;place-items:center;font-size:1.4rem;margin-bottom:18px;border:1px solid var(--line)}
+.pc2-c h3{font-family:var(--fd);font-size:1.3rem;margin-bottom:10px;font-weight:400}
+.pc2-c p{color:var(--ink-2);line-height:1.65}
+
+/* PROCESS 3 - Timeline */
+.pc3-tl{margin-top:50px;position:relative;padding-left:36px}
+.pc3-tl::before{content:'';position:absolute;left:0;top:30px;bottom:30px;width:2px;background:linear-gradient(180deg,var(--c-10),var(--c-2))}
+.pc3-st{padding:34px 0;position:relative}
+.pc3-st::before{content:'';position:absolute;left:-43px;top:46px;width:12px;height:12px;border-radius:50%;background:var(--c-10);border:3px solid var(--cream);box-shadow:0 0 0 1px var(--c-10)}
+.pc3-st h3{font-family:var(--fd);font-size:1.4rem;margin-bottom:10px;font-weight:400}
+.pc3-st p{color:var(--ink-2);line-height:1.7}
+.pc3-mt{font-family:var(--fm);font-size:.72rem;color:var(--c-10);letter-spacing:.14em;margin-bottom:12px;text-transform:uppercase}
+
+/* TEAM 2 - Profile Cards */
+.t2-gr{margin-top:50px;display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.t2-c{display:grid;grid-template-columns:170px 1fr;gap:24px;padding:26px;background:var(--cream);border:1px solid var(--line);border-radius:20px;transition:all .4s ease;box-shadow:var(--sh-s)}
+.t2-c:hover{border-color:var(--c-6);transform:translateY(-3px);box-shadow:var(--sh)}
+.t2-im{height:170px;border-radius:14px;overflow:hidden}
+.t2-im img{height:100%;object-fit:cover;object-position:center top}
+.t2-c h3{font-family:var(--fd);font-size:1.3rem;margin-bottom:4px;font-weight:400}
+.t2-c .rl{font-family:var(--fm);font-size:.72rem;color:var(--c-6);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.t2-c p{color:var(--ink-2);font-size:.9rem;line-height:1.6;margin-bottom:14px}
+.t2-sc{display:flex;gap:7px}
+.t2-sc a{width:30px;height:30px;border-radius:50%;border:1px solid var(--line-s);display:grid;place-items:center;color:var(--ink-2);font-family:var(--fm);font-size:.66rem;font-weight:500;transition:all .3s ease}
+.t2-sc a:hover{background:var(--c-6);border-color:var(--c-6);color:var(--cream)}
+
+/* TEAM 3 - Department */
+.t3-dp{margin-top:50px;display:grid;gap:50px}
+.t3-dh{display:flex;align-items:end;justify-content:space-between;margin-bottom:22px;border-bottom:1px solid var(--line);padding-bottom:16px}
+.t3-dh h2{font-family:var(--fd);font-size:clamp(1.6rem,3.8vw,2.4rem);font-style:italic;color:var(--c-3);font-weight:400}
+.t3-dh span{font-family:var(--fm);font-size:.76rem;color:var(--mute);letter-spacing:.14em}
+.t3-ls{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.t3-m{text-align:center}
+.t3-av{width:100px;height:100px;border-radius:50%;overflow:hidden;margin:0 auto 12px;border:2px solid var(--line-s);transition:all .4s ease}
+.t3-m:hover .t3-av{border-color:var(--c-3);transform:scale(1.05)}
+.t3-av img{height:100%;object-fit:cover}
+.t3-m h4{font-family:var(--fd);font-size:1.05rem;margin-bottom:4px;font-weight:400}
+.t3-m span{font-family:var(--fm);font-size:.66rem;color:var(--mute);letter-spacing:.1em;text-transform:uppercase}
+
+/* PRESS 1 - Quote Cards */
+.pe1-gr{margin-top:50px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pe1-c{padding:30px;background:var(--cream);border:1px solid var(--line);border-radius:18px;transition:all .4s ease;box-shadow:var(--sh-s)}
+.pe1-c:hover{border-color:var(--c-9);transform:translateY(-5px);box-shadow:var(--sh)}
+.pe1-sr{font-family:var(--fm);font-size:.72rem;color:var(--c-9);letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px}
+.pe1-c .qt{font-family:var(--fd);font-style:italic;font-size:1.2rem;line-height:1.45;margin-bottom:20px;color:var(--ink);font-weight:400}
+.pe1-dt{font-family:var(--fm);font-size:.7rem;color:var(--mute);letter-spacing:.1em}
+
+/* PRESS 2 - Awards */
+.pe2-ls{margin-top:50px;border-top:1px solid var(--line)}
+.pe2-rw{display:grid;grid-template-columns:90px 1fr 180px 90px;gap:22px;padding:22px 0;border-bottom:1px solid var(--line);align-items:center;transition:all .3s ease}
+.pe2-rw:hover{padding-left:12px;background:var(--cream-2)}
+.pe2-rw .yr{font-family:var(--fd);font-style:italic;font-size:1.5rem;color:var(--c-5);font-weight:400}
+.pe2-rw .nm{font-family:var(--fd);font-size:1.15rem;font-weight:400}
+.pe2-rw .ct{font-family:var(--fm);font-size:.72rem;color:var(--mute);letter-spacing:.1em;text-transform:uppercase}
+.pe2-rw .lk{text-align:right;font-family:var(--fm);font-size:.76rem;color:var(--c-5)}
+
+/* PRESS 3 - Logo Wall */
+.pe3-lg{margin-top:50px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.pe3-l{padding:40px 24px;background:var(--cream);border:1px solid var(--line);border-radius:16px;text-align:center;transition:all .4s ease;box-shadow:var(--sh-s)}
+.pe3-l:hover{border-color:var(--c-8);transform:translateY(-3px);background:var(--cream-2)}
+.pe3-l strong{font-family:var(--fd);font-style:italic;font-size:1.6rem;display:block;margin-bottom:10px;color:var(--ink);font-weight:400}
+.pe3-l span{font-family:var(--fm);font-size:.7rem;color:var(--mute);letter-spacing:.12em}
+
+/* JOURNAL 1 - Grid */
+.j1-gr{margin-top:50px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.j1-c{cursor:pointer;transition:transform .4s ease}
+.j1-c:hover{transform:translateY(-5px)}
+.j1-im{height:240px;border-radius:16px;overflow:hidden;margin-bottom:18px;box-shadow:var(--sh-s)}
+.j1-im img{height:100%;object-fit:cover;transition:transform 1s ease}
+.j1-c:hover .j1-im img{transform:scale(1.06)}
+.j1-tg{font-family:var(--fm);font-size:.7rem;color:var(--c-4);letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+.j1-c h3{font-family:var(--fd);font-size:1.35rem;line-height:1.2;margin-bottom:10px;font-weight:400;transition:color .3s ease}
+.j1-c:hover h3{color:var(--c-4)}
+.j1-c p{color:var(--ink-2);line-height:1.6;font-size:.9rem;margin-bottom:12px}
+.j1-mt{font-family:var(--fm);font-size:.7rem;color:var(--mute);letter-spacing:.1em}
+
+/* JOURNAL 2 - Featured */
+.j2-ft{margin-top:50px;display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:center;padding:32px;background:var(--cream);border:1px solid var(--line);border-radius:22px;box-shadow:var(--sh-s)}
+.j2-fi{height:360px;border-radius:16px;overflow:hidden;background:url("https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1100&q=85") center/cover}
+.j2-ft h2{font-family:var(--fd);font-size:clamp(1.6rem,3.8vw,2.4rem);font-weight:400;line-height:1.1;margin:14px 0;letter-spacing:-.02em}
+.j2-ft h2 em{font-style:italic;color:var(--c-6)}
+.j2-ls{margin-top:50px;display:grid}
+.j2-i{padding:24px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:60px 1fr 180px;gap:24px;align-items:center;cursor:pointer;transition:all .3s ease}
+.j2-i:hover{padding-left:12px}
+.j2-i .n{font-family:var(--fd);font-style:italic;font-size:1.7rem;color:var(--c-6);font-weight:400}
+.j2-i h3{font-family:var(--fd);font-size:1.2rem;margin-bottom:5px;transition:color .3s ease;font-weight:400}
+.j2-i:hover h3{color:var(--c-6)}
+.j2-i p{color:var(--mute);font-size:.84rem;line-height:1.5}
+.j2-i .mt{text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--mute);letter-spacing:.1em}
+
+/* JOURNAL 3 - Magazine */
+.j3-mg{margin-top:50px;display:grid;grid-template-columns:2fr 1fr;gap:32px}
+.j3-mn{display:grid;gap:22px}
+.j3-mc{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:20px;background:var(--cream);border:1px solid var(--line);border-radius:16px;cursor:pointer;transition:all .4s ease;box-shadow:var(--sh-s)}
+.j3-mc:hover{border-color:var(--c-3);transform:translateY(-3px)}
+.j3-mi{height:180px;border-radius:11px;overflow:hidden}
+.j3-mi img{height:100%;object-fit:cover}
+.j3-mt{padding:6px 0}
+.j3-mt span{font-family:var(--fm);font-size:.68rem;color:var(--c-3);letter-spacing:.12em;text-transform:uppercase}
+.j3-mt h3{font-family:var(--fd);font-size:1.2rem;margin:6px 0 10px;line-height:1.2;font-weight:400}
+.j3-mt p{color:var(--ink-2);font-size:.84rem;line-height:1.5}
+.j3-sd{display:grid;gap:16px;align-content:start;position:sticky;top:100px}
+.j3-sc{padding:20px;background:var(--cream);border:1px solid var(--line);border-radius:14px;cursor:pointer;transition:all .3s ease;box-shadow:var(--sh-s)}
+.j3-sc:hover{border-color:var(--c-3)}
+.j3-sc span{font-family:var(--fm);font-size:.66rem;color:var(--c-3);letter-spacing:.12em;text-transform:uppercase}
+.j3-sc h4{font-family:var(--fd);font-size:1.05rem;margin:6px 0;line-height:1.3;font-weight:400}
+.j3-sc .mt{font-family:var(--fm);font-size:.68rem;color:var(--mute);letter-spacing:.08em}
+
+/* CONTACT */
+.co-gr{display:grid;grid-template-columns:1fr 1.4fr;gap:44px;align-items:start}
+.co-in{margin-top:32px;border-top:1px solid var(--line)}
+.co-it{padding:18px 0;border-bottom:1px solid var(--line)}
+.co-it h4{font-family:var(--fm);font-size:.7rem;color:var(--c-1);letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px}
+.co-it p,.co-it a{font-family:var(--fd);font-size:1.15rem;color:var(--ink);line-height:1.4;font-weight:400}
+.co-it a:hover{color:var(--c-1)}
+.co-fm{padding:34px;background:var(--cream);border:1px solid var(--line);border-radius:20px;box-shadow:var(--sh-s)}
+.co-fm h2{font-family:var(--fd);font-size:1.6rem;font-weight:400;margin-bottom:8px}
+.co-fm h2 em{font-style:italic;color:var(--c-1)}
+.co-fm > p{color:var(--mute);margin-bottom:26px;font-size:.92rem}
+.fr-rw{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.fg{margin-bottom:16px}
+.fg label{display:block;margin-bottom:7px;color:var(--mute);font-family:var(--fm);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+.fg input,.fg textarea,.fg select{width:100%;padding:11px 0;border:0;border-bottom:1px solid var(--line-s);background:transparent;color:var(--ink);font-family:inherit;font-size:16px;outline:none;transition:border-color .3s ease;-webkit-appearance:none;appearance:none;border-radius:0}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-bottom-color:var(--c-1)}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--dim)}
+.fg textarea{min-height:80px;resize:vertical}
+.sb-btn{width:100%;margin-top:10px;padding:14px 24px;background:var(--ink);color:var(--cream);border:0;border-radius:99px;font-family:inherit;font-weight:500;font-size:.92rem;cursor:pointer;transition:all .3s ease}
+.sb-btn:hover{background:var(--c-1);transform:translateY(-2px)}
+
+/* MODAL */
+.mo{position:fixed;inset:0;z-index:99000;background:rgba(28,24,20,.6);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:all .4s ease;overflow-y:auto}
+.mo.on{opacity:1;visibility:visible}
+.mo-c{width:100%;max-width:620px;max-height:calc(100vh - 40px);overflow-y:auto;background:var(--cream);border:1px solid var(--line-s);border-radius:24px;padding:0;box-shadow:var(--sh);transition:transform .6s cubic-bezier(.16,1,.3,1),opacity .4s ease}
+.mo-c[data-dir="up"]{transform:translateY(100vh);opacity:0}
+.mo-c[data-dir="down"]{transform:translateY(-100vh);opacity:0}
+.mo-c[data-dir="left"]{transform:translateX(100vw);opacity:0}
+.mo-c[data-dir="right"]{transform:translateX(-100vw);opacity:0}
+.mo-c[data-dir="scale"]{transform:scale(.7);opacity:0}
+.mo-c[data-dir="rotate"]{transform:rotate(-10deg) scale(.85);opacity:0}
+.mo.on .mo-c{transform:translate(0,0) scale(1) rotate(0);opacity:1}
+.mo-im{height:220px;border-radius:24px 24px 0 0;overflow:hidden;position:relative}
+.mo-im img{height:100%;object-fit:cover}
+.mo-bd{padding:32px}
+.mo-cl{position:absolute;top:14px;right:14px;width:36px;height:36px;border:0;border-radius:50%;background:var(--cream);border:1px solid var(--line-s);color:var(--ink);display:grid;place-items:center;font-size:1.2rem;z-index:10;transition:all .3s ease;box-shadow:var(--sh-s)}
+.mo-cl:hover{background:var(--ink);color:var(--cream);border-color:var(--ink);transform:rotate(90deg)}
+.mo h2{font-family:var(--fd);font-size:1.7rem;font-weight:400;margin-bottom:14px;letter-spacing:-.015em}
+.mo h2 em{font-style:italic;color:var(--c-1)}
+.mo p{color:var(--ink-2);line-height:1.75;margin-bottom:14px}
+.mo-gr{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}
+.mo-gr div span{display:block;font-family:var(--fm);font-size:.68rem;color:var(--c-1);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+.mo-gr div strong{font-family:var(--fd);font-size:1.05rem;color:var(--ink);font-weight:400}
+
+/* Toast */
+.ts{position:fixed;bottom:22px;right:22px;z-index:99500;padding:13px 18px;background:var(--ink);color:var(--cream);border-radius:12px;display:flex;align-items:center;gap:11px;transform:translateX(calc(100% + 40px));transition:transform .5s cubic-bezier(.16,1,.3,1);box-shadow:var(--sh);max-width:calc(100% - 40px)}
+.ts.on{transform:translateX(0)}
+.ts-i{width:28px;height:28px;border-radius:50%;background:var(--c-1);color:var(--cream);display:grid;place-items:center;flex-shrink:0;font-size:.85rem;font-weight:700}
+.ts strong{display:block;font-size:.85rem;margin-bottom:2px}
+.ts span{color:var(--cream-3);font-size:.76rem}
+
+.sp{position:fixed;top:0;left:0;height:2px;background:var(--c-1);z-index:9999;width:0%;transition:width .1s linear}
+.bt{position:fixed;bottom:22px;right:22px;width:42px;height:42px;border-radius:50%;background:var(--ink);color:var(--cream);border:0;display:grid;place-items:center;font-size:1rem;z-index:9990;opacity:0;pointer-events:none;transform:translateY(20px);transition:all .4s ease;box-shadow:var(--sh-s)}
+.bt.on{opacity:1;pointer-events:all;transform:translateY(0)}
+.bt:hover{background:var(--c-1)}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+.nl{display:none}.nv-tg{display:flex}
+.h1-grid,.s-split,.h2-bn,.sv2-co,.pr3-ca,.p2-ft,.j2-ft,.j3-mg,.co-gr,.pc1-st{grid-template-columns:1fr;gap:36px}
+.h2-bn{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+.h2-mn{grid-column:1/-1;grid-row:auto;min-height:280px}
+.h1-img,.p2-fi,.j2-fi,.c3-im,.po2-im,.a3-fd{height:360px}
+.s-cards,.s-prod,.sv1-gr,.pr1-gr,.pe1-gr,.j1-gr,.po3-gr,.sv3-fl,.a1-co,.t2-gr,.pc2-gr,.s-feat{grid-template-columns:repeat(2,1fr)}
+.s-tm,.t3-ls,.pe3-lg,.c2-gr{grid-template-columns:repeat(3,1fr)}
+.po1-bn{grid-template-columns:repeat(2,1fr)}
+.bg,.wd,.tl{grid-column:span 1;grid-row:span 1}
+.pr1-c.ft{transform:none}
+.fr-g{grid-template-columns:repeat(2,1fr)}
+.c1-it:nth-child(odd),.a1-im:nth-child(2),.a3-fd:nth-child(2){margin-top:0;transform:none}
+.c3-rw,.po2-cs{grid-template-columns:1fr}
+.c3-rw:nth-child(even) .c3-im,.po2-cs:nth-child(even) .po2-im{order:0}
+.sec{padding:60px 0}
+.pr2-rw{grid-template-columns:2fr 1fr 1fr 1fr}
+.s-stats{grid-template-columns:repeat(2,1fr);gap:30px 0}
+.st-it:nth-child(2){border-right:0}
+.s-cta{margin:0}
+}
+
+@media(max-width:760px){
+.wrap{width:min(100% - 20px,1340px)}.sec{padding:50px 0}
+.nv{padding:8px 10px 8px 16px;top:8px;width:calc(100% - 20px)}
+.lg{font-size:1.3rem}.nv-tg{width:38px;height:38px}
+.s-cards,.s-prod,.sv1-gr,.pr1-gr,.pe1-gr,.j1-gr,.po3-gr,.sv3-fl,.a1-co,.t2-gr,.pc2-gr,.s-feat,.s-tm,.t3-ls,.pe3-lg,.c2-gr,.c1-ms,.po1-bn,.h2-bn,.fr-rw,.s-stats,.fr-g{grid-template-columns:1fr;gap:14px}
+.hr{padding-top:100px;padding-bottom:50px}
+.h1-img{height:300px;border-radius:18px}
+.h3-bi{height:240px;margin-top:36px}
+.h2-mn{min-height:280px;padding:26px}.h2-bi{padding:22px}
+.a1-im{height:200px}.a3-fd{height:260px}
+.sv1-c,.pe1-c,.pr1-c,.pc2-c{padding:28px 22px}
+.sv1-n{font-size:3.2rem;margin-bottom:18px}
+.sv2-it{grid-template-columns:40px 1fr 34px;gap:12px;padding:22px 0}
+.sv2-im{height:200px}
+.sv3-c{padding:28px 20px}
+.p2-ft{padding:24px;gap:22px}.p2-fi{height:260px}
+.p3-rw{grid-template-columns:60px 1fr;gap:12px;padding:16px 0}
+.p3-rw img{width:54px;height:54px}
+.p3-rw>*:nth-child(3),.p3-rw>*:nth-child(4),.p3-rw>*:nth-child(5){display:none}
+.c1-im{height:340px}.po1-bn{grid-auto-rows:220px}
+.po2-im,.c3-im,.pc2-c{height:240px}
+.pc1-st{padding:32px 0;gap:18px}.pc1-nm{font-size:3rem}
+.s-tm-c .img{height:240px}
+.t2-c{grid-template-columns:1fr;padding:22px}.t2-im{height:180px}
+.t3-av{width:88px;height:88px}
+.pe2-rw{grid-template-columns:50px 1fr 90px;gap:12px;padding:16px 0}
+.pe2-rw .lk{display:none}.pe2-rw .yr{font-size:1.2rem}
+.j2-i{grid-template-columns:44px 1fr;gap:14px}.j2-i .mt{display:none}
+.j3-mc{grid-template-columns:1fr}.j3-mi{height:180px}.j3-sd{position:static}
+.co-fm{padding:24px 20px}.co-it p,.co-it a{font-size:1.05rem}
+.fr-bt{flex-direction:column;text-align:center;gap:8px}
+.mo-im{height:160px}.mo-bd{padding:24px 20px}.mo h2{font-size:1.4rem}.mo-gr{grid-template-columns:1fr}
+.ts{bottom:12px;right:12px;left:12px;padding:11px 14px}
+.bt{bottom:70px;right:12px}
+.btns{flex-direction:column;align-items:stretch}.btn{width:100%}
+.s-split img{height:280px}
+.s-img-big{height:320px}
+.s-img-cap{left:18px;right:18px;bottom:18px;padding:14px 18px}
+.s-feat-i{padding:24px;grid-template-columns:1fr;gap:14px}
+.s-list-r{grid-template-columns:50px 1fr;gap:12px;padding:16px 0}
+.s-list-r>*:nth-child(3),.s-list-r>*:nth-child(4){display:none}
+.s-quote .mk{font-size:4rem}
+.pr2-rw{grid-template-columns:1fr 1fr;font-size:.82rem;padding:12px 16px;gap:8px}
+.pr2-rw>*:nth-child(3),.pr2-rw>*:nth-child(4){display:none}
+}
+
+@media(max-width:480px){
+.wrap{width:min(100% - 16px,1340px)}
+.lg{font-size:1.15rem}.nv-tg{width:34px;height:34px}
+.hr h1{font-size:clamp(1.9rem,9vw,2.8rem)}
+.sv1-c{padding:24px 20px}.sv1-n{font-size:2.8rem}
+.pr1-c{padding:26px 20px}
+.c1-im{height:280px}
+.mo-bd{padding:20px 16px}.mo h2{font-size:1.25rem}
+}
+
+@media(hover:none) and (pointer:coarse){
+.ni.op .dd{display:none}
+*:hover{transform:none!important}
+.btn:active{transform:scale(.97)!important}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="sp" id="sp"></div>
+<div class="pre" id="pre"><div class="pre-in"><div class="pre-lg">Vesper</div><div class="pre-bar"><div class="pre-fl" id="pf"></div></div><div class="pre-pc" id="pp">0%</div></div></div>
+<div class="tr" id="tr"><span></span><span></span><span></span><span></span><span></span></div>
+<button class="bt" id="bt">↑</button>
+
+<header class="nv" id="nv">
+<a class="lg" data-pg="home"><span class="lg-dt"></span><span>Vesper</span></a>
+<ul class="nl">
+<li class="ni" data-dr><span class="nlk on" data-pg="home">Home <svg class="nl-ar" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+<div class="dd">
+<a class="dd-i" data-pg="home"><span class="dd-n">01</span><div class="dd-tx"><span class="dd-tt">Editorial Hero</span><span class="dd-sb">Magazine split layout</span></div></a>
+<a class="dd-i" data-pg="home2"><span class="dd-n">02</span><div class="dd-tx"><span class="dd-tt">Bento Dashboard</span><span class="dd-sb">Modern bento grid</span></div></a>
+<a class="dd-i" data-pg="home3"><span class="dd-n">03</span><div class="dd-tx"><span class="dd-tt">Centered Bold</span><span class="dd-sb">Big statement hero</span></div></a>
+</div></li>
+<li class="ni" data-dr><span class="nlk" data-pg="about">About <svg class="nl-ar" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+<div class="dd">
+<a class="dd-i" data-pg="about"><span class="dd-n">01</span><div class="dd-tx"><span class="dd-tt">Story Collage</span><span class="dd-sb">Visual storytelling</span></div></a>
+<a class="dd-i" data-pg="about2"><span class="dd-n">02</span><div class="dd-tx"><span class="dd-tt">Manifesto</span><span class="dd-sb">Principles & values</span></div></a>
+<a class="dd-i" data-pg="about3"><span class="dd-n">03</span><div class="dd-tx"><span class="dd-tt">Founders</span><span class="dd-sb">Team profiles</span></div></a>
+</div></li>
+<li class="ni" data-dr><span class="nlk" data-pg="services">Services <svg class="nl-ar" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+<div class="dd">
+<a class="dd-i" data-pg="services"><span class="dd-n">01</span><div class="dd-tx"><span class="dd-tt">Numbered Cards</span><span class="dd-sb">Card grid layout</span></div></a>
+<a class="dd-i" data-pg="services2"><span class="dd-n">02</span><div class="dd-tx"><span class="dd-tt">Service List</span><span class="dd-sb">Editorial rows</span></div></a>
+<a class="dd-i" data-pg="services3"><span class="dd-n">03</span><div class="dd-tx"><span class="dd-tt">Process Flow</span><span class="dd-sb">Icon-led grid</span></div></a>
+</div></li>
+<li class="ni" data-dr><span class="nlk" data-pg="products">Products <svg class="nl-ar" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+<div class="dd">
+<a class="dd-i" data-pg="products"><span class="dd-n">01</span><div class="dd-tx"><span class="dd-tt">Product Grid</span><span class="dd-sb">E-commerce style</span></div></a>
+<a class="dd-i" data-pg="products2"><span class="dd-n">02</span><div class="dd-tx"><span class="dd-tt">Featured + Grid</span><span class="dd-sb">Hero product</span></div></a>
+<a class="dd-i" data-pg="products3"><span class="dd-n">03</span><div class="dd-tx"><span class="dd-tt">Catalog List</span><span class="dd-sb">Compact view</span></div></a>
+</div></li>
+<li class="ni" data-dr><span class="nlk" data-pg="collection">Collection <svg class="nl-ar" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+<div class="dd">
+<a class="dd-i" data-pg="collection"><span class="dd-n">01</span><div class="dd-tx"><span class="dd-tt">Masonry</span><span class="dd-sb">Offset grid</span></div></a>
+<a class="dd-i" data-pg="collection2"><span class="dd-n">02</span><div class="dd-tx"><span class="dd-tt">Card Grid</span><span class="dd-sb">Uniform 4-col</span></div></a>
+<a class="dd-i" data-pg="collection3"><span class="dd-n">03</span><div class="dd-tx"><span class="dd-tt">Editorial</span><span class="dd-sb">Magazine spread</span></div></a>
+</div></li>
+<li class="ni" data-dr><span class="nlk" data-pg="portfolio">Portfolio <svg class="nl-ar" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+<div class="dd">
+<a class="dd-i" data-pg="portfolio"><span class="dd-n">01</span><div class="dd-tx"><span class="dd-tt">Bento Mix</span><span class="dd-sb">Mixed sizes</span></div></a>
+<a class="dd-i" data-pg="portfolio2"><span class="dd-n">02</span><div class="dd-tx"><span class="dd-tt">Case Studies</span><span class="dd-sb">Long-form</span></div></a>
+<a class="dd-i" data-pg="portfolio3"><span class="dd-n">03</span><div class="dd-tx"><span class="dd-tt">Clean Grid</span><span class="dd-sb">Uniform cards</span></div></a>
+</div></li>
+<li class="ni" data-dr><span class="nlk" data-pg="pricing">Pricing <svg class="nl-ar" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+<div class="dd">
+<a class="dd-i" data-pg="pricing"><span class="dd-n">01</span><div class="dd-tx"><span class="dd-tt">3 Tier Cards</span><span class="dd-sb">Classic pricing</span></div></a>
+<a class="dd-i" data-pg="pricing2"><span class="dd-n">02</span><div class="dd-tx"><span class="dd-tt">Comparison</span><span class="dd-sb">Feature table</span></div></a>
+<a class="dd-i" data-pg="pricing3"><span class="dd-n">03</span><div class="dd-tx"><span class="dd-tt">Calculator</span><span class="dd-sb">Build your quote</span></div></a>
+</div></li>
+<li class="ni" data-dr><span class="nlk" data-pg="process">Process <svg class="nl-ar" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+<div class="dd">
+<a class="dd-i" data-pg="process"><span class="dd-n">01</span><div class="dd-tx"><span class="dd-tt">Numbered Steps</span><span class="dd-sb">Editorial list</span></div></a>
+<a class="dd-i" data-pg="process2"><span class="dd-n">02</span><div class="dd-tx"><span class="dd-tt">Icon Cards</span><span class="dd-sb">2-col grid</span></div></a>
+<a class="dd-i" data-pg="process3"><span class="dd-n">03</span><div class="dd-tx"><span class="dd-tt">Timeline</span><span class="dd-sb">Vertical path</span></div></a>
+</div></li>
+<li class="ni" data-dr><span class="nlk" data-pg="team">Team <svg class="nl-ar" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+<div class="dd">
+<a class="dd-i" data-pg="team"><span class="dd-n">01</span><div class="dd-tx"><span class="dd-tt">Portrait Grid</span><span class="dd-sb">4-column grid</span></div></a>
+<a class="dd-i" data-pg="team2"><span class="dd-n">02</span><div class="dd-tx"><span class="dd-tt">Profile Cards</span><span class="dd-sb">With bios</span></div></a>
+<a class="dd-i" data-pg="team3"><span class="dd-n">03</span><div class="dd-tx"><span class="dd-tt">By Department</span><span class="dd-sb">Organized teams</span></div></a>
+</div></li>
+<li class="ni" data-dr><span class="nlk" data-pg="press">Press <svg class="nl-ar" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+<div class="dd">
+<a class="dd-i" data-pg="press"><span class="dd-n">01</span><div class="dd-tx"><span class="dd-tt">Quote Cards</span><span class="dd-sb">Press quotes</span></div></a>
+<a class="dd-i" data-pg="press2"><span class="dd-n">02</span><div class="dd-tx"><span class="dd-tt">Awards List</span><span class="dd-sb">Editorial table</span></div></a>
+<a class="dd-i" data-pg="press3"><span class="dd-n">03</span><div class="dd-tx"><span class="dd-tt">Logo Wall</span><span class="dd-sb">Featured logos</span></div></a>
+</div></li>
+<li class="ni" data-dr><span class="nlk" data-pg="journal">Journal <svg class="nl-ar" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+<div class="dd">
+<a class="dd-i" data-pg="journal"><span class="dd-n">01</span><div class="dd-tx"><span class="dd-tt">3 Column</span><span class="dd-sb">Blog grid</span></div></a>
+<a class="dd-i" data-pg="journal2"><span class="dd-n">02</span><div class="dd-tx"><span class="dd-tt">Featured + List</span><span class="dd-sb">Hero + archive</span></div></a>
+<a class="dd-i" data-pg="journal3"><span class="dd-n">03</span><div class="dd-tx"><span class="dd-tt">Magazine</span><span class="dd-sb">Main + sidebar</span></div></a>
+</div></li>
+<li><a class="nlk nv-c" data-pg="contact">Contact →</a></li>
+</ul>
+<button class="nv-tg" id="nt"><span></span><span></span><span></span></button>
+</header>
+
+<div class="mm" id="mm"><div class="mm-in">
+<div class="mn-i"><div class="mn-h dr">Home</div><div class="mdd">
+<a class="md-i" data-pg="home"><span class="md-n">01</span>Editorial Hero</a>
+<a class="md-i" data-pg="home2"><span class="md-n">02</span>Bento Dashboard</a>
+<a class="md-i" data-pg="home3"><span class="md-n">03</span>Centered Bold</a>
+</div></div>
+<div class="mn-i"><div class="mn-h dr">About</div><div class="mdd">
+<a class="md-i" data-pg="about"><span class="md-n">01</span>Story Collage</a>
+<a class="md-i" data-pg="about2"><span class="md-n">02</span>Manifesto</a>
+<a class="md-i" data-pg="about3"><span class="md-n">03</span>Founders</a>
+</div></div>
+<div class="mn-i"><div class="mn-h dr">Services</div><div class="mdd">
+<a class="md-i" data-pg="services"><span class="md-n">01</span>Numbered Cards</a>
+<a class="md-i" data-pg="services2"><span class="md-n">02</span>Service List</a>
+<a class="md-i" data-pg="services3"><span class="md-n">03</span>Process Flow</a>
+</div></div>
+<div class="mn-i"><div class="mn-h dr">Products</div><div class="mdd">
+<a class="md-i" data-pg="products"><span class="md-n">01</span>Product Grid</a>
+<a class="md-i" data-pg="products2"><span class="md-n">02</span>Featured + Grid</a>
+<a class="md-i" data-pg="products3"><span class="md-n">03</span>Catalog List</a>
+</div></div>
+<div class="mn-i"><div class="mn-h dr">Collection</div><div class="mdd">
+<a class="md-i" data-pg="collection"><span class="md-n">01</span>Masonry</a>
+<a class="md-i" data-pg="collection2"><span class="md-n">02</span>Card Grid</a>
+<a class="md-i" data-pg="collection3"><span class="md-n">03</span>Editorial</a>
+</div></div>
+<div class="mn-i"><div class="mn-h dr">Portfolio</div><div class="mdd">
+<a class="md-i" data-pg="portfolio"><span class="md-n">01</span>Bento Mix</a>
+<a class="md-i" data-pg="portfolio2"><span class="md-n">02</span>Case Studies</a>
+<a class="md-i" data-pg="portfolio3"><span class="md-n">03</span>Clean Grid</a>
+</div></div>
+<div class="mn-i"><div class="mn-h dr">Pricing</div><div class="mdd">
+<a class="md-i" data-pg="pricing"><span class="md-n">01</span>3 Tier Cards</a>
+<a class="md-i" data-pg="pricing2"><span class="md-n">02</span>Comparison</a>
+<a class="md-i" data-pg="pricing3"><span class="md-n">03</span>Calculator</a>
+</div></div>
+<div class="mn-i"><div class="mn-h dr">Process</div><div class="mdd">
+<a class="md-i" data-pg="process"><span class="md-n">01</span>Numbered Steps</a>
+<a class="md-i" data-pg="process2"><span class="md-n">02</span>Icon Cards</a>
+<a class="md-i" data-pg="process3"><span class="md-n">03</span>Timeline</a>
+</div></div>
+<div class="mn-i"><div class="mn-h dr">Team</div><div class="mdd">
+<a class="md-i" data-pg="team"><span class="md-n">01</span>Portrait Grid</a>
+<a class="md-i" data-pg="team2"><span class="md-n">02</span>Profile Cards</a>
+<a class="md-i" data-pg="team3"><span class="md-n">03</span>By Department</a>
+</div></div>
+<div class="mn-i"><div class="mn-h dr">Press</div><div class="mdd">
+<a class="md-i" data-pg="press"><span class="md-n">01</span>Quote Cards</a>
+<a class="md-i" data-pg="press2"><span class="md-n">02</span>Awards List</a>
+<a class="md-i" data-pg="press3"><span class="md-n">03</span>Logo Wall</a>
+</div></div>
+<div class="mn-i"><div class="mn-h dr">Journal</div><div class="mdd">
+<a class="md-i" data-pg="journal"><span class="md-n">01</span>3 Column</a>
+<a class="md-i" data-pg="journal2"><span class="md-n">02</span>Featured + List</a>
+<a class="md-i" data-pg="journal3"><span class="md-n">03</span>Magazine</a>
+</div></div>
+<a class="m-c" data-pg="contact">Start a Project →</a>
+</div></div>
+
+<div class="ts" id="ts"><div class="ts-i">✓</div><div><strong id="tst">Success</strong><span id="tsm">Done</span></div></div>
+
+<div class="mo" id="mo"><div class="mo-c" id="moc" data-dir="scale"><button class="mo-cl" id="mocl">×</button><div class="mo-im"><img id="moi" src="" alt=""></div><div class="mo-bd" id="mob"></div></div></div>
+
+<!-- ALL 34 PAGES WITH FULL CONTENT (multiple sections each) -->
+
+<!-- HOME 1 -->
+<main class="page on" id="page-home" style="--acc:var(--c-1)">
+<section class="hr hr-1"><div class="wrap"><div class="h1-grid">
+<div><div class="tag">Vol 24 · Winter 2025</div><h1>Crafting <em>quiet</em> excellence in design.</h1><p class="lead">A multi-disciplinary studio building brands, products, and experiences for ambitious companies worldwide.</p><div class="btns"><button class="btn btn-d" data-mo="hello" data-dir="up">Start Project →</button><a class="btn btn-o" data-pg="portfolio">View Work</a></div></div>
+<div class="h1-img"></div></div></div></section>
+<section class="sec sec-sm"><div class="wrap"><div class="s-stats">
+<div class="st-it"><strong>240+</strong><span>Projects Shipped</span></div>
+<div class="st-it"><strong>11yr</strong><span>In Business</span></div>
+<div class="st-it"><strong>98%</strong><span>Client Retention</span></div>
+<div class="st-it"><strong>56</strong><span>Awards Won</span></div>
+</div></div></section>
+<section class="sec"><div class="wrap"><div class="s-hd"><div><div class="tag">What We Do</div><h2>Six services. <em>One studio</em>.</h2></div><a class="btn btn-o" data-pg="services">All Services →</a></div>
+<div class="s-cards">
+<div class="s-card"><div class="ic">🎨</div><h3>Brand Identity</h3><p>Logos, color systems, typography, and guidelines that build recognition across every touchpoint.</p></div>
+<div class="s-card"><div class="ic">💻</div><h3>Web Design</h3><p>Beautiful, fast websites with editorial typography and refined motion design.</p></div>
+<div class="s-card"><div class="ic">📐</div><h3>Product Design</h3><p>Interfaces and digital products combining usability with beautiful, considered aesthetics.</p></div>
+</div></div></section>
+<section class="s-mq"><div class="tk">
+<span>Brand Identity</span><span>Web Design</span><span>Editorial</span><span>Product Design</span><span>Brand Identity</span><span>Web Design</span><span>Editorial</span><span>Product Design</span>
+</div></section>
+<section class="sec"><div class="wrap"><div class="s-split">
+<img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1100&q=85" alt="">
+<div><div class="tag">Featured Project</div><h2>Maison de Lyon — A complete <em>rebrand</em>.</h2><p>From identity to interior signage, we crafted a refined brand world for one of Paris's most beloved hotels.</p><p>An 8-month engagement covering brand strategy, identity system, print collateral, signage, and digital touchpoints.</p><div class="btns"><button class="btn btn-d" data-mo="case1" data-dir="left">View Case →</button></div></div>
+</div></div></section>
+<section class="sec sec-sm"><div class="wrap"><div class="s-cta">
+<div class="tag ctr">Ready when you are</div><h2>Let's craft something <em>memorable</em> together.</h2><p>Tell us about your project. We respond within 24 hours with a tailored proposal.</p><div class="btns" style="justify-content:center"><a class="btn btn-d" data-pg="contact">Start a Project →</a></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>A multi-disciplinary design studio crafting brands, websites, and editorial work with care since 2014.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li><li><a data-pg="services">Services</a></li><li><a data-pg="team">Team</a></li><li><a data-pg="press">Press</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li><li><a data-pg="collection">Collection</a></li><li><a data-pg="products">Products</a></li><li><a data-pg="process">Process</a></li></ul></div><div><h4>Layouts</h4><ul><li><a data-pg="home2">Home 2</a></li><li><a data-pg="services2">Services 2</a></li><li><a data-pg="pricing3">Calculator</a></li><li><a data-pg="journal3">Magazine</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li><li><a data-pg="journal">Journal</a></li><li><a>Instagram</a></li><li><a>LinkedIn</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio · Brooklyn · London · Tokyo</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- HOME 2 - BENTO -->
+<main class="page" id="page-home2" style="--acc:var(--c-1)">
+<section class="hr hr-2"><div class="wrap"><div class="h2-bn">
+<div class="h2-bi h2-mn"><div><span class="h2-tg">Live · Q1 2025</span></div><h1>Design that <em>moves</em> the needle.</h1></div>
+<div class="h2-bi"><div class="h2-st"><strong>240+</strong><span>Projects</span></div></div>
+<div class="h2-bi"><div class="h2-st"><strong>11yr</strong><span>In Business</span></div></div>
+<div class="h2-bi"><div class="h2-st"><strong>98%</strong><span>Retention</span></div></div>
+<div class="h2-bi"><div class="h2-st"><strong>56</strong><span>Awards</span></div></div>
+</div><div class="btns"><button class="btn btn-d" data-mo="hello" data-dir="down">Start Project →</button><a class="btn btn-o" data-pg="portfolio">View Work</a></div></div></section>
+<section class="sec"><div class="wrap"><div class="s-hd"><div><div class="tag">Capabilities</div><h2>Everything we do, <em>under one roof</em>.</h2></div></div>
+<div class="s-feat">
+<div class="s-feat-i"><div class="num">01</div><div><h4>Brand Identity</h4><p>Logos, color systems, typography, brand guidelines, and visual direction.</p></div></div>
+<div class="s-feat-i"><div class="num">02</div><div><h4>Web Design & Build</h4><p>Beautiful, performant websites with editorial typography and refined motion.</p></div></div>
+<div class="s-feat-i"><div class="num">03</div><div><h4>Product Design</h4><p>Interfaces and digital products that combine usability with beauty.</p></div></div>
+<div class="s-feat-i"><div class="num">04</div><div><h4>Editorial Design</h4><p>Magazines, books, and printed matter with editorial precision.</p></div></div>
+</div></div></section>
+<section class="sec sec-sm"><div class="wrap"><div class="s-img-big"><img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=1800&q=85" alt=""><div class="s-img-cap"><strong>Recent Work — Studio Quarterly</strong><span>Editorial design · 160 pages · Issue 04</span></div></div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>A multi-disciplinary design studio crafting brands, websites, and editorial work.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li><li><a data-pg="services">Services</a></li><li><a data-pg="team">Team</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li><li><a data-pg="collection">Collection</a></li><li><a data-pg="products">Products</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li><li><a data-pg="journal">Journal</a></li><li><a data-pg="process">Process</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li><li><a>Instagram</a></li><li><a>LinkedIn</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- HOME 3 - CENTERED -->
+<main class="page" id="page-home3" style="--acc:var(--c-4)">
+<section class="hr hr-3" style="text-align:center"><div class="wrap"><span class="h3-pl">Now Accepting Q2 Projects</span><h1>The world's most <em>iconic</em><br>brands start here.</h1><p class="lead ctr cb">An independent studio creating brand identities, websites, and digital experiences that age beautifully.</p><div class="btns" style="justify-content:center"><button class="btn btn-a" data-mo="hello" data-dir="scale">Start Project →</button><a class="btn btn-o" data-pg="portfolio">View Selected Work</a></div><div class="h3-bi"></div></div></section>
+<section class="sec"><div class="wrap"><div class="s-quote"><div class="mk">"</div><p>Vesper's work has a quiet confidence that puts most studios to shame. They make brands feel like books — considered, refined, lasting.</p><div class="au">— It's Nice That, December 2024</div></div></div></section>
+<section class="sec"><div class="wrap"><div class="s-hd" style="text-align:center;justify-content:center"><div><div class="tag ctr">Trusted by</div><h2>Brands we've helped <em>build</em>.</h2></div></div>
+<div class="pe3-lg">
+<div class="pe3-l"><strong>Maison de Lyon</strong><span>Hospitality</span></div>
+<div class="pe3-l"><strong>Nordic Coffee</strong><span>F&B</span></div>
+<div class="pe3-l"><strong>Verse</strong><span>Architecture</span></div>
+<div class="pe3-l"><strong>Halo Studio</strong><span>Tech</span></div>
+<div class="pe3-l"><strong>Atelier Bloom</strong><span>Lifestyle</span></div>
+<div class="pe3-l"><strong>Silvern</strong><span>Beverages</span></div>
+<div class="pe3-l"><strong>Cipher Co.</strong><span>Finance</span></div>
+<div class="pe3-l"><strong>Aurora Audio</strong><span>Music</span></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>A multi-disciplinary design studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li><li><a data-pg="team">Team</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li><li><a data-pg="collection">Collection</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li><li><a data-pg="journal">Journal</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li><li><a>Instagram</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- ABOUT 1 - COLLAGE -->
+<main class="page" id="page-about" style="--acc:var(--c-2)">
+<section class="hr hr-4"><div class="wrap" style="text-align:center"><div class="tag ctr">About</div><h1 style="max-width:880px;margin:0 auto 22px">A studio of makers, thinkers, <em>and storytellers</em>.</h1><p class="lead ctr cb">For over a decade we've helped brands across fashion, tech, hospitality, and the arts find their voice and tell their story.</p><div class="a1-co"><div class="a1-im" style="background-image:url('https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=600&q=85')"></div><div class="a1-im" style="background-image:url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=600&q=85')"></div><div class="a1-im" style="background-image:url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=85')"></div></div></div></section>
+<section class="sec" style="padding-top:130px"><div class="wrap"><div class="s-split">
+<div><div class="tag">Our Story</div><h2>From a small Brooklyn apartment to a <em>global studio</em>.</h2><p>Vesper was founded in 2014 by three friends who met in design school. We started with a simple belief: brands deserve more than templates and trends.</p><p>Today, we're a team of 26 designers, developers, writers, and strategists working from studios in Brooklyn, London, and Tokyo.</p></div>
+<img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1100&q=85" alt="">
+</div></div></section>
+<section class="sec"><div class="wrap"><div class="s-hd"><div><div class="tag">Our Values</div><h2>What guides <em>everything</em> we do.</h2></div></div>
+<div class="s-cards">
+<div class="s-card"><div class="ic">🎯</div><h3>Craft First</h3><p>We'd rather ship one extraordinary thing than ten ordinary ones. Quality over quantity, always.</p></div>
+<div class="s-card"><div class="ic">💬</div><h3>Honest Work</h3><p>We tell clients what they need to hear, not what they want. Always with kindness and respect.</p></div>
+<div class="s-card"><div class="ic">🤝</div><h3>Long Game</h3><p>Most clients come back. We build for lasting relationships, not quick transactions.</p></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>A multi-disciplinary studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li><li><a data-pg="team">Team</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- ABOUT 2 - MANIFESTO -->
+<main class="page" id="page-about2" style="--acc:var(--c-2)">
+<section class="hr hr-5"><div class="wrap" style="max-width:900px"><div style="font-family:var(--fm);font-size:.72rem;letter-spacing:.18em;color:var(--c-2);margin-bottom:24px">A · MANIFESTO</div><h1>We make <em>fewer things</em>,<br>but make them count.</h1><p class="lead">Four core principles guide everything we do — and everything we say no to.</p><div class="a2-gr">
+<div class="a2-pl"><div class="a2-nm">01</div><h3>Craft over speed</h3><p>We'd rather ship one extraordinary thing than ten ordinary ones. Every project gets the time it deserves.</p></div>
+<div class="a2-pl"><div class="a2-nm">02</div><h3>Substance over style</h3><p>Beautiful design that works hard. We focus on outcomes, not trends or vanity metrics.</p></div>
+<div class="a2-pl"><div class="a2-nm">03</div><h3>Honesty over hype</h3><p>We tell clients what they need to hear, not what they want. Always with kindness and respect.</p></div>
+<div class="a2-pl"><div class="a2-nm">04</div><h3>Relationships over transactions</h3><p>Most clients come back. We're playing the long game and we build for the long term.</p></div>
+</div></div></section>
+<section class="sec"><div class="wrap"><div class="s-quote"><div class="mk">"</div><p>Design is not just what it looks like. Design is how it works — and how it makes you feel.</p><div class="au">— Studio Philosophy</div></div></div></section>
+<section class="sec sec-sm"><div class="wrap"><div class="s-cta">
+<h2>Want to work <em>with us</em>?</h2><p>We're currently accepting projects for Q2 2025. Send us a note and we'll respond within 24 hours.</p><div class="btns" style="justify-content:center"><a class="btn btn-d" data-pg="contact">Start Project →</a></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- ABOUT 3 - FOUNDERS -->
+<main class="page" id="page-about3" style="--acc:var(--c-12)">
+<section class="hr hr-6"><div class="wrap"><div class="tag">Founders</div><h1>Meet the three minds behind <em>Vesper</em>.</h1><p class="lead">Founded in 2014, we're a tight team of designers, technologists, and writers united by a love of craft.</p>
+<div class="a3-fg">
+<div class="a3-fd"><img src="https://i.pravatar.cc/700?img=12" alt=""><div class="a3-fi"><strong>Alex Carter</strong><span>Creative Director · Brooklyn</span></div></div>
+<div class="a3-fd"><img src="https://i.pravatar.cc/700?img=47" alt=""><div class="a3-fi"><strong>Maya Chen</strong><span>Design Director · Tokyo</span></div></div>
+<div class="a3-fd"><img src="https://i.pravatar.cc/700?img=32" alt=""><div class="a3-fi"><strong>James Wilson</strong><span>Tech Director · London</span></div></div>
+</div></div></section>
+<section class="sec" style="padding-top:130px"><div class="wrap"><div class="s-split">
+<img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1100&q=85" alt="">
+<div><div class="tag">Origins</div><h2>How three friends started a <em>global studio</em>.</h2><p>Alex, Maya, and James met at the Rhode Island School of Design in 2010. Different paths brought them together: Alex in branding, Maya in editorial, James in engineering.</p><p>By 2014, they'd had enough of agency work. They quit their jobs, rented a tiny Brooklyn apartment, and opened the studio with $5,000 and a single client.</p></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li><li><a data-pg="team">Team</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- SERVICES 1 - NUMBERED CARDS -->
+<main class="page" id="page-services" style="--acc:var(--c-3)">
+<section class="hr hr-7"><div class="wrap"><div class="tag">Services</div><h1>Six services. One <em>obsessive</em> studio.</h1><p class="lead">Each service is its own deep practice — delivered with care, depth, and craft over many years of refinement.</p>
+<div class="sv1-gr">
+<article class="sv1-c"><div class="sv1-n">01</div><h3>Brand Identity</h3><p>Logos, color systems, typography, and brand guidelines that build recognition.</p><div class="sv1-tg"><span>Logo</span><span>Type</span><span>Guidelines</span></div></article>
+<article class="sv1-c"><div class="sv1-n">02</div><h3>Web Design & Build</h3><p>Beautiful, fast websites with editorial typography and refined motion design.</p><div class="sv1-tg"><span>Design</span><span>Code</span><span>Motion</span></div></article>
+<article class="sv1-c"><div class="sv1-n">03</div><h3>Product Design</h3><p>Interfaces and digital products combining usability with beautiful aesthetics.</p><div class="sv1-tg"><span>UI</span><span>UX</span><span>Systems</span></div></article>
+<article class="sv1-c"><div class="sv1-n">04</div><h3>Editorial Design</h3><p>Magazines, books, and printed matter with editorial precision and rhythm.</p><div class="sv1-tg"><span>Print</span><span>Layout</span><span>Type</span></div></article>
+</div></div></section>
+<section class="sec"><div class="wrap"><div class="s-hd"><div><div class="tag">How We Work</div><h2>From kickoff to <em>launch day</em>.</h2></div></div>
+<div class="sv3-fl">
+<div class="sv3-c"><div class="sv3-i">💡</div><h3>Strategy</h3><p>Research, positioning, and roadmap. Every project starts with clarity.</p></div>
+<div class="sv3-c"><div class="sv3-i">🎨</div><h3>Design</h3><p>Visual systems, interfaces, and editorial work crafted with care.</p></div>
+<div class="sv3-c"><div class="sv3-i">🚀</div><h3>Launch</h3><p>Production, testing, and a confident launch with ongoing support.</p></div>
+</div></div></section>
+<section class="sec sec-sm"><div class="wrap"><div class="s-cta">
+<h2>Ready to start <em>something</em>?</h2><p>Let's chat about your project. We respond within 24 hours.</p><div class="btns" style="justify-content:center"><a class="btn btn-d" data-pg="contact">Start Project →</a></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- SERVICES 2 - LIST -->
+<main class="page" id="page-services2" style="--acc:var(--c-4)">
+<section class="hr hr-8"><div class="wrap"><div class="sv2-co">
+<div class="sv2-sk"><div class="tag">Service List</div><h1>Everything you need, <em>nothing you don't</em>.</h1><p class="lead">A focused offering. Each service is its own deep practice — not a checkbox on a list.</p><div class="sv2-im"></div></div>
+<div>
+<article class="sv2-it"><div class="nm">01</div><div><h3>Brand Identity</h3><p>Visual systems that build recognition</p></div><div class="ar">→</div></article>
+<article class="sv2-it"><div class="nm">02</div><div><h3>Web Design</h3><p>Beautiful, performant websites</p></div><div class="ar">→</div></article>
+<article class="sv2-it"><div class="nm">03</div><div><h3>Product Design</h3><p>Interfaces that delight</p></div><div class="ar">→</div></article>
+<article class="sv2-it"><div class="nm">04</div><div><h3>Editorial Design</h3><p>Print with precision</p></div><div class="ar">→</div></article>
+<article class="sv2-it"><div class="nm">05</div><div><h3>Packaging</h3><p>Memorable unboxing</p></div><div class="ar">→</div></article>
+<article class="sv2-it"><div class="nm">06</div><div><h3>Art Direction</h3><p>Cohesive campaign vision</p></div><div class="ar">→</div></article>
+</div></div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- SERVICES 3 - PROCESS FLOW -->
+<main class="page" id="page-services3" style="--acc:var(--c-10)">
+<section class="hr hr-9"><div class="wrap"><div class="tag">Process Flow</div><h1>Three phases. Six services. <em>Endless possibilities</em>.</h1><p class="lead">From strategy to launch — here's how we move work forward, one phase at a time.</p>
+<div class="sv3-fl">
+<div class="sv3-c"><div class="sv3-i">💡</div><h3>Strategy</h3><p>Research, positioning, and clear roadmap. Every project starts with deep clarity.</p></div>
+<div class="sv3-c"><div class="sv3-i">🎨</div><h3>Design</h3><p>Visual systems, interfaces, and editorial work crafted with obsessive care.</p></div>
+<div class="sv3-c"><div class="sv3-i">🚀</div><h3>Launch</h3><p>Production, QA testing, confident launch, and 30 days of post-launch support.</p></div>
+</div></div></section>
+<section class="sec"><div class="wrap"><div class="s-hd"><div><div class="tag">FAQ</div><h2>Questions we get <em>asked often</em>.</h2></div></div>
+<div class="s-fq">
+<div class="fq-i"><div class="fq-q">How long does a typical project take?</div><div class="fq-a">Most projects ship in 4-12 weeks depending on scope and complexity.</div></div>
+<div class="fq-i"><div class="fq-q">Do you work with small businesses?</div><div class="fq-a">Yes! We work with founders, small teams, and enterprise clients alike.</div></div>
+<div class="fq-i"><div class="fq-q">What's your pricing structure?</div><div class="fq-a">Project-based, starting at $4,500. See our pricing page for full breakdown.</div></div>
+<div class="fq-i"><div class="fq-q">Do you offer ongoing support?</div><div class="fq-a">Yes, 30-day post-launch support is included, with retainers available.</div></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PRODUCTS 1 -->
+<main class="page" id="page-products" style="--acc:var(--c-5)">
+<section class="hr hr-10"><div class="wrap" style="text-align:center"><div class="tag ctr">In-House Collection</div><h1>Beautifully made, <em>thoughtfully</em> sold.</h1><p class="lead ctr cb">A curated collection of physical and digital products designed by our studio over the past decade.</p>
+<div class="s-prod" style="margin-top:50px">
+<article class="pr-c"><div class="img"><span class="bd">New</span><img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=85" alt=""></div><div class="ct"><h4>Studio Journal</h4><p class="ds">Letterpress notebook with handsewn binding.</p><div class="mt"><span class="pc">$48</span><span class="tg">Print</span></div></div></article>
+<article class="pr-c"><div class="img"><img src="https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=600&q=85" alt=""></div><div class="ct"><h4>Type Library</h4><p class="ds">8 custom typefaces by our design team.</p><div class="mt"><span class="pc">$285</span><span class="tg">Digital</span></div></div></article>
+<article class="pr-c"><div class="img"><span class="bd">Limited</span><img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=600&q=85" alt=""></div><div class="ct"><h4>Print Set No. 02</h4><p class="ds">6 limited-edition letterpress prints.</p><div class="mt"><span class="pc">$120</span><span class="tg">Print</span></div></div></article>
+<article class="pr-c"><div class="img"><img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=600&q=85" alt=""></div><div class="ct"><h4>Brand Kit</h4><p class="ds">Figma template for brand guidelines.</p><div class="mt"><span class="pc">$95</span><span class="tg">Digital</span></div></div></article>
+<article class="pr-c"><div class="img"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=600&q=85" alt=""></div><div class="ct"><h4>Studio Tote</h4><p class="ds">Canvas tote, hand-screen-printed.</p><div class="mt"><span class="pc">$34</span><span class="tg">Apparel</span></div></div></article>
+<article class="pr-c"><div class="img"><span class="bd">Bestseller</span><img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=600&q=85" alt=""></div><div class="ct"><h4>Studio Book</h4><p class="ds">240-page hardcover retrospective.</p><div class="mt"><span class="pc">$65</span><span class="tg">Print</span></div></div></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Shop</h4><ul><li><a data-pg="products">All Products</a></li><li><a data-pg="collection">Collection</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li><li><a data-pg="team">Team</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="journal">Journal</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PRODUCTS 2 -->
+<main class="page" id="page-products2" style="--acc:var(--c-4)">
+<section class="hr hr-11"><div class="wrap" style="text-align:center"><div class="tag ctr">Featured Product</div><h1>Our latest <em>obsession</em>.</h1>
+<div class="p2-ft">
+<div class="p2-fi"></div>
+<div><span style="font-family:var(--fm);font-size:.72rem;color:var(--c-4);letter-spacing:.14em;text-transform:uppercase">Issue 04 · Just Released</span><h2>The <em>Studio Quarterly</em> magazine.</h2><p style="color:var(--ink-2);line-height:1.7;margin-bottom:20px">A printed magazine made by us, twice a year. Issue 04 explores craft, slow design, and the case for making fewer things.</p><div class="p2-st"><div><strong>$24</strong><span>PER ISSUE</span></div><div><strong>160pg</strong><span>PRINTED</span></div></div><div class="btns" style="margin:0"><button class="btn" style="background:var(--c-4);color:var(--cream)" data-mo="product" data-dir="up">Order Issue 04 →</button></div></div>
+</div></div></section>
+<section class="sec"><div class="wrap"><div class="s-hd"><div><div class="tag">More Products</div><h2>Browse the <em>full catalog</em>.</h2></div><a class="btn btn-o" data-pg="products3">View All →</a></div>
+<div class="s-prod">
+<article class="pr-c"><div class="img"><img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=85" alt=""></div><div class="ct"><h4>Studio Journal</h4><div class="mt"><span class="pc">$48</span><span class="tg">Print</span></div></div></article>
+<article class="pr-c"><div class="img"><img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=600&q=85" alt=""></div><div class="ct"><h4>Print Set No. 02</h4><div class="mt"><span class="pc">$120</span><span class="tg">Print</span></div></div></article>
+<article class="pr-c"><div class="img"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=600&q=85" alt=""></div><div class="ct"><h4>Studio Tote</h4><div class="mt"><span class="pc">$34</span><span class="tg">Apparel</span></div></div></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Shop</h4><ul><li><a data-pg="products">All Products</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="journal">Journal</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PRODUCTS 3 -->
+<main class="page" id="page-products3" style="--acc:var(--c-7)">
+<section class="hr hr-12"><div class="wrap" style="text-align:center"><div class="tag ctr">Full Catalog</div><h1>Every product, <em>at a glance</em>.</h1>
+<div class="p3-ls">
+<div class="p3-rw"><img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=200&q=85" alt=""><div><h3>Studio Journal</h3><p>Letterpress notebook · 240 pages</p></div><div>Notebooks</div><div class="pc">$48</div><div class="ar">→</div></div>
+<div class="p3-rw"><img src="https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=200&q=85" alt=""><div><h3>Type Library Vol 1</h3><p>8 custom typefaces · OTF</p></div><div>Typography</div><div class="pc">$285</div><div class="ar">→</div></div>
+<div class="p3-rw"><img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=200&q=85" alt=""><div><h3>Print Set No. 02</h3><p>Letterpress prints · Limited</p></div><div>Prints</div><div class="pc">$120</div><div class="ar">→</div></div>
+<div class="p3-rw"><img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=200&q=85" alt=""><div><h3>The Studio Book</h3><p>240-page hardcover · Numbered</p></div><div>Books</div><div class="pc">$65</div><div class="ar">→</div></div>
+<div class="p3-rw"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=200&q=85" alt=""><div><h3>Studio Tote</h3><p>Canvas tote · Hand-printed</p></div><div>Apparel</div><div class="pc">$34</div><div class="ar">→</div></div>
+<div class="p3-rw"><img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=200&q=85" alt=""><div><h3>Brand Template Kit</h3><p>Figma file · Documentation</p></div><div>Digital</div><div class="pc">$95</div><div class="ar">→</div></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Shop</h4><ul><li><a data-pg="products">Products</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="journal">Journal</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- COLLECTION 1 - MASONRY -->
+<main class="page" id="page-collection" style="--acc:var(--c-8)">
+<section class="hr hr-13"><div class="wrap" style="text-align:center"><div class="tag ctr">Vol 24 Collection</div><h1>Quiet. Considered. <em>Deeply made</em>.</h1><p class="lead ctr cb">A curated showcase of recent studio work. Twelve pieces. Winter 2025.</p>
+<div class="c1-ms">
+<article class="c1-it"><div class="c1-im"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=85" alt=""></div><div class="c1-mt"><div><h3>Maison de Lyon</h3><p>Brand Identity</p></div><div class="c1-nm">N°01</div></div></article>
+<article class="c1-it"><div class="c1-im"><img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=900&q=85" alt=""></div><div class="c1-mt"><div><h3>Atelier Bloom</h3><p>Packaging</p></div><div class="c1-nm">N°02</div></div></article>
+<article class="c1-it"><div class="c1-im"><img src="https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=900&q=85" alt=""></div><div class="c1-mt"><div><h3>Studio Quarterly</h3><p>Editorial</p></div><div class="c1-nm">N°03</div></div></article>
+<article class="c1-it"><div class="c1-im"><img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=900&q=85" alt=""></div><div class="c1-mt"><div><h3>Nordic Coffee</h3><p>Brand & Packaging</p></div><div class="c1-nm">N°04</div></div></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Work</h4><ul><li><a data-pg="collection">Collection</a></li><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- COLLECTION 2 -->
+<main class="page" id="page-collection2" style="--acc:var(--c-1)">
+<section class="hr hr-14"><div class="wrap" style="text-align:center"><div class="tag ctr">Card Collection</div><h1>Eight pieces. One <em>cohesive</em> story.</h1>
+<div class="c2-gr">
+<article class="c2-c"><img src="https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=600&q=85" alt=""><div class="c2-in"><span>Identity</span><h3>Halo Studio</h3></div></article>
+<article class="c2-c"><img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=600&q=85" alt=""><div class="c2-in"><span>Web</span><h3>Verse</h3></div></article>
+<article class="c2-c"><img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=600&q=85" alt=""><div class="c2-in"><span>Editorial</span><h3>Periodical</h3></div></article>
+<article class="c2-c"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&q=85" alt=""><div class="c2-in"><span>Brand</span><h3>Cipher Co.</h3></div></article>
+<article class="c2-c"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=600&q=85" alt=""><div class="c2-in"><span>Print</span><h3>Studio Book</h3></div></article>
+<article class="c2-c"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=85" alt=""><div class="c2-in"><span>Web</span><h3>Aurora</h3></div></article>
+<article class="c2-c"><img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=85" alt=""><div class="c2-in"><span>Identity</span><h3>Atelier Bloom</h3></div></article>
+<article class="c2-c"><img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=600&q=85" alt=""><div class="c2-in"><span>Web</span><h3>Bloom</h3></div></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- COLLECTION 3 -->
+<main class="page" id="page-collection3" style="--acc:var(--c-2)">
+<section class="hr hr-15"><div class="wrap" style="text-align:center"><div class="tag ctr">Editorial Spread</div><h1>The studio's <em>greatest hits</em>.</h1>
+<div class="c3-sp" style="text-align:left">
+<div class="c3-rw"><div class="c3-im" style="background-image:url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1100&q=85')"></div><div><div class="c3-mt">N°01 · Hospitality</div><h3>Maison de Lyon — A complete <em>rebrand</em>.</h3><p>From identity to interior signage, we crafted a refined brand world for one of Paris's most beloved hotels over 8 months.</p><button class="btn btn-o" data-mo="case1" data-dir="right">View Case →</button></div></div>
+<div class="c3-rw"><div class="c3-im" style="background-image:url('https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=1100&q=85')"></div><div><div class="c3-mt">N°02 · Coffee</div><h3>Nordic Coffee — Brand & <em>packaging</em>.</h3><p>A premium specialty coffee brand needed a story as rich as their roasts. We delivered identity, packaging, and flagship experience.</p><button class="btn btn-o" data-mo="case2" data-dir="left">View Case →</button></div></div>
+<div class="c3-rw"><div class="c3-im" style="background-image:url('https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=1100&q=85')"></div><div><div class="c3-mt">N°03 · Editorial</div><h3>Studio Quarterly — Our own <em>magazine</em>.</h3><p>A printed magazine we publish twice a year. 160 pages of essays, photography, and conversations about craft.</p><button class="btn btn-o" data-mo="case3" data-dir="up">View Case →</button></div></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PORTFOLIO 1 -->
+<main class="page" id="page-portfolio" style="--acc:var(--c-4)">
+<section class="hr hr-14"><div class="wrap" style="text-align:center"><div class="tag ctr">Bento Portfolio</div><h1>Selected work, <em>arranged</em> with care.</h1>
+<div class="po1-bn">
+<article class="po1-i bg"><img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=1200&q=85" alt=""><div class="po1-o"><span>Brand</span><h3>Nordic Coffee</h3></div></article>
+<article class="po1-i"><img src="https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=600&q=85" alt=""><div class="po1-o"><span>Web</span><h3>Halo Studio</h3></div></article>
+<article class="po1-i"><img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=600&q=85" alt=""><div class="po1-o"><span>Product</span><h3>Silvern</h3></div></article>
+<article class="po1-i tl"><img src="https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=600&q=85" alt=""><div class="po1-o"><span>Editorial</span><h3>Quarterly</h3></div></article>
+<article class="po1-i"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=85" alt=""><div class="po1-o"><span>Brand</span><h3>Maison de Lyon</h3></div></article>
+<article class="po1-i wd"><img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=85" alt=""><div class="po1-o"><span>Web</span><h3>Verse</h3></div></article>
+<article class="po1-i"><img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=85" alt=""><div class="po1-o"><span>Product</span><h3>Atelier Bloom</h3></div></article>
+<article class="po1-i"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=600&q=85" alt=""><div class="po1-o"><span>Editorial</span><h3>Studio Book</h3></div></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PORTFOLIO 2 -->
+<main class="page" id="page-portfolio2" style="--acc:var(--c-6)">
+<section class="hr hr-5"><div class="wrap" style="text-align:center"><div class="tag ctr">Case Studies</div><h1>Long-form looks at <em>recent work</em>.</h1>
+<div class="po2-ls" style="text-align:left">
+<article class="po2-cs"><div class="po2-im" style="background-image:url('https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=1100&q=85')"></div><div><div class="po2-nm">CASE 01 / 2024</div><h3>Nordic Coffee — Brand <em>reinvention</em>.</h3><p>From outdated visual identity to award-winning rebrand. We helped Nordic Coffee become one of Scandinavia's most distinctive specialty brands.</p><div class="po2-tg"><span>Identity</span><span>Packaging</span><span>Web</span></div><button class="btn btn-o" data-mo="case1" data-dir="left">View Case →</button></div></article>
+<article class="po2-cs"><div class="po2-im" style="background-image:url('https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1100&q=85')"></div><div><div class="po2-nm">CASE 02 / 2024</div><h3>Verse Architecture — Digital <em>headquarters</em>.</h3><p>A complete website redesign for one of the most respected architecture firms in the country.</p><div class="po2-tg"><span>Web</span><span>Photography</span></div><button class="btn btn-o" data-mo="case2" data-dir="right">View Case →</button></div></article>
+<article class="po2-cs"><div class="po2-im" style="background-image:url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1100&q=85')"></div><div><div class="po2-nm">CASE 03 / 2024</div><h3>Maison de Lyon — Hospitality <em>identity</em>.</h3><p>A complete brand world for one of Paris's most beloved hotels — from logo to interior signage.</p><div class="po2-tg"><span>Brand</span><span>Print</span></div><button class="btn btn-o" data-mo="case3" data-dir="up">View Case →</button></div></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PORTFOLIO 3 -->
+<main class="page" id="page-portfolio3" style="--acc:var(--c-3)">
+<section class="hr hr-9"><div class="wrap" style="text-align:center"><div class="tag ctr">Clean Grid</div><h1>Every project, one <em>uniform</em> view.</h1>
+<div class="po3-gr">
+<article class="po3-c"><div class="po3-im"><img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="po3-in"><span>Brand</span><h3>Nordic Coffee</h3></div></article>
+<article class="po3-c"><div class="po3-im"><img src="https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="po3-in"><span>Web</span><h3>Halo Studio</h3></div></article>
+<article class="po3-c"><div class="po3-im"><img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="po3-in"><span>Product</span><h3>Silvern Wines</h3></div></article>
+<article class="po3-c"><div class="po3-im"><img src="https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="po3-in"><span>Editorial</span><h3>Quarterly</h3></div></article>
+<article class="po3-c"><div class="po3-im"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="po3-in"><span>Brand</span><h3>Maison de Lyon</h3></div></article>
+<article class="po3-c"><div class="po3-im"><img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="po3-in"><span>Web</span><h3>Verse</h3></div></article>
+<article class="po3-c"><div class="po3-im"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="po3-in"><span>Editorial</span><h3>Studio Book</h3></div></article>
+<article class="po3-c"><div class="po3-im"><img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="po3-in"><span>Product</span><h3>Atelier Bloom</h3></div></article>
+<article class="po3-c"><div class="po3-im"><img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="po3-in"><span>Web</span><h3>Bloom</h3></div></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PRICING 1 -->
+<main class="page" id="page-pricing" style="--acc:var(--c-7)">
+<section class="hr hr-16"><div class="wrap" style="text-align:center"><div class="tag ctr">Pricing</div><h1>Honest pricing for <em>real work</em>.</h1><p class="lead ctr cb">Three tiers. No surprises. Pick the one that fits your scope and ambitions.</p>
+<div class="pr1-gr" style="text-align:left">
+<article class="pr1-c"><div class="nm">Essentials</div><div class="pc">$<em>4,500</em></div><div class="sb">STARTING FROM</div><ul class="ls"><li>Brand identity essentials</li><li>Logo & 2 variations</li><li>Color & typography</li><li>Basic guidelines</li><li>2-week delivery</li></ul><button class="btn btn-o" style="width:100%" data-pg="contact">Get Started</button></article>
+<article class="pr1-c ft"><div class="pr1-bd">Recommended</div><div class="nm">Signature</div><div class="pc">$12,500</div><div class="sb">STARTING FROM</div><ul class="ls"><li>Complete brand system</li><li>Logo system & marks</li><li>Full visual identity</li><li>Website design & build</li><li>4-week delivery</li><li>Unlimited revisions</li></ul><button class="btn" style="width:100%;background:var(--c-7);color:var(--cream)" data-pg="contact">Get Started →</button></article>
+<article class="pr1-c"><div class="nm">Bespoke</div><div class="pc">Custom</div><div class="sb">BY CONSULTATION</div><ul class="ls"><li>Fully bespoke engagement</li><li>Brand strategy</li><li>Complete identity</li><li>Multi-page website</li><li>Print collateral</li><li>Dedicated team</li></ul><button class="btn btn-o" style="width:100%" data-pg="contact">Talk to Us</button></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Pricing</h4><ul><li><a data-pg="pricing">Plans</a></li><li><a data-pg="pricing2">Compare</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PRICING 2 -->
+<main class="page" id="page-pricing2" style="--acc:var(--c-12)">
+<section class="hr hr-17"><div class="wrap" style="text-align:center"><div class="tag ctr">Compare Plans</div><h1>See exactly <em>what's included</em>.</h1>
+<div class="pr2-tb" style="text-align:left">
+<div class="pr2-rw hd"><div>Feature</div><div style="text-align:center">Essentials</div><div style="text-align:center">Signature</div><div style="text-align:center">Bespoke</div></div>
+<div class="pr2-rw"><div class="nm">Brand identity</div><div class="ck">✓</div><div class="ck">✓</div><div class="ck">✓</div></div>
+<div class="pr2-rw"><div class="nm">Brand guidelines</div><div class="xx">Basic</div><div class="xx">Full</div><div class="xx">Bespoke</div></div>
+<div class="pr2-rw"><div class="nm">Website design</div><div class="xx">—</div><div class="ck">✓</div><div class="ck">✓</div></div>
+<div class="pr2-rw"><div class="nm">Print collateral</div><div class="xx">—</div><div class="xx">—</div><div class="ck">✓</div></div>
+<div class="pr2-rw"><div class="nm">Dedicated team</div><div class="xx">—</div><div class="xx">—</div><div class="ck">✓</div></div>
+<div class="pr2-rw"><div class="nm">Timeline</div><div class="xx">2 weeks</div><div class="xx">4 weeks</div><div class="xx">8+ weeks</div></div>
+<div class="pr2-rw"><div class="nm" style="font-family:var(--fd);font-style:italic;font-size:1.2rem;font-weight:400">Starting price</div><div class="pc">$4,500</div><div class="pc">$12,500</div><div class="pc">Custom</div></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Pricing</h4><ul><li><a data-pg="pricing">Plans</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PRICING 3 -->
+<main class="page" id="page-pricing3" style="--acc:var(--c-1)">
+<section class="hr hr-18"><div class="wrap" style="text-align:center"><div class="tag ctr">Build Your Quote</div><h1>Pick what you need. <em>Get a price</em>.</h1>
+<div class="pr3-ca" style="text-align:left">
+<div class="pr3-op">
+<div class="pr3-o sl" data-price="2500"><div><h4>Brand Identity Basics</h4><p>Logo + 2 variations + color & type</p></div><span class="pt">$2,500</span></div>
+<div class="pr3-o" data-price="3500"><div><h4>Extended Brand Guidelines</h4><p>40-page brand book with examples</p></div><span class="pt">$3,500</span></div>
+<div class="pr3-o" data-price="6500"><div><h4>Website (up to 5 pages)</h4><p>Design + responsive build + CMS</p></div><span class="pt">$6,500</span></div>
+<div class="pr3-o" data-price="3500"><div><h4>Packaging Design</h4><p>3 SKUs, ready for production</p></div><span class="pt">$3,500</span></div>
+<div class="pr3-o" data-price="2000"><div><h4>Photography Direction</h4><p>Style frames + onsite direction</p></div><span class="pt">$2,000</span></div>
+</div>
+<div class="pr3-sm"><h3>Your <em style="color:var(--c-1);font-family:var(--fd)">estimate</em></h3><div class="pr3-sl">SELECTED ITEMS</div><div class="pr3-tt" id="td">$2,500</div><button class="btn" style="width:100%;background:var(--c-1);color:var(--cream)" data-mo="quote" data-dir="scale">Request Quote →</button></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Pricing</h4><ul><li><a data-pg="pricing">Plans</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PROCESS 1 -->
+<main class="page" id="page-process" style="--acc:var(--c-5)">
+<section class="hr hr-19"><div class="wrap" style="text-align:center"><div class="tag ctr">Our Process</div><h1>Five stages, <em>built on trust</em>.</h1><p class="lead ctr cb">A refined process that ensures every project unfolds with clarity, collaboration, and care.</p>
+<div class="pc1-ls" style="text-align:left">
+<div class="pc1-st"><div class="pc1-nm">01</div><div><h3>Discovery</h3><p>We start with workshops, interviews, and a thorough audit of your brand and audience.</p><div class="pc1-tg"><span>Workshops</span><span>Research</span><span>Audit</span></div></div></div>
+<div class="pc1-st"><div class="pc1-nm">02</div><div><h3>Strategy</h3><p>We define positioning, narrative, and visual direction with a clear roadmap for what's ahead.</p><div class="pc1-tg"><span>Positioning</span><span>Narrative</span><span>Roadmap</span></div></div></div>
+<div class="pc1-st"><div class="pc1-nm">03</div><div><h3>Design</h3><p>We craft the full visual system collaboratively, with regular reviews and rapid iteration.</p><div class="pc1-tg"><span>Identity</span><span>System</span><span>Prototypes</span></div></div></div>
+<div class="pc1-st"><div class="pc1-nm">04</div><div><h3>Production</h3><p>We refine and prepare every asset — from print files to production-ready code.</p><div class="pc1-tg"><span>Build</span><span>Refine</span><span>Test</span></div></div></div>
+<div class="pc1-st"><div class="pc1-nm">05</div><div><h3>Launch & Beyond</h3><p>We support launch and stay involved through care, refinements, and brand evolution.</p><div class="pc1-tg"><span>Launch</span><span>Support</span><span>Evolution</span></div></div></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li><li><a data-pg="process">Process</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PROCESS 2 -->
+<main class="page" id="page-process2" style="--acc:var(--c-4)">
+<section class="hr hr-19"><div class="wrap" style="text-align:center"><div class="tag ctr">Process Cards</div><h1>The way <em>we work</em>.</h1>
+<div class="pc2-gr">
+<div class="pc2-c"><div class="pc2-i">🔍</div><h3>Discover</h3><p>Workshops, research, and deep questions that shape great work.</p></div>
+<div class="pc2-c"><div class="pc2-i">💡</div><h3>Define</h3><p>Positioning, narrative, and clear direction before any design.</p></div>
+<div class="pc2-c"><div class="pc2-i">🎨</div><h3>Design</h3><p>Visual systems, interfaces, and editorial work crafted with care.</p></div>
+<div class="pc2-c"><div class="pc2-i">⚙️</div><h3>Build</h3><p>Production-ready files, performant code, and tested deliverables.</p></div>
+<div class="pc2-c"><div class="pc2-i">🚀</div><h3>Launch</h3><p>Confident launch with QA, deployment, and 30-day support.</p></div>
+<div class="pc2-c"><div class="pc2-i">📈</div><h3>Grow</h3><p>Ongoing care and brand evolution. Most clients stay for years.</p></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PROCESS 3 -->
+<main class="page" id="page-process3" style="--acc:var(--c-10)">
+<section class="hr hr-20"><div class="wrap" style="text-align:center"><div class="tag ctr">Timeline View</div><h1>From kickoff to <em>launch day</em>.</h1>
+<div class="pc3-tl" style="text-align:left">
+<div class="pc3-st"><div class="pc3-mt">WEEK 1 · DISCOVERY</div><h3>Kickoff & Workshops</h3><p>We meet your team, run discovery workshops, and dive deep into your brand and goals.</p></div>
+<div class="pc3-st"><div class="pc3-mt">WEEK 2 · STRATEGY</div><h3>Strategic Direction</h3><p>We present strategic recommendations, positioning, and creative direction options.</p></div>
+<div class="pc3-st"><div class="pc3-mt">WEEKS 3-5 · DESIGN</div><h3>Design Sprints</h3><p>We craft the visual system through 3 design sprints with regular reviews.</p></div>
+<div class="pc3-st"><div class="pc3-mt">WEEKS 6-7 · PRODUCTION</div><h3>Build & Refine</h3><p>Every file, asset, and deliverable is prepared, tested, and ready for launch.</p></div>
+<div class="pc3-st"><div class="pc3-mt">WEEK 8 · LAUNCH</div><h3>Go Live</h3><p>Confident launch day, plus 30 days of post-launch support to ensure a smooth transition.</p></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- TEAM 1 -->
+<main class="page" id="page-team" style="--acc:var(--c-11)">
+<section class="hr hr-21"><div class="wrap" style="text-align:center"><div class="tag ctr">The Team</div><h1>The people behind <em>the work</em>.</h1>
+<div class="s-tm">
+<article class="s-tm-c"><div class="img"><img src="https://i.pravatar.cc/700?img=12" alt=""></div><h4>Alex Carter</h4><div class="rl">Creative Director</div></article>
+<article class="s-tm-c"><div class="img"><img src="https://i.pravatar.cc/700?img=47" alt=""></div><h4>Maya Chen</h4><div class="rl">Design Director</div></article>
+<article class="s-tm-c"><div class="img"><img src="https://i.pravatar.cc/700?img=32" alt=""></div><h4>James Wilson</h4><div class="rl">Tech Director</div></article>
+<article class="s-tm-c"><div class="img"><img src="https://i.pravatar.cc/700?img=5" alt=""></div><h4>Sarah Kim</h4><div class="rl">Lead Designer</div></article>
+<article class="s-tm-c"><div class="img"><img src="https://i.pravatar.cc/700?img=14" alt=""></div><h4>David Park</h4><div class="rl">Strategist</div></article>
+<article class="s-tm-c"><div class="img"><img src="https://i.pravatar.cc/700?img=44" alt=""></div><h4>Emily Ross</h4><div class="rl">Type Designer</div></article>
+<article class="s-tm-c"><div class="img"><img src="https://i.pravatar.cc/700?img=18" alt=""></div><h4>Lucas Martin</h4><div class="rl">Art Director</div></article>
+<article class="s-tm-c"><div class="img"><img src="https://i.pravatar.cc/700?img=49" alt=""></div><h4>Olivia Nash</h4><div class="rl">Studio Manager</div></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li><li><a data-pg="team">Team</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- TEAM 2 -->
+<main class="page" id="page-team2" style="--acc:var(--c-6)">
+<section class="hr hr-4"><div class="wrap" style="text-align:center"><div class="tag ctr">Profiles</div><h1>Get to <em>know us</em>.</h1>
+<div class="t2-gr" style="text-align:left">
+<article class="t2-c"><div class="t2-im"><img src="https://i.pravatar.cc/700?img=12" alt=""></div><div><h3>Alex Carter</h3><div class="rl">Creative Director · Brooklyn</div><p>Founder of Vesper. Leads creative direction across all projects since 2014.</p><div class="t2-sc"><a>Li</a><a>X</a><a>Dr</a></div></div></article>
+<article class="t2-c"><div class="t2-im"><img src="https://i.pravatar.cc/700?img=47" alt=""></div><div><h3>Maya Chen</h3><div class="rl">Design Director · Tokyo</div><p>Leads visual identity and brand systems. Previously at Apple and Airbnb.</p><div class="t2-sc"><a>Li</a><a>Be</a><a>Ig</a></div></div></article>
+<article class="t2-c"><div class="t2-im"><img src="https://i.pravatar.cc/700?img=32" alt=""></div><div><h3>James Wilson</h3><div class="rl">Tech Director · London</div><p>Engineering lead for all digital products. React expert.</p><div class="t2-sc"><a>Gh</a><a>Li</a><a>X</a></div></div></article>
+<article class="t2-c"><div class="t2-im"><img src="https://i.pravatar.cc/700?img=5" alt=""></div><div><h3>Sarah Kim</h3><div class="rl">Design Lead · Tokyo</div><p>Brings editorial precision to every project. Type-obsessed.</p><div class="t2-sc"><a>Li</a><a>Be</a><a>Ig</a></div></div></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- TEAM 3 -->
+<main class="page" id="page-team3" style="--acc:var(--c-3)">
+<section class="hr hr-21"><div class="wrap" style="text-align:center"><div class="tag ctr">By Department</div><h1>Organized by <em>craft</em>.</h1>
+<div class="t3-dp" style="text-align:left">
+<div><div class="t3-dh"><h2>Design</h2><span>4 members</span></div><div class="t3-ls">
+<div class="t3-m"><div class="t3-av"><img src="https://i.pravatar.cc/300?img=12" alt=""></div><h4>Alex Carter</h4><span>Creative Director</span></div>
+<div class="t3-m"><div class="t3-av"><img src="https://i.pravatar.cc/300?img=47" alt=""></div><h4>Maya Chen</h4><span>Design Director</span></div>
+<div class="t3-m"><div class="t3-av"><img src="https://i.pravatar.cc/300?img=5" alt=""></div><h4>Sarah Kim</h4><span>Lead Designer</span></div>
+<div class="t3-m"><div class="t3-av"><img src="https://i.pravatar.cc/300?img=44" alt=""></div><h4>Emily Ross</h4><span>Type Designer</span></div>
+</div></div>
+<div><div class="t3-dh"><h2>Engineering</h2><span>3 members</span></div><div class="t3-ls">
+<div class="t3-m"><div class="t3-av"><img src="https://i.pravatar.cc/300?img=32" alt=""></div><h4>James Wilson</h4><span>Tech Director</span></div>
+<div class="t3-m"><div class="t3-av"><img src="https://i.pravatar.cc/300?img=15" alt=""></div><h4>Tom Bradley</h4><span>Lead Engineer</span></div>
+<div class="t3-m"><div class="t3-av"><img src="https://i.pravatar.cc/300?img=22" alt=""></div><h4>Rachel Green</h4><span>Frontend Dev</span></div>
+</div></div>
+<div><div class="t3-dh"><h2>Strategy</h2><span>2 members</span></div><div class="t3-ls">
+<div class="t3-m"><div class="t3-av"><img src="https://i.pravatar.cc/300?img=14" alt=""></div><h4>David Park</h4><span>Strategist</span></div>
+<div class="t3-m"><div class="t3-av"><img src="https://i.pravatar.cc/300?img=49" alt=""></div><h4>Olivia Nash</h4><span>Studio Manager</span></div>
+</div></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PRESS 1 -->
+<main class="page" id="page-press" style="--acc:var(--c-9)">
+<section class="hr hr-22"><div class="wrap" style="text-align:center"><div class="tag ctr">In the Press</div><h1>Words about <em>our work</em>.</h1>
+<div class="pe1-gr">
+<article class="pe1-c"><div class="pe1-sr">It's Nice That</div><p class="qt">"Vesper's work has a quiet confidence that puts most studios to shame."</p><div class="pe1-dt">December 2024</div></article>
+<article class="pe1-c"><div class="pe1-sr">Eye Magazine</div><p class="qt">"A masterclass in editorial restraint and quiet beauty."</p><div class="pe1-dt">October 2024</div></article>
+<article class="pe1-c"><div class="pe1-sr">Creative Review</div><p class="qt">"They make brands feel like books — considered, refined, lasting."</p><div class="pe1-dt">August 2024</div></article>
+<article class="pe1-c"><div class="pe1-sr">Brand New</div><p class="qt">"Easily one of the most distinctive studios working today."</p><div class="pe1-dt">June 2024</div></article>
+<article class="pe1-c"><div class="pe1-sr">Print Magazine</div><p class="qt">"Vesper shows the value of slow, careful design."</p><div class="pe1-dt">April 2024</div></article>
+<article class="pe1-c"><div class="pe1-sr">Wallpaper*</div><p class="qt">"A studio that treats every project like a love letter."</p><div class="pe1-dt">January 2024</div></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Press</h4><ul><li><a data-pg="press">Press</a></li><li><a data-pg="press2">Awards</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="journal">Journal</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PRESS 2 -->
+<main class="page" id="page-press2" style="--acc:var(--c-5)">
+<section class="hr hr-23"><div class="wrap" style="text-align:center"><div class="tag ctr">Awards Archive</div><h1>42 awards. <em>11 years</em>.</h1>
+<div class="pe2-ls" style="text-align:left">
+<div class="pe2-rw"><div class="yr">2024</div><div class="nm">Site of the Year</div><div class="ct">Awwwards · Web</div><div class="lk">View →</div></div>
+<div class="pe2-rw"><div class="yr">2024</div><div class="nm">Best Brand Identity</div><div class="ct">D&AD · Brand</div><div class="lk">View →</div></div>
+<div class="pe2-rw"><div class="yr">2023</div><div class="nm">Editorial Excellence</div><div class="ct">Type Directors Club</div><div class="lk">View →</div></div>
+<div class="pe2-rw"><div class="yr">2023</div><div class="nm">Packaging Gold</div><div class="ct">Brand New · Packaging</div><div class="lk">View →</div></div>
+<div class="pe2-rw"><div class="yr">2022</div><div class="nm">Studio of the Year</div><div class="ct">Print Magazine</div><div class="lk">View →</div></div>
+<div class="pe2-rw"><div class="yr">2021</div><div class="nm">Design Excellence</div><div class="ct">Communication Arts</div><div class="lk">View →</div></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Press</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="journal">Journal</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- PRESS 3 -->
+<main class="page" id="page-press3" style="--acc:var(--c-8)">
+<section class="hr hr-24"><div class="wrap" style="text-align:center"><div class="tag ctr">Featured In</div><h1>Trusted by the <em>best</em>.</h1>
+<div class="pe3-lg">
+<div class="pe3-l"><strong>Wallpaper*</strong><span>Magazine</span></div>
+<div class="pe3-l"><strong>Eye</strong><span>Magazine</span></div>
+<div class="pe3-l"><strong>It's Nice That</strong><span>Publication</span></div>
+<div class="pe3-l"><strong>Creative Review</strong><span>Magazine</span></div>
+<div class="pe3-l"><strong>Brand New</strong><span>Blog</span></div>
+<div class="pe3-l"><strong>Print</strong><span>Magazine</span></div>
+<div class="pe3-l"><strong>Communication Arts</strong><span>Annual</span></div>
+<div class="pe3-l"><strong>D&AD</strong><span>Awards</span></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Press</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="journal">Journal</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- JOURNAL 1 -->
+<main class="page" id="page-journal" style="--acc:var(--c-4)">
+<section class="hr hr-25"><div class="wrap" style="text-align:center"><div class="tag ctr">Journal</div><h1>Field notes from <em>the studio</em>.</h1>
+<div class="j1-gr">
+<article class="j1-c"><div class="j1-im"><img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="j1-tg">Design</div><h3>The case for slow design</h3><p>Why slowness is the most modern thing we can offer in an industry obsessed with speed.</p><div class="j1-mt">By Alex Carter · 8 min</div></article>
+<article class="j1-c"><div class="j1-im"><img src="https://images.unsplash.com/photo-1561070791-2526d30994b8?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="j1-tg">Typography</div><h3>On the craft of type</h3><p>Why type matters more than ever, and how we choose typefaces for brand work.</p><div class="j1-mt">By Maya Chen · 5 min</div></article>
+<article class="j1-c"><div class="j1-im"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="j1-tg">Strategy</div><h3>50 brand projects later</h3><p>Reflections on a decade of brand work — what worked and what we'd do differently.</p><div class="j1-mt">By David Park · 9 min</div></article>
+<article class="j1-c"><div class="j1-im"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="j1-tg">Print</div><h3>Why we still believe in print</h3><p>In an all-digital world, print remains our favorite medium. Here's why.</p><div class="j1-mt">By Lucas Martin · 6 min</div></article>
+<article class="j1-c"><div class="j1-im"><img src="https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="j1-tg">Branding</div><h3>Designing for trust</h3><p>How visual design shapes credibility — and the small details that make brands feel premium.</p><div class="j1-mt">By Sarah Kim · 8 min</div></article>
+<article class="j1-c"><div class="j1-im"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="j1-tg">Behind Scenes</div><h3>The studio book project</h3><p>Behind the scenes of making our 240-page studio retrospective over 18 months.</p><div class="j1-mt">By Olivia Nash · 11 min</div></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Journal</h4><ul><li><a data-pg="journal">Latest</a></li><li><a data-pg="journal2">Featured</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- JOURNAL 2 -->
+<main class="page" id="page-journal2" style="--acc:var(--c-6)">
+<section class="hr hr-26"><div class="wrap" style="text-align:center"><div class="tag ctr">Featured + Archive</div><h1>Latest essays & <em>field notes</em>.</h1>
+<div class="j2-ft" style="text-align:left">
+<div class="j2-fi"></div>
+<div><span style="font-family:var(--fm);font-size:.72rem;color:var(--c-6);letter-spacing:.14em;text-transform:uppercase">FEATURED ESSAY</span><h2>The case for <em>slow design</em> in a fast world.</h2><p style="color:var(--ink-2);line-height:1.7;margin-bottom:18px">In an industry obsessed with speed and scale, we've found freedom in slowness.</p><div style="font-family:var(--fm);font-size:.74rem;color:var(--mute);letter-spacing:.08em">BY ALEX CARTER · 8 MIN · DEC 2024</div></div>
+</div>
+<div class="j2-ls" style="text-align:left">
+<article class="j2-i"><div class="n">02</div><div><h3>On the craft of typography</h3><p>Why type matters more than ever.</p></div><div class="mt">MAYA CHEN<br>NOV 2024</div></article>
+<article class="j2-i"><div class="n">03</div><div><h3>Lessons from 50 brand projects</h3><p>A decade of brand work distilled.</p></div><div class="mt">ALEX CARTER<br>OCT 2024</div></article>
+<article class="j2-i"><div class="n">04</div><div><h3>Editorial design rules</h3><p>Quiet principles that make print sing.</p></div><div class="mt">SARAH KIM<br>SEP 2024</div></article>
+<article class="j2-i"><div class="n">05</div><div><h3>Why we still believe in print</h3><p>Print remains our favorite medium.</p></div><div class="mt">LUCAS MARTIN<br>AUG 2024</div></article>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Journal</h4><ul><li><a data-pg="journal">Latest</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- JOURNAL 3 -->
+<main class="page" id="page-journal3" style="--acc:var(--c-3)">
+<section class="hr hr-27"><div class="wrap" style="text-align:center"><div class="tag ctr">Magazine Layout</div><h1>Read like a <em>magazine</em>.</h1>
+<div class="j3-mg" style="text-align:left">
+<div class="j3-mn">
+<article class="j3-mc"><div class="j3-mi"><img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="j3-mt"><span>Featured · Essay</span><h3>The case for slow design</h3><p>Why slowness is the most modern thing we can offer.</p><div style="font-family:var(--fm);font-size:.7rem;color:var(--mute);margin-top:8px">8 MIN · ALEX CARTER</div></div></article>
+<article class="j3-mc"><div class="j3-mi"><img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="j3-mt"><span>Typography</span><h3>The craft of choosing type</h3><p>Why typography matters more than ever.</p><div style="font-family:var(--fm);font-size:.7rem;color:var(--mute);margin-top:8px">5 MIN · MAYA CHEN</div></div></article>
+<article class="j3-mc"><div class="j3-mi"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=700&q=85" alt=""></div><div class="j3-mt"><span>Strategy</span><h3>Lessons from 50 projects</h3><p>A decade of work distilled into honest observations.</p><div style="font-family:var(--fm);font-size:.7rem;color:var(--mute);margin-top:8px">9 MIN · DAVID PARK</div></div></article>
+</div>
+<div class="j3-sd">
+<div class="j3-sc"><span>Latest</span><h4>Designing for trust</h4><div class="mt">SARAH KIM · 8 MIN</div></div>
+<div class="j3-sc"><span>Print</span><h4>Why we still believe in print</h4><div class="mt">LUCAS MARTIN · 6 MIN</div></div>
+<div class="j3-sc"><span>Behind Scenes</span><h4>The studio book project</h4><div class="mt">OLIVIA NASH · 11 MIN</div></div>
+</div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>Multi-disciplinary studio.</p></div><div><h4>Journal</h4><ul><li><a data-pg="journal">Latest</a></li></ul></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio</span><span>Made with care</span></div></div></footer>
+</main>
+
+<!-- CONTACT -->
+<main class="page" id="page-contact" style="--acc:var(--c-1)">
+<section class="hr hr-28"><div class="wrap"><div class="co-gr">
+<div><div class="tag">Contact</div><h1>Tell us about your <em>project</em>.</h1><p class="lead">We're currently accepting work for Q2 2025. Send a note and we'll respond within 24 hours.</p>
+<div class="co-in">
+<div class="co-it"><h4>Project inquiries</h4><p><a href="mailto:hello@vesper.studio">hello@vesper.studio</a></p></div>
+<div class="co-it"><h4>Press & speaking</h4><p><a href="mailto:press@vesper.studio">press@vesper.studio</a></p></div>
+<div class="co-it"><h4>Brooklyn studio</h4><p>132 Greenpoint Ave<br>Brooklyn, NY 11222</p></div>
+<div class="co-it"><h4>Follow along</h4><p><a>Instagram</a> · <a>Are.na</a> · <a>LinkedIn</a></p></div>
+</div></div>
+<div class="co-fm"><h2>Start a <em>project</em>.</h2><p>Fill out the form and we'll respond within 24 hours.</p><form id="cf">
+<div class="fr-rw"><div class="fg"><label>Your name</label><input type="text" placeholder="First & last" required></div><div class="fg"><label>Email</label><input type="email" placeholder="you@company.com" required></div></div>
+<div class="fr-rw"><div class="fg"><label>Company</label><input type="text" placeholder="Brand or company"></div><div class="fg"><label>Project type</label><select required><option value="">Select one</option><option>Brand Identity</option><option>Website</option><option>Product Design</option><option>Editorial</option></select></div></div>
+<div class="fg"><label>Budget range</label><select required><option value="">Select range</option><option>$5k - $15k</option><option>$15k - $40k</option><option>$40k - $80k</option><option>$80k+</option></select></div>
+<div class="fg"><label>About your project</label><textarea placeholder="Brief description, goals, timeline..."></textarea></div>
+<button class="sb-btn" type="submit">Send Message →</button>
+</form></div>
+</div></div></section>
+<footer class="fr"><div class="wrap"><div class="fr-g"><div><div class="fr-lg"><span class="lg-dt"></span>Vesper</div><p>A multi-disciplinary design studio crafting brands, websites, and editorial work.</p></div><div><h4>Studio</h4><ul><li><a data-pg="about">About</a></li><li><a data-pg="services">Services</a></li><li><a data-pg="team">Team</a></li></ul></div><div><h4>Work</h4><ul><li><a data-pg="portfolio">Portfolio</a></li><li><a data-pg="collection">Collection</a></li></ul></div><div><h4>More</h4><ul><li><a data-pg="press">Press</a></li><li><a data-pg="journal">Journal</a></li></ul></div><div><h4>Connect</h4><ul><li><a data-pg="contact">Contact</a></li><li><a>Instagram</a></li></ul></div></div><div class="fr-bt"><span>© 2025 Vesper Studio · Brooklyn · London · Tokyo</span><span>Made with care</span></div></div></footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const lenis=new Lenis({duration:1.15,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)),smoothWheel:true,touchMultiplier:1.6});
+lenis.on("scroll",ScrollTrigger.update);
+gsap.ticker.add(t=>lenis.raf(t*1000));
+gsap.ticker.lagSmoothing(0);
+
+const pre=document.getElementById("pre"),pf=document.getElementById("pf"),pp=document.getElementById("pp");
+let pg=0;
+const li=setInterval(()=>{pg+=Math.random()*18+8;if(pg>100)pg=100;pf.style.width=pg+"%";pp.textContent=Math.round(pg)+"%";
+if(pg===100){clearInterval(li);setTimeout(()=>{gsap.to(pre,{yPercent:-100,duration:1,ease:"power4.inOut",onComplete:()=>{pre.style.display="none";iA();}});},300);}},90);
+
+const nv=document.getElementById("nv"),sp=document.getElementById("sp"),bt=document.getElementById("bt");
+window.addEventListener("scroll",()=>{nv.classList.toggle("scr",window.scrollY>30);bt.classList.toggle("on",window.scrollY>600);sp.style.width=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100+"%";});
+bt.addEventListener("click",()=>lenis.scrollTo(0));
+
+document.querySelectorAll(".ni[data-dr]").forEach(it=>{let tm;
+it.addEventListener("mouseenter",()=>{clearTimeout(tm);document.querySelectorAll(".ni.op").forEach(o=>{if(o!==it)o.classList.remove("op");});it.classList.add("op");});
+it.addEventListener("mouseleave",()=>{tm=setTimeout(()=>it.classList.remove("op"),100);});});
+document.addEventListener("click",e=>{if(!e.target.closest(".ni[data-dr]"))document.querySelectorAll(".ni.op").forEach(i=>i.classList.remove("op"));});
+
+const nt=document.getElementById("nt"),mm=document.getElementById("mm");
+nt.addEventListener("click",function(e){e.stopPropagation();this.classList.toggle("on");mm.classList.toggle("on");document.body.style.overflow=mm.classList.contains("on")?"hidden":"";});
+document.querySelectorAll(".mn-h.dr").forEach(h=>{h.addEventListener("click",function(e){e.stopPropagation();const i=this.parentElement;document.querySelectorAll(".mn-i.op").forEach(o=>{if(o!==i)o.classList.remove("op");});i.classList.toggle("op");});});
+
+let cP="home";
+const trs=document.querySelectorAll("#tr span");
+function sAL(p){document.querySelectorAll("[data-pg]").forEach(l=>l.classList.toggle("on",l.dataset.pg===p));}
+function nav(p){if(!p)return;mm.classList.remove("on");nt.classList.remove("on");document.body.style.overflow="";document.querySelectorAll(".ni.op,.mn-i.op").forEach(i=>i.classList.remove("op"));
+if(p===cP){lenis.scrollTo(0);return;}
+const np=document.getElementById("page-"+p);if(!np)return;
+const tl=gsap.timeline();
+tl.set(trs,{transformOrigin:"bottom"}).to(trs,{scaleY:1,duration:.5,stagger:.05,ease:"power4.inOut",onComplete:()=>{ScrollTrigger.getAll().forEach(t=>t.kill());document.getElementById("page-"+cP).classList.remove("on");np.classList.add("on");cP=p;sAL(p);window.scrollTo(0,0);lenis.scrollTo(0,{immediate:true});iA();}}).set(trs,{transformOrigin:"top"}).to(trs,{scaleY:0,duration:.5,stagger:.05,ease:"power4.inOut"});}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-pg]");if(t&&!t.classList.contains("nlk")){e.preventDefault();nav(t.dataset.pg);}});
+document.querySelectorAll(".nlk.nv-c,.lg").forEach(l=>{l.addEventListener("click",e=>{e.preventDefault();nav(l.dataset.pg);});});
+
+function iA(){const pg=document.querySelector(".page.on");if(!pg)return;
+const h1=pg.querySelector("h1");if(h1)gsap.fromTo(h1,{y:50,opacity:0},{y:0,opacity:1,duration:1,ease:"power4.out",delay:.1});
+pg.querySelectorAll(".lead").forEach((el,i)=>gsap.fromTo(el,{y:30,opacity:0},{y:0,opacity:1,duration:.8,delay:.3+(i*.1),ease:"power3.out"}));
+pg.querySelectorAll(".s-card,.s-feat-i,.s-tm-c,.s-list-r,.pr-c,.sv1-c,.sv2-it,.sv3-c,.a1-im,.a2-pl,.a3-fd,.p2-ft,.p3-rw,.c1-it,.c2-c,.c3-rw,.po1-i,.po2-cs,.po3-c,.pr1-c,.pr2-rw,.pr3-o,.pc1-st,.pc2-c,.pc3-st,.t2-c,.t3-m,.pe1-c,.pe2-rw,.pe3-l,.j1-c,.j2-i,.j3-mc,.j3-sc,.co-fm,.co-it,.fq-i,.h2-bi,.st-it,.s-cta,.s-quote").forEach((el,i)=>{gsap.fromTo(el,{y:30,opacity:0},{y:0,opacity:1,duration:.7,ease:"power3.out",delay:(i%6)*.05,scrollTrigger:{trigger:el,start:"top 90%",toggleActions:"play none none reverse"}});});
+ScrollTrigger.refresh();}
+
+const td=document.getElementById("td");
+document.addEventListener("click",e=>{const o=e.target.closest(".pr3-o");if(!o)return;o.classList.toggle("sl");if(td){let t=0;document.querySelectorAll(".pr3-o.sl").forEach(s=>t+=parseInt(s.dataset.price||0));td.textContent="$"+t.toLocaleString();}});
+
+document.addEventListener("click",e=>{const q=e.target.closest(".fq-q");if(!q)return;const i=q.parentElement;document.querySelectorAll(".fq-i.op").forEach(o=>{if(o!==i)o.classList.remove("op");});i.classList.toggle("op");});
+
+const mo=document.getElementById("mo"),moc=document.getElementById("moc"),moi=document.getElementById("moi"),mob=document.getElementById("mob"),mocl=document.getElementById("mocl");
+const mC={hello:{i:"https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1100&q=85",t:"Hello there 👋",b:`<p>Thanks for stopping by. We're accepting projects for Q2 2025.</p><p>Tell us about your project and we'll get back within 24 hours.</p><div class="mo-gr"><div><span>Response</span><strong>24 hours</strong></div><div><span>Starting</span><strong>$4,500</strong></div><div><span>Timeline</span><strong>2-12 weeks</strong></div><div><span>Availability</span><strong>Q2 2025</strong></div></div>`},
+case1:{i:"https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=1100&q=85",t:"Nordic Coffee Co.",b:`<p>A complete brand reinvention for Scandinavia's most respected specialty coffee brand.</p><p>We delivered identity, packaging, and flagship store experience over 6 months.</p><div class="mo-gr"><div><span>Year</span><strong>2024</strong></div><div><span>Scope</span><strong>Brand + Packaging</strong></div><div><span>Duration</span><strong>6 months</strong></div><div><span>Awards</span><strong>3 won</strong></div></div>`},
+case2:{i:"https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1100&q=85",t:"Verse Architecture",b:`<p>A complete website redesign for one of the country's most respected architecture firms.</p><p>The new site features editorial photography and refined typography.</p><div class="mo-gr"><div><span>Year</span><strong>2024</strong></div><div><span>Scope</span><strong>Web + Photo</strong></div><div><span>Duration</span><strong>4 months</strong></div><div><span>Pages</span><strong>14</strong></div></div>`},
+case3:{i:"https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1100&q=85",t:"Maison de Lyon",b:`<p>A complete brand world for one of Paris's most beloved boutique hotels.</p><p>From logo to interior signage and menus — every touchpoint considered.</p><div class="mo-gr"><div><span>Year</span><strong>2024</strong></div><div><span>Scope</span><strong>Identity + Print</strong></div><div><span>Duration</span><strong>8 months</strong></div><div><span>Touchpoints</span><strong>50+</strong></div></div>`},
+quote:{i:"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1100&q=85",t:"Your <em>custom quote</em>",b:`<p>Thanks for using our calculator. We'll prepare a detailed proposal based on your selections.</p><p>Send us a quick note and we'll respond within 24 hours.</p><div class="mo-gr"><div><span>Estimate</span><strong id="mt">$2,500</strong></div><div><span>Timeline</span><strong>4-8 weeks</strong></div><div><span>Response</span><strong>24 hours</strong></div><div><span>Includes</span><strong>Full proposal</strong></div></div>`},
+product:{i:"https://images.unsplash.com/photo-1606293459180-5e3b0c5ed5b3?auto=format&fit=crop&w=1100&q=85",t:"Studio <em>Quarterly</em>",b:`<p>Issue 04 of our printed magazine. 160 pages exploring slow design, craft, and making fewer things.</p><p>Printed on uncoated paper, hand-bound, shipped worldwide.</p><div class="mo-gr"><div><span>Price</span><strong>$24</strong></div><div><span>Pages</span><strong>160</strong></div><div><span>Format</span><strong>Print</strong></div><div><span>Shipping</span><strong>Worldwide</strong></div></div>`}};
+document.addEventListener("click",e=>{const t=e.target.closest("[data-mo]");if(!t)return;e.preventDefault();const d=mC[t.dataset.mo];if(!d)return;const dr=t.dataset.dir||"scale";moc.setAttribute("data-dir",dr);moi.src=d.i;mob.innerHTML=`<h2>${d.t}</h2>${d.b}`;const mt=mob.querySelector("#mt");if(mt&&td)mt.textContent=td.textContent;mo.classList.add("on");document.body.style.overflow="hidden";lenis.stop();});
+mocl.addEventListener("click",cM);mo.addEventListener("click",e=>{if(e.target===mo)cM();});
+function cM(){mo.classList.remove("on");document.body.style.overflow="";lenis.start();}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&mo.classList.contains("on"))cM();});
+
+const ts=document.getElementById("ts"),tst=document.getElementById("tst"),tsm=document.getElementById("tsm");let tt;
+function sT(t,m){tst.textContent=t;tsm.textContent=m;ts.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>ts.classList.remove("on"),3500);}
+const cf=document.getElementById("cf");
+cf.addEventListener("submit",e=>{e.preventDefault();const b=cf.querySelector(".sb-btn"),o=b.textContent;b.textContent="Sending...";b.style.opacity=".7";setTimeout(()=>{b.textContent="Sent ✓";b.style.background="var(--c-2)";b.style.opacity="1";sT("Message Sent!","We'll reply within 24 hours.");setTimeout(()=>{b.textContent=o;b.style.background="";cf.reset();},2800);},1200);});
+
+let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>ScrollTrigger.refresh(),250);});
+</script>
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>
