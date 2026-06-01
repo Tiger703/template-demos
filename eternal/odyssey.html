@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ETERNAL • Odyssey | Dimensional Journeys</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void: #0b0b1f;
+      --neon-purple: #8b00ff;
+      --neon-cyan: #00f0ff;
+      --neon-pink: #ff00aa;
+      --electric: #00ffea;
+      --glass: rgba(15, 15, 45, 0.25);
+      --glow: 0 0 30px rgba(138, 43, 226, 0.6);
+      --map-glow: 0 0 25px rgba(0, 240, 255, 0.8);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--void);
+      color: white;
+      font-family: 'Exo 2', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Cursor */
+    .cursor {
+      position: fixed;
+      width: 40px; height: 40px;
+      border: 2px solid var(--neon-cyan);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      mix-blend-mode: difference;
+      transition: transform 0.1s ease;
+      backdrop-filter: invert(1);
+    }
+    .cursor::after {
+      content: '';
+      position: absolute;
+      width: 8px; height: 8px;
+      background: var(--neon-cyan);
+      border-radius: 50%;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      box-shadow: var(--glow);
+      animation: cursorPulse 2s infinite;
+    }
+    @keyframes cursorPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .cursor.tour-hover { border-color: var(--electric); width: 50px; height: 50px; }
+
+    /* Particles */
+    #particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; width: 100%; padding: 1rem 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 1000; backdrop-filter: blur(20px);
+    }
+    .logo { font-family: 'Orbitron', sans-serif; font-size: 2rem; background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: white; text-decoration: none; font-weight: 600; letter-spacing: 2px;
+      position: relative; transition: all 0.3s;
+    }
+    .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--electric); transition: width 0.3s; }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links .active a { color: var(--electric); }
+
+    /* Hero */
+    .hero {
+      height: 100vh;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero-blob {
+      position: absolute;
+      width: 1400px; height: 1400px;
+      background: linear-gradient(45deg, var(--electric), var(--neon-purple), var(--neon-pink));
+      border-radius: 50%;
+      filter: blur(160px);
+      opacity: 0.3;
+      animation: portalMorph 35s infinite ease-in-out;
+    }
+    @keyframes portalMorph {
+      0%,100% { border-radius: 55% 45% 65% 35%/35% 55% 45% 65%; transform: scale(1) rotate(0deg); }
+      33% { border-radius: 65% 35% 45% 55%/55% 65% 35% 45%; transform: scale(1.15) rotate(120deg); }
+      66% { border-radius: 35% 65% 55% 45%/45% 35% 65% 55%; transform: scale(0.95) rotate(240deg); }
+    }
+    .hero-content {
+      z-index: 10; text-align: center;
+    }
+    .hero-title {
+      font-family: 'Orbitron'; font-size: clamp(4.5rem, 11vw, 10rem);
+      font-weight: 900; letter-spacing: 15px; text-transform: uppercase;
+      background: linear-gradient(135deg, var(--electric), var(--neon-cyan), var(--neon-purple));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: warpText 4s infinite alternate;
+    }
+    @keyframes warpText {
+      0% { filter: hue-rotate(0deg) drop-shadow(0 0 20px var(--electric)); transform: skew(0deg); }
+      100% { filter: hue-rotate(360deg) drop-shadow(0 0 50px var(--electric)); transform: skew(2deg); }
+    }
+    .hero-subtitle { font-size: 2rem; margin: 2.5rem 0; letter-spacing: 8px; opacity: 0.92; animation: fadeInUp 2.5s ease 1s both; }
+
+    /* Tours Grid */
+    .tours-section {
+      padding: 10rem 5% 5rem;
+      position: relative; z-index: 5;
+    }
+    .section-title {
+      text-align: center; font-family: 'Orbitron'; font-size: 4rem; margin-bottom: 5rem;
+      background: linear-gradient(45deg, var(--neon-pink), var(--electric));
+      -webkit-background-clip: text; color: transparent;
+      position: relative; animation: glowShift 3s infinite;
+    }
+    @keyframes glowShift { 0%,100% { text-shadow: 0 0 20px var(--neon-pink); } 50% { text-shadow: 0 0 40px var(--electric); } }
+    .tour-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 4rem;
+    }
+    .tour-card {
+      background: var(--glass);
+      backdrop-filter: blur(40px);
+      border: 1px solid rgba(0,255,234,0.5);
+      border-radius: 45px;
+      padding: 4rem 3rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+      transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+      transform-style: preserve-3d;
+    }
+    .tour-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0,255,234,0.3), rgba(139,43,226,0.25));
+      opacity: 0; transition: all 0.8s; border-radius: 45px;
+    }
+    .tour-card:hover::before { opacity: 1; }
+    .tour-card:hover {
+      transform: translateY(-50px) rotateY(15deg) rotateX(10deg) scale(1.05);
+      box-shadow: 0 70px 140px rgba(0,255,234,0.6);
+      border-color: var(--electric);
+    }
+    .tour-icon {
+      font-size: 6rem; margin-bottom: 2rem;
+      background: linear-gradient(45deg, var(--electric), var(--neon-cyan));
+      -webkit-background-clip: text; color: transparent;
+      animation: orbitFloat 4s ease-in-out infinite;
+    }
+    @keyframes orbitFloat {
+      0%,100% { transform: rotate(0deg) translateY(0); }
+      25% { transform: rotate(90deg) translateY(-15px); }
+      50% { transform: rotate(180deg) translateY(0); }
+      75% { transform: rotate(270deg) translateY(15px); }
+    }
+    .tour-name {
+      font-family: 'Orbitron'; font-size: 2.8rem; font-weight: 900; margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .tour-name::after {
+      content: attr(data-warp); position: absolute; top: 0; left: 0;
+      color: var(--neon-pink); animation: warpEffect 2s infinite; opacity: 0.7;
+    }
+    @keyframes warpEffect {
+      0%,100% { transform: scale(1) translateZ(0); }
+      50% { transform: scale(1.1) translateZ(20px); }
+    }
+    .tour-price { font-size: 3.5rem; font-weight: 900; color: var(--electric); margin-bottom: 2rem; }
+    .tour-itinerary { 
+      max-height: 0; overflow: hidden; transition: max-height 0.7s ease;
+      list-style: none; font-size: 1.25rem; line-height: 2.5;
+    }
+    .tour-card.expanded .tour-itinerary { max-height: 400px; }
+    .tour-item { padding: 1.2rem 0; border-bottom: 1px solid rgba(0,240,255,0.3); transition: all 0.4s; }
+    .tour-item:hover { padding-left: 1.5rem; color: var(--electric); }
+
+    /* Interactive Map */
+    .map-section {
+      padding: 8rem 5%; background: radial-gradient(circle at center, rgba(0,255,234,0.12), transparent);
+      text-align: center;
+    }
+    #world-map {
+      width: 80%; max-width: 1000px; height: 500px; margin: 0 auto 3rem;
+      background: var(--glass); border-radius: 30px; position: relative;
+      border: 2px solid rgba(0,255,234,0.4); backdrop-filter: blur(20px);
+    }
+    .map-point {
+      position: absolute; width: 20px; height: 20px;
+      background: var(--electric); border-radius: 50%;
+      cursor: none; transition: all 0.3s;
+      box-shadow: var(--map-glow);
+    }
+    .map-point:hover { transform: scale(2); box-shadow: 0 0 40px var(--electric); }
+    .highlands { top: 30%; left: 20%; }
+    .coastal { top: 60%; left: 70%; }
+    .heritage { top: 45%; right: 25%; }
+
+    /* Gallery */
+    .gallery-section { padding: 8rem 5%; }
+    .slider-container { max-width: 1400px; margin: 0 auto; position: relative; }
+    .tour-slides { display: flex; overflow: hidden; border-radius: 40px; }
+    .tour-slide {
+      min-width: 100%; height: 600px;
+      background-size: cover; background-position: center;
+      position: relative; transition: transform 1s ease;
+    }
+    .tour-slide::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(45deg, rgba(11,11,31,0.85), rgba(0,255,234,0.4));
+      border-radius: 40px;
+    }
+    .slide-overlay {
+      position: absolute; bottom: 3rem; left: 3rem; right: 3rem;
+      background: var(--glass); backdrop-filter: blur(25px); padding: 2.5rem;
+      border-radius: 25px; border: 1px solid var(--electric);
+    }
+    .slide-title { font-family: 'Orbitron'; font-size: 2.5rem; margin-bottom: 1rem; }
+    .nav-arrows {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: var(--glass); border: none; color: var(--electric);
+      font-size: 2.5rem; padding: 1.5rem 1rem; cursor: none; border-radius: 50%;
+      transition: all 0.4s; z-index: 10;
+    }
+    .nav-arrows:hover { transform: translateY(-50%) scale(1.3); box-shadow: var(--glow); }
+    .prev { left: -80px; }
+    .next { right: -80px; }
+
+    /* Tour Booking Modal */
+    .tour-modal {
+      position: fixed; inset: 0; background: rgba(11,11,31,0.97);
+      backdrop-filter: blur(70px); z-index: 10000;
+      display: none; align-items: center; justify-content: center;
+      opacity: 0; transition: all 0.7s;
+    }
+    .tour-modal.open { display: flex; opacity: 1; }
+    .modal-content {
+      background: var(--glass); backdrop-filter: blur(50px);
+      border: 3px solid var(--electric); border-radius: 50px;
+      padding: 5rem; max-width: 600px; width: 90%; text-align: center;
+      transform: scale(0.5) rotateZ(-180deg); transition: all 0.7s;
+    }
+    .tour-modal.open .modal-content { transform: scale(1) rotateZ(0deg); }
+    .close-tour { position: absolute; top: 2rem; right: 3rem; background: none; border: none; color: var(--electric); font-size: 3.5rem; cursor: none; }
+    #tourModalTitle { font-family: 'Orbitron'; font-size: 2.5rem; margin-bottom: 2rem; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .tour-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .nav-links { display: none; }
+      .hero-title { font-size: 3.5rem; letter-spacing: 6px; }
+      #world-map { width: 95%; height: 350px; }
+      .tour-slides { height: 400px; }
+      .prev, .next { font-size: 1.8rem; padding: 1rem; left: 10px; right: 10px; }
+      .tours-section, .map-section, .gallery-section { padding: 5rem 1.5rem; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(80px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div class="cursor"></div>
+
+  <!-- Particles -->
+  <div id="particles"></div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="logo">ETERNAL</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="hotel.html">Hotel</a></li>
+      <li><a href="dining.html">Dining</a></li>
+      <li><a href="odyssey" class="active">Odyssey</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-blob"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">DIMENSIONAL ODYSSEY</h1>
+      <p class="hero-subtitle">Portals to worlds unknown. Adventures that rewrite reality.</p>
+    </div>
+  </section>
+
+  <!-- Tours -->
+  <section class="tours-section">
+    <h2 class="section-title">PORTAL EXPEDITIONS</h2>
+    <div class="tour-grid">
+      <div class="tour-card" onclick="toggleItinerary(this); openTourModal('Highland Portal Trek')">
+        <i class="fas fa-mountain-sun tour-icon"></i>
+        <div class="tour-name" data-warp="HIGHLAND PORTAL TREK">HIGHLAND PORTAL TREK</div>
+        <div class="tour-price">$2,499/pp</div>
+        <ul class="tour-itinerary">
+          <li class="tour-item">Dawn rift activation</li>
+          <li class="tour-item">Waterfall singularity dive</li>
+          <li class="tour-item">Eternal peak summit</li>
+          <li class="tour-item">Cultural echo chamber</li>
+        </ul>
+      </div>
+      <div class="tour-card" onclick="toggleItinerary(this); openTourModal('Coastal Dimension Cruise')">
+        <i class="fas fa-sail-ship tour-icon"></i>
+        <div class="tour-name" data-warp="COASTAL DIMENSION CRUISE">COASTAL DIMENSION CRUISE</div>
+        <div class="tour-price">$3,299/pp</div>
+        <ul class="tour-itinerary">
+          <li class="tour-item">Yacht hyperspace launch</li>
+          <li class="tour-item">Island warp hopping</li>
+          <li class="tour-item">Crystal abyss snorkel</li>
+          <li class="tour-item">Sunset rift banquet</li>
+        </ul>
+      </div>
+      <div class="tour-card" onclick="toggleItinerary(this); openTourModal('Heritage Time Warp')">
+        <i class="fas fa-layer-group tour-icon"></i>
+        <div class="tour-name" data-warp="HERITAGE TIME WARP">HERITAGE TIME WARP</div>
+        <div class="tour-price">$4,499/pp</div>
+        <ul class="tour-itinerary">
+          <li class="tour-item">Ancient nexus access</li>
+          <li class="tour-item">Artisan timeline weave</li>
+          <li class="tour-item">Culinary epoch tour</li>
+          <li class="tour-item">Relic resonance close</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Map -->
+  <section class="map-section">
+    <h2 class="section-title">ODYSSEY NEXUS</h2>
+    <p>Scan portals worldwide. Hover to warp.</p>
+    <svg id="world-map" viewBox="0 0 800 400">
+      <path d="M100 150 Q200 100 300 150 T500 150 Q600 200 700 150" stroke="rgba(0,255,234,0.3)" stroke-width="3" fill="none"/>
+      <!-- Simplified continents for demo -->
+      <ellipse cx="200" cy="120" rx="80" ry="40" fill="none" stroke="rgba(139,43,226,0.2)" stroke-width="2"/>
+      <ellipse cx="600" cy="180" rx="100" ry="50" fill="none" stroke="rgba(139,43,226,0.2)" stroke-width="2"/>
+    </svg>
+    <div class="map-point highlands" title="Highlands"></div>
+    <div class="map-point coastal" title="Coastal"></div>
+    <div class="map-point heritage" title="Heritage" style="background: var(--neon-pink);"></div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="gallery-section">
+    <h2 class="section-title">WARPSCAPES</h2>
+    <div class="slider-container">
+      <div class="tour-slides" id="tourSlides">
+        <div class="tour-slide" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=80');">
+          <div class="slide-overlay">
+            <h3 class="slide-title">Highland Rift</h3>
+            <p>Peaks that pierce dimensions.</p>
+          </div>
+        </div>
+        <div class="tour-slide" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1920&q=80');">
+          <div class="slide-overlay">
+            <h3 class="slide-title">Coastal Hyperspace</h3>
+            <p>Waves from parallel oceans.</p>
+          </div>
+        </div>
+        <div class="tour-slide" style="background-image: url('https://images.unsplash.com/photo-1429046867825-091804c2602e?auto=format&fit=crop&w=1920&q=80');">
+          <div class="slide-overlay">
+            <h3 class="slide-title">Heritage Echo</h3>
+            <p>Ruins echoing future-past.</p>
+          </div>
+        </div>
+      </div>
+      <button class="nav-arrows prev" onclick="shiftTourSlide(-1)">❰</button>
+      <button class="nav-arrows next" onclick="shiftTourSlide(1)">❱</button>
+    </div>
+  </section>
+
+  <!-- Tour Modal -->
+  <div class="tour-modal" id="tourModal">
+    <button class="close-tour" onclick="closeTourModal()">✕</button>
+    <div class="modal-content">
+      <h2 id="tourModalTitle">Select Expedition</h2>
+      <form id="tourForm">
+        <div class="form-group" style="margin-bottom:2rem;">
+          <label>Dates</label>
+          <input type="date" required>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:2rem;">
+          <div class="form-group"><label>Group/Private</label><select><option>Group</option><option>Private</option></select></div>
+          <div class="form-group"><label>Travelers</label><select><option>1</option><option>2</option><option>3+</option></select></div>
+        </div>
+        <div class="form-group"><label>Name/Email</label><input type="text" placeholder="You@odyssey" required></div>
+        <button type="submit" class="reserve-btn" style="margin-top:2rem;">WARP IN</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    // Particles - Odyssey Edition
+    particlesJS('particles', {
+      particles: {
+        number: { value: 150 },
+        color: { value: ['#00ffea', '#8b00ff', '#ff00aa'] },
+        shape: { type: 'star' },
+        opacity: { value: 0.7 },
+        size: { value: 4, random: true },
+        line_linked: { enable: true, distance: 100, color: '#00ffea', opacity: 0.5, width: 2 },
+        move: { enable: true, speed: 5, direction: 'top', warp: true }
+      },
+      interactivity: { events: { onhover: { enable: true, mode: 'grab' } } }
+    });
+
+    // Cursor
+    const cursor = document.querySelector('.cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = `${e.clientX}px`;
+      cursor.style.top = `${e.clientY}px`;
+    });
+    document.querySelectorAll('.tour-card, .map-point, button, a').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('tour-hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('tour-hover'));
+    });
+
+    // Tour Itinerary Toggle
+    function toggleItinerary(card) {
+      card.classList.toggle('expanded');
+    }
+
+    // Tour Modal
+    function openTourModal(tour) {
+      document.getElementById('tourModalTitle').textContent = tour;
+      document.getElementById('tourModal').classList.add('open');
+    }
+    function closeTourModal() {
+      document.getElementById('tourModal').classList.remove('open');
+    }
+    document.getElementById('tourForm').addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Warp coordinates locked. Odyssey begins.');
+      closeTourModal();
+    });
+
+    // Gallery Slider
+    let tourSlideIndex = 0;
+    const tourSlides = document.getElementById('tourSlides');
+    function shiftTourSlide(n) {
+      tourSlideIndex += n;
+      const total = tourSlides.children.length;
+      if (tourSlideIndex >= total) tourSlideIndex = 0;
+      if (tourSlideIndex < 0) tourSlideIndex = total - 1;
+      tourSlides.style.transform = `translateX(-${tourSlideIndex * 100}%)`;
+    }
+    setInterval(() => shiftTourSlide(1), 6000);
+
+    // Map Points Interactive
+    document.querySelectorAll('.map-point').forEach(point => {
+      point.addEventListener('click', () => {
+        const title = point.getAttribute('title');
+        openTourModal(`${title} Expedition`);
+      });
+    });
+  </script>
+
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</body>
+</html>

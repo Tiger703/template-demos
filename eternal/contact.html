@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ETERNAL • Nexus | Comm Link</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void: #0b0b1f;
+      --neon-purple: #8b00ff;
+      --neon-cyan: #00f0ff;
+      --neon-pink: #ff00aa;
+      --electric: #00ffea;
+      --glass: rgba(15, 15, 45, 0.3);
+      --glow: 0 0 35px rgba(0, 240, 255, 0.7);
+      --pulse-glow: 0 0 20px rgba(139, 43, 226, 0.8);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--void);
+      color: white;
+      font-family: 'Exo 2', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Cursor */
+    .cursor {
+      position: fixed; width: 45px; height: 45px;
+      border: 2px solid var(--neon-cyan); border-radius: 50%;
+      pointer-events: none; z-index: 99999;
+      mix-blend-mode: difference; transition: all 0.15s ease;
+      backdrop-filter: invert(1);
+    }
+    .cursor::after {
+      content: ''; position: absolute; width: 12px; height: 12px;
+      background: var(--neon-cyan); border-radius: 50%;
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      box-shadow: var(--glow);
+    }
+    .cursor.comm-hover { transform: scale(1.5) rotate(180deg); border-color: var(--electric); }
+
+    /* Particles */
+    #particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; width: 100%; padding: 1.5rem 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 1000; backdrop-filter: blur(25px);
+    }
+    .logo { font-family: 'Orbitron'; font-size: 2.2rem; background: linear-gradient(45deg, var(--neon-purple), var(--electric)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      color: white; text-decoration: none; font-weight: 600; letter-spacing: 3px;
+      position: relative; transition: all 0.4s;
+    }
+    .nav-links a::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 0; height: 3px; background: var(--electric); transition: width 0.4s; border-radius: 2px; }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links .active a { color: var(--neon-pink); text-shadow: var(--pulse-glow); }
+
+    /* Hero */
+    .hero {
+      height: 100vh; position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero-signal {
+      position: absolute; inset: 0;
+      background: radial-gradient(circle, var(--neon-cyan) 0%, transparent 70%);
+      animation: signalPulse 4s infinite ease-in-out;
+      opacity: 0.2;
+    }
+    @keyframes signalPulse {
+      0%,100% { transform: scale(1); opacity: 0.2; }
+      50% { transform: scale(1.5); opacity: 0.4; }
+    }
+    .hero-content { z-index: 10; text-align: center; }
+    .hero-title {
+      font-family: 'Orbitron'; font-size: clamp(5rem, 12vw, 11rem);
+      font-weight: 900; letter-spacing: 18px; text-transform: uppercase;
+      background: linear-gradient(90deg, var(--electric), var(--neon-cyan), var(--neon-purple));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      position: relative; overflow: hidden;
+    }
+    .hero-title::before {
+      content: 'COMMENCING TRANSMISSION...'; position: absolute; top: 0; left: -100%;
+      animation: typeTransmit 6s infinite steps(20);
+      white-space: nowrap; color: var(--neon-pink); opacity: 0.6;
+    }
+    @keyframes typeTransmit {
+      0%, 90% { left: -100%; }
+      100% { left: 100%; }
+    }
+    .hero-subtitle { font-size: 2.2rem; margin: 3rem 0; letter-spacing: 10px; opacity: 0.88; animation: fadeInUp 3s ease 2s both; }
+
+    /* Contact Grid */
+    .contact-section {
+      padding: 10rem 5% 6rem; position: relative; z-index: 5;
+    }
+    .section-title {
+      text-align: center; font-family: 'Orbitron'; font-size: 4.5rem; margin-bottom: 6rem;
+      background: linear-gradient(45deg, var(--neon-pink), var(--electric));
+      -webkit-background-clip: text; color: transparent; animation: glitchComm 3s infinite;
+    }
+    @keyframes glitchComm {
+      0%,100% { transform: translate(0); }
+      20% { transform: translate(-5px, 5px); }
+      40% { transform: translate(5px, -5px); }
+    }
+    .contact-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 4rem; max-width: 1200px; margin: 0 auto;
+    }
+    .contact-card {
+      background: var(--glass); backdrop-filter: blur(45px);
+      border: 2px solid rgba(0,255,234,0.4); border-radius: 50px;
+      padding: 4rem 3rem; text-align: center; transition: all 0.6s;
+      position: relative; overflow: hidden;
+    }
+    .contact-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0,255,234,0.2), rgba(255,0,170,0.15));
+      opacity: 0; transition: opacity 0.6s; border-radius: 50px;
+    }
+    .contact-card:hover::before { opacity: 1; }
+    .contact-card:hover {
+      transform: translateY(-25px) scale(1.02); box-shadow: 0 60px 120px rgba(0,255,234,0.5);
+      border-color: var(--electric);
+    }
+    .contact-icon {
+      font-size: 5rem; margin-bottom: 2rem;
+      background: linear-gradient(45deg, var(--neon-cyan), var(--electric));
+      -webkit-background-clip: text; color: transparent; display: block;
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+    @keyframes iconFloat { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
+    .contact-detail { font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; opacity: 0.95; }
+    .contact-link { color: var(--electric); text-decoration: none; font-size: 1.3rem; transition: all 0.3s; }
+    .contact-link:hover { text-shadow: var(--glow); transform: scale(1.1); }
+
+    /* Form */
+    .form-container {
+      background: var(--glass); backdrop-filter: blur(50px);
+      border: 2px solid rgba(255,0,170,0.5); border-radius: 50px;
+      padding: 5rem; max-width: 700px; margin: 6rem auto 0;
+    }
+    .form-group {
+      margin-bottom: 3rem; text-align: left; position: relative;
+    }
+    .form-group label {
+      display: block; margin-bottom: 1rem; font-weight: 700;
+      color: var(--neon-pink); font-size: 1.2rem; letter-spacing: 2px;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 1.5rem 2rem; background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(0,255,234,0.3); border-radius: 25px;
+      color: white; font-size: 1.2rem; font-family: 'Exo 2';
+      transition: all 0.4s; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: none; border-color: var(--electric); box-shadow: 0 0 40px var(--glow);
+      transform: scale(1.02);
+    }
+    .form-group textarea { resize: vertical; min-height: 150px; }
+    .submit-btn {
+      width: 100%; padding: 2rem; background: linear-gradient(45deg, var(--neon-purple), var(--electric));
+      border: none; border-radius: 35px; font-size: 1.6rem; font-weight: 900;
+      cursor: none; transition: all 0.5s; text-transform: uppercase;
+      letter-spacing: 4px; box-shadow: var(--glow);
+    }
+    .submit-btn:hover { transform: scale(1.08); box-shadow: 0 0 60px var(--electric); }
+    .submit-btn:active { transform: scale(0.98); }
+
+    /* Success Modal */
+    .success-modal {
+      position: fixed; inset: 0; background: rgba(0,255,234,0.95);
+      backdrop-filter: blur(80px); z-index: 10001;
+      display: none; align-items: center; justify-content: center;
+      opacity: 0; transition: all 0.8s;
+    }
+    .success-modal.open { display: flex; opacity: 1; animation: successBurst 0.8s ease; }
+    @keyframes successBurst {
+      0% { transform: scale(0.5); } 70% { transform: scale(1.1); } 100% { transform: scale(1); }
+    }
+    .success-content {
+      background: var(--glass); border: 3px solid var(--electric);
+      border-radius: 60px; padding: 6rem 4rem; text-align: center;
+      transform: rotateY(360deg); transition: transform 0.8s;
+    }
+    .success-modal.open .success-content { transform: rotateY(0); }
+    .success-icon { font-size: 8rem; color: var(--electric); margin-bottom: 2rem; animation: successSpin 1s ease; }
+    @keyframes successSpin { 0% { transform: rotate(0deg) scale(0); } 50% { transform: rotate(180deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1); } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-title { font-size: 4rem; letter-spacing: 8px; }
+      .form-container { padding: 3rem 2rem; margin-top: 4rem; }
+      .contact-section { padding: 6rem 1.5rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div class="cursor"></div>
+
+  <!-- Particles -->
+  <div id="particles"></div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="logo">ETERNAL</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="hotel.html">Hotel</a></li>
+      <li><a href="dining.html">Dining</a></li>
+      <li><a href="odyssey.html">Odyssey</a></li>
+      <li><a href="#" class="active">Nexus</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-signal"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">COMMENCE TRANSMISSION</h1>
+      <p class="hero-subtitle">Link established. Send your signal to the void.</p>
+    </div>
+  </section>
+
+  <!-- Contact Info -->
+  <section class="contact-section">
+    <h2 class="section-title">SIGNAL RELAYS</h2>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <i class="fas fa-phone-volume contact-icon"></i>
+        <div class="contact-detail">Hyperlink Voice</div>
+        <a href="tel:+18885550123" class="contact-link">+1 (888) 555-0123</a>
+      </div>
+      <div class="contact-card">
+        <i class="fas fa-envelope contact-icon"></i>
+        <div class="contact-detail">Quantum Mail</div>
+        <a href="mailto:nexus@eternal.void" class="contact-link">nexus@eternal.void</a>
+      </div>
+      <div class="contact-card">
+        <i class="fas fa-map-marker-alt contact-icon"></i>
+        <div class="contact-detail">Dimensional HQ</div>
+        <a href="#" class="contact-link">123 Void Avenue<br>Quantum City, ∞</a>
+      </div>
+      <div class="contact-card">
+        <i class="fas fa-globe contact-icon"></i>
+        <div class="contact-detail">Social Warp</div>
+        <div style="display:flex; justify-content:center; gap:2rem; margin-top:1rem;">
+          <a href="#" class="contact-link" style="font-size:2rem;"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="contact-link" style="font-size:2rem;"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="contact-link" style="font-size:2rem;"><i class="fab fa-discord"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Form -->
+  <div class="form-container">
+    <h3 style="text-align:center; font-family:'Orbitron'; font-size:2.5rem; margin-bottom:3rem; color:var(--electric);">TRANSMIT MESSAGE</h3>
+    <form id="contactForm">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <select name="subject" required>
+          <option value="">Select Warp</option>
+          <option>Stay Inquiry</option>
+          <option>Dining Portal</option>
+          <option>Odyssey Booking</option>
+          <option>Other Dimension</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea name="message" placeholder="Transmit your thoughts..." required></textarea>
+      </div>
+      <button type="submit" class="submit-btn">SEND SIGNAL</button>
+    </form>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="success-modal" id="successModal">
+    <div class="success-content">
+      <div class="success-icon">🚀</div>
+      <h2 style="font-family:'Orbitron'; font-size:3rem; margin-bottom:1.5rem;">SIGNAL RECEIVED</h2>
+      <p style="font-size:1.3rem; opacity:0.95;">Transmission acknowledged. Response warping through the void.</p>
+      <button onclick="closeSuccess()" style="margin-top:2rem; padding:1.2rem 3rem; background:var(--neon-purple); color:var(--electric); border:none; border-radius:25px; font-weight:700; cursor:pointer; font-size:1.2rem;">CLOSE LINK</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    // Particles - Comm Theme
+    particlesJS('particles', {
+      particles: {
+        number: { value: 100 },
+        color: { value: ['#00f0ff', '#00ffea', '#8b00ff'] },
+        shape: { type: 'line' },
+        opacity: { value: 0.8 },
+        size: { value: 3 },
+        line_linked: { enable: true, distance: 80, color: '#00f0ff', opacity: 0.6, width: 2 },
+        move: { enable: true, speed: 4, direction: 'none', random: true }
+      },
+      interactivity: {
+        events: { onhover: { enable: true, mode: 'bubble' }, onclick: { enable: true, mode: 'push' } }
+      }
+    });
+
+    // Cursor
+    const cursor = document.querySelector('.cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button, input, textarea, select, .contact-card').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('comm-hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('comm-hover'));
+    });
+
+    // Form Handling
+    document.getElementById('contactForm').addEventListener('submit', e => {
+      e.preventDefault();
+      // Simulate API
+      setTimeout(() => {
+        document.getElementById('successModal').classList.add('open');
+        // Particles burst on success
+        particlesJS('particles', { particles: { number: { value: 300 }, move: { speed: 10 } } });
+        setTimeout(() => particlesJS.reload('#particles'), 3000);
+      }, 1200);
+    });
+
+    function closeSuccess() {
+      document.getElementById('successModal').classList.remove('open');
+    }
+
+    // Voice-to-Text for Message (Mobile Safari/Chrome)
+    const messageField = document.querySelector('textarea[name="message"]');
+    if ('webkitSpeechRecognition' in window) {
+      const recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+      messageField.parentNode.appendChild(Object.assign(document.createElement('button'), {
+        textContent: '🎤 Voice Warp', style: 'position:absolute; right:2rem; top:4rem; background:none; border:1px solid var(--electric); color:var(--electric); padding:0.5rem 1rem; border-radius:15px; cursor:pointer; font-size:1rem;',
+        onclick: () => recognition.start()
+      }));
+      recognition.onresult = e => {
+        messageField.value += e.results[0][0].transcript + ' ';
+      };
+    }
+  </script>
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</body>
+</html>

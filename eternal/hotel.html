@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ETERNAL • Hotel | Infinite Stays</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void: #0b0b1f;
+      --neon-purple: #8b00ff;
+      --neon-cyan: #00f0ff;
+      --neon-pink: #ff00aa;
+      --electric: #00ffea;
+      --glass: rgba(15, 15, 45, 0.25);
+      --glow: 0 0 30px rgba(138, 43, 226, 0.6);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--void);
+      color: white;
+      font-family: 'Exo 2', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* 3D Magnetic Cursor */
+    .cursor {
+      position: fixed;
+      width: 40px; height: 40px;
+      border: 2px solid var(--neon-cyan);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      mix-blend-mode: difference;
+      transition: transform 0.1s ease, background 0.3s;
+      backdrop-filter: invert(1);
+    }
+    .cursor::after {
+      content: '';
+      position: absolute;
+      width: 8px; height: 8px;
+      background: var(--neon-cyan);
+      border-radius: 50%;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      box-shadow: var(--glow);
+    }
+    .cursor.room-hover { background: var(--neon-purple); border-color: var(--neon-pink); }
+
+    /* Floating Particles */
+    #particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+    /* Navigation */
+    nav {
+      position: fixed; top: 0; width: 100%; padding: 1rem 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 1000; backdrop-filter: blur(20px);
+    }
+    .logo { font-family: 'Orbitron', sans-serif; font-size: 2rem; background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: white; text-decoration: none; font-weight: 600; letter-spacing: 2px;
+      position: relative; transition: all 0.3s;
+    }
+    .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--neon-cyan); transition: width 0.3s; }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Hero */
+    .hero {
+      height: 100vh;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero-blob {
+      position: absolute;
+      width: 1200px; height: 1200px;
+      background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan), var(--neon-pink));
+      border-radius: 50%;
+      filter: blur(150px);
+      opacity: 0.3;
+      animation: morph 25s infinite ease-in-out;
+    }
+    @keyframes morph {
+      0%,100% { border-radius: 60% 40% 30% 70%/60% 30% 70% 40%; transform: rotate(0deg); }
+      50% { border-radius: 30% 60% 70% 40%/50% 60% 30% 60%; transform: rotate(180deg); }
+    }
+    .hero-content {
+      z-index: 10; text-align: center; position: relative;
+    }
+    .hero-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(4rem, 10vw, 8rem);
+      font-weight: 900;
+      letter-spacing: 10px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glitchPulse 3s infinite;
+      position: relative;
+    }
+    @keyframes glitchPulse {
+      0%,100% { transform: scale(1); filter: hue-rotate(0deg); }
+      50% { transform: scale(1.05); filter: hue-rotate(180deg); }
+    }
+    .hero-subtitle { font-size: 1.8rem; margin: 2rem 0; opacity: 0.9; letter-spacing: 5px; animation: fadeInUp 1.5s ease 0.5s both; }
+
+    /* Room Selector - Floating 3D Cards */
+    .rooms-section {
+      padding: 8rem 5% 4rem;
+      position: relative; z-index: 5;
+    }
+    .section-title {
+      text-align: center; font-family: 'Orbitron'; font-size: 4rem; margin-bottom: 4rem;
+      background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan));
+      -webkit-background-clip: text; color: transparent;
+      position: relative;
+    }
+    .room-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 4rem;
+    }
+    .room-card {
+      background: var(--glass);
+      backdrop-filter: blur(30px);
+      border: 1px solid rgba(139, 43, 226, 0.4);
+      border-radius: 40px;
+      padding: 4rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transform-style: preserve-3d;
+    }
+    .room-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(139,43,226,0.2), rgba(0,240,255,0.3));
+      opacity: 0; transition: all 0.6s;
+      border-radius: 40px;
+    }
+    .room-card:hover::before { opacity: 1; }
+    .room-card:hover {
+      transform: translateY(-40px) rotateY(10deg) rotateX(5deg) scale(1.03);
+      box-shadow: 0 50px 100px rgba(139,43,226,0.5);
+      border-color: var(--neon-cyan);
+    }
+    .room-icon {
+      font-size: 5rem; margin-bottom: 2rem;
+      background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+      -webkit-background-clip: text; color: transparent;
+      display: block;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+    .room-name {
+      font-family: 'Orbitron'; font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem;
+      position: relative; display: inline-block;
+    }
+    .room-name::after {
+      content: attr(data-glitch); position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%; color: var(--neon-pink);
+      animation: glitchText 2s infinite; opacity: 0.5;
+    }
+    @keyframes glitchText { 0%,100% { transform: translate(0); } 20% { transform: translate(-3px,3px); } 40% { transform: translate(3px,-3px); } }
+    .room-price { font-size: 3rem; font-weight: 900; color: var(--neon-cyan); margin-bottom: 1.5rem; }
+    .room-features { list-style: none; font-size: 1.2rem; opacity: 0.9; line-height: 2; }
+
+    /* Gallery Slider */
+    .gallery {
+      padding: 8rem 5%;
+      background: radial-gradient(circle at center, rgba(139,43,226,0.1), transparent);
+    }
+    .slider-container { max-width: 1200px; margin: 0 auto; position: relative; }
+    .slides { display: flex; overflow: hidden; border-radius: 30px; }
+    .slide {
+      min-width: 100%; height: 500px;
+      background-size: cover; background-position: center;
+      position: relative; display: flex; align-items: center; justify-content: center;
+      transition: transform 0.8s ease;
+    }
+    .slide::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(45deg, rgba(11,11,31,0.8), rgba(139,43,226,0.3));
+      border-radius: 30px;
+    }
+    .slide-content {
+      z-index: 2; text-align: center;
+      background: var(--glass); backdrop-filter: blur(20px); padding: 3rem; border-radius: 20px;
+      border: 1px solid rgba(0,240,255,0.3);
+    }
+    .nav-arrows {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: var(--glass); border: none; color: var(--neon-cyan);
+      font-size: 2rem; padding: 1rem; cursor: none; border-radius: 50%;
+      transition: all 0.3s; z-index: 10;
+    }
+    .nav-arrows:hover { box-shadow: var(--glow); transform: translateY(-50%) scale(1.2); }
+    .prev { left: -60px; }
+    .next { right: -60px; }
+
+    /* Booking Modal */
+    .booking-modal {
+      position: fixed; inset: 0; background: rgba(11,11,31,0.95);
+      backdrop-filter: blur(50px); z-index: 10000;
+      display: none; align-items: center; justify-content: center;
+      opacity: 0; transition: all 0.5s;
+    }
+    .booking-modal.open { display: flex; opacity: 1; }
+    .modal-content {
+      background: var(--glass); backdrop-filter: blur(40px);
+      border: 2px solid var(--neon-cyan); border-radius: 40px;
+      padding: 4rem; max-width: 500px; width: 90%; text-align: center;
+      transform: scale(0.7); transition: transform 0.5s;
+    }
+    .booking-modal.open .modal-content { transform: scale(1); }
+    .close-btn {
+      position: absolute; top: 2rem; right: 2rem;
+      background: none; border: none; color: var(--neon-cyan);
+      font-size: 2.5rem; cursor: none;
+    }
+    .form-group { margin-bottom: 2rem; text-align: left; }
+    .form-group label { display: block; margin-bottom: 0.5rem; color: var(--neon-cyan); }
+    .form-group input, .form-group select { width: 100%; padding: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,240,255,0.3); border-radius: 15px; color: white; font-size: 1rem; }
+    .book-btn {
+      width: 100%; padding: 1.5rem; background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+      border: none; border-radius: 30px; font-size: 1.3rem; font-weight: 800;
+      cursor: none; transition: all 0.4s;
+    }
+    .book-btn:hover { box-shadow: 0 0 50px var(--neon-cyan); transform: scale(1.05); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .room-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .nav-links { display: none; }
+      .hero-title { font-size: 3rem; letter-spacing: 5px; }
+      .prev { left: 10px; } .next { right: 10px; }
+      .gallery { padding: 4rem 1rem; }
+      .slides { height: 300px; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div class="cursor"></div>
+
+  <!-- Particles -->
+  <div id="particles"></div>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">ETERNAL</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#">Hotel</a></li>
+      <li><a href="dining.html">Dining</a></li>
+   <li><a href="odyssey.html">Odyssey</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-blob"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">INFINITE STAYS</h1>
+      <p class="hero-subtitle">Surrender to rooms that defy gravity and time itself.</p>
+    </div>
+  </section>
+
+  <!-- Rooms -->
+  <section class="rooms-section">
+    <h2 class="section-title">ROOM PORTALS</h2>
+    <div class="room-grid">
+      <div class="room-card" data-room="sky">
+        <i class="fas fa-cloud-sun room-icon"></i>
+        <div class="room-name" data-glitch="SKY PENTHOUSE">SKY PENTHOUSE</div>
+        <div class="room-price">$999/night</div>
+        <ul class="room-features">
+          <li>∞ Sky View Holo-Screen</li>
+          <li>Zero-Gravity Bed</li>
+          <li>AI Butler</li>
+        </ul>
+        <button class="book-btn" onclick="openBooking('Sky Penthouse')">ENTER PORTAL</button>
+      </div>
+      <div class="room-card" data-room="void">
+        <i class="fas fa-layer-group room-icon"></i>
+        <div class="room-name" data-glitch="VOID SUITE">VOID SUITE</div>
+        <div class="room-price">$1,499/night</div>
+        <ul class="room-features">
+          <li>Neural Dream Simulator</li>
+          <li>Private Void Pool</li>
+          <li>Quantum Safe</li>
+        </ul>
+        <button class="book-btn" onclick="openBooking('Void Suite')">ENTER PORTAL</button>
+      </div>
+      <div class="room-card" data-room="nebula">
+        <i class="fas fa-star-shooting room-icon"></i>
+        <div class="room-name" data-glitch="NEBULA LOFT">NEBULA LOFT</div>
+        <div class="room-price">$2,999/night</div>
+        <ul class="room-features">
+          <li>Stellar Projection Dome</li>
+          <li>Personal Nebula Bar</li>
+          <li>Teleport Lounge</li>
+        </ul>
+        <button class="book-btn" onclick="openBooking('Nebula Loft')">ENTER PORTAL</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="gallery">
+    <h2 class="section-title">HOLO-GALLERY</h2>
+    <div class="slider-container">
+      <div class="slides" id="slides">
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1920&q=80');">
+          <div class="slide-content">
+            <h3>Sky Penthouse</h3>
+            <p>Where clouds become your floor.</p>
+          </div>
+        </div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1920&q=80');">
+          <div class="slide-content">
+            <h3>Void Suite</h3>
+            <p>Darkness that whispers secrets.</p>
+          </div>
+        </div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1920&q=80');">
+          <div class="slide-content">
+            <h3>Nebula Loft</h3>
+            <p>Stars in every corner.</p>
+          </div>
+        </div>
+      </div>
+      <button class="nav-arrows prev" onclick="changeSlide(-1)">❮</button>
+      <button class="nav-arrows next" onclick="changeSlide(1)">❯</button>
+    </div>
+  </section>
+
+  <!-- Booking Modal -->
+  <div class="booking-modal" id="bookingModal">
+    <button class="close-btn" onclick="closeBooking()">&times;</button>
+    <div class="modal-content">
+      <h2 id="selectedRoom">Select a Portal</h2>
+      <form id="bookingForm">
+        <div class="form-group">
+          <label>Dates</label>
+          <input type="date" required>
+        </div>
+        <div class="form-group">
+          <label>Guests</label>
+          <select>
+            <option>1</option>
+            <option>2</option>
+            <option>3+</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" placeholder="Enter your name" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="Enter email" required>
+        </div>
+        <button type="submit" class="book-btn">SECURE PORTAL</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    // Particles
+    particlesJS('particles', {
+      particles: {
+        number: { value: 100 },
+        color: { value: ['#8b00ff', '#00f0ff', '#ff00aa'] },
+        shape: { type: 'circle' },
+        opacity: { value: 0.5 },
+        size: { value: 4 },
+        line_linked: { enable: true, distance: 150, color: '#8b00ff', opacity: 0.3, width: 1 },
+        move: { enable: true, speed: 3 }
+      },
+      interactivity: { events: { onhover: { enable: true, mode: 'repulse' } } }
+    });
+
+    // Magnetic Cursor
+    const cursor = document.querySelector('.cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.animate({ left: e.clientX + 'px', top: e.clientY + 'px' }, { duration: 100, fill: 'forwards' });
+    });
+    document.querySelectorAll('.room-card, button, a').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('room-hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('room-hover'));
+    });
+
+    // Gallery Slider
+    let slideIndex = 0;
+    const slides = document.getElementById('slides');
+    function changeSlide(n) {
+      slideIndex += n;
+      if (slideIndex >= slides.children.length) slideIndex = 0;
+      if (slideIndex < 0) slideIndex = slides.children.length - 1;
+      slides.style.transform = `translateX(-${slideIndex * 100}%)`;
+    }
+    setInterval(() => changeSlide(1), 5000);
+
+    // Booking Modal
+    function openBooking(room) {
+      document.getElementById('selectedRoom').textContent = room;
+      document.getElementById('bookingModal').classList.add('open');
+    }
+    function closeBooking() {
+      document.getElementById('bookingModal').classList.remove('open');
+    }
+    document.getElementById('bookingForm').addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Portal secured! Welcome to ETERNAL.');
+      closeBooking();
+    });
+
+    // Smooth Scroll for Nav
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(anchor.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</body>
+</html>

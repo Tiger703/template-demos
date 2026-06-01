@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ETERNAL • Hyperspace Gallery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void: #0b0b1f;
+      --neon-purple: #8b00ff;
+      --neon-cyan: #00f0ff;
+      --neon-pink: #ff00aa;
+      --electric: #00ffea;
+      --glass: rgba(15, 15, 45, 0.35);
+      --glow: 0 0 40px rgba(0, 240, 255, 0.75);
+      --warp-glow: 0 0 25px rgba(255, 0, 170, 0.6);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--void);
+      color: white;
+      font-family: 'Exo 2', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Cursor */
+    .cursor {
+      position: fixed; width: 30px; height: 30px;
+      border: 3px solid var(--neon-cyan); border-radius: 50%;
+      pointer-events: none; z-index: 99999;
+      transition: all 0.2s ease; backdrop-filter: blur(10px);
+      mix-blend-mode: difference;
+    }
+    .cursor::before {
+      content: '🔍'; position: absolute; top: -5px; left: -5px;
+      font-size: 1.2rem; opacity: 0; transition: opacity 0.3s;
+    }
+    .cursor::after {
+      content: ''; position: absolute; width: 6px; height: 6px;
+      background: var(--electric); border-radius: 50%;
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      box-shadow: var(--glow);
+    }
+    .cursor.gallery-hover {
+      width: 60px; height: 60px; border-width: 1px;
+      border-image: linear-gradient(45deg, var(--neon-purple), var(--electric)) 1;
+    }
+    .cursor.gallery-hover::before { opacity: 1; }
+
+    /* Particles */
+    #particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; width: 100%; padding: 1.5rem 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 1000; backdrop-filter: blur(30px); background: rgba(11,11,31,0.4);
+    }
+    .logo { font-family: 'Orbitron'; font-size: 2.3rem; background: linear-gradient(45deg, var(--neon-cyan), var(--electric)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      color: white; text-decoration: none; font-weight: 600; letter-spacing: 3px;
+      position: relative; transition: all 0.4s;
+    }
+    .nav-links a::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 0; height: 2px; background: var(--neon-pink); transition: width 0.4s; }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links .active a { color: var(--electric); text-shadow: var(--glow); }
+
+    /* Hero */
+    .hero {
+      height: 100vh; position: relative;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      overflow: hidden; text-align: center;
+    }
+    .hero-matrix {
+      position: absolute; inset: 0;
+      background-image: 
+        radial-gradient(circle at 20% 80%, var(--neon-cyan) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, var(--electric) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, var(--neon-purple) 0%, transparent 50%);
+      animation: matrixFlow 20s linear infinite;
+    }
+    @keyframes matrixFlow {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-100vh) rotate(360deg); }
+    }
+    .hero h1 {
+      font-family: 'Orbitron'; font-size: clamp(5.5rem, 14vw, 12rem);
+      font-weight: 900; letter-spacing: 20px; text-transform: uppercase;
+      background: linear-gradient(135deg, var(--electric), var(--neon-cyan), var(--neon-pink), var(--neon-purple));
+      background-size: 300% 300%; -webkit-background-clip: text; background-clip: text;
+      color: transparent; animation: gradientShift 5s ease infinite, glitchMatrix 2s infinite;
+      position: relative; z-index: 10; margin-bottom: 2rem;
+    }
+    @keyframes gradientShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    @keyframes glitchMatrix {
+      0%,100% { text-shadow: 0 0 10px var(--electric); transform: translate(0); }
+      10% { text-shadow: 0 0 30px var(--neon-pink); transform: translate(-2px,2px); }
+      20% { text-shadow: 0 0 20px var(--neon-cyan); transform: translate(2px,-2px); }
+    }
+    .filter-tabs {
+      display: flex; gap: 2rem; z-index: 10; margin-top: 3rem; flex-wrap: wrap;
+      justify-content: center;
+    }
+    .filter-tab {
+      padding: 1.2rem 2.5rem; background: var(--glass); backdrop-filter: blur(20px);
+      border: 2px solid rgba(0,255,234,0.4); border-radius: 40px;
+      color: white; font-weight: 700; letter-spacing: 3px; cursor: none;
+      transition: all 0.5s; position: relative; overflow: hidden;
+    }
+    .filter-tab::before {
+      content: ''; position: absolute; inset: 0; background: var(--electric);
+      opacity: 0; transition: opacity 0.5s; border-radius: 40px;
+    }
+    .filter-tab.active::before, .filter-tab:hover::before { opacity: 0.2; }
+    .filter-tab.active, .filter-tab:hover {
+      color: var(--void); border-color: var(--electric); box-shadow: var(--glow);
+      transform: translateY(-5px);
+    }
+
+    /* Gallery Grid */
+    .gallery-grid {
+      padding: 8rem 5% 4rem; column-count: 3; column-gap: 3rem;
+      max-width: 1400px; margin: 0 auto;
+    }
+    .gallery-item {
+      break-inside: avoid; margin-bottom: 3rem; position: relative;
+      border-radius: 25px; overflow: hidden; cursor: none;
+      opacity: 0; transform: translateY(50px); transition: all 0.6s;
+    }
+    .gallery-item.visible { opacity: 1; transform: translateY(0); }
+    .gallery-item img, .gallery-item video {
+      width: 100%; height: auto; display: block;
+      transition: all 0.5s; filter: grayscale(100%) contrast(1.1);
+    }
+    .gallery-item:hover img, .gallery-item:hover video {
+      filter: grayscale(0%) contrast(1.3) brightness(1.1);
+      transform: scale(1.05);
+    }
+    .gallery-item::before {
+      content: attr(data-category); position: absolute; bottom: 1.5rem; left: 1.5rem;
+      background: var(--glass); backdrop-filter: blur(15px); padding: 0.8rem 1.5rem;
+      border-radius: 20px; font-size: 0.9rem; font-weight: 600; opacity: 0;
+      transition: opacity 0.3s; border: 1px solid rgba(0,255,234,0.5);
+    }
+    .gallery-item:hover::before { opacity: 1; }
+
+    /* Lightbox Modal */
+    .lightbox {
+      position: fixed; inset: 0; background: rgba(11,11,31,0.98);
+      backdrop-filter: blur(100px); z-index: 10000;
+      display: none; align-items: center; justify-content: center;
+      opacity: 0; transition: all 0.6s;
+    }
+    .lightbox.open { display: flex; opacity: 1; }
+    .lightbox-content {
+      max-width: 90%; max-height: 90%; position: relative;
+      transform: scale(0.8); transition: transform 0.6s;
+    }
+    .lightbox.open .lightbox-content { transform: scale(1); }
+    .lightbox img, .lightbox video { max-width: 100%; max-height: 100%; border-radius: 20px; box-shadow: 0 0 100px rgba(0,255,234,0.8); }
+    .lightbox-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: var(--glass); border: none; color: var(--electric);
+      font-size: 3rem; width: 70px; height: 70px; border-radius: 50%;
+      cursor: none; transition: all 0.4s; backdrop-filter: blur(20px);
+    }
+    .lightbox-nav:hover { transform: translateY(-50%) scale(1.2); box-shadow: var(--glow); }
+    .lb-prev { left: -100px; }
+    .lb-next { right: -100px; }
+    .close-lb {
+      position: absolute; top: -5rem; right: -5rem;
+      background: var(--glass); border: none; color: var(--neon-pink);
+      font-size: 3rem; width: 60px; height: 60px; border-radius: 50%;
+      cursor: none; transition: all 0.4s;
+    }
+    .close-lb:hover { transform: scale(1.2); box-shadow: var(--warp-glow); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero h1 { font-size: 4.5rem; letter-spacing: 10px; }
+      .filter-tabs { gap: 1rem; }
+      .filter-tab { padding: 1rem 2rem; font-size: 0.95rem; }
+      .gallery-grid { column-count: 2; column-gap: 2rem; padding: 4rem 1.5rem; }
+      .lightbox-nav { font-size: 2rem; width: 50px; height: 50px; }
+      .lb-prev { left: 1rem; } .lb-next { right: 1rem; }
+      .close-lb { top: 1rem; right: 1rem; font-size: 2.5rem; }
+    }
+    @media (max-width: 480px) { .gallery-grid { column-count: 1; } }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div class="cursor"></div>
+
+  <!-- Particles -->
+  <div id="particles"></div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="logo">ETERNAL</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="hotel.html">Hotel</a></li>
+      <li><a href="dining.html">Dining</a></li>
+      <li><a href="odyssey.html">Odyssey</a></li>
+      <li><a href="contact.html">Nexus</a></li>
+      <li><a href="#" class="active">Gallery</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-matrix"></div>
+    <h1>HYPERSPACE ARCHIVE</h1>
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">All Warps</button>
+      <button class="filter-tab" data-filter="hotel">Hotel Portals</button>
+      <button class="filter-tab" data-filter="dining">Molecular Feasts</button>
+      <button class="filter-tab" data-filter="odyssey">Dimensional Trails</button>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <div class="gallery-grid" id="galleryGrid">
+    <!-- Hotel -->
+    <div class="gallery-item hotel" data-category="Hotel">
+      <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80" alt="Sky Penthouse">
+    </div>
+    <div class="gallery-item hotel" data-category="Hotel">
+      <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80" alt="Void Suite">
+    </div>
+    <div class="gallery-item dining" data-category="Dining">
+      <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80" alt="Molecular Dish">
+    </div>
+    <div class="gallery-item odyssey" data-category="Odyssey">
+      <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80" alt="Highland Trek">
+    </div>
+    <div class="gallery-item hotel" data-category="Hotel">
+      <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80" alt="Nebula Loft">
+    </div>
+    <div class="gallery-item dining" data-category="Dining">
+      <img src="https://images.unsplash.com/photo-1571583061924-50f18a769ecc?auto=format&fit=crop&w=800&q=80" alt="Plasma Dessert">
+    </div>
+    <div class="gallery-item odyssey" data-category="Odyssey">
+      <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80" alt="Coastal Cruise">
+    </div>
+    <div class="gallery-item hotel" data-category="Hotel">
+      <video autoplay muted loop playsinline>
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-neon-lines-video-animation-22186-large.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="gallery-item dining" data-category="Dining">
+      <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80" alt="Fusion Protein">
+    </div>
+    <div class="gallery-item odyssey" data-category="Odyssey">
+      <img src="https://images.unsplash.com/photo-1429046867825-091804c2602e?auto=format&fit=crop&w=800&q=80" alt="Heritage Warp">
+    </div>
+    <div class="gallery-item hotel" data-category="Hotel">
+      <img src="https://images.unsplash.com/photo-1578683015141-3990a5a343cb?auto=format&fit=crop&w=800&q=80" alt="Spa Void">
+    </div>
+    <div class="gallery-item dining" data-category="Dining">
+      <video autoplay muted loop playsinline style="height:400px;">
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-nav lb-prev" onclick="prevImage()">&#8249;</button>
+    <button class="lightbox-nav lb-next" onclick="nextImage()">&#8250;</button>
+    <button class="close-lb" onclick="closeLightbox()">&times;</button>
+    <div class="lightbox-content">
+      <img id="lbImage" src="" alt="">
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    // Particles - Gallery Vortex
+    particlesJS('particles', {
+      particles: {
+        number: { value: 200 },
+        color: { value: ['#00f0ff', '#00ffea', '#ff00aa', '#8b00ff'] },
+        shape: { type: ['circle', 'star'] },
+        opacity: { value: 0.6, random: true },
+        size: { value: 4, random: true },
+        line_linked: { enable: true, distance: 90, color: '#00ffea', opacity: 0.4, width: 1 },
+        move: { enable: true, speed: 6, attract: { enable: true, rotateX: 800, rotateY: 1000 } }
+      },
+      interactivity: {
+        events: {
+          onhover: { enable: true, mode: 'repulse' },
+          onclick: { enable: true, mode: 'bubble' }
+        }
+      }
+    });
+
+    // Cursor
+    const cursor = document.querySelector('.cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = `${e.clientX}px`;
+      cursor.style.top = `${e.clientY}px`;
+    });
+    document.querySelectorAll('.gallery-item, .filter-tab, button, a').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('gallery-hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('gallery-hover'));
+    });
+
+    // Filter Tabs
+    const tabs = document.querySelectorAll('.filter-tab');
+    const items = document.querySelectorAll('.gallery-item');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const filter = tab.dataset.filter;
+        items.forEach(item => {
+          if (filter === 'all' || item.classList.contains(filter)) {
+            item.style.display = 'block';
+            setTimeout(() => item.classList.add('visible'), 100);
+          } else {
+            item.classList.remove('visible');
+            setTimeout(() => item.style.display = 'none', 300);
+          }
+        });
+      });
+    });
+
+    // Lightbox
+    let currentIndex = 0;
+    const images = Array.from(document.querySelectorAll('.gallery-item img, .gallery-item video'));
+    document.querySelectorAll('.gallery-item').forEach((item, index) => {
+      item.addEventListener('click', () => openLightbox(index));
+    });
+
+    function openLightbox(index) {
+      currentIndex = index;
+      updateLightbox();
+      document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+    }
+    function updateLightbox() {
+      const media = images[currentIndex];
+      const lbImage = document.getElementById('lbImage');
+      if (media.tagName === 'VIDEO') {
+        lbImage.src = '';
+        lbImage.parentNode.innerHTML = media.outerHTML;
+      } else {
+        lbImage.src = media.src;
+        lbImage.parentNode.innerHTML = `<img id="lbImage" src="${media.src}" alt="${media.alt}">`;
+      }
+    }
+    function nextImage() { currentIndex = (currentIndex + 1) % images.length; updateLightbox(); }
+    function prevImage() { currentIndex = (currentIndex - 1 + images.length) % images.length; updateLightbox(); }
+
+    // Keyboard Nav
+    document.addEventListener('keydown', e => {
+      if (document.getElementById('lightbox').classList.contains('open')) {
+        if (e.key === 'ArrowRight') nextImage();
+        if (e.key === 'ArrowLeft') prevImage();
+        if (e.key === 'Escape') closeLightbox();
+      }
+    });
+
+    // Scroll Reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    });
+    document.querySelectorAll('.gallery-item').forEach(item => observer.observe(item));
+  </script>
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</body>
+</html>

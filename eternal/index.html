@@ -1,1 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ETERNAL • Hotel | Dining | Odyssey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void: #0b0b1f;
+      --neon-purple: #8b00ff;
+      --neon-cyan: #00f0ff;
+      --neon-pink: #ff00aa;
+      --electric: #00ffea;
+      --glass: rgba(15, 15, 45, 0.25);
+      --glow: 0 0 30px rgba(138, 43, 226, 0.6);
+    }
 
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--void);
+      color: white;
+      font-family: 'Exo 2', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* 3D Magnetic Cursor */
+    .cursor {
+      position: fixed;
+      width: 40px; height: 40px;
+      border: 2px solid var(--neon-cyan);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      mix-blend-mode: difference;
+      transition: transform 0.1s ease, background 0.3s;
+      backdrop-filter: invert(1);
+    }
+    .cursor::after {
+      content: '';
+      position: absolute;
+      width: 8px; height: 8px;
+      background: var(--neon-cyan);
+      border-radius: 50%;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      box-shadow: var(--glow);
+    }
+
+    /* Floating Particles Background */
+    #particles {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Hero - Liquid Morphing Blob */
+    .hero {
+      height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .blob {
+      position: absolute;
+      width: 800px; height: 800px;
+      background: linear-gradient(45deg, #8b00ff, #00f0ff, #ff00aa);
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.4;
+      animation: morph 20s infinite ease-in-out;
+      z-index: 2;
+    }
+    @keyframes morph {
+      0%,100% { border-radius: 60% 40% 30% 70%/60% 30% 70% 40%; }
+      50% { border-radius: 30% 60% 70% 40%/50% 60% 30% 60%; }
+    }
+
+    .hero-content {
+      z-index: 10;
+      text-align: center;
+      position: relative;
+    }
+    .glitch {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(4rem, 12vw, 10rem);
+      font-weight: 900;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan), var(--neon-pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      position: relative;
+      animation: glitch 4s infinite;
+    }
+    .glitch::before, .glitch::after {
+      content: 'ETERNAL';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: inherit;
+      -webkit-background-clip: text;
+      clip-text: text;
+    }
+    .glitch::before {
+      left: 4px;
+      text-shadow: -4px 0 #ff00aa;
+      animation: glitch-1 2s infinite reverse;
+    }
+    .glitch::after {
+      left: -4px;
+      text-shadow: 4px 0 #00f0ff;
+      animation: glitch-2 3s infinite;
+    }
+    @keyframes glitch { 0%,100% { transform: translate(0); } 20% { transform: translate(-5px,5px); } 40% { transform: translate(5px,-5px); } }
+    @keyframes glitch-1 { 0%,100% { clip: rect(0,9999px,0,0); } 25% { clip: rect(20px,9999px,80px,0); } }
+    @keyframes glitch-2 { 0%,100% { clip: rect(0,9999px,0,0); } 50% { clip: rect(80px,9999px,40px,0); } }
+
+    .tagline {
+      font-size: 1.5rem;
+      margin: 2rem 0;
+      opacity: 0.8;
+      letter-spacing: 6px;
+      animation: fadeIn 2s ease 1s forwards;
+      opacity: 0;
+    }
+
+    /* Neon Buttons */
+    .neon-btn {
+      padding: 1.2rem 3rem;
+      margin: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      background: transparent;
+      border: 2px solid transparent;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      border-radius: 50px;
+      cursor: none;
+      transition: all 0.5s;
+    }
+    .neon-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+      z-index: -1;
+      transition: all 0.5s;
+      filter: blur(10px);
+      opacity: 0;
+    }
+    .neon-btn:hover::before { opacity: 1; }
+    .neon-btn:hover {
+      box-shadow: 0 0 40px var(--neon-cyan);
+      transform: translateY(-5px);
+      border-image: linear-gradient(45deg, #8b00ff, #00f0ff) 1;
+    }
+
+    /* Full-Screen Modal Menu */
+    .menu-btn {
+      position: fixed;
+      top: 30px; right: 30px;
+      width: 70px; height: 70px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(20px);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      z-index: 999;
+      cursor: none;
+      box-shadow: var(--glow);
+    }
+    .menu-btn span {
+      width: 30px; height: 3px;
+      background: var(--neon-cyan);
+      position: relative;
+      transition: 0.5s;
+    }
+    .menu-btn span::before, .menu-btn span::after {
+      content: '';
+      position: absolute;
+      width: 100%; height: 100%;
+      background: inherit;
+      transition: 0.5s;
+    }
+    .menu-btn span::before { top: -10px; }
+    .menu-btn span::after { top: 10px; }
+    .menu-btn.open span { background: transparent; }
+    .menu-btn.open span::before { transform: rotate(45deg) translate(7px,7px); }
+    .menu-btn.open span::after { transform: rotate(-45deg) translate(7px,-7px); }
+
+    .modal-menu {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,30,0.98);
+      backdrop-filter: blur(20px);
+      z-index: 998;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.6s cubic-bezier(0.87, 0, 0.13, 1);
+    }
+    .modal-menu.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-links {
+      list-style: none;
+    }
+    .modal-links li {
+      font-size: 5rem;
+      font-weight: 900;
+      font-family: 'Orbitron';
+      margin: 1rem 0;
+      opacity: 0;
+      transform: translateY(100px);
+      transition: all 0.8s;
+    }
+    .modal-menu.open .modal-links li {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .modal-links a {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--neon-purple);
+      text-stroke: 2px var(--neon-purple);
+      text-decoration: none;
+      transition: all 0.6s;
+    }
+    .modal-links a:hover {
+      color: var(--neon-cyan);
+      -webkit-text-stroke: 2px var(--neon-cyan);
+      text-shadow: 0 0 40px var(--neon-cyan);
+    }
+
+    /* Cards Section */
+    .cards {
+      padding: 10rem 5%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 3rem;
+      position: relative;
+      z-index: 5;
+    }
+    .card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(138,43,226,0.3);
+      border-radius: 30px;
+      padding: 3rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.8s;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(138,43,226,0.3), rgba(0,240,255,0.2));
+      opacity: 0;
+      transition: all 0.8s;
+    }
+    .card:hover::before { opacity: 1; }
+    .card:hover {
+      transform: translateY(-30px) scale(1.05);
+      box-shadow: 0 40px 80px rgba(138,43,226,0.4);
+    }
+    .card h2 {
+      font-family: 'Orbitron';
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    /* Voice Scroll Hint */
+    .voice-hint {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      z-index: 100;
+      animation: pulse 3s infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+
+    @media (max-width: 768px) {
+      .glitch { font-size: 3.5rem; letter-spacing: 4px; }
+      .modal-links li { font-size: 2.5rem; }
+      .cards { padding: 5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 3D Cursor -->
+  <div class="cursor"></div>
+
+  <!-- Particles Background -->
+  <div id="particles"></div>
+
+  <!-- Menu Button -->
+  <div class="menu-btn" id="menuBtn">
+    <span></span>
+  </div>
+
+  <!-- Full Screen Modal Menu -->
+  <div class="modal-menu" id="modalMenu">
+    <ul class="modal-links">
+      <li style="transition-delay: 0.1s"><a href="hotel.html">Hotel</a></li>
+      <li style="transition-delay: 0.2s"><a href="dining.html">Dining</a></li>
+      <li style="transition-delay: 0.3s"><a href="odyssey.html">Odyssey</a></li>
+      <li style="transition-delay: 0.4s"><a href="gallery.html">Gallery</a></li>
+      <li style="transition-delay: 0.5s"><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="blob"></div>
+    <div class="hero-content">
+      <h1 class="glitch">ETERNAL</h1>
+      <p class="tagline">BEYOND LUXURY • BEYOND TIME</p>
+      <div>
+        <button class="neon-btn">ENTER THE VOID</button>
+        <button class="neon-btn">BEGIN ODYSSEY</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <section class="cards">
+    <div class="card">
+      <h2>STAY</h2>
+      <p>Floating sky suites with AI concierge and zero-gravity beds.</p>
+    </div>
+    <div class="card">
+      <h2>DINE</h2>
+      <p>Molecular gastronomy served under holographic stars.</p>
+    </div>
+    <div class="card">
+      <h2>ODYSSEY</h2>
+      <p>Private portals to secret destinations only we know exist.</p>
+    </div>
+  </section>
+
+  <div class="voice-hint">Say "Scroll" or just move your eyes...</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    // Magnetic 3D Cursor
+    const cursor = document.querySelector('.cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+    });
+    document.querySelectorAll('a, button, .card').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.style.transform += ' scale(2)');
+      el.addEventListener('mouseleave', () => cursor.style.transform = cursor.style.transform.replace(' scale(2)', ''));
+    });
+
+    // Particles.js
+    particlesJS('particles', {
+      particles: {
+        number: { value: 80 },
+        color: { value: ['#8b00ff', '#00f0ff', '#ff00aa'] },
+        shape: { type: 'circle' },
+        opacity: { value: 0.6, random: true },
+        size: { value: 3, random: true },
+        line_linked: { enable: true, distance: 150, color: '#8b00ff', opacity: 0.2, width: 1 },
+        move: { enable: true, speed: 2, direction: 'none', random: false, straight: false, out_mode: 'out' }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } }
+      }
+    });
+
+    // Modal Menu
+    const menuBtn = document.getElementById('menuBtn');
+    const modalMenu = document.getElementById('modalMenu');
+    menuBtn.addEventListener('click', () => {
+      menuBtn.classList.toggle('open');
+      modalMenu.classList.toggle('open');
+    });
+
+    // Voice Scroll Hint (Easter egg)
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.continuous = true;
+      recognition.interimResults = false;
+      recognition.onresult = event => {
+        const command = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+        if (command.includes('scroll')) window.scrollBy(0, window.innerHeight);
+      };
+      recognition.start();
+    }
+  </script>
+
+
+<script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+
+
+</body>
+</html>
