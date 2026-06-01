@@ -1,1 +1,4001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHER Studio — Luxury Architectural & Digital Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           CSS RESET & VARIABLES
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        :root {
+            --color-bg: #0d0f12;
+            --color-bg-alt: #13161b;
+            --color-bg-card: #181b22;
+            --color-surface: #1e222b;
+            --color-text: #f0eae1;
+            --color-text-secondary: #c5bbae;
+            --color-text-muted: #8e867b;
+            --color-text-dim: #5c564f;
+            --color-accent: #d9a74a;
+            --color-accent-hover: #f3c267;
+            --color-accent-light: rgba(217, 167, 74, 0.1);
+            --color-accent-glow: rgba(217, 167, 74, 0.2);
+            --color-border: #2a2e37;
+            --color-border-light: #3d4351;
+            --font-primary: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 26px;
+            --radius-full: 9999px;
+            --shadow-sm: 0 4px 20px rgba(0,0,0,0.3);
+            --shadow-md: 0 8px 32px rgba(0,0,0,0.4);
+            --shadow-lg: 0 16px 48px rgba(0,0,0,0.5);
+            --shadow-glow: 0 0 40px rgba(217, 167, 74, 0.15);
+        }
+
+        html {
+            scroll-behavior: auto;
+            background-color: var(--color-bg);
+        }
+
+        html, body {
+            overflow-x: hidden;
+            font-family: var(--font-primary);
+            color: var(--color-text);
+            background: var(--color-bg);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body { position: relative; }
+
+        html.lenis, html.lenis body { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+
+        /* ============================================
+           DYNAMIC PAGE BACKGROUND IMAGES
+           ============================================ */
+        .page-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.05;
+            transition: opacity 0.8s ease, background-image 0.8s ease;
+            filter: contrast(1.2) brightness(0.8);
+        }
+
+        /* ============================================
+           CUSTOM CURSOR
+           ============================================ */
+        .cursor {
+            width: 24px;
+            height: 24px;
+            border: 1.5px solid var(--color-accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hover {
+            transform: scale(2.8);
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .cursor-dot {
+            width: 5px;
+            height: 5px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10001;
+        }
+
+        @media (max-width: 768px) {
+            .cursor, .cursor-dot { display: none !important; }
+        }
+
+        /* ============================================
+           PRELOADER
+           ============================================ */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--color-bg);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .preloader-logo {
+            font-family: var(--font-display);
+            font-size: 3.8rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: var(--color-text);
+            opacity: 0;
+            text-transform: uppercase;
+        }
+
+        .preloader-logo span { color: var(--color-accent); font-family: var(--font-primary); font-size: 1rem; }
+
+        .preloader-bar {
+            width: 240px;
+            height: 1px;
+            background: var(--color-border);
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        .preloader-bar-fill {
+            height: 100%;
+            background: var(--color-accent);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        .preloader-percent {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            font-weight: 600;
+            opacity: 0;
+            letter-spacing: 5px;
+        }
+
+        /* ============================================
+           PAGE TRANSITION
+           ============================================ */
+        .page-transition {
+            position: fixed;
+            inset: 0;
+            z-index: 99998;
+            display: flex;
+            pointer-events: none;
+        }
+
+        .page-transition .col {
+            flex: 1;
+            background: var(--color-bg-alt);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            border-right: 1px solid var(--color-border);
+        }
+
+        /* ============================================
+           NAVIGATION
+           ============================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9990;
+            padding: 24px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .navbar.scrolled {
+            background: rgba(13, 15, 18, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 18px 50px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .nav-logo {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--color-text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-logo span { color: var(--color-accent); font-family: var(--font-primary); font-size: 0.8rem; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+            position: relative;
+            padding: 6px 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--color-accent);
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-links a:hover, .nav-links a.active { color: var(--color-text); }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+        .nav-cta {
+            background: var(--color-accent) !important;
+            color: var(--color-bg) !important;
+            padding: 10px 24px !important;
+            border-radius: var(--radius-full) !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .nav-cta::after { display: none !important; }
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+            background: var(--color-accent-hover) !important;
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 10001;
+        }
+
+        .nav-toggle span {
+            width: 28px;
+            height: 1.5px;
+            background: var(--color-text);
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+        .nav-toggle.active span:nth-child(2) { opacity: 0; }
+        .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+
+        .mobile-menu {
+            position: fixed;
+            inset: 0;
+            background: var(--color-bg);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .mobile-menu.active { opacity: 1; pointer-events: all; }
+
+        .mobile-menu a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: 600;
+            font-family: var(--font-display);
+            transition: color 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .mobile-menu a:hover { color: var(--color-accent); }
+
+        /* ============================================
+           PAGE SYSTEM
+           ============================================ */
+        .page { display: none; min-height: 100vh; }
+        .page.active { display: block; }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 36px;
+            border-radius: var(--radius-full);
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            border: none;
+            font-family: var(--font-primary);
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: var(--color-bg);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
+            background: var(--color-accent-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--color-text);
+            border: 1px solid var(--color-border-light);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            transform: translateY(-3px);
+        }
+
+        .btn-large { padding: 18px 44px; font-size: 0.95rem; }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover svg { transform: translateX(4px); }
+
+        /* ============================================
+           SECTION UTILITIES
+           ============================================ */
+        .section {
+            padding: 140px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: 20px;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--color-accent);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 4.8rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: var(--color-text);
+        }
+
+        .section-title em {
+            font-style: italic;
+            color: var(--color-accent);
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            line-height: 1.8;
+            max-width: 600px;
+        }
+
+        .section-subtitle.centered {
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        /* ============================================
+           REVEAL ANIMATIONS
+           ============================================ */
+        .reveal { opacity: 0; transform: translateY(60px); }
+        .reveal-left { opacity: 0; transform: translateX(-60px); }
+        .reveal-right { opacity: 0; transform: translateX(60px); }
+        .reveal-scale { opacity: 0; transform: scale(0.9); }
+        .stagger-children > * { opacity: 0; transform: translateY(40px); }
+
+        /* ============================================
+           MARQUEE
+           ============================================ */
+        .marquee-section {
+            padding: 40px 0;
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+            overflow: hidden;
+            background: var(--color-bg-alt);
+        }
+
+        .marquee {
+            display: flex;
+            gap: 60px;
+            animation: marquee 25s linear infinite;
+            width: max-content;
+        }
+
+        .marquee-item {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            color: var(--color-text-dim);
+            display: flex;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .marquee-item .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* ============================================
+           MAGIC MODALS (SHARED SYSTEM)
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(13, 15, 18, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 99990;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-container {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            transform: translateY(40px) scale(0.95);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 56px 48px;
+        }
+
+        /* Modal specific variants */
+        .modal-header-img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .modal-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--color-accent-light);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .modal-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 24px 0;
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+            margin: 28px 0;
+        }
+
+        .modal-meta-item h5 {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .modal-meta-item p {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .modal-desc {
+            color: var(--color-text-secondary);
+            line-height: 1.8;
+            margin-bottom: 24px;
+            font-size: 1rem;
+        }
+
+        /* Floating Inquiry Trigger */
+        .floating-trigger {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 9980;
+            padding: 16px 32px;
+            background: var(--color-accent);
+            color: var(--color-bg);
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .floating-trigger:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-glow);
+            background: var(--color-accent-hover);
+        }
+
+        /* ============================================
+           PAGE 1: HOME
+           ============================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 160px 40px 100px;
+            overflow: hidden;
+        }
+
+        .hero-bg-image {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-bg-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.2;
+            filter: brightness(0.6);
+        }
+
+        .hero-bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(217,167,74,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(217,167,74,0.03) 1px, transparent 1px);
+            background-size: 100px 100px;
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+            z-index: 1;
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(140px);
+        }
+
+        .hero-glow-1 {
+            background: var(--color-accent);
+            top: -200px;
+            right: -100px;
+            opacity: 0.08;
+        }
+
+        .hero-glow-2 {
+            background: #4a5d78;
+            bottom: -200px;
+            left: -100px;
+            opacity: 0.05;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1300px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px;
+            background: var(--color-accent-light);
+            border: 1px solid rgba(217, 167, 74, 0.15);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        .hero-badge .pulse {
+            width: 6px;
+            height: 6px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.6); }
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 7.5vw, 7rem);
+            font-weight: 700;
+            line-height: 1.02;
+            margin-bottom: 32px;
+            max-width: 1000px;
+            color: var(--color-text);
+        }
+
+        .hero-title .line { display: block; overflow: hidden; }
+        .hero-title .line span { display: inline-block; }
+        .hero-title em { font-style: italic; color: var(--color-accent); }
+
+        .hero-desc {
+            font-size: 1.2rem;
+            color: var(--color-text-secondary);
+            line-height: 1.8;
+            max-width: 540px;
+            margin-bottom: 48px;
+        }
+
+        .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+
+        .hero-stats {
+            display: flex;
+            gap: 70px;
+            margin-top: 90px;
+            padding-top: 40px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .hero-stat { display: flex; flex-direction: column; gap: 6px; }
+
+        .hero-stat-number {
+            font-family: var(--font-display);
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .hero-stat-label {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hero-scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            color: var(--color-text-dim);
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: scrollBounce 2s ease-in-out infinite;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--color-accent), transparent);
+        }
+
+        @keyframes scrollBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Home Services */
+        .home-services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .service-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: 0;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .service-card-img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--color-border);
+            transition: transform 0.6s ease;
+        }
+
+        .service-card-content {
+            padding: 40px 36px;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-accent-light);
+        }
+
+        .service-card:hover .service-card-img {
+            transform: scale(1.05);
+        }
+
+        .service-card-number {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(13, 15, 18, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            z-index: 2;
+        }
+
+        .service-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .service-card p {
+            color: var(--color-text-muted);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* Work Showcase */
+        .work-showcase {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .work-card {
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            aspect-ratio: 16/10;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+        }
+
+        .work-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .work-card:hover img { transform: scale(1.05); }
+
+        .work-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(13,15,18,0.9) 0%, rgba(13,15,18,0.3) 40%, transparent 70%);
+            padding: 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .work-card:hover .work-card-overlay { opacity: 1; }
+
+        .work-card-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .work-card-title {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        /* Testimonial Preview */
+        .testimonial-preview-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: 56px;
+            position: relative;
+            box-shadow: var(--shadow-md);
+        }
+
+        .testimonial-stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 28px;
+            color: var(--color-accent);
+            font-size: 1.2rem;
+        }
+
+        .testimonial-text {
+            font-size: 1.35rem;
+            line-height: 1.8;
+            margin-bottom: 36px;
+            font-style: italic;
+            color: var(--color-text);
+            font-family: var(--font-display);
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .testimonial-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid var(--color-border);
+        }
+
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .testimonial-name { font-weight: 700; font-size: 1rem; }
+        .testimonial-role { font-size: 0.85rem; color: var(--color-text-muted); }
+
+        .quote-mark {
+            position: absolute;
+            top: 24px;
+            right: 40px;
+            font-family: var(--font-display);
+            font-size: 7rem;
+            color: var(--color-accent);
+            opacity: 0.08;
+            line-height: 1;
+        }
+
+        .home-cta {
+            padding: 140px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .home-cta-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .home-cta-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.15;
+            filter: brightness(0.5);
+        }
+
+        .home-cta .container { position: relative; z-index: 1; }
+
+        .home-cta .section-title {
+            font-size: clamp(2.8rem, 6vw, 5.5rem);
+            max-width: 900px;
+            margin: 0 auto 32px;
+        }
+
+        /* ============================================
+           PAGE 2: ABOUT
+           ============================================ */
+        .about-hero {
+            padding: 200px 40px 100px;
+            position: relative;
+        }
+
+        .about-hero-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .about-image-wrapper {
+            position: relative;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            aspect-ratio: 4/5;
+            border: 1px solid var(--color-border);
+        }
+
+        .about-image-accent {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 200px;
+            height: 200px;
+            border: 2px solid var(--color-accent);
+            border-radius: var(--radius-xl);
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .about-values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .value-card {
+            padding: 48px 36px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            background: var(--color-bg-card);
+            transition: all 0.4s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-accent-light);
+        }
+
+        .value-number {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            opacity: 0.2;
+            margin-bottom: 20px;
+        }
+
+        .value-card h3 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; margin-bottom: 12px; }
+        .value-card p { color: var(--color-text-muted); line-height: 1.7; font-size: 0.95rem; }
+
+        .timeline { position: relative; padding-left: 60px; }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--color-border);
+        }
+
+        .timeline-item { position: relative; padding-bottom: 60px; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -64px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            border: 3px solid var(--color-bg);
+        }
+
+        .timeline-year {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 8px;
+        }
+
+        .timeline-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
+        .timeline-desc { color: var(--color-text-muted); line-height: 1.7; font-size: 0.95rem; }
+
+        .stats-banner {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            padding: 80px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 48px 28px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            background: var(--color-bg-card);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 3.8rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* ============================================
+           PAGE 3: SERVICES
+           ============================================ */
+        .services-hero {
+            padding: 200px 40px 80px;
+            text-align: center;
+            position: relative;
+        }
+
+        .service-detail-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 70px;
+            align-items: center;
+            padding: 70px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            background: var(--color-bg-card);
+            margin-bottom: 40px;
+            transition: all 0.5s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .service-detail-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+            border-color: var(--color-border-light);
+        }
+
+        .service-detail-card:nth-child(even) { direction: rtl; }
+        .service-detail-card:nth-child(even) > * { direction: ltr; }
+
+        .service-detail-num {
+            font-family: var(--font-display);
+            font-size: 6rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            opacity: 0.1;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .service-detail-card h3 {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .service-detail-card p {
+            color: var(--color-text-muted);
+            line-height: 1.8;
+            margin-bottom: 28px;
+            font-size: 1.05rem;
+        }
+
+        .service-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .service-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .service-features li::before {
+            content: '✓';
+            color: var(--color-accent);
+            font-weight: 700;
+            font-size: 0.85rem;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-accent-light);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .service-visual {
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            aspect-ratio: 1;
+            border: 1px solid var(--color-border);
+        }
+
+        .service-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .pricing-card {
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: 56px 40px;
+            background: var(--color-bg-card);
+            position: relative;
+            transition: all 0.5s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--color-accent);
+            box-shadow: var(--shadow-md);
+            background: linear-gradient(145deg, var(--color-bg-card), #1b1f28);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-accent);
+            color: var(--color-bg);
+            padding: 8px 24px;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .pricing-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .pricing-price {
+            font-family: var(--font-display);
+            font-size: 3.8rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--color-accent);
+        }
+
+        .pricing-period { font-size: 0.9rem; color: var(--color-text-dim); margin-bottom: 32px; }
+
+        .pricing-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.92rem;
+            color: var(--color-text-secondary);
+        }
+
+        .pricing-features li .check {
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        /* ============================================
+           PAGE 4: PORTFOLIO
+           ============================================ */
+        .portfolio-hero {
+            padding: 200px 40px 60px;
+            text-align: center;
+        }
+
+        .portfolio-filter {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 12px 28px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-full);
+            background: transparent;
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-primary);
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--color-accent);
+            color: var(--color-bg);
+            border-color: var(--color-accent);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .portfolio-item {
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            aspect-ratio: 1;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .portfolio-item:hover img { transform: scale(1.06); }
+
+        .portfolio-item-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 36px;
+            background: linear-gradient(to top, rgba(13,15,18,0.95), transparent);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .portfolio-item:hover .portfolio-item-info {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .portfolio-item-info span {
+            font-size: 0.75rem;
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .portfolio-item-info h4 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-top: 6px;
+        }
+
+        .featured-work {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 60px;
+            align-items: center;
+            padding: 80px 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .featured-work:nth-child(even) { grid-template-columns: 1fr 1.2fr; }
+        .featured-work:nth-child(even) .featured-work-img { order: 2; }
+
+        .featured-work-img {
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            aspect-ratio: 16/10;
+            border: 1px solid var(--color-border);
+        }
+
+        .featured-work-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        .featured-work-tag {
+            font-size: 0.8rem;
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .featured-work h3 {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .featured-work p {
+            color: var(--color-text-muted);
+            line-height: 1.8;
+            margin-bottom: 28px;
+            font-size: 1rem;
+        }
+
+        /* ============================================
+           PAGE 5: PROCESS
+           ============================================ */
+        .process-hero {
+            padding: 200px 40px 80px;
+            text-align: center;
+        }
+
+        .process-steps { counter-reset: process; }
+
+        .process-step {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 50px;
+            padding: 70px 0;
+            border-bottom: 1px solid var(--color-border);
+            align-items: start;
+        }
+
+        .process-step-num {
+            counter-increment: process;
+            font-family: var(--font-display);
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            opacity: 0.15;
+            line-height: 1;
+        }
+
+        .process-step h3 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; margin-bottom: 14px; }
+
+        .process-step p {
+            color: var(--color-text-muted);
+            line-height: 1.8;
+            font-size: 1.05rem;
+            max-width: 680px;
+        }
+
+        .process-step-visual {
+            margin-top: 24px;
+            padding: 24px 32px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .process-tag {
+            padding: 8px 20px;
+            background: var(--color-surface);
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            color: var(--color-accent);
+            font-weight: 600;
+            border: 1px solid var(--color-border);
+        }
+
+        .faq-list { max-width: 800px; margin: 0 auto; }
+
+        .faq-item {
+            border-bottom: 1px solid var(--color-border);
+            padding: 28px 0;
+        }
+
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--color-text);
+            transition: color 0.3s ease;
+        }
+
+        .faq-question:hover { color: var(--color-accent); }
+
+        .faq-icon {
+            font-size: 1.5rem;
+            color: var(--color-accent);
+            transition: transform 0.3s ease;
+            font-weight: 300;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .faq-item.open .faq-answer { max-height: 300px; padding-top: 16px; }
+        .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+        .faq-answer p {
+            color: var(--color-text-muted);
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        /* ============================================
+           PAGE 6: TEAM
+           ============================================ */
+        .team-hero {
+            padding: 200px 40px 80px;
+            text-align: center;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .team-card {
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            background: var(--color-bg-card);
+            transition: all 0.5s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .team-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-border-light);
+        }
+
+        .team-card-img {
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .team-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .team-card:hover .team-card-img img { transform: scale(1.05); }
+
+        .team-card-info { padding: 28px; text-align: center; }
+
+        .team-card-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+
+        .team-card-role {
+            font-size: 0.85rem;
+            color: var(--color-accent);
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        .team-socials { display: flex; justify-content: center; gap: 12px; }
+
+        .team-social-link {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            background: var(--color-surface);
+        }
+
+        .team-social-link:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            background: var(--color-accent-light);
+        }
+
+        /* ============================================
+           PAGE 7: CAREERS (NEW 10th PAGE)
+           ============================================ */
+        .careers-hero {
+            padding: 200px 40px 80px;
+            text-align: center;
+        }
+
+        .careers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+            align-items: center;
+        }
+
+        .perks-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .perk-card {
+            padding: 36px 28px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+        }
+
+        .perk-card h4 { font-size: 1.1rem; font-weight: 700; color: var(--color-accent); margin-bottom: 10px; }
+        .perk-card p { font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.7; }
+
+        .job-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .job-row {
+            border-bottom: 1px solid var(--color-border);
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        .job-row:hover {
+            background: var(--color-bg-card);
+        }
+
+        .job-row td {
+            padding: 36px 20px;
+        }
+
+        .job-title { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--color-text); }
+        .job-dept { font-size: 0.85rem; color: var(--color-accent); text-transform: uppercase; letter-spacing: 2px; }
+        .job-location { font-size: 0.95rem; color: var(--color-text-muted); }
+        .job-cta { text-align: right; font-weight: 600; color: var(--color-accent); }
+
+        /* ============================================
+           PAGE 8: TESTIMONIALS
+           ============================================ */
+        .testimonials-hero {
+            padding: 200px 40px 80px;
+            text-align: center;
+        }
+
+        .testimonial-large {
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: 64px;
+            background: var(--color-bg-card);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .testimonial-large::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            font-family: var(--font-display);
+            font-size: 8rem;
+            color: var(--color-accent);
+            opacity: 0.1;
+            line-height: 1;
+        }
+
+        .testimonial-large .stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            font-size: 1.2rem;
+            color: var(--color-accent);
+        }
+
+        .testimonial-large .text {
+            font-size: 1.6rem;
+            line-height: 1.8;
+            margin-bottom: 32px;
+            font-family: var(--font-display);
+            font-style: italic;
+            max-width: 800px;
+            color: var(--color-text);
+        }
+
+        .testimonial-large .author {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .testimonial-large .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid var(--color-border);
+        }
+
+        .testimonial-large .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .testimonial-large .name { font-weight: 700; font-size: 1.05rem; }
+        .testimonial-large .role { color: var(--color-text-muted); font-size: 0.85rem; }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .testimonial-card {
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: 36px;
+            background: var(--color-bg-card);
+            transition: all 0.4s ease;
+            box-shadow: var(--shadow-xs);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-border-light);
+        }
+
+        .testimonial-card .stars {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 16px;
+            color: var(--color-accent);
+            font-size: 1rem;
+        }
+
+        .testimonial-card .text {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--color-text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .testimonial-card .author { display: flex; align-items: center; gap: 14px; }
+
+        .testimonial-card .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid var(--color-border);
+        }
+
+        .testimonial-card .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .testimonial-card .name { font-weight: 700; font-size: 0.9rem; }
+        .testimonial-card .role { font-size: 0.8rem; color: var(--color-text-muted); }
+
+        /* ============================================
+           PAGE 9: BLOG
+           ============================================ */
+        .blog-hero {
+            padding: 200px 40px 80px;
+            text-align: center;
+        }
+
+        .blog-featured {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 50px;
+            padding: 60px 0;
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: 60px;
+            align-items: center;
+        }
+
+        .blog-featured-img {
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            aspect-ratio: 16/10;
+            border: 1px solid var(--color-border);
+        }
+
+        .blog-featured-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        .blog-featured-content { display: flex; flex-direction: column; justify-content: center; }
+
+        .blog-tag {
+            display: inline-flex;
+            padding: 6px 16px;
+            background: var(--color-accent-light);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            color: var(--color-accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .blog-featured-content h2 {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.25;
+        }
+
+        .blog-featured-content p {
+            color: var(--color-text-muted);
+            line-height: 1.8;
+            margin-bottom: 24px;
+            font-size: 1rem;
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.85rem;
+            color: var(--color-text-dim);
+        }
+
+        .blog-meta .author { color: var(--color-text-secondary); font-weight: 600; }
+
+        .blog-meta .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--color-text-dim);
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .blog-card {
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            background: var(--color-bg-card);
+            transition: all 0.5s ease;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-border-light);
+        }
+
+        .blog-card-img {
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .blog-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .blog-card:hover .blog-card-img img { transform: scale(1.05); }
+
+        .blog-card-content { padding: 32px; }
+
+        .blog-card-content .tag {
+            font-size: 0.72rem;
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .blog-card-content h3 {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.35;
+            transition: color 0.3s ease;
+        }
+
+        .blog-card:hover .blog-card-content h3 { color: var(--color-accent); }
+
+        .blog-card-content p {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+
+        .blog-card-content .date { font-size: 0.8rem; color: var(--color-text-dim); }
+
+        /* ============================================
+           PAGE 10: CONTACT
+           ============================================ */
+        .contact-hero {
+            padding: 200px 40px 80px;
+            text-align: center;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 60px;
+        }
+
+        .contact-info { display: flex; flex-direction: column; gap: 24px; }
+
+        .contact-info-card {
+            padding: 36px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            background: var(--color-bg-card);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .contact-info-card h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-accent);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .contact-info-card p { color: var(--color-text-muted); line-height: 1.8; font-size: 0.95rem; }
+
+        .contact-info-card a {
+            color: var(--color-text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info-card a:hover { color: var(--color-accent); }
+
+        .contact-form-wrapper {
+            padding: 56px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            background: var(--color-bg-card);
+            box-shadow: var(--shadow-md);
+        }
+
+        .form-group { margin-bottom: 24px; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text);
+            font-family: var(--font-primary);
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 2px var(--color-accent-light);
+        }
+
+        .form-group textarea { min-height: 140px; resize: vertical; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 18px;
+            background: var(--color-accent);
+            color: var(--color-bg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: var(--font-primary);
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .form-submit:hover {
+            background: var(--color-accent-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .map-section {
+            margin-top: 60px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            height: 420px;
+            background: var(--color-surface);
+        }
+
+        .map-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.1) brightness(0.8);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            border-top: 1px solid var(--color-border);
+            padding: 90px 40px 40px;
+            background: var(--color-bg-alt);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand { max-width: 320px; }
+
+        .footer-logo {
+            font-family: var(--font-display);
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-logo span { color: var(--color-accent); font-family: var(--font-primary); font-size: 0.85rem; }
+
+        .footer-brand p {
+            color: var(--color-text-muted);
+            line-height: 1.8;
+            font-size: 0.9rem;
+        }
+
+        .footer-column h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .footer-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover { color: var(--color-accent); }
+
+        .footer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 32px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .footer-bottom p { color: var(--color-text-dim); font-size: 0.85rem; }
+
+        .footer-socials { display: flex; gap: 14px; }
+
+        .footer-social-link {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--color-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: var(--color-surface);
+        }
+
+        .footer-social-link:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            background: var(--color-accent-light);
+        }
+
+/* ============================================
+📱 COMPLETE MOBILE RESPONSIVE SYSTEM (ALL PAGES)
+============================================ */
+
+/* 1. Base Mobile Fixes (iOS & Touch) */
+@media (max-width: 768px) {
+  /* Prevent Horizontal Scroll & Zoom Issues */
+  html, body { overflow-x: hidden; width: 100%; -webkit-text-size-adjust: 100%; }
+  
+  /* Fix iOS Input Zoom */
+  input, textarea, select, button, .filter-btn {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+  
+  /* Hide Custom Cursor */
+  .cursor, .cursor-dot { display: none !important; }
+
+  /* Navigation Mobile */
+  .nav-links { display: none !important; }
+  .nav-toggle { display: flex !important; }
+  .navbar { padding: 16px 20px; background: rgba(13, 15, 18, 0.95); backdrop-filter: blur(12px); }
+  .mobile-menu { padding: 100px 20px 40px; }
+  .mobile-menu a { font-size: 1.5rem; padding: 12px 0; }
+
+  /* General Spacing */
+  .section { padding: 60px 20px !important; }
+  .container { max-width: 100%; padding: 0; }
+
+  /* Typography Scaling */
+  .hero-title { font-size: clamp(2.2rem, 9vw, 3.5rem) !important; line-height: 1.1 !important; }
+  .section-title { font-size: clamp(1.8rem, 7vw, 2.8rem) !important; }
+  .section-subtitle { font-size: 1rem !important; max-width: 100% !important; }
+  .hero-desc { font-size: 1rem !important; max-width: 100% !important; }
+  .hero-badge { font-size: 0.7rem !important; padding: 6px 14px !important; margin-bottom: 24px !important; }
+
+  /* Hero Section Adjustments */
+  .hero, .about-hero, .services-hero, .portfolio-hero, .process-hero, 
+  .team-hero, .careers-hero, .testimonials-hero, .blog-hero, .contact-hero {
+    padding: 120px 20px 60px !important;
+    min-height: 90dvh;
+  }
+  .home-cta { padding: 80px 20px; }
+
+  /* Hero Buttons & Stats */
+  .hero-buttons { flex-direction: column !important; width: 100% !important; gap: 12px !important; }
+  .hero-buttons .btn { width: 100% !important; justify-content: center !important; padding: 14px 24px !important; }
+  .hero-stats { flex-direction: column !important; gap: 16px !important; align-items: flex-start !important; border-top: none !important; padding-top: 20px !important; margin-top: 40px !important; }
+  .hero-stat { flex-direction: row !important; justify-content: space-between !important; width: 100% !important; padding: 8px 0 !important; border-bottom: 1px solid var(--color-border) !important; }
+  .hero-stat-number { font-size: 2rem !important; }
+  .hero-scroll-indicator { display: none !important; }
+
+  /* Grids & Layouts (Forced Single Column) */
+  .home-services-grid, .pricing-grid, .testimonial-grid, .testimonial-grid-large,
+  .blog-grid, .portfolio-grid, .about-values-grid, .team-grid, .perks-grid, .work-showcase,
+  .footer-grid, .stats-banner {
+    grid-template-columns: 1fr !important; gap: 20px !important;
+  }
+  .stats-banner { padding: 40px 0 !important; }
+  .stat-item { padding: 32px 24px !important; }
+  .stat-number { font-size: 2.8rem !important; }
+
+  /* Split Layouts (Stacking) */
+  .about-hero-grid, .service-detail-card, .contact-grid, .careers-grid, 
+  .featured-work, .blog-featured {
+    display: flex !important; flex-direction: column !important; gap: 30px !important;
+  }
+  /* Fix inline styles from HTML */
+  div[style*="grid-template-columns:1fr 1fr"], div[style*="grid-template-columns: 1fr 1fr"] { 
+    grid-template-columns: 1fr !important; display: grid !important; gap: 30px !important; 
+  }
+
+  /* Service Details & Features */
+  .service-detail-card { padding: 24px !important; }
+  .service-detail-card:nth-child(even) { flex-direction: column-reverse !important; direction: ltr !important; }
+  .service-detail-num { font-size: 3rem !important; opacity: 0.15 !important; margin-bottom: 10px !important; }
+  .service-visual { width: 100% !important; aspect-ratio: 16/10 !important; }
+
+  /* Modals (Fix Scrolling & Sizing) */
+  .modal-overlay { 
+    align-items: flex-start !important; padding: 16px !important; height: 100dvh !important; overflow-y: auto !important; 
+  }
+  .modal-container { 
+    max-width: 100% !important; margin: 40px 0 20px !important; max-height: 85dvh !important; overflow-y: auto !important; 
+    transform: translateY(0) scale(1) !important; border-radius: var(--radius-md) !important; 
+  }
+  .modal-header-img { height: 180px !important; }
+  .modal-title { font-size: 1.6rem !important; }
+  .modal-meta-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .modal-body { padding: 24px 16px !important; }
+  .modal-close { top: 12px !important; right: 12px !important; width: 36px !important; height: 36px !important; }
+
+  /* Forms (Contact) */
+  .form-row { grid-template-columns: 1fr !important; gap: 0 !important; }
+  .contact-form-wrapper { padding: 24px !important; }
+  .contact-info { gap: 16px !important; }
+  .contact-info-card { padding: 24px !important; }
+
+  /* Tables (Careers) → Converted to Cards */
+  .job-table { display: block !important; }
+  .job-row { 
+    display: flex !important; flex-direction: column !important; gap: 10px !important;
+    padding: 20px !important; margin-bottom: 16px !important; 
+    border: 1px solid var(--color-border) !important; border-radius: var(--radius-md) !important; 
+    background: var(--color-bg-card) !important;
+  }
+  .job-row td { padding: 0 !important; text-align: left !important; display: block !important; }
+  .job-cta { margin-top: 8px !important; padding-top: 8px !important; border-top: 1px solid var(--color-border) !important; text-align: left !important; width: 100% !important; }
+
+  /* Process & Timeline */
+  .process-step { grid-template-columns: 1fr !important; gap: 16px !important; padding: 30px 0 !important; }
+  .process-step-num { font-size: 3rem !important; opacity: 0.3 !important; }
+  .process-step p { max-width: 100% !important; }
+  .timeline { padding-left: 24px !important; }
+  .timeline-item { padding-bottom: 40px !important; }
+  .timeline-item::before { left: -28px !important; width: 10px !important; height: 10px !important; }
+
+  /* Global Buttons */
+  .btn { padding: 12px 24px !important; font-size: 0.85rem !important; width: 100% !important; justify-content: center !important; }
+  .btn-outline, .btn-primary { margin-bottom: 8px !important; }
+
+  /* Floating Trigger (Safe Area) */
+  .floating-trigger {
+    bottom: 16px !important; left: 16px !important; right: 16px !important; width: calc(100% - 32px) !important;
+    justify-content: center !important; padding: 14px !important; font-size: 0.9rem !important; z-index: 9980 !important;
+  }
+
+  /* Footer */
+  .footer { padding: 60px 20px 30px !important; }
+  .footer-bottom { flex-direction: column !important; gap: 16px !important; text-align: center !important; }
+  .map-section { height: 280px !important; }
+}
+
+/* 2. Small Mobile Tweaks */
+@media (max-width: 380px) {
+  .hero { padding-top: 100px !important; }
+  .modal-header-img { height: 140px !important; }
+}
+    </style>
+</head>
+<body>
+
+    <!-- Page Background -->
+    <div class="page-bg" id="page-bg" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80');"></div>
+
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-logo">AETHER<span>.</span></div>
+        <div class="preloader-bar"><div class="preloader-bar-fill" id="preloader-fill"></div></div>
+        <div class="preloader-percent" id="preloader-percent">0%</div>
+    </div>
+
+    <!-- Page Transition -->
+    <div class="page-transition" id="page-transition">
+        <div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+
+    <!-- Floating Inquiry Trigger -->
+    <div class="floating-trigger" id="inquiry-trigger">
+        ✨ Let's Talk
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <a href="#" class="nav-logo" data-page="home">AETHER<span>.</span></a>
+        <ul class="nav-links">
+            <li><a href="#" data-page="home" class="active">Home</a></li>
+            <li><a href="#" data-page="about">About</a></li>
+            <li><a href="#" data-page="services">Services</a></li>
+            <li><a href="#" data-page="portfolio">Portfolio</a></li>
+            <li><a href="#" data-page="process">Process</a></li>
+            <li><a href="#" data-page="team">Team</a></li>
+            <li><a href="#" data-page="careers">Careers</a></li>
+            <li><a href="#" data-page="testimonials">Reviews</a></li>
+            <li><a href="#" data-page="blog">Blog</a></li>
+            <li><a href="#" data-page="contact" class="nav-cta">Contact</a></li>
+        </ul>
+        <div class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="#" data-page="home">Home</a>
+        <a href="#" data-page="about">About</a>
+        <a href="#" data-page="services">Services</a>
+        <a href="#" data-page="portfolio">Portfolio</a>
+        <a href="#" data-page="process">Process</a>
+        <a href="#" data-page="team">Team</a>
+        <a href="#" data-page="careers">Careers</a>
+        <a href="#" data-page="testimonials">Reviews</a>
+        <a href="#" data-page="blog">Blog</a>
+        <a href="#" data-page="contact">Contact</a>
+    </div>
+
+    <!-- ============================================
+         MAGIC MODAL SYSTEM (DYNAMIC CONTENT)
+         ============================================ -->
+    <div class="modal-overlay" id="magic-modal">
+        <div class="modal-container">
+            <button class="modal-close" id="modal-close">✕</button>
+            <div id="modal-dynamic-content">
+                <!-- Injected via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         PAGE 1: HOME
+         ============================================ -->
+    <div class="page active" id="page-home">
+        <section class="hero">
+            <div class="hero-bg-image">
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80" alt="Villa">
+            </div>
+            <div class="hero-bg-grid"></div>
+            <div class="hero-glow hero-glow-1"></div>
+            <div class="hero-glow hero-glow-2"></div>
+            <div class="hero-content">
+                <div class="hero-badge reveal">
+                    <span class="pulse"></span> Bespoke Architectural & Digital Design
+                </div>
+                <h1 class="hero-title">
+                    <span class="line"><span>We craft</span></span>
+                    <span class="line"><span><em>monumental</em> spaces</span></span>
+                    <span class="line"><span>& digital identities.</span></span>
+                </h1>
+                <p class="hero-desc reveal">An elite design maison blending architectural rigor with immersive digital experiences for ultra-luxury brands worldwide.</p>
+                <div class="hero-buttons reveal">
+                    <a href="#" class="btn btn-primary btn-large" data-page="portfolio">Explore Our Work <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    <a href="#" class="btn btn-outline btn-large" data-page="contact">Request a Commission</a>
+                </div>
+                <div class="hero-stats reveal">
+                    <div class="hero-stat"><div class="hero-stat-number">$1.2B</div><div class="hero-stat-label">Real Estate Value</div></div>
+                    <div class="hero-stat"><div class="hero-stat-number">120+</div><div class="hero-stat-label">Global Commissions</div></div>
+                    <div class="hero-stat"><div class="hero-stat-number">38</div><div class="hero-stat-label">Design Excellence Awards</div></div>
+                    <div class="hero-stat"><div class="hero-stat-number">100%</div><div class="hero-stat-label">Discretion & Privacy</div></div>
+                </div>
+            </div>
+            <div class="hero-scroll-indicator"><span>Scroll</span><div class="scroll-line"></div></div>
+        </section>
+
+        <!-- Marquee -->
+        <div class="marquee-section">
+            <div class="marquee">
+                <div class="marquee-item">Luxury Architecture <span class="dot"></span></div>
+                <div class="marquee-item">Immersive Digital <span class="dot"></span></div>
+                <div class="marquee-item">Interior Curation <span class="dot"></span></div>
+                <div class="marquee-item">Brand Identity <span class="dot"></span></div>
+                <div class="marquee-item">3D Visualizations <span class="dot"></span></div>
+                <div class="marquee-item">High-End Development <span class="dot"></span></div>
+                <div class="marquee-item">Luxury Architecture <span class="dot"></span></div>
+                <div class="marquee-item">Immersive Digital <span class="dot"></span></div>
+                <div class="marquee-item">Interior Curation <span class="dot"></span></div>
+                <div class="marquee-item">Brand Identity <span class="dot"></span></div>
+                <div class="marquee-item">3D Visualizations <span class="dot"></span></div>
+                <div class="marquee-item">High-End Development <span class="dot"></span></div>
+            </div>
+        </div>
+
+        <!-- Services Preview -->
+        <section class="section">
+            <div class="container">
+                <div class="reveal">
+                    <div class="section-label">Our Disciplines</div>
+                    <h2 class="section-title">Harmonizing physical<br><em>elegance</em> & digital depth</h2>
+                    <p class="section-subtitle">We seamlessly merge spatial aesthetics with high-performance digital environments.</p>
+                </div>
+                <div style="height:50px;"></div>
+                <div class="home-services-grid stagger-children">
+                    <div class="service-card" data-modal="service-arch">
+                        <div class="service-card-number">01</div>
+                        <img class="service-card-img" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop" alt="Architecture">
+                        <div class="service-card-content">
+                            <h3>Architecture</h3>
+                            <p>Masterful residential and commercial developments engineered for generational legacy.</p>
+                        </div>
+                    </div>
+                    <div class="service-card" data-modal="service-digital">
+                        <div class="service-card-number">02</div>
+                        <img class="service-card-img" src="https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&h=400&fit=crop" alt="Digital Design">
+                        <div class="service-card-content">
+                            <h3>Digital Design</h3>
+                            <p>Award-winning websites and digital portals crafted with exquisite UI/UX precision.</p>
+                        </div>
+                    </div>
+                    <div class="service-card" data-modal="service-brand">
+                        <div class="service-card-number">03</div>
+                        <img class="service-card-img" src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&h=400&fit=crop" alt="Branding">
+                        <div class="service-card-content">
+                            <h3>Brand Identity</h3>
+                            <p>Sophisticated visual identities that establish immediate authority and brand prestige.</p>
+                        </div>
+                    </div>
+                    <div class="service-card" data-modal="service-interior">
+                        <div class="service-card-number">04</div>
+                        <img class="service-card-img" src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&h=400&fit=crop" alt="Interior">
+                        <div class="service-card-content">
+                            <h3>Interior Curation</h3>
+                            <p>Bespoke interior design and furniture sourcing for uncompromising luxury living.</p>
+                        </div>
+                    </div>
+                    <div class="service-card" data-modal="service-3d">
+                        <div class="service-card-number">05</div>
+                        <img class="service-card-img" src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600&h=400&fit=crop" alt="3D">
+                        <div class="service-card-content">
+                            <h3>3D Visualizations</h3>
+                            <p>Hyper-realistic architectural renderings and immersive virtual real estate walkthroughs.</p>
+                        </div>
+                    </div>
+                    <div class="service-card" data-modal="service-dev">
+                        <div class="service-card-number">06</div>
+                        <img class="service-card-img" src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=400&fit=crop" alt="Development">
+                        <div class="service-card-content">
+                            <h3>Web Engineering</h3>
+                            <p>High-end full-stack development ensuring blazing speed, security, and flawless execution.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Work -->
+        <section class="section" style="padding-top:40px;">
+            <div class="container">
+                <div class="reveal" style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:50px;flex-wrap:wrap;gap:20px;">
+                    <div>
+                        <div class="section-label">Selected Commissions</div>
+                        <h2 class="section-title">Featured <em>masterpieces</em></h2>
+                    </div>
+                    <a href="#" class="btn btn-outline" data-page="portfolio">View Entire Portfolio <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                </div>
+                <div class="work-showcase stagger-children">
+                    <div class="work-card" data-project="project-1">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=500&fit=crop" alt="Villa Aether">
+                        <div class="work-card-overlay"><div class="work-card-tag">Architecture + Interior</div><div class="work-card-title">Villa Aether, Lake Como</div></div>
+                    </div>
+                    <div class="work-card" data-project="project-2">
+                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=500&fit=crop" alt="Elysium Residences">
+                        <div class="work-card-overlay"><div class="work-card-tag">Branding + Web Platform</div><div class="work-card-title">Elysium Private Residences</div></div>
+                    </div>
+                    <div class="work-card" data-project="project-3">
+                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&h=500&fit=crop" alt="Axiom Tower">
+                        <div class="work-card-overlay"><div class="work-card-tag">3D Visualizations</div><div class="work-card-title">Axiom Tower, Dubai</div></div>
+                    </div>
+                    <div class="work-card" data-project="project-4">
+                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop" alt="Chalet Noir">
+                        <div class="work-card-overlay"><div class="work-card-tag">Full Commission</div><div class="work-card-title">Chalet Noir, Gstaad</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonial Preview -->
+        <section class="section">
+            <div class="container">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+                    <div class="reveal-left">
+                        <div class="section-label">Patron Accolades</div>
+                        <h2 class="section-title">What our patrons <em>say</em></h2>
+                        <p class="section-subtitle">We serve family offices, ultra-high-net-worth individuals, and elite luxury corporations worldwide.</p>
+                        <div style="height:30px;"></div>
+                        <a href="#" class="btn btn-outline" data-page="testimonials">All Testimonials <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    </div>
+                    <div class="reveal-right">
+                        <div class="testimonial-preview-card">
+                            <div class="quote-mark">"</div>
+                            <div class="testimonial-stars">★★★★★</div>
+                            <p class="testimonial-text">"AETHER delivered a property and digital identity that perfectly reflects the uncompromising standard of our portfolio. Phenomenal execution."</p>
+                            <div class="testimonial-author">
+                                <div class="testimonial-avatar"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="Lord Alistair"></div>
+                                <div>
+                                    <div class="testimonial-name">Lord Alistair Sterling</div>
+                                    <div class="testimonial-role">Principal, Sterling Family Office</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="home-cta">
+            <div class="home-cta-bg"><img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=1920&q=80" alt="Interior"></div>
+            <div class="container reveal">
+                <h2 class="section-title">Ready to realize your next <em>vision</em>?</h2>
+                <p class="section-subtitle centered">Contact our principal architects and digital directors to commence an exploratory consultation.</p>
+                <div style="height:36px;"></div>
+                <a href="#" class="btn btn-primary btn-large" data-page="contact">Commence Consultation <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================
+         PAGE 2: ABOUT
+         ============================================ -->
+    <div class="page" id="page-about">
+        <section class="about-hero">
+            <div class="container">
+                <div class="about-hero-grid">
+                    <div class="reveal-left">
+                        <div class="section-label">Maison Philosophy</div>
+                        <h1 class="section-title">Designing for <em>eternity</em></h1>
+                        <p class="section-subtitle" style="max-width:100%;">AETHER Studio was founded in 2010 on a singular premise: that true luxury is defined by timelessness, architectural precision, and sublime emotional resonance.</p>
+                        <p style="color:var(--color-text-muted);line-height:1.8;margin-top:20px;max-width:540px;">We reject disposable trends. Whether crafting a monolithic concrete estate or a bespoke digital platform, we engineer experiences intended to captivate for generations.</p>
+                    </div>
+                    <div class="about-image-wrapper reveal-right">
+                        <img src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=600&h=750&fit=crop" alt="Architecture Structure" style="width:100%;height:100%;object-fit:cover;">
+                        <div class="about-image-accent"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="marquee-section">
+            <div class="marquee">
+                <div class="marquee-item">Uncompromising Rigor <span class="dot"></span></div>
+                <div class="marquee-item">Architectural Form <span class="dot"></span></div>
+                <div class="marquee-item">Digital Exquisiteness <span class="dot"></span></div>
+                <div class="marquee-item">Elite Discretion <span class="dot"></span></div>
+                <div class="marquee-item">Uncompromising Rigor <span class="dot"></span></div>
+                <div class="marquee-item">Architectural Form <span class="dot"></span></div>
+                <div class="marquee-item">Digital Exquisiteness <span class="dot"></span></div>
+                <div class="marquee-item">Elite Discretion <span class="dot"></span></div>
+            </div>
+        </div>
+
+        <section class="section">
+            <div class="container">
+                <div class="reveal" style="text-align:center;margin-bottom:60px;">
+                    <div class="section-label" style="justify-content:center;">Maison Creeds</div>
+                    <h2 class="section-title">The pillars of our <em>practice</em></h2>
+                </div>
+                <div class="about-values-grid stagger-children">
+                    <div class="value-card"><div class="value-number">01</div><h3>Structural Integrity</h3><p>We approach digital engineering with the same structural gravity as physical skyscraper development.</p></div>
+                    <div class="value-card"><div class="value-number">02</div><h3>Sublime Materiality</h3><p>Every texture, color palette, and micro-interaction is curated to evoke profound tactile satisfaction.</p></div>
+                    <div class="value-card"><div class="value-number">03</div><h3>Spatial Harmony</h3><p>We balance whitespace, typography, and negative space to create breathing room for ultra-luxury brands.</p></div>
+                    <div class="value-card"><div class="value-number">04</div><h3>Elite Privacy</h3><p>We maintain strict NDAs and absolute confidentiality for our patron roster of global luminaries.</p></div>
+                    <div class="value-card"><div class="value-number">05</div><h3>Generational Longevity</h3><p>Our codebases and architectural plans are future-proofed to resist technological and stylistic decay.</p></div>
+                    <div class="value-card"><div class="value-number">06</div><h3>Artisanal Obsession</h3><p>We believe perfection is achieved not when nothing more can be added, but when nothing can be taken away.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;">
+                    <div class="reveal-left">
+                        <div class="section-label">Maison Chronology</div>
+                        <h2 class="section-title">A decade of <em>prestige</em></h2>
+                        <p class="section-subtitle">From an elite European architectural guild to a global multidisciplinary powerhouse.</p>
+                    </div>
+                    <div class="reveal-right">
+                        <div class="timeline">
+                            <div class="timeline-item"><div class="timeline-year">2010</div><div class="timeline-title">Foundation in Milan</div><div class="timeline-desc">Established as a boutique architectural visualization and design studio by three master architects.</div></div>
+                            <div class="timeline-item"><div class="timeline-year">2014</div><div class="timeline-title">The Digital Expansion</div><div class="timeline-desc">Integrated elite software engineers to provide end-to-end luxury brand digital portals.</div></div>
+                            <div class="timeline-item"><div class="timeline-year">2018</div><div class="timeline-title">Global Maison Status</div><div class="timeline-desc">Opened permanent ateliers in Geneva, New York, and Tokyo to serve international family offices.</div></div>
+                            <div class="timeline-item"><div class="timeline-year">2022</div><div class="timeline-title">Metaverse & Web3</div><div class="timeline-desc">Pioneered ultra-luxury virtual real estate developments and elite NFT membership ecosystems.</div></div>
+                            <div class="timeline-item"><div class="timeline-year">2025</div><div class="timeline-title">The Horizon</div><div class="timeline-desc">Continuing to set the absolute benchmark for luxury architectural and digital symbiosis.</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div class="stats-banner stagger-children">
+                    <div class="stat-item"><div class="stat-number">120+</div><div class="stat-label">Commissions</div></div>
+                    <div class="stat-item"><div class="stat-number">45</div><div class="stat-label">Master Artisans</div></div>
+                    <div class="stat-item"><div class="stat-number">16</div><div class="stat-label">Global Ateliers</div></div>
+                    <div class="stat-item"><div class="stat-number">38</div><div class="stat-label">Excellence Awards</div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="home-cta">
+            <div class="home-cta-bg"><img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1920&q=80" alt="Luxury Villa"></div>
+            <div class="container reveal">
+                <h2 class="section-title">Entrust your legacy to <em>AETHER</em></h2>
+                <p class="section-subtitle centered">We accept a strictly limited number of commissions per annum to ensure uncompromised devotion.</p>
+                <div style="height:36px;"></div>
+                <a href="#" class="btn btn-primary btn-large" data-page="contact">Inquire on Availability <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================
+         PAGE 3: SERVICES
+         ============================================ -->
+    <div class="page" id="page-services">
+        <section class="services-hero">
+            <div class="container">
+                <div class="reveal">
+                    <div class="section-label" style="justify-content:center;">Bespoke Offerings</div>
+                    <h1 class="section-title" style="text-align:center;">Comprehensive <em>architectural</em><br>& digital solutions</h1>
+                    <p class="section-subtitle centered">From foundational blueprints to high-end digital infrastructure, we orchestrate every dimension of your luxury enterprise.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="service-detail-card reveal" data-modal="service-arch">
+                    <div>
+                        <div class="service-detail-num">01</div>
+                        <h3>Architectural & Spatial Design</h3>
+                        <p>We masterfully design private estates, luxury hospitality venues, and flagship retail environments that command immediate reverence.</p>
+                        <ul class="service-features">
+                            <li>Feasibility & Site Analysis</li>
+                            <li>Concept Design & 3D Visualization</li>
+                            <li>Structural Engineering Liaison</li>
+                            <li>Zoning & Municipal Approvals</li>
+                        </ul>
+                    </div>
+                    <div class="service-visual"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=600&fit=crop" alt="Architecture"></div>
+                </div>
+
+                <div class="service-detail-card reveal" data-modal="service-digital">
+                    <div>
+                        <div class="service-detail-num">02</div>
+                        <h3>Digital Portals & Web Platforms</h3>
+                        <p>We create bespoke, immersive web environments that serve as the digital equivalent of an ultra-luxury flagship boutique.</p>
+                        <ul class="service-features">
+                            <li>Bespoke UI/UX Direction</li>
+                            <li>WebGL & 3D Interactive Elements</li>
+                            <li>High-End E-Commerce Infrastructure</li>
+                            <li>Enterprise headless CMS architecture</li>
+                        </ul>
+                    </div>
+                    <div class="service-visual"><img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&h=600&fit=crop" alt="Digital"></div>
+                </div>
+
+                <div class="service-detail-card reveal" data-modal="service-brand">
+                    <div>
+                        <div class="service-detail-num">03</div>
+                        <h3>Brand Identity & Art Direction</h3>
+                        <p>We forge iconic visual identities, packaging, and editorial collateral that anchor your brand firmly in the ultra-luxury echelon.</p>
+                        <ul class="service-features">
+                            <li>Brand Archetype & Strategy</li>
+                            <li>Custom Typography & Crest Design</li>
+                            <li>Extensive Brand Guidelines</li>
+                            <li>Premium Print & Packaging Sourcing</li>
+                        </ul>
+                    </div>
+                    <div class="service-visual"><img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&h=600&fit=crop" alt="Branding"></div>
+                </div>
+
+                <div class="service-detail-card reveal" data-modal="service-interior">
+                    <div>
+                        <div class="service-detail-num">04</div>
+                        <h3>Interior Curation & Styling</h3>
+                        <p>Our interior directors source rare materials, bespoke furniture, and museum-grade art to complete your physical sanctuary.</p>
+                        <ul class="service-features">
+                            <li>Interior Materiality & Lighting</li>
+                            <li>Custom Millwork & Furniture Sourcing</li>
+                            <li>Art & Antiquities Curation</li>
+                            <li>Turnkey white-glove installation</li>
+                        </ul>
+                    </div>
+                    <div class="service-visual"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&h=600&fit=crop" alt="Interior"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div class="reveal" style="text-align:center;margin-bottom:60px;">
+                    <div class="section-label" style="justify-content:center;">Investment Tiers</div>
+                    <h2 class="section-title">Transparent <em>commission</em> tiers</h2>
+                </div>
+                <div class="pricing-grid stagger-children">
+                    <div class="pricing-card">
+                        <div class="pricing-name">Boutique Digital</div>
+                        <div class="pricing-price">$25k</div>
+                        <div class="pricing-period">starting investment</div>
+                        <ul class="pricing-features">
+                            <li><span class="check">✓</span> High-End Brand Crest & Palette</li>
+                            <li><span class="check">✓</span> 8-Page Immersive Website</li>
+                            <li><span class="check">✓</span> Advanced Lenis & GSAP Motion</li>
+                            <li><span class="check">✓</span> 3 Revision Cycles</li>
+                            <li><span class="check">✓</span> 60-Day White-Glove Support</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline" style="width:100%;justify-content:center;" data-page="contact">Secure Commission</a>
+                    </div>
+                    <div class="pricing-card featured">
+                        <div class="pricing-badge">Maison Benchmark</div>
+                        <div class="pricing-name">Spatial + Digital Symbiosis</div>
+                        <div class="pricing-price">$75k</div>
+                        <div class="pricing-period">starting investment</div>
+                        <ul class="pricing-features">
+                            <li><span class="check">✓</span> Full Brand Archetype & Crest</li>
+                            <li><span class="check">✓</span> 15+ Page Enterprise Web Portal</li>
+                            <li><span class="check">✓</span> 3D WebGL Virtual Walkthrough</li>
+                            <li><span class="check">✓</span> Headless CMS Architecture</li>
+                            <li><span class="check">✓</span> Unlimited Revisions until Flawless</li>
+                            <li><span class="check">✓</span> 1-Year Dedicated Concierge</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary" style="width:100%;justify-content:center;" data-page="contact">Secure Commission</a>
+                    </div>
+                    <div class="pricing-card">
+                        <div class="pricing-name">Maison Monument</div>
+                        <div class="pricing-price">Custom</div>
+                        <div class="pricing-period">bespoke tailored allocation</div>
+                        <ul class="pricing-features">
+                            <li><span class="check">✓</span> Physical Architectural Blueprints</li>
+                            <li><span class="check">✓</span> Interior Curation & Art Sourcing</li>
+                            <li><span class="check">✓</span> Global E-Commerce Architecture</li>
+                            <li><span class="check">✓</span> Metaverse & Web3 Integration</li>
+                            <li><span class="check">✓</span> 24/7 Priority Engineering Pod</li>
+                            <li><span class="check">✓</span> Perpetual NDA & Discretion</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline" style="width:100%;justify-content:center;" data-page="contact">Request Allocation</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================
+         PAGE 4: PORTFOLIO
+         ============================================ -->
+    <div class="page" id="page-portfolio">
+        <section class="portfolio-hero">
+            <div class="container">
+                <div class="reveal">
+                    <div class="section-label" style="justify-content:center;">Maison Catalog</div>
+                    <h1 class="section-title">Our <em>curated</em> works</h1>
+                    <p class="section-subtitle centered">A comprehensive exhibition of our global architectural landmarks and elite digital portals.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div class="portfolio-filter reveal">
+                    <button class="filter-btn active">All Works</button>
+                    <button class="filter-btn">Architecture</button>
+                    <button class="filter-btn">Digital</button>
+                    <button class="filter-btn">Interior</button>
+                    <button class="filter-btn">3D Renderings</button>
+                </div>
+
+                <div class="portfolio-grid stagger-children">
+                    <div class="portfolio-item" data-project="project-1"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=600&fit=crop" alt="Villa Aether"><div class="portfolio-item-info"><span>Architecture</span><h4>Villa Aether, Como</h4></div></div>
+                    <div class="portfolio-item" data-project="project-2"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=600&fit=crop" alt="Elysium"><div class="portfolio-item-info"><span>Digital</span><h4>Elysium Platform</h4></div></div>
+                    <div class="portfolio-item" data-project="project-3"><img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&h=600&fit=crop" alt="Axiom"><div class="portfolio-item-info"><span>3D Renderings</span><h4>Axiom Tower, Dubai</h4></div></div>
+                    <div class="portfolio-item" data-project="project-4"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=600&fit=crop" alt="Chalet Noir"><div class="portfolio-item-info"><span>Interior</span><h4>Chalet Noir, Gstaad</h4></div></div>
+                    <div class="portfolio-item" data-project="project-5"><img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=600&h=600&fit=crop" alt="The Monolith"><div class="portfolio-item-info"><span>Architecture</span><h4>The Monolith, Kyoto</h4></div></div>
+                    <div class="portfolio-item" data-project="project-6"><img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&h=600&fit=crop" alt="Aura Luxury"><div class="portfolio-item-info"><span>Digital</span><h4>Aura Portal</h4></div></div>
+                    <div class="portfolio-item" data-project="project-7"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&h=600&fit=crop" alt="Penthouse V"><div class="portfolio-item-info"><span>Interior</span><h4>Penthouse V, NY</h4></div></div>
+                    <div class="portfolio-item" data-project="project-8"><img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600&h=600&fit=crop" alt="Nebula Marina"><div class="portfolio-item-info"><span>3D Renderings</span><h4>Nebula Marina</h4></div></div>
+                    <div class="portfolio-item" data-project="project-9"><img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=600&fit=crop" alt="Kore Private"><div class="portfolio-item-info"><span>Digital</span><h4>Kore Vault App</h4></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div class="reveal" style="margin-bottom:40px;">
+                    <div class="section-label">Detailed Case Studies</div>
+                    <h2 class="section-title">Architectural <em>deep dives</em></h2>
+                </div>
+                <div class="featured-work reveal" data-project="project-1" style="cursor:pointer;">
+                    <div class="featured-work-img"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=500&fit=crop" alt="Villa Aether"></div>
+                    <div>
+                        <div class="featured-work-tag">Architecture + Interior + Web Portal</div>
+                        <h3>Villa Aether, Lake Como</h3>
+                        <p>A multi-year commission involving the ground-up development of a 14,000 sq ft concrete waterfront estate, accompanied by a secure digital management portal for the patron's staff.</p>
+                        <a href="#" class="btn btn-outline">Explore Commission Specs <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    </div>
+                </div>
+                <div class="featured-work reveal" data-project="project-2" style="cursor:pointer;">
+                    <div>
+                        <div class="featured-work-tag">Brand Strategy + High-End Web Platform</div>
+                        <h3>Elysium Private Residences</h3>
+                        <p>We established the entire brand identity, marketing collateral, and interactive WebGL sales platform for a $850M private island residential development.</p>
+                        <a href="#" class="btn btn-outline">Explore Commission Specs <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    </div>
+                    <div class="featured-work-img"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=500&fit=crop" alt="Elysium"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================
+         PAGE 5: PROCESS
+         ============================================ -->
+    <div class="page" id="page-process">
+        <section class="process-hero">
+            <div class="container">
+                <div class="reveal">
+                    <div class="section-label" style="justify-content:center;">Maison Methodology</div>
+                    <h1 class="section-title">The anatomy of <em>creation</em></h1>
+                    <p class="section-subtitle centered">A rigorous five-stage methodology refined over 15 years, ensuring absolute alignment, structural perfection, and flawless execution.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div class="process-steps">
+                    <div class="process-step reveal">
+                        <div class="process-step-num">01</div>
+                        <div>
+                            <h3>Discovery & Topographical Research</h3>
+                            <p>We immerse ourselves in your objectives, spatial constraints, and brand heritage. Through intense stakeholder dialogues and site analysis, we uncover the foundational soul of the project.</p>
+                            <div class="process-step-visual">
+                                <span class="process-tag">Patron Dialogues</span>
+                                <span class="process-tag">Topographical Audit</span>
+                                <span class="process-tag">Competitive Benchmarking</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="process-step reveal">
+                        <div class="process-step-num">02</div>
+                        <div>
+                            <h3>Architectural Blueprinting & Strategy</h3>
+                            <p>We formulate exact structural blueprints, digital wireframes, information architecture, and materiality boards. Every technical specification is locked before visual creation commences.</p>
+                            <div class="process-step-visual">
+                                <span class="process-tag">Structural Blueprints</span>
+                                <span class="process-tag">Information Architecture</span>
+                                <span class="process-tag">Materiality Selection</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="process-step reveal">
+                        <div class="process-step-num">03</div>
+                        <div>
+                            <h3>3D Prototyping & Visual Artistry</h3>
+                            <p>Our master artisans craft hyper-realistic 3D visualizations, interactive WebGL prototypes, and exquisite UI layouts. We refine every pixel and spatial dimension until sublime perfection is attained.</p>
+                            <div class="process-step-visual">
+                                <span class="process-tag">WebGL Interactive Models</span>
+                                <span class="process-tag">Hyper-Realistic 3D</span>
+                                <span class="process-tag">Bespoke UI Design</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="process-step reveal">
+                        <div class="process-step-num">04</div>
+                        <div>
+                            <h3>Engineering & Structural Development</h3>
+                            <p>Our engineering pod brings the designs to life using enterprise-grade code structures and physical development liaisons. Rigorous multi-stage QA guarantees absolute stability and speed.</p>
+                            <div class="process-step-visual">
+                                <span class="process-tag">Full-Stack Development</span>
+                                <span class="process-tag">Physical Construction Oversight</span>
+                                <span class="process-tag">Military-Grade Security Audit</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="process-step reveal">
+                        <div class="process-step-num">05</div>
+                        <div>
+                            <h3>Maison Dedication & Perpetual Care</h3>
+                            <p>We launch your digital portal or physical structure with immaculate white-glove ceremony. Our dedicated concierge team remains attached to provide ongoing optimization and continuous evolution.</p>
+                            <div class="process-step-visual">
+                                <span class="process-tag">White-Glove Ceremony</span>
+                                <span class="process-tag">Concierge Optimization</span>
+                                <span class="process-tag">Perpetual Maintenance</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div class="reveal" style="text-align:center;margin-bottom:60px;">
+                    <div class="section-label" style="justify-content:center;">Maison Inquiries</div>
+                    <h2 class="section-title">Frequently asked <em>questions</em></h2>
+                </div>
+                <div class="faq-list">
+                    <div class="faq-item reveal"><div class="faq-question">What is your typical commission timeline?<span class="faq-icon">+</span></div><div class="faq-answer"><p>Boutique digital portals typically require 8-12 weeks of meticulous craftsmanship. Full-scale physical architectural commissions and enterprise digital ecosystems range from 6 to 18 months depending on spatial complexity.</p></div></div>
+                    <div class="faq-item reveal"><div class="faq-question">How does AETHER handle client confidentiality?<span class="faq-icon">+</span></div><div class="faq-answer"><p>We operate under military-grade NDAs and maintain strict privacy protocols. Our patron list is never disclosed publicly without explicit written consent. All communications are routed through secure encrypted channels.</p></div></div>
+                    <div class="faq-item reveal"><div class="faq-question">Do you collaborate with external engineering or construction firms?<span class="faq-icon">+</span></div><div class="faq-answer"><p>Yes. While we provide complete turnkey design and digital engineering, we frequently liaise with your retained local construction developers and family office legal teams to ensure flawless physical realization.</p></div></div>
+                    <div class="faq-item reveal"><div class="faq-question">What digital technologies does the Maison employ?<span class="faq-icon">+</span></div><div class="faq-answer"><p>We build upon cutting-edge enterprise stacks: React, Next.js, Three.js/WebGL for immersive 3D motion, GSAP, and robust headless CMS platforms (Sanity, Strapi) backed by highly secure AWS/Vercel cloud infrastructure.</p></div></div>
+                    <div class="faq-item reveal"><div class="faq-question">What is included in your perpetual concierge care?<span class="faq-icon">+</span></div><div class="faq-answer"><p>Our concierge service guarantees 24/7 priority engineering support, instant security patching, continuous performance optimization, content updates, and annual design refreshments to ensure absolute supremacy.</p></div></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================
+         PAGE 6: TEAM
+         ============================================ -->
+    <div class="page" id="page-team">
+        <section class="team-hero">
+            <div class="container">
+                <div class="reveal">
+                    <div class="section-label" style="justify-content:center;">Maison Leadership</div>
+                    <h1 class="section-title">Meet the <em>masters</em></h1>
+                    <p class="section-subtitle centered">An elite cadre of visionary architects, digital directors, and master artisans united by an uncompromising pursuit of absolute perfection.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div class="team-grid stagger-children">
+                    <div class="team-card"><div class="team-card-img"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face" alt="Maximilian"></div><div class="team-card-info"><div class="team-card-name">Maximilian Vance</div><div class="team-card-role">Principal Founder & Architect</div><div class="team-socials"><a href="#" class="team-social-link">Li</a><a href="#" class="team-social-link">Tw</a></div></div></div>
+                    <div class="team-card"><div class="team-card-img"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face" alt="Elena"></div><div class="team-card-info"><div class="team-card-name">Elena Rostova</div><div class="team-card-role">Head of Digital Design</div><div class="team-socials"><a href="#" class="team-social-link">Li</a><a href="#" class="team-social-link">Be</a></div></div></div>
+                    <div class="team-card"><div class="team-card-img"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face" alt="Marcus"></div><div class="team-card-info"><div class="team-card-name">Marcus Sterling</div><div class="team-card-role">Chief Engineering Officer</div><div class="team-socials"><a href="#" class="team-social-link">Li</a><a href="#" class="team-social-link">Gh</a></div></div></div>
+                    <div class="team-card"><div class="team-card-img"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face" alt="Chloe"></div><div class="team-card-info"><div class="team-card-name">Chloe Dupont</div><div class="team-card-role">Interior Curation Director</div><div class="team-socials"><a href="#" class="team-social-link">Ig</a><a href="#" class="team-social-link">Li</a></div></div></div>
+                    <div class="team-card"><div class="team-card-img"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face" alt="Julian"></div><div class="team-card-info"><div class="team-card-name">Julian Thorne</div><div class="team-card-role">Master 3D Visualizer</div><div class="team-socials"><a href="#" class="team-social-link">Be</a><a href="#" class="team-social-link">Dr</a></div></div></div>
+                    <div class="team-card"><div class="team-card-img"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face" alt="Sophia"></div><div class="team-card-info"><div class="team-card-name">Sophia Chen</div><div class="team-card-role">Brand Identity Director</div><div class="team-socials"><a href="#" class="team-social-link">Li</a><a href="#" class="team-social-link">Tw</a></div></div></div>
+                    <div class="team-card"><div class="team-card-img"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop&crop=face" alt="Arthur"></div><div class="team-card-info"><div class="team-card-name">Arthur Pendelton</div><div class="team-card-role">Director of Spatial Acoustics</div><div class="team-socials"><a href="#" class="team-social-link">Li</a><a href="#" class="team-social-link">Tw</a></div></div></div>
+                    <div class="team-card"><div class="team-card-img"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face" alt="Vivienne"></div><div class="team-card-info"><div class="team-card-name">Vivienne Moore</div><div class="team-card-role">Maison Concierge Director</div><div class="team-socials"><a href="#" class="team-social-link">Li</a><a href="#" class="team-social-link">Ig</a></div></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div class="stats-banner stagger-children">
+                    <div class="stat-item"><div class="stat-number">45</div><div class="stat-label">Elite Artisans</div></div>
+                    <div class="stat-item"><div class="stat-number">12</div><div class="stat-label">Nationalities</div></div>
+                    <div class="stat-item"><div class="stat-number">100%</div><div class="stat-label">In-House Production</div></div>
+                    <div class="stat-item"><div class="stat-number">25+</div><div class="stat-label">Years Avg Experience</div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="home-cta">
+            <div class="home-cta-bg"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&q=80" alt="Team Collaboration"></div>
+            <div class="container reveal">
+                <h2 class="section-title">Are you a master of your <em>craft</em>?</h2>
+                <p class="section-subtitle centered">Explore our career offerings to join our elite design guild in Milan, New York, or Tokyo.</p>
+                <div style="height:36px;"></div>
+                <a href="#" class="btn btn-primary btn-large" data-page="careers">Explore Career Offerings <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================
+         PAGE 7: CAREERS (NEW 10th PAGE)
+         ============================================ -->
+    <div class="page" id="page-careers">
+        <section class="careers-hero">
+            <div class="container">
+                <div class="reveal">
+                    <div class="section-label" style="justify-content:center;">Maison Expansion</div>
+                    <h1 class="section-title">Shape the future of <em>luxury</em></h1>
+                    <p class="section-subtitle centered">We are perpetually searching for exceptional architectural and digital minds who refuse to compromise on their artistic integrity.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div class="careers-grid">
+                    <div class="reveal-left">
+                        <div class="section-label">Life at AETHER</div>
+                        <h2 class="section-title">Uncompromising standards,<br><em>unrivaled</em> rewards</h2>
+                        <p class="section-subtitle" style="max-width:100%;">We provide an environment where master artisans can produce their absolute finest life's work without bureaucratic friction or budgetary compromises.</p>
+                        <p style="color:var(--color-text-muted);line-height:1.8;margin-top:20px;">We offer top-of-market global compensation, bespoke private medical suites, infinite creative sabbaticals, and equity allocation in Maison real estate ventures.</p>
+                    </div>
+                    <div class="perks-grid stagger-children reveal-right">
+                        <div class="perk-card"><h4>Global Allocation</h4><p>Freedom to operate from any of our global ateliers or bespoke private residences.</p></div>
+                        <div class="perk-card"><h4>Elite Health Concierge</h4><p>Unrestricted access to private medical clinics and premium wellness sanctuaries.</p></div>
+                        <div class="perk-card"><h4>Artistic Sabbaticals</h4><p>Paid 2-month creative exploration sabbaticals every three years of tenure.</p></div>
+                        <div class="perk-card"><h4>Maison Equity</h4><p>Direct profit-sharing and equity participation in our physical estate developments.</p></div>
+                    </div>
+                </div>
+
+                <div class="reveal" style="margin-bottom:40px;">
+                    <div class="section-label">Open Positions</div>
+                    <h2 class="section-title">Current <em>allocations</em></h2>
+                </div>
+
+                <table class="job-table stagger-children">
+                    <tr class="job-row" data-job="job-1">
+                        <td><div class="job-title">Senior Spatial Architect</div></td>
+                        <td><div class="job-dept">Architecture</div></td>
+                        <td><div class="job-location">Milan, Italy / Hybrid</div></td>
+                        <td><div class="job-cta">Submit Application →</div></td>
+                    </tr>
+                    <tr class="job-row" data-job="job-2">
+                        <td><div class="job-title">Lead WebGL & 3D Motion Engineer</div></td>
+                        <td><div class="job-dept">Digital Engineering</div></td>
+                        <td><div class="job-location">New York, USA / Remote</div></td>
+                        <td><div class="job-cta">Submit Application →</div></td>
+                    </tr>
+                    <tr class="job-row" data-job="job-3">
+                        <td><div class="job-title">Luxury Brand Art Director</div></td>
+                        <td><div class="job-dept">Brand Identity</div></td>
+                        <td><div class="job-location">Geneva, Switzerland</div></td>
+                        <td><div class="job-cta">Submit Application →</div></td>
+                    </tr>
+                    <tr class="job-row" data-job="job-4">
+                        <td><div class="job-title">Senior Interior Curation Specialist</div></td>
+                        <td><div class="job-dept">Interior Styling</div></td>
+                        <td><div class="job-location">Tokyo, Japan</div></td>
+                        <td><div class="job-cta">Submit Application →</div></td>
+                    </tr>
+                    <tr class="job-row" data-job="job-5">
+                        <td><div class="job-title">Headless CMS Solutions Architect</div></td>
+                        <td><div class="job-dept">Digital Engineering</div></td>
+                        <td><div class="job-location">London, UK / Remote</div></td>
+                        <td><div class="job-cta">Submit Application →</div></td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================
+         PAGE 8: TESTIMONIALS
+         ============================================ -->
+    <div class="page" id="page-testimonials">
+        <section class="testimonials-hero">
+            <div class="container">
+                <div class="reveal">
+                    <div class="section-label" style="justify-content:center;">Patron Testimonials</div>
+                    <h1 class="section-title">In the words of our <em>patrons</em></h1>
+                    <p class="section-subtitle centered">Excerpts of appreciation from global family offices, industry titans, and elite luxury conglomerates.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div class="testimonial-large reveal">
+                    <div class="stars">★★★★★</div>
+                    <div class="text">"AETHER delivered a property and digital identity that perfectly reflects the uncompromising standard of our portfolio. Phenomenal execution and absolute discretion."</div>
+                    <div class="author"><div class="avatar"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="Lord Alistair"></div><div><div class="name">Lord Alistair Sterling</div><div class="role">Principal, Sterling Family Office</div></div></div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-bottom:30px;">
+                    <div class="testimonial-large reveal" style="padding:48px;">
+                        <div class="stars">★★★★★</div>
+                        <div class="text" style="font-size:1.3rem;">"Their understanding of spatial acoustics and minimal digital design is beyond anything we have experienced. A true design powerhouse."</div>
+                        <div class="author"><div class="avatar"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face" alt="Baroness"></div><div><div class="name">Baroness Charlotte von Gstaad</div><div class="role">Patron of the Arts</div></div></div>
+                    </div>
+                    <div class="testimonial-large reveal" style="padding:48px;">
+                        <div class="stars">★★★★★</div>
+                        <div class="text" style="font-size:1.3rem;">"The interactive WebGL sales platform they developed generated over $200M in private reservations before physical groundbreaking."</div>
+                        <div class="author"><div class="avatar"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" alt="Kenji"></div><div><div class="name">Kenji Takahashi</div><div class="role">CEO, Takahashi Luxury Developments</div></div></div>
+                    </div>
+                </div>
+
+                <div class="testimonial-grid stagger-children">
+                    <div class="testimonial-card"><div class="stars">★★★★★</div><div class="text">"Impeccable structural rigor and breathtaking digital execution. AETHER is our exclusive design partner."</div><div class="author"><div class="avatar"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&h=80&fit=crop&crop=face" alt="Victoria"></div><div><div class="name">Victoria Kensington</div><div class="role">Managing Director, K-Holdings</div></div></div></div>
+                    <div class="testimonial-card"><div class="stars">★★★★★</div><div class="text">"They maintained absolute secrecy throughout our private estate development. Flawless white-glove service."</div><div class="author"><div class="avatar"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face" alt="Dimitri"></div><div><div class="name">Dimitri Volkov</div><div class="role">Principal, Volkov Investments</div></div></div></div>
+                    <div class="testimonial-card"><div class="stars">★★★★★</div><div class="text">"The brand identity they crafted established instant authority in the ultra-luxury hospitality sector."</div><div class="author"><div class="avatar"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face" alt="Amelia"></div><div><div class="name">Amelia Rothschild</div><div class="role">Director, Rothschild Luxury Group</div></div></div></div>
+                    <div class="testimonial-card"><div class="stars">★★★★★</div><div class="text">"AETHER's engineering pod created an e-commerce platform that is incredibly fast, secure, and gorgeous."</div><div class="author"><div class="avatar"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=face" alt="Jean-Paul"></div><div><div class="name">Jean-Paul Laurent</div><div class="role">CTO, Laurent Horology</div></div></div></div>
+                    <div class="testimonial-card"><div class="stars">★★★★★</div><div class="text">"Their interior curation team sourced museum-grade antiquities that perfectly complete our new Tokyo residence."</div><div class="author"><div class="avatar"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=face" alt="Hana"></div><div><div class="name">Hana Tanaka</div><div class="role">Private Collector</div></div></div></div>
+                    <div class="testimonial-card"><div class="stars">★★★★★</div><div class="text">"Absolute mastery of space, light, and code. We will never trust another agency with our global commissions."</div><div class="author"><div class="avatar"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Sir Richard"></div><div><div class="name">Sir Richard Branson</div><div class="role">Founding Patron</div></div></div></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================
+         PAGE 9: BLOG
+         ============================================ -->
+    <div class="page" id="page-blog">
+        <section class="blog-hero">
+            <div class="container">
+                <div class="reveal">
+                    <div class="section-label" style="justify-content:center;">Maison Journal</div>
+                    <h1 class="section-title">Discourses on <em>design</em></h1>
+                    <p class="section-subtitle centered">Reflections on architectural legacy, digital aesthetics, and the evolving nature of global luxury.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div class="blog-featured reveal" data-blog="blog-1" style="cursor:pointer;">
+                    <div class="blog-featured-img"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=500&fit=crop" alt="Villa Architecture"></div>
+                    <div class="blog-featured-content">
+                        <div class="blog-tag">Editorial Feature</div>
+                        <h2>The Monolith & The Portal: Architectural Rigor in Web Engineering</h2>
+                        <p>Exploring how principles of structural engineering and spatial proportion apply directly to the creation of ultra-premium digital portals.</p>
+                        <div class="blog-meta"><span class="author">Maximilian Vance</span><span class="dot"></span><span>Dec 18, 2024</span><span class="dot"></span><span>12 min read</span></div>
+                    </div>
+                </div>
+
+                <div class="blog-grid stagger-children">
+                    <div class="blog-card" data-blog="blog-2">
+                        <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&h=340&fit=crop" alt="Digital Design"></div>
+                        <div class="blog-card-content"><div class="tag">Digital Direction</div><h3>WebGL & The Death of Flat Luxury Design</h3><p>Why elite brands are abandoning static layouts for immersive 3D web environments.</p><div class="date">Dec 12, 2024 · 8 min read</div></div>
+                    </div>
+                    <div class="blog-card" data-blog="blog-3">
+                        <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&h=340&fit=crop" alt="Branding"></div>
+                        <div class="blog-card-content"><div class="tag">Brand Archetype</div><h3>The Crest & The Grid: Designing for Dynasty</h3><p>Establishing visual identities intended to endure across multi-generational family enterprises.</p><div class="date">Nov 30, 2024 · 10 min read</div></div>
+                    </div>
+                    <div class="blog-card" data-blog="blog-4">
+                        <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&h=340&fit=crop" alt="Interior Styling"></div>
+                        <div class="blog-card-content"><div class="tag">Interior Curation</div><h3>Sublime Tactility in Concrete & Marble</h3><p>Balancing brutalist architectural frameworks with warm, museum-grade interior styling.</p><div class="date">Nov 22, 2024 · 7 min read</div></div>
+                    </div>
+                    <div class="blog-card" data-blog="blog-5">
+                        <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600&h=340&fit=crop" alt="3D"></div>
+                        <div class="blog-card-content"><div class="tag">Visual Artistry</div><h3>Hyper-Realism in Virtual Real Estate</h3><p>How our 3D rendering engine achieves emotional resonance before physical construction.</p><div class="date">Nov 15, 2024 · 6 min read</div></div>
+                    </div>
+                    <div class="blog-card" data-blog="blog-6">
+                        <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=340&fit=crop" alt="Development"></div>
+                        <div class="blog-card-content"><div class="tag">Engineering</div><h3>Headless Architecture for Luxury Conglomerates</h3><p>Engineering lightning-fast, ultra-secure digital portals for global distribution.</p><div class="date">Nov 08, 2024 · 9 min read</div></div>
+                    </div>
+                    <div class="blog-card" data-blog="blog-7">
+                        <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=340&fit=crop" alt="Chalet"></div>
+                        <div class="blog-card-content"><div class="tag">Case Study</div><h3>Chalet Noir: A Symphony in Dark Ash</h3><p>An in-depth retrospective on our award-winning alpine hospitality development.</p><div class="date">Oct 28, 2024 · 14 min read</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================
+         PAGE 10: CONTACT
+         ============================================ -->
+    <div class="page" id="page-contact">
+        <section class="contact-hero">
+            <div class="container">
+                <div class="reveal">
+                    <div class="section-label" style="justify-content:center;">Commence Dialogue</div>
+                    <h1 class="section-title">Request a <em>commission</em></h1>
+                    <p class="section-subtitle centered">We welcome exploratory inquiries from family offices, corporate leadership, and private patrons. All communications are strictly confidential.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top:0;">
+            <div class="container">
+                <div class="contact-grid">
+                    <div class="contact-info reveal-left">
+                        <div class="contact-info-card"><h4>Secure Digital Channels</h4><p><a href="mailto:concierge@aetherstudio.com">concierge@aetherstudio.com</a></p><p><a href="mailto:principals@aetherstudio.com">principals@aetherstudio.com</a></p></div>
+                        <div class="contact-info-card"><h4>Encrypted Voice</h4><p><a href="tel:+41228192000">+41 (22) 819 2000 (Geneva)</a></p><p><a href="tel:+12125550199">+1 (212) 555 0199 (New York)</a></p></div>
+                        <div class="contact-info-card"><h4>Maison Ateliers</h4><p>Via Montenapoleone 14, Milan<br>57th Street Penthouse, New York<br>Ginza Six Tower, Tokyo</p></div>
+                        <div class="contact-info-card"><h4>Digital Presence</h4><p style="display:flex;gap:18px;flex-wrap:wrap;"><a href="#">Instagram</a><a href="#">LinkedIn</a><a href="#">Behance</a><a href="#">Dribbble</a></p></div>
+                    </div>
+                    <div class="contact-form-wrapper reveal-right">
+                        <form id="contact-form">
+                            <div class="form-row">
+                                <div class="form-group"><label>Patron / Organization Name</label><input type="text" placeholder="Lord Sterling / Elite Corp" required></div>
+                                <div class="form-group"><label>Secure Email Address</label><input type="email" placeholder="patron@domain.com" required></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Direct Phone Number</label><input type="tel" placeholder="+41 (22) 819 2000"></div>
+                                <div class="form-group"><label>Primary Discipline</label><select><option value="">Select offering</option><option>Architectural Commission</option><option>Bespoke Digital Portal</option><option>Brand Identity Direction</option><option>Interior Curation</option><option>Full Maison Symbiosis</option></select></div>
+                            </div>
+                            <div class="form-group"><label>Allocated Investment Range</label><select><option value="">Select allocation</option><option>$25,000 - $75,000</option><option>$75,000 - $250,000</option><option>$250,000 - $1,000,000</option><option>$1,000,000+</option></select></div>
+                            <div class="form-group"><label>Commission Brief / Vision</label><textarea placeholder="Provide an outline of your spatial objectives, digital requirements, or brand aspirations..."></textarea></div>
+                            <button type="submit" class="form-submit">Transmit Encrypted Brief →</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="map-section reveal">
+                    <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1200&h=400&fit=crop" alt="Maison Map">
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================
+         FOOTER
+         ============================================ -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">AETHER<span>.</span></div>
+                    <p>An elite design maison blending architectural rigor with immersive digital experiences for ultra-luxury brands worldwide.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Maison Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-page="home">Home</a></li>
+                        <li><a href="#" data-page="about">About</a></li>
+                        <li><a href="#" data-page="services">Services</a></li>
+                        <li><a href="#" data-page="portfolio">Portfolio</a></li>
+                        <li><a href="#" data-page="process">Process</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Maison Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-page="team">Team</a></li>
+                        <li><a href="#" data-page="careers">Careers</a></li>
+                        <li><a href="#" data-page="testimonials">Reviews</a></li>
+                        <li><a href="#" data-page="blog">Blog</a></li>
+                        <li><a href="#" data-page="contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Encrypted Channels</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">Behance</a></li>
+                        <li><a href="#">Dribbble</a></li>
+                        <li><a href="#">Encrypted Portal</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AETHER Studio. All rights reserved. Military-Grade Discretion.</p>
+                <div class="footer-socials">
+                    <a href="#" class="footer-social-link">Ig</a>
+                    <a href="#" class="footer-social-link">Li</a>
+                    <a href="#" class="footer-social-link">Be</a>
+                    <a href="#" class="footer-social-link">Dr</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================
+         SCRIPTS
+         ============================================ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+
+    <script>
+        /* ---- LENIS SMOOTH SCROLL ---- */
+        const lenis = new Lenis({
+            duration: 1.4,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+
+        /* ---- PRELOADER ---- */
+        const preloader = document.getElementById('preloader');
+        const preloaderFill = document.getElementById('preloader-fill');
+        const preloaderPercent = document.getElementById('preloader-percent');
+
+        gsap.timeline()
+            .to('.preloader-logo', { opacity: 1, duration: 0.6 })
+            .to('.preloader-bar', { opacity: 1, duration: 0.4 }, '-=0.3')
+            .to('.preloader-percent', { opacity: 1, duration: 0.4 }, '-=0.3');
+
+        let progress = 0;
+        const pInt = setInterval(() => {
+            progress += Math.random() * 12 + 4;
+            if (progress > 100) progress = 100;
+            preloaderFill.style.width = progress + '%';
+            preloaderPercent.textContent = Math.round(progress) + '%';
+            if (progress >= 100) {
+                clearInterval(pInt);
+                setTimeout(() => {
+                    gsap.to(preloader, {
+                        yPercent: -100,
+                        duration: 1.2,
+                        ease: 'power4.inOut',
+                        onComplete: () => {
+                            preloader.style.display = 'none';
+                            initAnimations();
+                        }
+                    });
+                }, 500);
+            }
+        }, 120);
+
+        /* ---- CUSTOM CURSOR ---- */
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursor-dot');
+        let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0, dotX = 0, dotY = 0;
+
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.1;
+            cursorY += (mouseY - cursorY) * 0.1;
+            dotX += (mouseX - dotX) * 0.25;
+            dotY += (mouseY - dotY) * 0.25;
+            cursor.style.left = cursorX - 12 + 'px';
+            cursor.style.top = cursorY - 12 + 'px';
+            cursorDot.style.left = dotX - 2.5 + 'px';
+            cursorDot.style.top = dotY - 2.5 + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        function bindCursorHover() {
+            document.querySelectorAll('a, button, .service-card, .work-card, .portfolio-item, .blog-card, .team-card, .pricing-card, .job-row, .floating-trigger').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
+        }
+        bindCursorHover();
+
+        /* ---- PAGE NAVIGATION ---- */
+        let currentPage = 'home';
+
+        const bgImages = {
+            home: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80',
+            about: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=1920&q=80',
+            services: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80',
+            portfolio: 'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=1920&q=80',
+            process: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80',
+            team: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&q=80',
+            careers: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1920&q=80',
+            testimonials: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&q=80',
+            blog: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1920&q=80',
+            contact: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1920&q=80'
+        };
+
+        function navigateToPage(pageName) {
+            if (pageName === currentPage) return;
+            const cols = document.querySelectorAll('#page-transition .col');
+            const tl = gsap.timeline();
+
+            document.getElementById('mobile-menu').classList.remove('active');
+            document.getElementById('nav-toggle').classList.remove('active');
+
+            tl.to(cols, {
+                scaleY: 1, duration: 0.4, stagger: 0.05, ease: 'power4.in',
+                onComplete: () => {
+                    document.getElementById('page-' + currentPage).classList.remove('active');
+                    document.getElementById('page-' + currentPage).style.display = 'none';
+                    const np = document.getElementById('page-' + pageName);
+                    np.style.display = 'block';
+                    np.classList.add('active');
+
+                    document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(l => {
+                        l.classList.remove('active');
+                        if (l.getAttribute('data-page') === pageName) l.classList.add('active');
+                    });
+
+                    window.scrollTo(0, 0);
+                    lenis.scrollTo(0, { immediate: true });
+                    currentPage = pageName;
+
+                    if (bgImages[pageName]) {
+                        document.getElementById('page-bg').style.backgroundImage = `url('${bgImages[pageName]}')`;
+                    }
+
+                    ScrollTrigger.getAll().forEach(st => st.kill());
+                    setTimeout(initPageAnimations, 150);
+                }
+            });
+
+            tl.to(cols, { scaleY: 0, duration: 0.4, stagger: 0.05, ease: 'power4.out', delay: 0.1 });
+        }
+
+        document.querySelectorAll('[data-page]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigateToPage(link.getAttribute('data-page'));
+            });
+        });
+
+        /* ---- MOBILE MENU ---- */
+        document.getElementById('nav-toggle').addEventListener('click', () => {
+            document.getElementById('nav-toggle').classList.toggle('active');
+            document.getElementById('mobile-menu').classList.toggle('active');
+        });
+
+        /* ---- NAVBAR SCROLL ---- */
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        /* ---- FAQ ---- */
+        document.querySelectorAll('.faq-question').forEach(q => {
+            q.addEventListener('click', () => {
+                const item = q.parentElement;
+                const isOpen = item.classList.contains('open');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+                if (!isOpen) item.classList.add('open');
+            });
+        });
+
+        /* ---- FILTER ---- */
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        /* ---- MAGIC MODALS SYSTEM ---- */
+        const modalOverlay = document.getElementById('magic-modal');
+        const modalDynamicContent = document.getElementById('modal-dynamic-content');
+        const modalClose = document.getElementById('modal-close');
+
+        const modalData = {
+            'service-arch': {
+                tag: 'Maison Discipline',
+                title: 'Architectural & Spatial Design',
+                img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=600&fit=crop',
+                meta: [{label: 'Delivery', val: '6-18 Months'}, {label: 'Scope', val: 'Turnkey Ground-Up'}, {label: 'Tier', val: 'Maison Monument'}],
+                desc: 'Our spatial design discipline merges classical architectural proportions with cutting-edge engineering. We design private estates, hospitality flagships, and luxury commercial towers that command immediate authority and stand the test of time across generations.'
+            },
+            'service-digital': {
+                tag: 'Maison Discipline',
+                title: 'Digital Portals & Web Platforms',
+                img: 'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=1200&h=600&fit=crop',
+                meta: [{label: 'Delivery', val: '8-16 Weeks'}, {label: 'Stack', val: 'WebGL / Next.js'}, {label: 'Tier', val: 'Maison Benchmark'}],
+                desc: 'We engineer immersive digital environments that serve as the virtual equivalent of a high-end flagship boutique. Incorporating interactive 3D WebGL motion, headless e-commerce, and immaculate typography.'
+            },
+            'service-brand': {
+                tag: 'Maison Discipline',
+                title: 'Brand Identity & Art Direction',
+                img: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200&h=600&fit=crop',
+                meta: [{label: 'Delivery', val: '6-8 Weeks'}, {label: 'Output', val: 'Crest & Guidelines'}, {label: 'Tier', val: 'Boutique Digital'}],
+                desc: 'We forge iconic visual identities, custom crests, packaging, and editorial guidelines that anchor your brand firmly in the ultra-luxury echelon, establishing immediate market prestige.'
+            },
+            'service-interior': {
+                tag: 'Maison Discipline',
+                title: 'Interior Curation & Styling',
+                img: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&h=600&fit=crop',
+                meta: [{label: 'Delivery', val: '3-6 Months'}, {label: 'Sourcing', val: 'Museum-Grade Art'}, {label: 'Tier', val: 'Maison Monument'}],
+                desc: 'Our interior directors source rare materials, bespoke furniture, custom millwork, and museum-grade art to complete your physical sanctuary with uncompromised aesthetic harmony.'
+            },
+            'service-3d': {
+                tag: 'Maison Discipline',
+                title: '3D Visualizations & Walkthroughs',
+                img: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&h=600&fit=crop',
+                meta: [{label: 'Delivery', val: '4-8 Weeks'}, {label: 'Tech', val: 'Unreal Engine / WebGL'}, {label: 'Tier', val: 'Maison Benchmark'}],
+                desc: 'Hyper-realistic architectural renderings and immersive virtual real estate walkthroughs that generate immense pre-sales and emotional buy-in before physical groundbreaking.'
+            },
+            'service-dev': {
+                tag: 'Maison Discipline',
+                title: 'High-End Web Engineering',
+                img: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&h=600&fit=crop',
+                meta: [{label: 'Delivery', val: '8-12 Weeks'}, {label: 'Security', val: 'Military-Grade'}, {label: 'Tier', val: 'Boutique Digital'}],
+                desc: 'Enterprise-grade full-stack development ensuring blazing speed, flawless security, and unbreakable infrastructure for global family offices and luxury conglomerates.'
+            },
+            'project-1': {
+                tag: 'Selected Commission',
+                title: 'Villa Aether, Lake Como',
+                img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=600&fit=crop',
+                meta: [{label: 'Valuation', val: '$85M Estate'}, {label: 'Scope', val: 'Spatial + Digital'}, {label: 'Location', val: 'Lake Como, Italy'}],
+                desc: 'A multi-year commission involving the ground-up development of a 14,000 sq ft concrete waterfront estate, accompanied by a secure digital management portal for the patron\'s staff.'
+            },
+            'project-2': {
+                tag: 'Selected Commission',
+                title: 'Elysium Private Residences',
+                img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&h=600&fit=crop',
+                meta: [{label: 'Valuation', val: '$850M Island'}, {label: 'Scope', val: 'Branding + WebGL'}, {label: 'Location', val: 'Exuma, Bahamas'}],
+                desc: 'We established the entire brand identity, marketing collateral, and interactive WebGL sales platform for a private island residential development, generating $200M in pre-sales.'
+            },
+            'project-3': {
+                tag: 'Selected Commission',
+                title: 'Axiom Tower, Dubai',
+                img: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200&h=600&fit=crop',
+                meta: [{label: 'Height', val: '320 Meters'}, {label: 'Scope', val: '3D Renderings'}, {label: 'Location', val: 'Dubai, UAE'}],
+                desc: 'We crafted the definitive 3D architectural visualization package and interactive VR leasing center for one of Dubai\'s most anticipated ultra-luxury residential skyscrapers.'
+            },
+            'project-4': {
+                tag: 'Selected Commission',
+                title: 'Chalet Noir, Gstaad',
+                img: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&h=600&fit=crop',
+                meta: [{label: 'Valuation', val: '$45M Estate'}, {label: 'Scope', val: 'Turnkey Maison'}, {label: 'Location', val: 'Gstaad, Switzerland'}],
+                desc: 'A complete turnkey commission. We handled the architectural re-engineering of a historic alpine chalet, interior styling in dark ash and bronze, and a private booking portal.'
+            },
+            'project-5': {
+                tag: 'Selected Commission',
+                title: 'The Monolith, Kyoto',
+                img: 'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=1200&h=600&fit=crop',
+                meta: [{label: 'Valuation', val: '$32M Sanctuary'}, {label: 'Scope', val: 'Architecture'}, {label: 'Location', val: 'Kyoto, Japan'}],
+                desc: 'A brutalist concrete sanctuary nestled into the hills of Kyoto, featuring natural thermal baths and acoustic isolation engineering for absolute meditative seclusion.'
+            },
+            'project-6': {
+                tag: 'Selected Commission',
+                title: 'Aura Luxury Portal',
+                img: 'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=1200&h=600&fit=crop',
+                meta: [{label: 'Traffic', val: '1M+ VIPs/mo'}, {label: 'Scope', val: 'Digital Portal'}, {label: 'Location', val: 'Global Distribution'}],
+                desc: 'An ultra-premium e-commerce and editorial portal for a global high-fashion conglomerate, engineered for blazing speed, headless architecture, and sublime typography.'
+            },
+            'project-7': {
+                tag: 'Selected Commission',
+                title: 'Penthouse V, New York',
+                img: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&h=600&fit=crop',
+                meta: [{label: 'Valuation', val: '$68M Triplex'}, {label: 'Scope', val: 'Interior Styling'}, {label: 'Location', val: 'New York, USA'}],
+                desc: 'Complete interior styling and art curation for a 57th Street triplex penthouse overlooking Central Park, incorporating museum-grade antiquities and bespoke bronze millwork.'
+            },
+            'project-8': {
+                tag: 'Selected Commission',
+                title: 'Nebula Marina',
+                img: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&h=600&fit=crop',
+                meta: [{label: 'Berths', val: '85 Superyachts'}, {label: 'Scope', val: '3D Renderings'}, {label: 'Location', val: 'Monaco'}],
+                desc: 'Definitive 3D master planning and interactive digital presentation suite for an elite superyacht marina and private members\' club in Monaco.'
+            },
+            'project-9': {
+                tag: 'Selected Commission',
+                title: 'Kore Vault Application',
+                img: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&h=600&fit=crop',
+                meta: [{label: 'Assets', val: '$5B+ Managed'}, {label: 'Scope', val: 'App Engineering'}, {label: 'Location', val: 'Geneva, Switzerland'}],
+                desc: 'A military-grade secure mobile vault and portfolio tracking application developed exclusively for the principals of a Swiss private wealth management institution.'
+            },
+            'job-1': {
+                tag: 'Career Allocation', title: 'Senior Spatial Architect', img: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&h=600&fit=crop',
+                meta: [{label: 'Department', val: 'Architecture'}, {label: 'Location', val: 'Milan, Italy'}, {label: 'Allocation', val: 'Full-Time / Equity'}],
+                desc: 'We are seeking a master spatial architect with 10+ years of experience leading ultra-luxury residential developments. You will have absolute creative autonomy and equity participation in our European estate portfolio.'
+            },
+            'job-2': {
+                tag: 'Career Allocation', title: 'Lead WebGL & 3D Motion Engineer', img: 'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=1200&h=600&fit=crop',
+                meta: [{label: 'Department', val: 'Digital Engineering'}, {label: 'Location', val: 'New York / Remote'}, {label: 'Allocation', val: 'Full-Time / Equity'}],
+                desc: 'An allocation for a world-class WebGL/Three.js engineer capable of pushing the absolute boundaries of browser-based 3D motion, shader programming, and immersive digital storytelling.'
+            },
+            'job-3': {
+                tag: 'Career Allocation', title: 'Luxury Brand Art Director', img: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200&h=600&fit=crop',
+                meta: [{label: 'Department', val: 'Brand Identity'}, {label: 'Location', val: 'Geneva, Switzerland'}, {label: 'Allocation', val: 'Full-Time / Equity'}],
+                desc: 'Seeking a visionary art director with impeccable typographic sensitivity and experience crafting visual identities for high-fashion maisons, luxury horology, or elite hospitality.'
+            },
+            'job-4': {
+                tag: 'Career Allocation', title: 'Senior Interior Curation Specialist', img: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&h=600&fit=crop',
+                meta: [{label: 'Department', val: 'Interior Styling'}, {label: 'Location', val: 'Tokyo, Japan'}, {label: 'Allocation', val: 'Full-Time / Equity'}],
+                desc: 'An allocation for an interior director with deep connections to rare material suppliers, bespoke furniture ateliers, and international art galleries to curate our Asian sanctuary developments.'
+            },
+            'job-5': {
+                tag: 'Career Allocation', title: 'Headless CMS Solutions Architect', img: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&h=600&fit=crop',
+                meta: [{label: 'Department', val: 'Digital Engineering'}, {label: 'Location', val: 'London, UK / Remote'}, {label: 'Allocation', val: 'Full-Time / Equity'}],
+                desc: 'We require an enterprise solutions architect capable of designing robust, highly secure headless CMS architectures (Sanity, Next.js) for our global luxury conglomerate patrons.'
+            },
+            'blog-1': {
+                tag: 'Editorial Feature', title: 'The Monolith & The Portal', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=600&fit=crop',
+                meta: [{label: 'Author', val: 'Maximilian Vance'}, {label: 'Published', val: 'Dec 18, 2024'}, {label: 'Reading Time', val: '12 Min Read'}],
+                desc: 'An extensive treatise exploring how the classical principles of structural engineering, load distribution, and spatial proportion apply directly to the creation of ultra-premium digital portals. We examine the psychological impact of whitespace versus monolithic mass.'
+            },
+            'blog-2': {
+                tag: 'Digital Direction', title: 'WebGL & The Death of Flat Luxury Design', img: 'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=1200&h=600&fit=crop',
+                meta: [{label: 'Author', val: 'Elena Rostova'}, {label: 'Published', val: 'Dec 12, 2024'}, {label: 'Reading Time', val: '8 Min Read'}],
+                desc: 'Why elite brands are abandoning static layouts for immersive 3D web environments. An analysis of shader programming, real-time lighting models, and the emotional buy-in generated by interactive spatial web portals.'
+            },
+            'blog-3': {
+                tag: 'Brand Archetype', title: 'The Crest & The Grid: Designing for Dynasty', img: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200&h=600&fit=crop',
+                meta: [{label: 'Author', val: 'Sophia Chen'}, {label: 'Published', val: 'Nov 30, 2024'}, {label: 'Reading Time', val: '10 Min Read'}],
+                desc: 'Establishing visual identities intended to endure across multi-generational family enterprises. We explore the heraldic origins of luxury branding and the mathematical precision required to craft timeless typographic systems.'
+            },
+            'blog-4': {
+                tag: 'Interior Curation', title: 'Sublime Tactility in Concrete & Marble', img: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&h=600&fit=crop',
+                meta: [{label: 'Author', val: 'Chloe Dupont'}, {label: 'Published', val: 'Nov 22, 2024'}, {label: 'Reading Time', val: '7 Min Read'}],
+                desc: 'Balancing brutalist architectural frameworks with warm, museum-grade interior styling. A masterclass in materiality, acoustic dampening, and the psychological comfort of natural stone.'
+            },
+            'blog-5': {
+                tag: 'Visual Artistry', title: 'Hyper-Realism in Virtual Real Estate', img: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&h=600&fit=crop',
+                meta: [{label: 'Author', val: 'Julian Thorne'}, {label: 'Published', val: 'Nov 15, 2024'}, {label: 'Reading Time', val: '6 Min Read'}],
+                desc: 'How our 3D rendering engine achieves emotional resonance before physical construction. An exploration of raytracing, atmospheric light scattering, and virtual cinematography.'
+            },
+            'blog-6': {
+                tag: 'Engineering', title: 'Headless Architecture for Luxury Conglomerates', img: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&h=600&fit=crop',
+                meta: [{label: 'Author', val: 'Marcus Sterling'}, {label: 'Published', val: 'Nov 08, 2024'}, {label: 'Reading Time', val: '9 Min Read'}],
+                desc: 'Engineering lightning-fast, ultra-secure digital portals for global distribution. A technical breakdown of our headless CMS deployment pipelines and global edge caching strategies.'
+            },
+            'blog-7': {
+                tag: 'Case Study', title: 'Chalet Noir: A Symphony in Dark Ash', img: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&h=600&fit=crop',
+                meta: [{label: 'Author', val: 'Maximilian Vance'}, {label: 'Published', val: 'Oct 28, 2024'}, {label: 'Reading Time', val: '14 Min Read'}],
+                desc: 'An in-depth retrospective on our award-winning alpine hospitality development. We detail the engineering challenges of building into a mountain face while maintaining absolute luxury comfort.'
+            },
+            'inquiry-quick': {
+                tag: 'Secure Transmission',
+                title: 'Commence Exploratory Consultation',
+                img: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1200&h=600&fit=crop',
+                meta: [{label: 'Discretion', val: '100% Guaranteed'}, {label: 'Response', val: 'Under 24 Hours'}, {label: 'Routing', val: 'Encrypted Pod'}],
+                desc: 'Transmit your initial commission parameters directly to our principal architects and digital directors. We will assign an elite concierge pod to analyze your objectives prior to our first dialogue.'
+            }
+        };
+
+        function openModal(key) {
+            const data = modalData[key];
+            if (!data) return;
+
+            lenis.stop(); // Lock scroll
+
+            let metaHtml = '';
+            data.meta.forEach(m => {
+                metaHtml += `<div class="modal-meta-item"><h5>${m.label}</h5><p>${m.val}</p></div>`;
+            });
+
+            let formHtml = '';
+            if (key.startsWith('job-')) {
+                formHtml = `
+                    <div style="margin-top:40px;padding-top:40px;border-top:1px solid var(--color-border);">
+                        <h4 style="font-family:var(--font-display);font-size:1.8rem;margin-bottom:20px;color:var(--color-accent);">Submit Encrypted Application</h4>
+                        <form id="modal-apply-form">
+                            <div class="form-row">
+                                <div class="form-group"><label>Full Name</label><input type="text" placeholder="Master Artisan" required></div>
+                                <div class="form-group"><label>Secure Email</label><input type="email" placeholder="artisan@domain.com" required></div>
+                            </div>
+                            <div class="form-group"><label>Portfolio / Github Link</label><input type="url" placeholder="https://portfolio.com" required></div>
+                            <div class="form-group"><label>Covering Statement</label><textarea placeholder="Explain why your uncompromising standards align with AETHER Studio..."></textarea></div>
+                            <button type="submit" class="form-submit">Transmit Application →</button>
+                        </form>
+                    </div>`;
+            } else if (key === 'inquiry-quick') {
+                formHtml = `
+                    <div style="margin-top:40px;padding-top:40px;border-top:1px solid var(--color-border);">
+                        <form id="modal-quick-form">
+                            <div class="form-row">
+                                <div class="form-group"><label>Patron Name</label><input type="text" placeholder="Lord Sterling" required></div>
+                                <div class="form-group"><label>Secure Email</label><input type="email" placeholder="patron@domain.com" required></div>
+                            </div>
+                            <div class="form-group"><label>Brief Outline</label><textarea placeholder="Share your vision..."></textarea></div>
+                            <button type="submit" class="form-submit">Transmit Encrypted Brief →</button>
+                        </form>
+                    </div>`;
+            }
+
+            modalDynamicContent.innerHTML = `
+                <img class="modal-header-img" src="${data.img}" alt="${data.title}">
+                <div class="modal-body">
+                    <span class="modal-tag">${data.tag}</span>
+                    <h2 class="modal-title">${data.title}</h2>
+                    <p class="modal-desc">${data.desc}</p>
+                    <div class="modal-meta-grid">${metaHtml}</div>
+                    ${formHtml}
+                </div>`;
+
+            modalOverlay.classList.add('active');
+            bindCursorHover();
+
+            // Bind dynamic forms
+            const form = document.getElementById('modal-apply-form') || document.getElementById('modal-quick-form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const btn = this.querySelector('.form-submit');
+                    btn.textContent = '✓ Securely Transmitted!';
+                    btn.style.background = '#22c55e';
+                    setTimeout(() => closeModal(), 2000);
+                });
+            }
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            setTimeout(() => { modalDynamicContent.innerHTML = ''; lenis.start(); }, 500);
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        // Bind triggers
+        function bindModalTriggers() {
+            document.querySelectorAll('[data-modal]').forEach(el => {
+                el.addEventListener('click', () => openModal(el.getAttribute('data-modal')));
+            });
+            document.querySelectorAll('[data-project]').forEach(el => {
+                el.addEventListener('click', () => openModal(el.getAttribute('data-project')));
+            });
+            document.querySelectorAll('[data-job]').forEach(el => {
+                el.addEventListener('click', () => openModal(el.getAttribute('data-job')));
+            });
+            document.querySelectorAll('[data-blog]').forEach(el => {
+                el.addEventListener('click', () => openModal(el.getAttribute('data-blog')));
+            });
+        }
+        bindModalTriggers();
+
+        document.getElementById('inquiry-trigger').addEventListener('click', () => openModal('inquiry-quick'));
+
+        /* ---- GSAP ANIMATIONS ---- */
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+            initPageAnimations();
+        }
+
+        function initPageAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const heroTl = gsap.timeline({ delay: 0.2 });
+            heroTl
+                .from('.hero-badge', { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out' })
+                .from('.hero-title .line span', { y: 100, opacity: 0, duration: 1, stagger: 0.15, ease: 'power4.out' }, '-=0.4')
+                .from('.hero-desc', { y: 40, opacity: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+                .from('.hero-buttons', { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+                .from('.hero-stats', { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out' }, '-=0.4');
+
+            gsap.utils.toArray('.reveal').forEach(el => {
+                gsap.fromTo(el, { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' } });
+            });
+
+            gsap.utils.toArray('.reveal-left').forEach(el => {
+                gsap.fromTo(el, { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' } });
+            });
+
+            gsap.utils.toArray('.reveal-right').forEach(el => {
+                gsap.fromTo(el, { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' } });
+            });
+
+            gsap.utils.toArray('.stagger-children').forEach(container => {
+                gsap.fromTo(container.children, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: container, start: 'top 88%', toggleActions: 'play none none reverse' } });
+            });
+
+            gsap.utils.toArray('.hero-glow').forEach(el => {
+                gsap.to(el, { y: -100, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 } });
+            });
+
+            gsap.utils.toArray('.service-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = (e.clientX - rect.left - rect.width / 2) / 25;
+                    const y = (e.clientY - rect.top - rect.height / 2) / 25;
+                    gsap.to(card, { rotateX: -y, rotateY: x, transformPerspective: 1000, duration: 0.3, ease: 'power2.out' });
+                });
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.5, ease: 'power2.out' });
+                });
+            });
+
+            gsap.utils.toArray('.stat-number, .hero-stat-number').forEach(el => {
+                const text = el.textContent;
+                const num = parseInt(text.replace(/[^0-9]/g, ''));
+                if (!isNaN(num)) {
+                    const suffix = text.replace(/[0-9.]/g, '');
+                    const prefix = text.startsWith('$') ? '$' : '';
+                    const obj = { val: 0 };
+                    gsap.to(obj, { val: num, duration: 2, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' }, onUpdate: () => { el.textContent = prefix + Math.round(obj.val) + suffix; } });
+                }
+            });
+
+            gsap.utils.toArray('.process-step').forEach((step, i) => {
+                gsap.fromTo(step, { x: i % 2 === 0 ? -25 : 25, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: step, start: 'top 88%', toggleActions: 'play none none reverse' } });
+            });
+
+            gsap.utils.toArray('.timeline-item').forEach((item, i) => {
+                gsap.fromTo(item, { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, delay: i * 0.12, ease: 'power3.out', scrollTrigger: { trigger: item, start: 'top 88%', toggleActions: 'play none none reverse' } });
+            });
+
+            gsap.utils.toArray('.about-image-wrapper, .work-card, .portfolio-item').forEach(el => {
+                gsap.fromTo(el, { scale: 0.95 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'top center', scrub: 1 } });
+            });
+
+            gsap.utils.toArray('.pricing-card').forEach((card, i) => {
+                gsap.fromTo(card, { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, delay: i * 0.12, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 92%', toggleActions: 'play none none reverse' } });
+            });
+
+            gsap.utils.toArray('.testimonial-card, .testimonial-large').forEach((card, i) => {
+                gsap.fromTo(card, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, delay: i * 0.08, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 92%', toggleActions: 'play none none reverse' } });
+            });
+
+            gsap.utils.toArray('.blog-card').forEach((card, i) => {
+                gsap.fromTo(card, { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, delay: i * 0.08, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 92%', toggleActions: 'play none none reverse' } });
+            });
+
+            ScrollTrigger.create({
+                trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true,
+                onUpdate: (self) => {
+                    const hero = document.querySelector('.hero-content');
+                    if (hero) gsap.set(hero, { y: self.progress * 80, opacity: 1 - self.progress * 0.5 });
+                }
+            });
+
+            ScrollTrigger.refresh();
+            bindModalTriggers();
+        }
+
+        /* ---- CONTACT FORM ---- */
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('.form-submit');
+            const orig = btn.textContent;
+            btn.textContent = 'Transmitting Encrypted Brief...';
+            btn.style.opacity = '0.7';
+            setTimeout(() => {
+                btn.textContent = '✓ Brief Securely Transmitted!';
+                btn.style.background = '#22c55e';
+                btn.style.opacity = '1';
+                setTimeout(() => { btn.textContent = orig; btn.style.background = ''; this.reset(); }, 3000);
+            }, 1500);
+        });
+
+        /* ---- MAGNETIC BUTTONS ---- */
+        document.querySelectorAll('.btn-primary, .nav-cta').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                gsap.to(btn, { x: (e.clientX - rect.left - rect.width / 2) * 0.3, y: (e.clientY - rect.top - rect.height / 2) * 0.3, duration: 0.3, ease: 'power2.out' });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.5)' });
+            });
+        });
+
+        /* ---- RESIZE ---- */
+        let resizeTimer;
+        window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(ScrollTrigger.refresh, 250); });
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) ScrollTrigger.refresh(); });
+
+        console.log('🏛️ AETHER Studio — 10-Page Luxury Maison Website Loaded');
+        console.log('✨ GSAP + Lenis + ScrollTrigger + Magic Modals Active');
+    </script>
+
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>
