@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | SEO & Growth</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Premium Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES & STRICT RESET
+           ========================================= */
+        :root {
+            --dark: #020604; /* Very deep green-black */
+            --light: #f0fdf4;
+            --accent: #10b981; /* Metric Growth Green */
+            --gray: #0f1712;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden !important; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); -webkit-font-smoothing: antialiased; }
+        
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        .mono-font { font-family: 'Space Mono', monospace; }
+        
+        section { position: relative; width: 100%; overflow: hidden; }
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* Dot Grid Overlay for Data Vibe */
+        .bg-dots {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 0; opacity: 0.3;
+            background-image: radial-gradient(var(--accent) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* =========================================
+           MAGIC CURSOR
+           ========================================= */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; mix-blend-mode: difference; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--accent); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        @media (max-width: 768px) { .cursor { display: none !important; } * { cursor: auto !important; } }
+
+        /* =========================================
+           NAVBAR & MOBILE-OPTIMIZED MENU
+           ========================================= */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5%; z-index: 10000; background: transparent; mix-blend-mode: difference; }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(2,6,4,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5% 5vh 5%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5% 10vh 5%; } .menu-item { padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .menu-item-title span { font-size: 1.2rem !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } .dropdown a i { font-size: 1.8rem !important; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); opacity: 0; transform: translateX(-10px); transition: 0.3s; }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+        .dropdown a:hover i { opacity: 1; transform: translateX(0); }
+
+        /* =========================================
+           UNIQUE S01: SEARCH QUERY HERO
+           ========================================= */
+        #seo-hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 0 5%; z-index: 2;
+        }
+        .hero-bg-img {
+            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+            opacity: 0.15; z-index: -2; mix-blend-mode: screen; filter: hue-rotate(90deg);
+        }
+        .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, rgba(2,6,4,0.3) 0%, rgba(2,6,4,1) 100%); z-index: -1; }
+        
+        .search-box {
+            font-size: clamp(2rem, 8vw, 7rem); font-family: 'Syne', sans-serif; font-weight: 800;
+            color: var(--light); display: flex; align-items: center; justify-content: center;
+            border-bottom: 4px solid var(--accent); padding-bottom: 1rem; margin-bottom: 2rem;
+        }
+        .search-prefix { color: #555; margin-right: 20px; font-weight: 400; }
+        .typewriter { margin-right: 5px; }
+        .blink { animation: blinker 1s linear infinite; color: var(--accent); }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        .seo-desc { font-size: clamp(1rem, 2vw, 1.5rem); color: #888; max-width: 600px; opacity: 0; transform: translateY(20px); }
+
+        @media (max-width: 768px) {
+            .search-box { border-bottom: 2px solid var(--accent); flex-direction: column; align-items: flex-start; text-align: left; }
+            .search-prefix { margin-bottom: 10px; }
+        }
+
+        /* =========================================
+           UNIQUE S02: THE GROWTH GRAPH (SVG PATH)
+           ========================================= */
+        #seo-graph { padding: 15vh 0; background: var(--gray); min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 2; }
+        .graph-header { font-size: clamp(2.5rem, 6vw, 5rem); text-align: center; margin-bottom: 10vh; z-index: 5; position: relative; }
+        
+        .chart-container { position: relative; width: 100%; height: 50vh; }
+        
+        /* The SVG Chart */
+        .svg-chart { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: visible; }
+        .chart-line-bg { stroke: #222; stroke-width: 4px; fill: none; vector-effect: non-scaling-stroke; }
+        .chart-line-glow {
+            stroke: var(--accent); stroke-width: 6px; fill: none; vector-effect: non-scaling-stroke;
+            stroke-dasharray: 2000; stroke-dashoffset: 2000; filter: drop-shadow(0 0 10px var(--accent));
+        }
+
+        /* Nodes on the graph */
+        .chart-node {
+            position: absolute; width: 20px; height: 20px; background: var(--dark);
+            border: 4px solid var(--accent); border-radius: 50%; z-index: 3;
+            transform: translate(-50%, -50%) scale(0); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .chart-node.active { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px var(--accent); }
+        
+        .node-label {
+            position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); padding: 10px 20px; border-radius: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.9rem; font-weight: 600;
+            white-space: nowrap; opacity: 0; transition: 0.4s; pointer-events: none; color: var(--light);
+        }
+        .chart-node.active .node-label { opacity: 1; top: 40px; }
+
+        /* Node Placements (Matches SVG Path percentages roughly) */
+        .n1 { left: 10%; top: 80%; }
+        .n2 { left: 40%; top: 60%; }
+        .n3 { left: 70%; top: 30%; }
+        .n4 { left: 95%; top: 10%; }
+
+        @media (max-width: 768px) {
+            .chart-container { height: 40vh; }
+            .node-label { font-size: 0.7rem; padding: 5px 10px; }
+            .n1 { left: 15%; top: 80%; } .n2 { left: 45%; top: 60%; } .n3 { left: 75%; top: 30%; } .n4 { left: 90%; top: 10%; }
+        }
+
+        /* =========================================
+           UNIQUE S03: GOOGLEBOT CRAWL GRID
+           ========================================= */
+        #seo-crawl { padding: 15vh 5%; background: var(--dark); z-index: 2; position: relative; }
+        .crawl-header { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 8vh; }
+        
+        .crawl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+        
+        .crawl-card {
+            background: #080d0a; border: 1px solid #1a261e; border-radius: 16px;
+            padding: 4rem 3rem; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; gap: 1rem;
+        }
+        
+        /* The Laser Scanner Effect */
+        .crawl-scanner {
+            position: absolute; top: -100%; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 95%, var(--accent) 100%);
+            opacity: 0; z-index: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .crawl-card:hover .crawl-scanner { opacity: 1; animation: scanAnim 1.5s ease-in-out infinite; }
+        @keyframes scanAnim { 0% { top: -100%; } 100% { top: 100%; } }
+        
+        .cc-content { position: relative; z-index: 2; }
+        .cc-icon { font-size: 3rem; color: var(--accent); margin-bottom: 1rem; }
+        .cc-title { font-size: 2rem; font-family: 'Syne', sans-serif; font-weight: 700; }
+        .cc-desc { color: #888; line-height: 1.6; }
+
+        @media (max-width: 900px) {
+            .crawl-grid { grid-template-columns: 1fr; }
+            .crawl-card { padding: 2rem; }
+            /* Disable hover laser on mobile, just show subtle green tint */
+            .crawl-card:active { border-color: var(--accent); }
+            .crawl-scanner { display: none; }
+        }
+
+        /* =========================================
+           UNIQUE S04: INFINITE KEYWORD STREAM
+           ========================================= */
+        #seo-keywords { padding: 10vh 0; background: var(--gray); overflow: hidden; z-index: 2; position: relative; }
+        
+        .kw-track { display: flex; white-space: nowrap; margin-bottom: 2rem; transform: rotate(-3deg); }
+        .kw-track:nth-child(even) { transform: rotate(2deg); }
+        
+        .kw-text {
+            font-size: clamp(4rem, 8vw, 8rem); font-family: 'Syne', sans-serif; font-weight: 800;
+            color: transparent; -webkit-text-stroke: 2px rgba(255,255,255,0.1);
+            text-transform: uppercase; padding-right: 2rem; line-height: 1; transition: 0.3s;
+        }
+        .kw-text:hover { color: var(--accent); -webkit-text-stroke: 0px; }
+
+        /* =========================================
+           UNIQUE S05: SEARCH BAR CTA FOOTER
+           ========================================= */
+        #seo-cta {
+            height: 80vh; background: var(--dark); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 5%; z-index: 2; position: relative;
+        }
+        .cta-label { font-family: 'Space Mono', monospace; color: var(--accent); font-size: 1.2rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .search-input-mockup {
+            width: 100%; max-width: 800px; display: flex; align-items: center;
+            background: #0f1712; border: 2px solid #2a3f32; border-radius: 100px;
+            padding: 1rem 2rem; transition: 0.4s; position: relative;
+        }
+        .search-input-mockup:hover { border-color: var(--accent); box-shadow: 0 0 30px rgba(16, 185, 129, 0.2); transform: scale(1.02); }
+        
+        .search-input-mockup i { font-size: 2rem; color: #888; margin-right: 1rem; }
+        .search-input-mockup span { font-size: clamp(1.2rem, 3vw, 2rem); color: #fff; font-weight: 500; }
+        
+        .search-btn {
+            position: absolute; right: 10px; top: 10px; bottom: 10px;
+            background: var(--accent); color: var(--dark); font-family: 'Syne', sans-serif; font-weight: 700;
+            border-radius: 50px; padding: 0 2rem; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; text-transform: uppercase; font-size: 1.1rem; transition: 0.3s;
+        }
+        .search-btn:hover { background: var(--light); }
+
+        @media (max-width: 768px) {
+            .search-input-mockup { flex-direction: column; padding: 2rem; border-radius: 20px; gap: 2rem; background: transparent; border: none; }
+            .search-input-mockup i { display: none; }
+            .search-input-mockup span { text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 1rem; width: 100%; }
+            .search-btn { position: relative; right: auto; top: auto; bottom: auto; width: 100%; padding: 1.5rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- DOT GRID OVERLAY -->
+    <div class="bg-dots"></div>
+
+    <!-- MAGIC CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU -->
+    <div class="menu-overlay"><div class="menu-container" id="menu-grid"></div></div>
+
+    <main>
+
+        <!-- S01: SEARCH QUERY HERO -->
+        <section id="seo-hero">
+            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2000&auto=format&fit=crop" class="hero-bg-img" alt="Data Flow">
+            <div class="hero-overlay"></div>
+            
+            <div class="search-box">
+                <span class="search-prefix">query:</span>
+                <span class="typewriter" id="typewriter"></span><span class="blink">_</span>
+            </div>
+            
+            <p class="seo-desc">We don't just optimize. We engineer organic dominance. Reverse-engineering algorithms to put your brand at the absolute top of the index.</p>
+        </section>
+
+        <!-- S02: EXPONENTIAL GROWTH GRAPH -->
+        <section id="seo-graph">
+            <h2 class="display-font graph-header">THE TRAJECTORY</h2>
+            
+            <div class="chart-container">
+                <!-- SVG path representing growth curve -->
+                <svg class="svg-chart" viewBox="0 0 1000 500" preserveAspectRatio="none">
+                    <path class="chart-line-bg" d="M 0,450 C 300,450 400,300 600,250 C 800,200 900,50 1000,0"></path>
+                    <path class="chart-line-glow" id="draw-chart" d="M 0,450 C 300,450 400,300 600,250 C 800,200 900,50 1000,0"></path>
+                </svg>
+
+                <div class="chart-node n1 trigger-node">
+                    <div class="node-label">Technical Audit</div>
+                </div>
+                <div class="chart-node n2 trigger-node">
+                    <div class="node-label">On-Page Scaling</div>
+                </div>
+                <div class="chart-node n3 trigger-node">
+                    <div class="node-label">Authority Building</div>
+                </div>
+                <div class="chart-node n4 trigger-node">
+                    <div class="node-label">Market Dominance</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S03: GOOGLEBOT CRAWL GRID -->
+        <section id="seo-crawl">
+            <h2 class="display-font crawl-header">INDEXING ARCHITECTURE</h2>
+            
+            <div class="crawl-grid">
+                
+                <div class="crawl-card">
+                    <div class="crawl-scanner"></div>
+                    <div class="cc-content">
+                        <i class="ph ph-code cc-icon"></i>
+                        <h3 class="cc-title">Technical SEO</h3>
+                        <p class="cc-desc">Optimizing server response times, core web vitals, crawl budgets, and structured data so search engines can read your site perfectly.</p>
+                    </div>
+                </div>
+
+                <div class="crawl-card">
+                    <div class="crawl-scanner"></div>
+                    <div class="cc-content">
+                        <i class="ph ph-file-text cc-icon"></i>
+                        <h3 class="cc-title">Content Velocity</h3>
+                        <p class="cc-desc">Deploying high-intent, algorithmically mapped content clusters that capture long-tail keywords and dominate featured snippets.</p>
+                    </div>
+                </div>
+
+                <div class="crawl-card">
+                    <div class="crawl-scanner"></div>
+                    <div class="cc-content">
+                        <i class="ph ph-link cc-icon"></i>
+                        <h3 class="cc-title">Authority Link Building</h3>
+                        <p class="cc-desc">Executing bespoke PR campaigns to earn high-DR backlinks from top-tier publications, drastically raising domain authority.</p>
+                    </div>
+                </div>
+
+                <div class="crawl-card">
+                    <div class="crawl-scanner"></div>
+                    <div class="cc-content">
+                        <i class="ph ph-map-pin cc-icon"></i>
+                        <h3 class="cc-title">Local Search Domination</h3>
+                        <p class="cc-desc">Taking over the Google Map Pack and local listings to drive physical foot traffic and localized conversion spikes.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- S04: INFINITE KEYWORD STREAM -->
+        <section id="seo-keywords">
+            
+            <div class="kw-track track-left">
+                <div class="kw-text">ORGANIC TRAFFIC • BACKLINKS • CORE WEB VITALS • ORGANIC TRAFFIC • BACKLINKS • CORE WEB VITALS •</div>
+            </div>
+            
+            <div class="kw-track track-right">
+                <div class="kw-text">ALGORITHMS • CRAWL BUDGET • KEYWORD CLUSTERS • ALGORITHMS • CRAWL BUDGET • KEYWORD CLUSTERS •</div>
+            </div>
+            
+            <div class="kw-track track-left">
+                <div class="kw-text">DOMAIN AUTHORITY • INDEXING • SCHEMA MARKUP • DOMAIN AUTHORITY • INDEXING • SCHEMA MARKUP •</div>
+            </div>
+
+        </section>
+
+        <!-- S05: SEARCH BAR CTA FOOTER -->
+        <section id="seo-cta">
+            <div class="cta-label">Initiate Sequence</div>
+            
+            <div class="search-input-mockup">
+                <i class="ph ph-magnifying-glass"></i>
+                <span>How to scale my organic traffic?</span>
+                <a href="#" class="search-btn magnetic" data-strength="20">Search</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. Lenis Smooth Scroll
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. Cursor & Magnetic (Desktop Only)
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+            
+            document.querySelectorAll('a, button, .menu-item-title, .search-input-mockup, .crawl-card').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    gsap.to(el, { x: ((e.clientX - rect.left) / rect.width - 0.5) * strength, y: ((e.clientY - rect.top) / rect.height - 0.5) * strength, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        }
+
+        // 3. Menu Data & Routing
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetUrl = link.getAttribute('href');
+                if(targetUrl !== '#') {
+                    e.preventDefault();
+                    toggleMenu();
+                    setTimeout(() => { 
+                        if (targetUrl.startsWith('#') || targetUrl.includes('.html#')) {
+                            const id = targetUrl.split('#')[1];
+                            const element = document.getElementById(id);
+                            if(element) lenis.scrollTo(element, { duration: 1.5 });
+                            else window.location.href = targetUrl;
+                        } else { window.location.href = targetUrl; }
+                    }, 800);
+                }
+            });
+        });
+
+        // 4. SEO MAGIC: Typewriter Hero Reveal
+        const text = '"Dominate Search"';
+        const target = document.getElementById('typewriter');
+        let index = 0;
+        
+        setTimeout(() => {
+            const typing = setInterval(() => {
+                if(index < text.length) {
+                    target.innerHTML += text.charAt(index);
+                    index++;
+                } else {
+                    clearInterval(typing);
+                    gsap.to(".seo-desc", { opacity: 1, y: 0, duration: 1, ease: "power3.out" });
+                }
+            }, 100); // Typing speed
+        }, 500);
+
+        // 5. SEO MAGIC: SVG Path Growth Graph Draw
+        const chartLine = document.getElementById('draw-chart');
+        
+        // Ensure path starts hidden (2000 is safely larger than path length)
+        gsap.set(chartLine, { strokeDasharray: 2000, strokeDashoffset: 2000 });
+
+        gsap.to(chartLine, {
+            strokeDashoffset: 0,
+            ease: "none",
+            scrollTrigger: {
+                trigger: "#seo-graph",
+                start: "top center",
+                end: "bottom center",
+                scrub: true
+            }
+        });
+
+        // Pop nodes as the line passes them
+        gsap.utils.toArray('.trigger-node').forEach(node => {
+            ScrollTrigger.create({
+                trigger: node,
+                start: "top center", // Triggers when the line gets roughly near it
+                onEnter: () => node.classList.add('active'),
+                onLeaveBack: () => node.classList.remove('active')
+            });
+        });
+
+        // 6. SEO MAGIC: Infinite Keyword Streams
+        const tracksLeft = document.querySelectorAll('.track-left');
+        const tracksRight = document.querySelectorAll('.track-right');
+        
+        tracksLeft.forEach(track => {
+            track.innerHTML += track.innerHTML; // duplicate for loop
+            gsap.to(track, { xPercent: -50, ease: "none", duration: 20, repeat: -1 });
+        });
+        
+        tracksRight.forEach(track => {
+            track.innerHTML += track.innerHTML; 
+            // Set initial offset so it can move right infinitely
+            gsap.set(track, { xPercent: -50 });
+            gsap.to(track, { xPercent: 0, ease: "none", duration: 20, repeat: -1 });
+        });
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

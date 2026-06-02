@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Archives</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Premium Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES & STRICT RESET
+           ========================================= */
+        :root {
+            --dark: #050505;
+            --light: #f4f4f5;
+            --accent: #ff4b2b; 
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden !important; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); -webkit-font-smoothing: antialiased; }
+        
+        /* Using Space Mono for that "Archive / Data" feel */
+        h1, h2, h3, h4, .display-font { font-family: 'Syne', sans-serif; }
+        .mono-font { font-family: 'Space Mono', monospace; }
+        
+        section { position: relative; width: 100%; overflow: hidden; }
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* =========================================
+           MAGIC CURSOR
+           ========================================= */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--light); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; mix-blend-mode: difference; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--light); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        @media (max-width: 768px) { .cursor { display: none !important; } * { cursor: auto !important; } }
+
+        /* =========================================
+           NAVBAR & MOBILE-OPTIMIZED MENU
+           ========================================= */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5%; z-index: 10000; background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(5,5,5,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5% 5vh 5%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5% 10vh 5%; } .menu-item { padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .menu-item-title span { font-size: 1.2rem !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } .dropdown a i { font-size: 1.8rem !important; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); opacity: 0; transform: translateX(-10px); transition: 0.3s; }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+        .dropdown a:hover i { opacity: 1; transform: translateX(0); }
+
+        /* =========================================
+           UNIQUE S01: THE SCRAMBLE HERO
+           ========================================= */
+        #arch-hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center;
+            padding: 0 5%; background: var(--dark); border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .arch-meta { font-size: 1rem; color: var(--accent); text-transform: uppercase; margin-bottom: 2rem; display: flex; gap: 2rem; opacity: 0; }
+        .arch-title { font-size: clamp(3.5rem, 15vw, 15rem); font-weight: 800; line-height: 0.85; text-transform: uppercase; }
+        /* The scramble text will be targeted by JS */
+        .scramble-text { display: inline-block; }
+        
+        .arch-desc { margin-top: 3rem; font-size: clamp(1rem, 2vw, 1.2rem); color: #888; max-width: 500px; opacity: 0; }
+
+        /* =========================================
+           UNIQUE S02: THE INFINITE VAULT (Opposite Scroll)
+           ========================================= */
+        #arch-vault {
+            height: 150vh; background: #0a0a0a; display: flex; justify-content: center; align-items: center;
+            overflow: hidden; padding: 0 5%; position: relative;
+        }
+        .vault-overlay {
+            position: absolute; inset: 0; pointer-events: none; z-index: 10;
+            background: linear-gradient(to bottom, var(--dark) 0%, transparent 20%, transparent 80%, var(--dark) 100%);
+        }
+        .vault-grid {
+            display: flex; gap: 2vw; height: 250vh; transform: rotate(-5deg) scale(1.2);
+        }
+        .vault-col {
+            display: flex; flex-direction: column; gap: 2vw; width: clamp(200px, 25vw, 400px);
+        }
+        .vault-item { width: 100%; padding-bottom: 120%; position: relative; border-radius: 12px; overflow: hidden; }
+        .vault-item img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.4s; }
+        .vault-item:hover img { filter: grayscale(0%); }
+
+        @media (max-width: 768px) {
+            .vault-grid { transform: rotate(0) scale(1); gap: 4vw; height: 200vh; }
+            .vault-col:nth-child(3) { display: none; } /* Hide 3rd col on mobile */
+            .vault-col { width: 48vw; }
+        }
+
+        /* =========================================
+           UNIQUE S03: THE SCRUB TIMELINE
+           ========================================= */
+        #arch-timeline {
+            padding: 15vh 5%; background: var(--light); color: var(--dark); position: relative;
+        }
+        .timeline-header { text-align: center; margin-bottom: 10vh; font-size: clamp(2.5rem, 6vw, 5rem); }
+        
+        .timeline-wrapper { position: relative; max-width: 1000px; margin: 0 auto; }
+        
+        /* The actual animated line */
+        .timeline-line {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 2px; height: 100%; background: rgba(0,0,0,0.1);
+        }
+        .timeline-progress {
+            position: absolute; top: 0; left: 0; width: 100%; height: 0%; /* JS height */
+            background: var(--accent);
+        }
+
+        .timeline-item {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10vh; position: relative; wwidth: 100%;
+        }
+        .timeline-item:nth-child(odd) .tl-content { text-align: right; padding-right: 5vw; }
+        .timeline-item:nth-child(even) .tl-content { text-align: left; padding-left: 5vw; order: 2; }
+        .timeline-item:nth-child(even) .tl-year { order: 1; text-align: right; padding-right: 5vw; }
+        
+        .tl-content { width: 50%; }
+        .tl-year { width: 50%; font-size: clamp(3rem, 6vw, 6rem); font-weight: 800; color: rgba(0,0,0,0.1); transition: color 0.5s; }
+        .tl-year.active { color: var(--dark); }
+        
+        .tl-title { font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .tl-desc { color: #555; font-size: 1rem; line-height: 1.5; }
+        
+        /* The Node Dot */
+        .tl-node {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 16px; height: 16px; border-radius: 50%; background: var(--dark); border: 4px solid var(--accent);
+            z-index: 2; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .tl-node.active { transform: translate(-50%, -50%) scale(1); }
+
+        /* Mobile Adjustments for Timeline */
+        @media (max-width: 768px) {
+            .timeline-line { left: 0; transform: none; }
+            .timeline-item { flex-direction: column; align-items: flex-start; margin-bottom: 8vh; padding-left: 8vw; }
+            .timeline-item:nth-child(odd) .tl-content, .timeline-item:nth-child(even) .tl-content { text-align: left; padding: 0; width: 100%; order: 2; }
+            .timeline-item:nth-child(even) .tl-year { order: 1; text-align: left; padding: 0; }
+            .tl-year { width: 100%; font-size: 3rem; margin-bottom: 1rem; }
+            .tl-node { left: 0; transform: translate(-50%, 0) scale(0); top: 1.5rem; }
+            .tl-node.active { transform: translate(-50%, 0) scale(1); }
+        }
+
+        /* =========================================
+           UNIQUE S04: BRUTALIST DATA TABLE
+           ========================================= */
+        #arch-data { padding: 15vh 5%; background: var(--dark); color: var(--light); }
+        .data-header { font-size: clamp(2rem, 5vw, 4rem); margin-bottom: 5vh; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 2rem; }
+        
+        .data-row {
+            display: grid; grid-template-columns: 1fr 3fr 2fr 1fr; gap: 2rem; align-items: center;
+            padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s; position: relative; overflow: hidden;
+        }
+        .data-row:hover { background: var(--accent); color: var(--dark); padding-left: 2%; padding-right: 2%; border-color: transparent; }
+        .data-row:hover .mono-font { color: var(--dark); }
+
+        .d-id { color: #555; }
+        .d-title { font-size: clamp(1.2rem, 2vw, 1.8rem); font-weight: 700; font-family: 'Syne', sans-serif; }
+        .d-type { font-size: 1rem; }
+        .d-link { text-align: right; }
+        .d-link i { font-size: 1.5rem; transition: transform 0.3s; }
+        .data-row:hover .d-link i { transform: rotate(45deg); }
+
+        @media (max-width: 768px) {
+            .data-row { grid-template-columns: 1fr; gap: 0.5rem; padding: 1.5rem 0; }
+            .d-id { font-size: 0.8rem; }
+            .d-type { font-size: 0.9rem; color: #aaa; }
+            .data-row:hover { padding-left: 0; padding-right: 0; background: transparent; color: var(--light); border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .data-row:hover .mono-font { color: #555; }
+            .d-link { display: none; }
+        }
+
+        /* =========================================
+           UNIQUE S05: MAGNETIC FOOTER CTA
+           ========================================= */
+        #arch-cta {
+            height: 60vh; background: var(--gray); display: flex; align-items: center; justify-content: center;
+        }
+        .giant-magnetic-btn {
+            width: clamp(200px, 40vw, 350px); height: clamp(200px, 40vw, 350px);
+            border-radius: 50%; background: var(--light); color: var(--dark);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; transition: background 0.3s;
+        }
+        .giant-magnetic-btn:hover { background: var(--accent); }
+        .gmb-text { font-family: 'Syne', sans-serif; font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; text-transform: uppercase; }
+        .gmb-sub { font-family: 'Space Mono', monospace; font-size: 0.9rem; margin-top: 0.5rem; }
+
+    </style>
+</head>
+<body>
+
+    <!-- MAGIC CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU -->
+    <div class="menu-overlay"><div class="menu-container" id="menu-grid"></div></div>
+
+    <main>
+
+        <!-- S01: SCRAMBLE HERO -->
+        <section id="arch-hero">
+            <div class="arch-meta mono-font">
+                <span>Total: 104</span>
+                <span>Active: 22</span>
+            </div>
+            <!-- The text will be scrambled by JS -->
+            <h1 class="arch-title"><span class="scramble-text" data-text="ARCHIVES">00000000</span></h1>
+            <p class="arch-desc">A brutalist documentation of our past experiments, successful deployments, and raw data.</p>
+        </section>
+
+        <!-- S02: INFINITE VAULT (Opposite Scroll Columns) -->
+        <section id="arch-vault">
+            <div class="vault-overlay"></div>
+            <div class="vault-grid">
+                
+                <!-- Column 1 (Scrolls Down) -->
+                <div class="vault-col col-down">
+                    <div class="vault-item"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop"></div>
+                    <div class="vault-item"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&auto=format&fit=crop"></div>
+                    <div class="vault-item"><img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=600&auto=format&fit=crop"></div>
+                </div>
+
+                <!-- Column 2 (Scrolls Up) -->
+                <div class="vault-col col-up" style="margin-top: 10vh;">
+                    <div class="vault-item"><img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=600&auto=format&fit=crop"></div>
+                    <div class="vault-item"><img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=600&auto=format&fit=crop"></div>
+                    <div class="vault-item"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=600&auto=format&fit=crop"></div>
+                </div>
+
+                <!-- Column 3 (Scrolls Down - Hidden on mobile) -->
+                <div class="vault-col col-down" style="margin-top: -10vh;">
+                    <div class="vault-item"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=600&auto=format&fit=crop"></div>
+                    <div class="vault-item"><img src="https://images.unsplash.com/photo-1618005192384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop"></div>
+                    <div class="vault-item"><img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600&auto=format&fit=crop"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- S03: SCRUB TIMELINE -->
+        <section id="arch-timeline">
+            <h2 class="display-font timeline-header">THE EVOLUTION</h2>
+            
+            <div class="timeline-wrapper">
+                <div class="timeline-line"><div class="timeline-progress"></div></div>
+
+                <div class="timeline-item">
+                    <div class="tl-node"></div>
+                    <div class="tl-content">
+                        <div class="tl-title">Foundation</div>
+                        <div class="tl-desc">The agency is born. We started by building raw HTML/CSS frameworks for local brands, setting the stage for future growth.</div>
+                    </div>
+                    <div class="tl-year display-font">2018</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="tl-node"></div>
+                    <div class="tl-content">
+                        <div class="tl-title">The WebGL Era</div>
+                        <div class="tl-desc">We integrated Three.js into our stack, winning our first FWA and Awwwards for immersive 3D browser experiences.</div>
+                    </div>
+                    <div class="tl-year display-font">2020</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="tl-node"></div>
+                    <div class="tl-content">
+                        <div class="tl-title">Global Scale</div>
+                        <div class="tl-desc">Expanded to a remote team of 40. Launched enterprise-grade applications for Fortune 500 tech companies.</div>
+                    </div>
+                    <div class="tl-year display-font">2022</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="tl-node"></div>
+                    <div class="tl-content">
+                        <div class="tl-title">AI Integration</div>
+                        <div class="tl-desc">Developing bespoke LLM interfaces and AI-driven platforms, redefining how humans interact with machine learning.</div>
+                    </div>
+                    <div class="tl-year display-font">2024</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- S04: BRUTALIST DATA TABLE -->
+        <section id="arch-data">
+            <h2 class="display-font data-header">RAW INDEX_</h2>
+            
+            <div class="data-table">
+                <div class="data-row">
+                    <div class="d-id mono-font">041</div>
+                    <div class="d-title">Neon District</div>
+                    <div class="d-type mono-font">Web UI / Frontend</div>
+                    <div class="d-link"><i class="ph ph-arrow-up-right"></i></div>
+                </div>
+                <div class="data-row">
+                    <div class="d-id mono-font">040</div>
+                    <div class="d-title">Cyber Bank</div>
+                    <div class="d-type mono-font">App / FinTech</div>
+                    <div class="d-link"><i class="ph ph-arrow-up-right"></i></div>
+                </div>
+                <div class="data-row">
+                    <div class="d-id mono-font">039</div>
+                    <div class="d-title">Aura Acoustics</div>
+                    <div class="d-type mono-font">WebGL / 3D</div>
+                    <div class="d-link"><i class="ph ph-arrow-up-right"></i></div>
+                </div>
+                <div class="data-row">
+                    <div class="d-id mono-font">038</div>
+                    <div class="d-title">Vortex Engine</div>
+                    <div class="d-type mono-font">Identity / Branding</div>
+                    <div class="d-link"><i class="ph ph-arrow-up-right"></i></div>
+                </div>
+                <div class="data-row">
+                    <div class="d-id mono-font">037</div>
+                    <div class="d-title">Project Alpha</div>
+                    <div class="d-type mono-font">SaaS Dashboard</div>
+                    <div class="d-link"><i class="ph ph-arrow-up-right"></i></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S05: MAGNETIC FOOTER CTA -->
+        <section id="arch-cta">
+            <a href="#" class="giant-magnetic-btn magnetic" data-strength="60">
+                <span class="gmb-text">INITIATE</span>
+                <span class="gmb-sub">System_Boot</span>
+            </a>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. Lenis Smooth Scroll
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. Cursor & Magnetic (Desktop Only)
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+            
+            document.querySelectorAll('a, button, .menu-item-title, .data-row').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    gsap.to(el, { x: ((e.clientX - rect.left) / rect.width - 0.5) * strength, y: ((e.clientY - rect.top) / rect.height - 0.5) * strength, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        }
+
+        // 3. Menu Data & Routing
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetUrl = link.getAttribute('href');
+                if(targetUrl !== '#') {
+                    e.preventDefault();
+                    toggleMenu();
+                    setTimeout(() => { 
+                        if (targetUrl.startsWith('#') || targetUrl.includes('.html#')) {
+                            const id = targetUrl.split('#')[1];
+                            const element = document.getElementById(id);
+                            if(element) lenis.scrollTo(element, { duration: 1.5 });
+                            else window.location.href = targetUrl;
+                        } else { window.location.href = targetUrl; }
+                    }, 800);
+                }
+            });
+        });
+
+        // 4. ARCHIVE MAGIC: Hero Text Scramble Reveal
+        const scrambleText = document.querySelector('.scramble-text');
+        const finalWord = scrambleText.getAttribute('data-text');
+        const chars = '!<>-_\\/[]{}—=+*^?#_';
+        let iterations = 0;
+        
+        setTimeout(() => {
+            const interval = setInterval(() => {
+                scrambleText.innerText = finalWord.split('').map((char, index) => {
+                    if (index < iterations) return finalWord[index];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join('');
+                if (iterations >= finalWord.length) clearInterval(interval);
+                iterations += 1 / 3; // Controls speed of decode
+            }, 30);
+            
+            gsap.to(".arch-meta, .arch-desc", { opacity: 1, y: -20, duration: 1, delay: 0.5 });
+        }, 300);
+
+        // 5. ARCHIVE MAGIC: Vault Opposite Scroll
+        gsap.to(".col-down", {
+            yPercent: -20, // Moves up slightly while scrolling down
+            ease: "none",
+            scrollTrigger: { trigger: "#arch-vault", start: "top bottom", end: "bottom top", scrub: 1 }
+        });
+        gsap.to(".col-up", {
+            yPercent: 20, // Moves down slightly while scrolling down
+            ease: "none",
+            scrollTrigger: { trigger: "#arch-vault", start: "top bottom", end: "bottom top", scrub: 1 }
+        });
+
+        // 6. ARCHIVE MAGIC: Scrub Timeline
+        const timelineWrapper = document.querySelector('.timeline-wrapper');
+        
+        // Draw the line down
+        gsap.to(".timeline-progress", {
+            height: "100%", ease: "none",
+            scrollTrigger: { trigger: timelineWrapper, start: "top center", end: "bottom center", scrub: true }
+        });
+
+        // Activate Nodes & Years as line passes them
+        gsap.utils.toArray('.timeline-item').forEach(item => {
+            const node = item.querySelector('.tl-node');
+            const year = item.querySelector('.tl-year');
+            
+            ScrollTrigger.create({
+                trigger: item, start: "top center", end: "bottom center",
+                onEnter: () => { node.classList.add('active'); year.classList.add('active'); },
+                onLeaveBack: () => { node.classList.remove('active'); year.classList.remove('active'); }
+            });
+        });
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

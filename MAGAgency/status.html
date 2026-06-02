@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MΛGAgency | Support Status</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --dark:#040506;
+      --light:#f4f4f5;
+      --accent:#00f59b;
+      --accent-2:#00d4ff;
+      --accent-3:#8b5cf6;
+      --danger:#ff5470;
+      --warn:#ffd166;
+      --gray:#101419;
+      --nav-height:70px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;cursor:none;}
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--light);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+    h1,h2,h3,h4,h5,h6,.display-font{font-family:'Syne',sans-serif;}
+    .mono{font-family:'JetBrains Mono',monospace;}
+    html.lenis{height:auto;}
+    .lenis.lenis-smooth{scroll-behavior:auto !important;}
+
+    .cursor{
+      position:fixed;top:0;left:0;width:20px;height:20px;border-radius:50%;
+      background:var(--accent);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);
+      transition:width .3s,height .3s,background .3s,border .3s;
+      mix-blend-mode:screen;
+    }
+    .cursor.hovered{
+      width:80px;height:80px;background:transparent;border:1px solid var(--accent);
+      mix-blend-mode:normal;backdrop-filter:grayscale(1);
+    }
+    .cursor.view-mode::after{
+      content:'LIVE';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      font-size:10px;font-weight:600;color:var(--accent);font-family:'JetBrains Mono';letter-spacing:1px;
+    }
+    @media (max-width:768px){
+      .cursor{display:none;}
+      *{cursor:auto !important;}
+    }
+
+    nav{
+      position:fixed;top:0;left:0;width:100%;height:var(--nav-height);
+      display:flex;justify-content:space-between;align-items:center;padding:0 5vw;
+      z-index:10000;background:rgba(4,5,6,.8);backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(0,245,155,.12);
+    }
+    .nav-brand{
+      font-size:1.3rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;
+      color:var(--light);text-decoration:none;
+    }
+    .menu-btn{
+      display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--light);
+      font-weight:600;text-transform:uppercase;font-size:.9rem;
+    }
+    .hamburger{width:35px;height:8px;position:relative;}
+    .hamburger span{
+      position:absolute;width:100%;height:2px;background:var(--light);transition:.4s;
+    }
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){bottom:0;}
+    .menu-btn.active .hamburger span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);background:var(--accent);
+    }
+    .menu-btn.active .hamburger span:nth-child(2){
+      transform:translateY(-3px) rotate(-45deg);background:var(--accent);
+    }
+
+    .menu-overlay{
+      position:fixed;top:0;left:0;width:100vw;height:100vh;
+      background:rgba(4,5,6,.98);backdrop-filter:blur(10px);z-index:9999;display:flex;
+      padding-top:calc(var(--nav-height) + 3vh);
+      clip-path:polygon(0 0,100% 0,100% 0,0 0);
+      overflow-y:auto;
+      pointer-events:none;
+    }
+    .menu-overlay.active{pointer-events:auto;}
+    .menu-container{
+      width:100%;padding:0 5vw 5vh 5vw;display:grid;grid-template-columns:repeat(4,1fr);
+      gap:2rem 2.5rem;align-content:start;
+    }
+    @media (max-width:1200px){.menu-container{grid-template-columns:repeat(3,1fr);}}
+    @media (max-width:768px){
+      .menu-container{grid-template-columns:1fr;gap:.5rem;padding:2vh 5vw 10vh 5vw;}
+      .menu-item{border-bottom:1px solid rgba(255,255,255,.15);padding:1.5rem 0;}
+      .menu-item-title{font-size:2rem !important;font-weight:800 !important;}
+      .dropdown a{font-size:1.08rem !important;padding:.75rem 0;}
+    }
+    .menu-item{border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:1rem;}
+    .menu-item-title{
+      font-size:clamp(1.3rem,2.5vw,2rem);font-weight:700;display:flex;justify-content:space-between;
+      align-items:center;opacity:0;transform:translateY(20px);
+    }
+    .menu-item-title span{
+      font-size:1rem;font-family:'Inter',sans-serif;font-weight:400;color:var(--accent);
+    }
+    .dropdown{height:0;overflow:hidden;transition:height .4s ease;}
+    .dropdown-inner{padding-top:1rem;display:flex;flex-direction:column;gap:.8rem;}
+    .dropdown a{
+      color:#aaa;text-decoration:none;font-size:1.1rem;display:flex;align-items:center;gap:10px;transition:.3s;
+      word-break:break-word;
+    }
+    .dropdown a i{font-size:1.4rem;color:var(--accent);flex-shrink:0;}
+    .dropdown a:hover{color:var(--light);padding-left:10px;}
+
+    section{
+      position:relative;width:100vw;min-height:100vh;overflow:hidden;
+    }
+    .section-bg{
+      position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;
+    }
+    .section-overlay{
+      position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;background:rgba(4,5,6,.58);
+    }
+    .section-content{
+      position:relative;z-index:2;width:100%;height:100%;padding:calc(var(--nav-height) + 4vh) 5vw 8vh 5vw;
+      display:flex;
+    }
+
+    /* HERO */
+    #s01-hero .section-overlay{
+      background:
+        radial-gradient(circle at 70% 30%, rgba(0,245,155,.08), transparent 30%),
+        linear-gradient(180deg, rgba(4,5,6,.08) 0%, rgba(4,5,6,.92) 100%);
+    }
+    #s01-hero .section-content{
+      flex-direction:column;justify-content:center;align-items:flex-start;
+    }
+    .hero-eyebrow{
+      color:var(--warn);font-family:'JetBrains Mono';font-size:.95rem;letter-spacing:4px;text-transform:uppercase;
+      margin-bottom:1.4rem;
+    }
+    .hero-title{
+      font-size:clamp(3.4rem,10vw,9rem);line-height:.88;text-transform:uppercase;font-weight:800;
+      max-width:1100px;
+    }
+    .hero-title .line{display:block;overflow:hidden;}
+    .hero-title .word{display:inline-block;transform:translateY(110%);}
+    .hero-title .outline{color:transparent;-webkit-text-stroke:2px var(--light);}
+    .hero-sub{
+      margin-top:1.6rem;max-width:760px;color:#b6bfce;font-size:clamp(1rem,2vw,1.18rem);line-height:1.75;
+    }
+    .hero-live{
+      margin-top:2rem;display:flex;align-items:center;gap:12px;padding:1rem 1.2rem;
+      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;backdrop-filter:blur(14px);width:min(100%,520px);flex-wrap:wrap;
+    }
+    .live-dot{
+      width:12px;height:12px;border-radius:50%;background:var(--accent);
+      box-shadow:0 0 16px rgba(0,245,155,.7);
+      animation:pulseDot 1.2s infinite;
+      flex-shrink:0;
+    }
+    @keyframes pulseDot{
+      0%,100%{transform:scale(1);opacity:1;}
+      50%{transform:scale(.75);opacity:.35;}
+    }
+    .hero-live .main{
+      font-family:'JetBrains Mono';font-size:.9rem;color:#d6fff0;
+    }
+    .hero-live .clock{
+      font-family:'JetBrains Mono';font-size:.82rem;color:#90a7ad;
+    }
+
+    /* UNIQUE SECTION 2: CENTRAL STATUS SUN */
+    #s02-sun{
+      background:#05070a;
+      min-height:155vh;
+    }
+    .sun-stage{
+      position:sticky;top:0;height:100vh;width:100%;
+      display:flex;align-items:center;justify-content:center;z-index:2;overflow:hidden;
+    }
+    .sun-grid{
+      position:absolute;inset:0;
+      background:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size:42px 42px;
+      opacity:.5;
+    }
+    .status-sun{
+      position:relative;
+      width:min(44vw,420px);
+      height:min(44vw,420px);
+      min-width:250px;
+      min-height:250px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(0,245,155,.42), rgba(0,212,255,.12) 48%, rgba(124,77,255,.08) 68%, transparent 72%);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 0 80px rgba(0,245,155,.15), 0 0 140px rgba(0,212,255,.08);
+      display:flex;align-items:center;justify-content:center;text-align:center;
+      backdrop-filter:blur(18px);
+      z-index:3;
+    }
+    .status-sun::before,
+    .status-sun::after{
+      content:'';
+      position:absolute;border-radius:50%;border:1px dashed rgba(255,255,255,.12);
+    }
+    .status-sun::before{
+      width:130%;height:130%;
+      animation:spinSlow 18s linear infinite;
+    }
+    .status-sun::after{
+      width:165%;height:165%;
+      animation:spinSlowReverse 24s linear infinite;
+    }
+    @keyframes spinSlow{
+      from{transform:rotate(0deg);}
+      to{transform:rotate(360deg);}
+    }
+    @keyframes spinSlowReverse{
+      from{transform:rotate(360deg);}
+      to{transform:rotate(0deg);}
+    }
+
+    .sun-core{
+      width:60%;text-align:center;
+    }
+    .sun-core .mini{
+      color:var(--warn);font-family:'JetBrains Mono';font-size:.78rem;margin-bottom:.45rem;
+    }
+    .sun-core h2{
+      font-size:clamp(1.6rem,3vw,2.4rem);line-height:1.05;
+      margin-bottom:.5rem;
+    }
+    .sun-core p{
+      color:#d2fcef;font-family:'JetBrains Mono';font-size:.82rem;line-height:1.5;
+    }
+
+    .status-orbit-card{
+      position:absolute;
+      width:190px;
+      background:rgba(17,20,27,.82);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:1rem;
+      backdrop-filter:blur(16px);
+      box-shadow:0 18px 40px rgba(0,0,0,.26);
+      transition:.35s;
+      transform:translate(-50%,-50%);
+      z-index:4;
+    }
+    .status-orbit-card:hover{
+      transform:translate(-50%,-50%) scale(1.05);
+      border-color:rgba(0,245,155,.25);
+    }
+    .status-orbit-card .mini{
+      color:var(--accent-2);
+      font-family:'JetBrains Mono';
+      font-size:.72rem;
+      margin-bottom:.35rem;
+    }
+    .status-orbit-card h4{
+      font-size:1rem;line-height:1.18;margin-bottom:.3rem;
+    }
+    .status-orbit-card p{
+      color:#a8b1c2;font-size:.82rem;line-height:1.45;
+    }
+    .status-orbit-card.good{border-left:4px solid var(--accent);}
+    .status-orbit-card.warn{border-left:4px solid var(--warn);}
+    .status-orbit-card.issue{border-left:4px solid var(--danger);}
+
+    .soc-1{top:18%;left:22%;}
+    .soc-2{top:18%;left:78%;}
+    .soc-3{top:50%;left:12%;}
+    .soc-4{top:50%;left:88%;}
+    .soc-5{top:82%;left:28%;}
+    .soc-6{top:82%;left:72%;}
+
+    .sun-copy{
+      position:absolute;left:5vw;bottom:9vh;max-width:460px;z-index:5;
+    }
+    .sun-copy h3{
+      font-size:clamp(2.4rem,5vw,4.5rem);line-height:.95;margin-bottom:1rem;
+    }
+    .sun-copy p{
+      color:#aab2c4;line-height:1.7;
+    }
+
+    @media (max-width:1024px){
+      #s02-sun{min-height:190vh;}
+      .status-orbit-card{width:160px;padding:.85rem;}
+    }
+    @media (max-width:768px){
+      #s02-sun{min-height:220vh;}
+      .sun-stage{align-items:flex-start;padding-top:18vh;}
+      .status-sun{
+        width:78vw;height:78vw;min-width:220px;min-height:220px;
+      }
+      .status-orbit-card{
+        width:138px;padding:.75rem;
+      }
+      .status-orbit-card h4{font-size:.85rem;}
+      .status-orbit-card p{font-size:.72rem;}
+      .soc-1{top:4%;left:20%;}
+      .soc-2{top:4%;left:80%;}
+      .soc-3{top:34%;left:8%;}
+      .soc-4{top:34%;left:92%;}
+      .soc-5{top:78%;left:24%;}
+      .soc-6{top:78%;left:76%;}
+      .sun-copy{
+        position:relative;left:auto;bottom:auto;
+        margin:86vh 5vw 0 5vw;
+        max-width:none;
+      }
+    }
+
+    /* SECTION 3: LIVE PULSE MATRIX */
+    #s03-matrix{
+      background:#06080d;
+    }
+    .matrix-wrap{
+      width:100%;display:flex;flex-direction:column;justify-content:center;
+    }
+    .matrix-head{
+      display:flex;justify-content:space-between;align-items:end;gap:2rem;flex-wrap:wrap;margin-bottom:4vh;
+    }
+    .matrix-head h2{
+      font-size:clamp(2.8rem,6vw,5.8rem);line-height:.92;
+    }
+    .matrix-head p{
+      max-width:540px;color:#a9b1c1;line-height:1.75;
+    }
+    .matrix-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;
+    }
+    .matrix-box{
+      position:relative;min-height:220px;padding:1.3rem;border-radius:22px;
+      background:#11161d;border:1px solid rgba(255,255,255,.06);overflow:hidden;
+      transition:.35s;
+    }
+    .matrix-box::before{
+      content:'';position:absolute;inset:0;background:radial-gradient(circle at top right, rgba(0,194,255,.12), transparent 40%);
+      pointer-events:none;
+    }
+    .matrix-box:hover{
+      transform:translateY(-10px);border-color:rgba(0,194,255,.28);box-shadow:0 20px 50px rgba(0,0,0,.28);
+    }
+    .matrix-status{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:.45rem .7rem;border-radius:999px;font-family:'JetBrains Mono';font-size:.72rem;margin-bottom:1rem;
+      background:rgba(0,245,155,.08);border:1px solid rgba(0,245,155,.18);color:#d3fff0;
+    }
+    .matrix-status.warn{
+      background:rgba(255,209,102,.08);border-color:rgba(255,209,102,.18);color:#ffe9b2;
+    }
+    .matrix-status.issue{
+      background:rgba(255,92,122,.08);border-color:rgba(255,92,122,.18);color:#ffd4dc;
+    }
+    .matrix-pulse{
+      width:8px;height:8px;border-radius:50%;background:currentColor;
+      box-shadow:0 0 12px currentColor;
+    }
+    .matrix-box h3{
+      font-size:1.25rem;line-height:1.14;margin-bottom:.6rem;
+    }
+    .matrix-box p{
+      color:#a5aebf;line-height:1.55;font-size:.92rem;
+    }
+    .matrix-value{
+      margin-top:1rem;font-size:1.8rem;font-weight:700;
+    }
+    @media (max-width:1024px){
+      .matrix-grid{grid-template-columns:repeat(2,1fr);}
+    }
+    @media (max-width:768px){
+      .matrix-grid{grid-template-columns:1fr;}
+    }
+
+    /* SECTION 4: INCIDENT RIVER */
+    #s04-river{
+      background:#05070a;
+    }
+    .river-wrap{
+      width:100%;display:flex;align-items:center;justify-content:space-between;gap:2rem;
+    }
+    .river-copy{
+      width:34%;display:flex;flex-direction:column;gap:1rem;
+    }
+    .river-copy h2{
+      font-size:clamp(2.8rem,5vw,5.7rem);line-height:.94;
+    }
+    .river-copy p{
+      color:#aab2c4;line-height:1.75;max-width:430px;
+    }
+    .river-stage{
+      width:60%;height:74vh;position:relative;display:flex;align-items:center;justify-content:center;
+      overflow:hidden;
+    }
+    .river-line{
+      position:absolute;left:8%;right:8%;top:50%;height:6px;border-radius:999px;
+      background:linear-gradient(90deg, rgba(0,245,155,.3), rgba(0,212,255,.25), rgba(124,77,255,.25));
+      filter:blur(.2px);
+    }
+    .incident-bubble{
+      position:absolute;
+      width:210px;
+      padding:1rem;
+      border-radius:18px;
+      background:rgba(17,20,27,.84);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(16px);
+      box-shadow:0 20px 40px rgba(0,0,0,.26);
+      transform:translate(-50%,-50%);
+      opacity:0;
+    }
+    .incident-bubble .mini{
+      color:var(--accent-2);font-family:'JetBrains Mono';font-size:.72rem;margin-bottom:.35rem;
+    }
+    .incident-bubble h4{
+      font-size:1rem;line-height:1.16;margin-bottom:.35rem;
+    }
+    .incident-bubble p{
+      color:#aab2c4;font-size:.82rem;line-height:1.45;
+    }
+    .incident-bubble.good{border-left:4px solid var(--accent);}
+    .incident-bubble.warn{border-left:4px solid var(--warn);}
+    .incident-bubble.issue{border-left:4px solid var(--danger);}
+    .ib-1{top:38%;left:16%;}
+    .ib-2{top:60%;left:34%;}
+    .ib-3{top:36%;left:54%;}
+    .ib-4{top:60%;left:73%;}
+    @media (max-width:1024px){
+      .river-wrap{flex-direction:column;justify-content:center;}
+      .river-copy,.river-stage{width:100%;}
+      .river-copy{text-align:center;}
+      .river-copy p{margin:0 auto;}
+      .river-stage{height:86vh;}
+    }
+    @media (max-width:768px){
+      .river-stage{height:96vh;}
+      .incident-bubble{width:150px;padding:.75rem;}
+      .incident-bubble h4{font-size:.82rem;}
+      .incident-bubble p{font-size:.72rem;}
+      .ib-1{top:26%;left:20%;}
+      .ib-2{top:48%;left:58%;}
+      .ib-3{top:66%;left:24%;}
+      .ib-4{top:82%;left:70%;}
+    }
+
+    /* SECTION 5: SERVICE TYPES */
+    #s05-types{
+      background:#08090d;
+    }
+    .types-wrap{
+      width:100%;display:flex;flex-direction:column;justify-content:center;
+    }
+    .types-head{
+      display:flex;justify-content:space-between;align-items:end;gap:2rem;flex-wrap:wrap;margin-bottom:5vh;
+    }
+    .types-head h2{
+      font-size:clamp(2.6rem,6vw,5.5rem);line-height:.94;
+    }
+    .types-head p{
+      max-width:520px;color:#a8afbf;line-height:1.75;
+    }
+    .types-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;
+    }
+    .type-card{
+      background:#12161d;border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:1.4rem;
+      transition:.35s;position:relative;overflow:hidden;
+    }
+    .type-card::before{
+      content:'';position:absolute;inset:0;background:radial-gradient(circle at top right, rgba(0,194,255,.12), transparent 42%);
+      pointer-events:none;
+    }
+    .type-card:hover{
+      transform:translateY(-10px);border-color:rgba(0,194,255,.28);box-shadow:0 20px 50px rgba(0,0,0,.3);
+    }
+    .type-top{
+      display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;
+      color:var(--accent-4);font-family:'JetBrains Mono';font-size:.82rem;
+    }
+    .type-icon{
+      width:56px;height:56px;border-radius:14px;background:rgba(255,255,255,.05);
+      display:flex;align-items:center;justify-content:center;font-size:1.55rem;color:var(--accent);margin-bottom:1rem;
+    }
+    .type-card h3{
+      font-size:1.3rem;line-height:1.15;margin-bottom:.8rem;
+    }
+    .type-card p{
+      color:#a1a9bb;line-height:1.6;font-size:.95rem;
+    }
+    @media (max-width:1024px){.types-grid{grid-template-columns:repeat(2,1fr);}}
+    @media (max-width:768px){.types-grid{grid-template-columns:1fr;}}
+
+    /* FOOTER */
+    #s06-footer{background:#020304;}
+    #s06-footer .section-overlay{
+      background:linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,.45) 100%);
+    }
+    .footer-main{
+      position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;
+      padding:calc(var(--nav-height) + 2vh) 5vw 5vh 5vw;
+    }
+    .footer-title{
+      margin-top:auto;text-align:center;font-size:clamp(3rem,14vw,11rem);line-height:.8;font-weight:800;
+    }
+    .footer-title span{color:var(--accent);}
+    .footer-bottom{
+      display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap;
+      border-top:1px solid rgba(255,255,255,.1);padding-top:2rem;margin-top:auto;
+    }
+    .social-links{display:flex;gap:1rem;}
+    .social-btn{
+      width:60px;height:60px;border-radius:50%;border:1px solid rgba(255,255,255,.2);
+      display:flex;justify-content:center;align-items:center;color:var(--light);font-size:1.5rem;transition:.3s;
+    }
+    .social-btn:hover{background:var(--accent);border-color:var(--accent);color:#00141a;}
+  </style>
+</head>
+<body>
+  <div class="cursor"></div>
+
+  <nav>
+    <a href="#" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+    <button class="menu-btn magnetic" data-strength="30">
+      Menu
+      <div class="hamburger"><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <div class="menu-overlay" id="menuOverlay">
+    <div class="menu-container" id="menu-grid"></div>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section id="s01-hero">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2200&auto=format&fit=crop" class="section-bg hero-bg" alt="Status Hero">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="hero-eyebrow gsap-up">► SUPPORT / STATUS</div>
+
+        <h1 class="hero-title">
+          <span class="line"><span class="word gsap-word">SYSTEM</span></span>
+          <span class="line"><span class="word gsap-word outline">HEALTH</span></span>
+        </h1>
+
+        <p class="hero-sub gsap-up">
+          A unique status page built like a living operations universe — central status sun, live pulse matrix,
+          incident river, and service-type wall. Nothing repeated. Fully mobile-friendly.
+        </p>
+
+        <div class="hero-live gsap-up hover-target">
+          <div class="live-dot"></div>
+          <div class="main">All core systems operational</div>
+          <div class="clock" id="liveClock">00:00:00 UTC</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- UNIQUE STATUS SUN -->
+    <section id="s02-sun">
+      <div class="section-overlay" style="background:radial-gradient(circle at center, rgba(0,245,155,.06) 0%, rgba(4,5,6,.95) 72%);"></div>
+
+      <div class="sun-stage">
+        <div class="sun-grid"></div>
+
+        <div class="status-sun" id="statusSun">
+          <div class="sun-core">
+            <div class="mini">CORE STATUS</div>
+            <h2 class="display-font">Operational</h2>
+            <p>Everything is live, synced, and actively monitored.</p>
+          </div>
+        </div>
+
+        <article class="status-orbit-card good soc-1 view-target">
+          <div class="mini">AUTH</div>
+          <h4 class="display-font">Authentication</h4>
+          <p>Healthy sessions and secure login flows.</p>
+        </article>
+
+        <article class="status-orbit-card good soc-2 view-target">
+          <div class="mini">API</div>
+          <h4 class="display-font">API Gateway</h4>
+          <p>Stable throughput and response timing.</p>
+        </article>
+
+        <article class="status-orbit-card warn soc-3 view-target">
+          <div class="mini">QUEUE</div>
+          <h4 class="display-font">Background Jobs</h4>
+          <p>Minor delay spike being monitored.</p>
+        </article>
+
+        <article class="status-orbit-card good soc-4 view-target">
+          <div class="mini">CDN</div>
+          <h4 class="display-font">Edge Delivery</h4>
+          <p>Fast asset propagation across regions.</p>
+        </article>
+
+        <article class="status-orbit-card good soc-5 view-target">
+          <div class="mini">BILLING</div>
+          <h4 class="display-font">Payments</h4>
+          <p>Invoices and subscriptions operating normally.</p>
+        </article>
+
+        <article class="status-orbit-card issue soc-6 view-target">
+          <div class="mini">EU REGION</div>
+          <h4 class="display-font">Resolved Incident</h4>
+          <p>Latency spike recovered and closed.</p>
+        </article>
+
+        <div class="sun-copy">
+          <h3 class="display-font">The Status Sun.</h3>
+          <p>
+            Instead of another boring uptime row, this section turns your system health into a focal command center.
+            Every subsystem orbits the core so users instantly understand platform health in one glance.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PULSE MATRIX -->
+    <section id="s03-matrix">
+      <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.06;" alt="Matrix Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="matrix-wrap">
+          <div class="matrix-head">
+            <h2 class="display-font">Pulse<br>Matrix.</h2>
+            <p>
+              A live operational matrix showing the current health of every major service area — visually grouped as signals instead of repetitive cards.
+            </p>
+          </div>
+
+          <div class="matrix-grid">
+            <article class="matrix-box view-target">
+              <div class="matrix-status"><span class="matrix-pulse"></span> HEALTHY</div>
+              <h3 class="display-font">API Platform</h3>
+              <p>Request routing, gateway validation, and endpoint response timing.</p>
+              <div class="matrix-value">99.99%</div>
+            </article>
+
+            <article class="matrix-box view-target">
+              <div class="matrix-status"><span class="matrix-pulse"></span> HEALTHY</div>
+              <h3 class="display-font">Authentication</h3>
+              <p>Identity checks, token sessions, refresh flow, and access control.</p>
+              <div class="matrix-value">42ms</div>
+            </article>
+
+            <article class="matrix-box view-target">
+              <div class="matrix-status warn"><span class="matrix-pulse"></span> MONITORED</div>
+              <h3 class="display-font">Background Queue</h3>
+              <p>Worker queue health, delayed processing, and scheduled jobs.</p>
+              <div class="matrix-value">+6%</div>
+            </article>
+
+            <article class="matrix-box view-target">
+              <div class="matrix-status"><span class="matrix-pulse"></span> HEALTHY</div>
+              <h3 class="display-font">Billing</h3>
+              <p>Invoice generation, payment confirmation, and subscription flow.</p>
+              <div class="matrix-value">Stable</div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INCIDENT RIVER -->
+    <section id="s04-river">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.05;" alt="River Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="river-wrap">
+          <div class="river-copy">
+            <div class="hero-eyebrow">► INCIDENT RIVER</div>
+            <h2 class="display-font">Flow Of<br>Events.</h2>
+            <p>
+              This section turns incident history into a floating river of events — a more expressive structure than standard timelines or boring logs.
+            </p>
+          </div>
+
+          <div class="river-stage">
+            <div class="river-line"></div>
+
+            <article class="incident-bubble good ib-1 view-target">
+              <div class="mini">09:20 UTC</div>
+              <h4 class="display-font">API Healthy</h4>
+              <p>Gateway latency returned to baseline.</p>
+            </article>
+
+            <article class="incident-bubble warn ib-2 view-target">
+              <div class="mini">10:02 UTC</div>
+              <h4 class="display-font">Queue Delay</h4>
+              <p>Worker backlog increased briefly.</p>
+            </article>
+
+            <article class="incident-bubble issue ib-3 view-target">
+              <div class="mini">11:14 UTC</div>
+              <h4 class="display-font">EU Region Spike</h4>
+              <p>Partial latency increase detected.</p>
+            </article>
+
+            <article class="incident-bubble good ib-4 view-target">
+              <div class="mini">11:29 UTC</div>
+              <h4 class="display-font">Recovered</h4>
+              <p>Routing restored, system normalized.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICE TYPES -->
+    <section id="s05-types">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.06;" alt="Types Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="types-wrap">
+          <div class="types-head">
+            <h2 class="display-font">Service<br>Types.</h2>
+            <p>
+              Different monitored categories, grouped clearly so users can understand what each operational lane represents.
+            </p>
+          </div>
+
+          <div class="types-grid">
+            <article class="type-card view-target">
+              <div class="type-top"><span>CATEGORY</span><span>CORE</span></div>
+              <div class="type-icon"><i class="ph ph-cloud"></i></div>
+              <h3 class="display-font">Infrastructure</h3>
+              <p>Scaling, compute, storage, regional routing, and network-level health.</p>
+            </article>
+
+            <article class="type-card view-target">
+              <div class="type-top"><span>CATEGORY</span><span>AUTH</span></div>
+              <div class="type-icon"><i class="ph ph-shield-check"></i></div>
+              <h3 class="display-font">Authentication</h3>
+              <p>Identity verification, tokens, sessions, and account protection.</p>
+            </article>
+
+            <article class="type-card view-target">
+              <div class="type-top"><span>CATEGORY</span><span>API</span></div>
+              <div class="type-icon"><i class="ph ph-code"></i></div>
+              <h3 class="display-font">API Platform</h3>
+              <p>Request flow, endpoint availability, service responses, and client access.</p>
+            </article>
+
+            <article class="type-card view-target">
+              <div class="type-top"><span>CATEGORY</span><span>PAYMENTS</span></div>
+              <div class="type-icon"><i class="ph ph-credit-card"></i></div>
+              <h3 class="display-font">Billing Systems</h3>
+              <p>Subscriptions, payment events, invoices, receipts, and finance webhooks.</p>
+            </article>
+
+            <article class="type-card view-target">
+              <div class="type-top"><span>CATEGORY</span><span>DELIVERY</span></div>
+              <div class="type-icon"><i class="ph ph-rocket-launch"></i></div>
+              <h3 class="display-font">Content Delivery</h3>
+              <p>CDN performance, asset distribution, and edge caching behaviour.</p>
+            </article>
+
+            <article class="type-card view-target">
+              <div class="type-top"><span>CATEGORY</span><span>OBSERVE</span></div>
+              <div class="type-icon"><i class="ph ph-chart-line-up"></i></div>
+              <h3 class="display-font">Observability</h3>
+              <p>Monitoring, traces, logs, and alert pipelines that keep the platform visible.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section id="s06-footer">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="filter:brightness(.42) hue-rotate(12deg);" alt="Footer Background">
+      <div class="section-overlay"></div>
+
+      <div class="footer-main">
+        <h2 class="footer-title display-font">CHECK.<br><span>LIVE.</span></h2>
+
+        <div class="footer-bottom">
+          <div class="mono" style="color:#919aae;">
+            <p>MΛGIC AGENCY // STATUS CENTER</p>
+            <p style="margin-top:6px;">REAL-TIME SERVICE HEALTH EXPERIENCE</p>
+          </div>
+
+          <div class="social-links">
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-pulse"></i></a>
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-chart-line-up"></i></a>
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-broadcast"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+  <script>
+    // LENIS
+    const lenis = new Lenis({ duration: 1.5, smooth: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+    gsap.registerPlugin(ScrollTrigger);
+
+    // CURSOR
+    const cursor = document.querySelector('.cursor');
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+      });
+
+      document.querySelectorAll('a, button, .hover-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+
+      document.querySelectorAll('.view-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered','view-mode'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered','view-mode'));
+      });
+    }
+
+    // LIVE CLOCK
+    function updateClock() {
+      const now = new Date();
+      const time = now.toUTCString().split(' ')[4] + ' UTC';
+      const el = document.getElementById('liveClock');
+      if (el) el.textContent = time;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // MAGNETIC
+    const attachMagnetic = () => {
+      if (window.innerWidth <= 768) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const strength = el.dataset.strength || 20;
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+          gsap.to(el, { x, y, duration: 0.3, ease: "power2.out" });
+        });
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+      });
+    };
+
+    // MENU DATA EXACT
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+    const menuGrid = document.getElementById('menu-grid');
+    menuData.forEach(item => {
+      let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+      menuGrid.innerHTML += `
+        <div class="menu-item">
+          <div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div>
+          <div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div>
+        </div>
+      `;
+    });
+
+    document.querySelectorAll('.menu-item-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const dropdown = title.nextElementSibling;
+        const inner = dropdown.querySelector('.dropdown-inner');
+        document.querySelectorAll('.dropdown').forEach(drop => {
+          if (drop !== dropdown) drop.style.height = '0px';
+        });
+        dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+      });
+    });
+
+    const menuBtn = document.querySelector('.menu-btn');
+    const menuOverlay = document.getElementById('menuOverlay');
+    let menuOpen = false;
+
+    const menuTl = gsap.timeline({ paused: true, reversed: true })
+      .to(menuOverlay, {
+        clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+        duration: 0.8,
+        ease: "power4.inOut",
+        onStart: () => menuOverlay.classList.add('active')
+      })
+      .to('.menu-item-title', {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.04,
+        ease: "power3.out"
+      }, "-=0.4");
+
+    const closeMenu = () => {
+      menuOpen = false;
+      menuBtn.classList.remove('active');
+      document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px');
+      lenis.start();
+      menuTl.reverse();
+      setTimeout(() => {
+        if (!menuOpen) menuOverlay.classList.remove('active');
+      }, 850);
+    };
+
+    const openMenu = () => {
+      menuOpen = true;
+      menuBtn.classList.add('active');
+      lenis.stop();
+      menuOverlay.classList.add('active');
+      menuTl.play();
+    };
+
+    menuBtn.addEventListener('click', () => {
+      if (menuOpen) closeMenu();
+      else openMenu();
+    });
+
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute('href');
+        closeMenu();
+        setTimeout(() => {
+          if (targetUrl.startsWith('#')) lenis.scrollTo(targetUrl, { duration: 1.5 });
+          else window.location.href = targetUrl;
+        }, 850);
+      });
+    });
+
+    // HERO
+    gsap.to(".gsap-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.2,
+      ease: "power4.out",
+      delay: 0.2
+    });
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      delay: 0.8,
+      stagger: 0.1,
+      ease: "power3.out"
+    });
+    gsap.to(".hero-bg", {
+      y: "18%",
+      scrollTrigger: {
+        trigger: "#s01-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // SUN
+    gsap.to("#statusSun", {
+      rotate: 10,
+      scale: 1.04,
+      scrollTrigger: {
+        trigger: "#s02-sun",
+        start: "top center",
+        end: "bottom center",
+        scrub: true
+      }
+    });
+
+    gsap.utils.toArray('.status-orbit-card').forEach((card, i) => {
+      gsap.from(card, {
+        opacity: 0,
+        scale: 0.8,
+        y: 40,
+        duration: 1,
+        delay: i * 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s02-sun",
+          start: "top 60%"
+        }
+      });
+    });
+
+    // MATRIX
+    gsap.utils.toArray('.matrix-box').forEach((box, i) => {
+      gsap.from(box, {
+        opacity: 0,
+        y: 70,
+        duration: 1,
+        delay: i * 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s03-matrix",
+          start: "top 72%"
+        }
+      });
+    });
+
+    // INCIDENT RIVER
+    gsap.utils.toArray('.incident-bubble').forEach((bubble, i) => {
+      gsap.to(bubble, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1,
+        delay: i * 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s04-river",
+          start: "top 70%"
+        }
+      });
+    });
+
+    // TYPES
+    gsap.utils.toArray('.type-card').forEach((card, i) => {
+      gsap.from(card, {
+        opacity: 0,
+        y: 70,
+        duration: 1,
+        delay: i * 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s05-types",
+          start: "top 70%"
+        }
+      });
+    });
+
+    attachMagnetic();
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

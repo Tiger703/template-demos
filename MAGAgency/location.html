@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MΛGAgency | Contact / Locations</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --dark:#06080d;
+      --light:#f4f4f5;
+      --accent:#73e7ff;
+      --accent-2:#ff8b66;
+      --accent-3:#7dff9b;
+      --soft:#a6b0bb;
+      --gray:#12161d;
+      --nav-height:70px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      cursor:none;
+    }
+
+    html.lenis{height:auto;}
+    .lenis.lenis-smooth{scroll-behavior:auto !important;}
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--light);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    h1,h2,h3,h4,h5,h6,.display-font{
+      font-family:'Syne',sans-serif;
+    }
+
+    .mono{font-family:'JetBrains Mono',monospace;}
+    a{text-decoration:none;color:inherit;}
+    button{font-family:inherit;}
+
+    section{
+      position:relative;
+      width:100vw;
+      min-height:100vh;
+      overflow:hidden;
+    }
+
+    .section-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:0;
+    }
+
+    .section-overlay{
+      position:absolute;
+      inset:0;
+      z-index:1;
+    }
+
+    .section-inner{
+      position:relative;
+      z-index:2;
+      width:100%;
+      min-height:100vh;
+      padding:calc(var(--nav-height) + 4vh) 5vw 6vh 5vw;
+    }
+
+    .glass{
+      background:rgba(14,18,24,.48);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 20px 50px rgba(0,0,0,.35);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid rgba(115,231,255,.24);
+      color:var(--accent);
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:.82rem;
+      font-family:'JetBrains Mono',monospace;
+      width:max-content;
+      margin-bottom:1.2rem;
+    }
+
+    .pulse{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--accent);
+      animation:pulseDot 1.2s infinite;
+    }
+
+    @keyframes pulseDot{
+      0%{transform:scale(1);opacity:1;}
+      50%{transform:scale(.55);opacity:.45;}
+      100%{transform:scale(1);opacity:1;}
+    }
+
+    /* ===============================
+       CURSOR
+       =============================== */
+    .cursor{
+      position:fixed;
+      top:0;
+      left:0;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:var(--accent);
+      pointer-events:none;
+      z-index:99999;
+      transform:translate(-50%,-50%);
+      transition:width .3s,height .3s,background .3s,border .3s;
+      mix-blend-mode:screen;
+    }
+
+    .cursor.hovered{
+      width:78px;
+      height:78px;
+      background:transparent;
+      border:1px solid var(--accent);
+      mix-blend-mode:normal;
+      backdrop-filter:blur(6px);
+    }
+
+    .cursor.visit-mode::after{
+      content:'VISIT';
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      font-size:10px;
+      color:var(--accent);
+      font-family:'JetBrains Mono',monospace;
+      font-weight:700;
+      letter-spacing:1px;
+    }
+
+    @media(max-width:768px){
+      .cursor{display:none;}
+      *{cursor:auto !important;}
+    }
+
+    /* ===============================
+       NAV
+       =============================== */
+    nav{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:var(--nav-height);
+      padding:0 5vw;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:10000;
+      background:rgba(6,8,13,.74);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(115,231,255,.14);
+    }
+
+    .nav-brand{
+      font-size:1.3rem;
+      font-weight:800;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+
+    .menu-btn{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:none;
+      border:none;
+      color:var(--light);
+      font-weight:600;
+      text-transform:uppercase;
+      font-size:.9rem;
+    }
+
+    .hamburger{
+      width:35px;
+      height:8px;
+      position:relative;
+    }
+
+    .hamburger span{
+      position:absolute;
+      width:100%;
+      height:2px;
+      background:var(--light);
+      left:0;
+      transition:.4s;
+    }
+
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){bottom:0;}
+
+    .menu-btn.active .hamburger span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);
+      background:#111;
+    }
+
+    .menu-btn.active .hamburger span:nth-child(2){
+      transform:translateY(-3px) rotate(-45deg);
+      background:#111;
+    }
+
+    /* ===============================
+       MENU OVERLAY
+       =============================== */
+    .menu-overlay{
+      position:fixed;
+      inset:0;
+      background:var(--accent);
+      z-index:9999;
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transform:translateY(-100%);
+      overflow-y:auto;
+      padding-top:calc(var(--nav-height) + 3vh);
+    }
+
+    .menu-container{
+      width:100%;
+      padding:0 5vw 5vh 5vw;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:2rem 2.5rem;
+      align-content:start;
+    }
+
+    .menu-item{
+      border-bottom:1px solid rgba(0,0,0,.12);
+      padding-bottom:1rem;
+    }
+
+    .menu-item-title{
+      font-size:clamp(1.3rem,2.5vw,2rem);
+      font-weight:700;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:#111;
+      opacity:0;
+      transform:translateY(20px);
+      cursor:pointer;
+    }
+
+    .menu-item-title span{
+      font-size:1rem;
+      font-family:'Inter',sans-serif;
+      font-weight:500;
+      color:#111;
+    }
+
+    .dropdown{
+      height:0;
+      overflow:hidden;
+      transition:height .35s ease;
+    }
+
+    .dropdown-inner{
+      padding-top:1rem;
+      display:flex;
+      flex-direction:column;
+      gap:.8rem;
+    }
+
+    .dropdown a{
+      color:#1f1f1f;
+      font-size:1.05rem;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      transition:.3s;
+      font-weight:500;
+    }
+
+    .dropdown a i{
+      font-size:1.2rem;
+      color:#111;
+    }
+
+    .dropdown a:hover{padding-left:10px;}
+
+    @media(max-width:1200px){
+      .menu-container{grid-template-columns:repeat(3,1fr);}
+    }
+
+    @media(max-width:768px){
+      .menu-container{
+        grid-template-columns:1fr;
+        gap:.5rem;
+        padding:2vh 5vw 10vh 5vw;
+      }
+
+      .menu-item{
+        border-bottom:1px solid rgba(0,0,0,.15);
+        padding:1.5rem 0;
+      }
+
+      .menu-item-title{
+        font-size:2rem !important;
+        font-weight:800 !important;
+      }
+
+      .dropdown a{
+        font-size:1.2rem !important;
+        padding:.8rem 0;
+      }
+    }
+
+    /* ===============================
+       HERO
+       =============================== */
+    #locations-hero .section-overlay{
+      background:
+        linear-gradient(90deg,rgba(6,8,13,.92) 0%, rgba(6,8,13,.48) 48%, rgba(6,8,13,.84) 100%);
+    }
+
+    .hero-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:4vw;
+      align-items:center;
+    }
+
+    .hero-title{
+      font-size:clamp(3.6rem,10vw,8rem);
+      line-height:.9;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .hero-title .line{
+      display:block;
+      overflow:hidden;
+    }
+
+    .hero-title .word{
+      display:inline-block;
+      transform:translateY(110%);
+    }
+
+    .hero-title .outline{
+      color:transparent;
+      -webkit-text-stroke:2px var(--light);
+    }
+
+    .hero-desc{
+      margin-top:1.4rem;
+      max-width:560px;
+      color:#c4cad2;
+      line-height:1.75;
+    }
+
+    .hero-meta{
+      margin-top:2rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:1.2rem 2rem;
+      color:#9ca5af;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.88rem;
+    }
+
+    .passport-wrap{
+      display:flex;
+      justify-content:center;
+      perspective:1200px;
+    }
+
+    .passport-card{
+      width:min(620px,100%);
+      min-height:68vh;
+      border-radius:28px;
+      overflow:hidden;
+      position:relative;
+      transform-style:preserve-3d;
+      transition:transform .12s;
+    }
+
+    .passport-card img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      filter:brightness(.58) contrast(1.05);
+    }
+
+    .passport-card::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top,rgba(7,8,13,.96),rgba(7,8,13,.12));
+    }
+
+    .passport-content{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      padding:1.3rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .passport-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+
+    .passport-code{
+      padding:.45rem .75rem;
+      border-radius:999px;
+      background:rgba(115,231,255,.12);
+      border:1px solid rgba(115,231,255,.24);
+      color:var(--accent);
+      font-family:'JetBrains Mono',monospace;
+      font-size:.76rem;
+    }
+
+    .passport-stamp{
+      padding:.55rem .8rem;
+      border:1px solid rgba(255,139,102,.4);
+      color:var(--accent-2);
+      font-family:'JetBrains Mono',monospace;
+      font-size:.76rem;
+      border-radius:12px;
+      transform:rotate(-7deg);
+      background:rgba(255,139,102,.08);
+    }
+
+    .passport-main .mono{
+      color:var(--accent);
+      font-size:.76rem;
+      display:block;
+      margin-bottom:.55rem;
+    }
+
+    .passport-main h3{
+      font-size:2rem;
+      line-height:1.08;
+      margin-bottom:.65rem;
+    }
+
+    .passport-main p{
+      color:#c8cfd7;
+      line-height:1.6;
+      max-width:460px;
+    }
+
+    .passport-bottom{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+    }
+
+    .passport-box{
+      padding:1rem;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .passport-box .label{
+      color:#9ca7b4;
+      font-size:.72rem;
+      text-transform:uppercase;
+      margin-bottom:.35rem;
+    }
+
+    .passport-box .value{
+      font-family:'JetBrains Mono',monospace;
+      font-size:1rem;
+      color:var(--light);
+      font-weight:700;
+    }
+
+    @media(max-width:1024px){
+      .hero-layout{
+        grid-template-columns:1fr;
+      }
+      .hero-left{
+        text-align:center;
+      }
+      .hero-desc{margin-inline:auto;}
+    }
+
+    @media(max-width:768px){
+      .hero-left{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+      }
+      .passport-bottom{
+        grid-template-columns:1fr;
+      }
+    }
+
+    /* ===============================
+       UNIQUE SECTION 1 / SIGNAL MAP
+       =============================== */
+    #signal-map .section-overlay{
+      background:radial-gradient(circle at center,rgba(6,8,13,.45),rgba(6,8,13,.94));
+    }
+
+    .signal-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:2rem;
+    }
+
+    .signal-head{
+      text-align:center;
+      max-width:860px;
+      margin:0 auto;
+    }
+
+    .signal-head h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .signal-head p{
+      color:#c0c7cf;
+      line-height:1.75;
+    }
+
+    .signal-stage{
+      position:relative;
+      width:100%;
+      height:68vh;
+      border-radius:28px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(12,14,20,.35);
+      backdrop-filter:blur(12px);
+    }
+
+    .signal-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:1;
+      pointer-events:none;
+    }
+
+    .signal-line{
+      stroke:rgba(115,231,255,.18);
+      stroke-width:2.5;
+      fill:none;
+      stroke-linecap:round;
+      transition:.35s;
+    }
+
+    .signal-line.active{
+      stroke:rgba(115,231,255,.82);
+      filter:drop-shadow(0 0 10px rgba(115,231,255,.38));
+    }
+
+    .signal-center{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      width:340px;
+      max-width:80vw;
+      padding:1.2rem;
+      border-radius:24px;
+      z-index:3;
+      text-align:left;
+    }
+
+    .signal-center .mono{
+      color:var(--accent);
+      font-size:.78rem;
+      display:block;
+      margin-bottom:.5rem;
+    }
+
+    .signal-center h3{
+      font-size:1.7rem;
+      line-height:1.08;
+      margin-bottom:.7rem;
+    }
+
+    .signal-center p{
+      color:#c7ced7;
+      line-height:1.6;
+      font-size:.92rem;
+      margin-bottom:1rem;
+    }
+
+    .signal-meta{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:.8rem;
+    }
+
+    .signal-meta .box{
+      padding:.8rem;
+      border-radius:14px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .signal-meta .label{
+      color:#98a5b2;
+      font-size:.7rem;
+      text-transform:uppercase;
+      margin-bottom:.2rem;
+    }
+
+    .signal-meta .value{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.9rem;
+      color:var(--light);
+      font-weight:700;
+    }
+
+    .signal-node{
+      position:absolute;
+      min-width:170px;
+      padding:1rem 1.05rem;
+      border-radius:18px;
+      background:rgba(15,19,28,.85);
+      border:1px solid rgba(255,255,255,.08);
+      transform:translate(-50%,-50%);
+      z-index:4;
+      box-shadow:0 16px 34px rgba(0,0,0,.28);
+      transition:.35s;
+      text-align:left;
+    }
+
+    .signal-node:hover,
+    .signal-node.active{
+      transform:translate(-50%,-50%) scale(1.06);
+      border-color:rgba(115,231,255,.34);
+      box-shadow:0 0 24px rgba(115,231,255,.14);
+    }
+
+    .signal-node .mono{
+      color:var(--accent);
+      font-size:.72rem;
+      display:block;
+      margin-bottom:.3rem;
+    }
+
+    .signal-node strong{
+      display:block;
+      font-size:1rem;
+      margin-bottom:.35rem;
+    }
+
+    .signal-node span{
+      display:block;
+      color:#b7bfc8;
+      font-size:.83rem;
+      line-height:1.4;
+    }
+
+    .sn1{left:12%;top:18%;}
+    .sn2{left:28%;top:68%;}
+    .sn3{left:72%;top:18%;}
+    .sn4{left:84%;top:58%;}
+    .sn5{left:50%;top:14%;}
+    .sn6{left:50%;top:82%;}
+
+    @media(max-width:1024px){
+      .signal-stage{
+        height:auto;
+        min-height:860px;
+      }
+    }
+
+    @media(max-width:768px){
+      .signal-stage{
+        height:auto;
+        min-height:auto;
+        padding:1rem;
+        display:grid;
+        gap:1rem;
+      }
+      .signal-svg{display:none;}
+      .signal-center{
+        position:relative;
+        top:auto;
+        left:auto;
+        transform:none;
+        width:100%;
+        max-width:none;
+        order:-1;
+      }
+      .signal-meta{grid-template-columns:1fr;}
+      .signal-node{
+        position:relative;
+        left:auto !important;
+        right:auto !important;
+        top:auto !important;
+        bottom:auto !important;
+        width:100%;
+        max-width:none;
+        transform:none !important;
+      }
+      .signal-node:hover,
+      .signal-node.active{
+        transform:translateY(-4px) !important;
+      }
+    }
+
+    /* ===============================
+       UNIQUE SECTION 2 / DEPARTURE BOARD
+       =============================== */
+    #departure-board .section-overlay{
+      background:linear-gradient(180deg,rgba(6,8,13,.84),rgba(6,8,13,.95));
+    }
+
+    .board-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:.82fr 1.18fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .board-left h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .board-left p{
+      color:#c2c9d1;
+      line-height:1.75;
+      max-width:500px;
+      margin-bottom:1.5rem;
+    }
+
+    .board-note{
+      padding:1rem 1.1rem;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      max-width:420px;
+    }
+
+    .board-note .mono{
+      color:var(--accent-2);
+      font-size:.74rem;
+      display:block;
+      margin-bottom:.35rem;
+    }
+
+    .board-note p{
+      margin:0;
+      color:#b7c0ca;
+      font-size:.88rem;
+      line-height:1.5;
+    }
+
+    .board-terminal{
+      border-radius:24px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 20px 50px rgba(0,0,0,.35);
+    }
+
+    .board-header{
+      display:grid;
+      grid-template-columns:1.2fr .8fr .8fr .8fr;
+      gap:1rem;
+      padding:1rem 1.2rem;
+      background:rgba(255,255,255,.04);
+      border-bottom:1px solid rgba(255,255,255,.08);
+      font-family:'JetBrains Mono',monospace;
+      font-size:.78rem;
+      color:var(--accent);
+      text-transform:uppercase;
+    }
+
+    .board-body{
+      display:grid;
+    }
+
+    .board-row{
+      display:grid;
+      grid-template-columns:1.2fr .8fr .8fr .8fr;
+      gap:1rem;
+      padding:1rem 1.2rem;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      align-items:center;
+      background:rgba(255,255,255,.02);
+    }
+
+    .board-row:last-child{border-bottom:none;}
+
+    .board-city{
+      font-size:1.05rem;
+      font-weight:600;
+    }
+
+    .flip-cell{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.95rem;
+      color:var(--light);
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:10px;
+      padding:.65rem .75rem;
+      text-align:center;
+    }
+
+    .flip-cell.status-open{color:var(--accent-3);}
+    .flip-cell.status-busy{color:var(--accent-4);}
+    .flip-cell.status-soon{color:var(--accent-2);}
+
+    @media(max-width:1024px){
+      .board-layout{
+        grid-template-columns:1fr;
+      }
+      .board-left{
+        text-align:center;
+      }
+      .board-left p,
+      .board-note{
+        margin-inline:auto;
+      }
+    }
+
+    @media(max-width:768px){
+      .board-header{
+        display:none;
+      }
+      .board-row{
+        grid-template-columns:1fr;
+        gap:.7rem;
+        padding:1rem;
+      }
+      .board-city{
+        margin-bottom:.25rem;
+      }
+    }
+
+    /* ===============================
+       CITY SELECTOR
+       =============================== */
+    #city-selector{
+      background:#06080d;
+    }
+
+    .city-bg-wrap{
+      position:absolute;
+      inset:0;
+      z-index:0;
+    }
+
+    .city-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      opacity:0;
+      transition:opacity .8s ease;
+      filter:brightness(.42) saturate(1.08);
+    }
+
+    .city-bg.active{
+      opacity:1;
+    }
+
+    #city-selector .section-overlay{
+      background:linear-gradient(90deg,rgba(6,8,13,.9) 0%, rgba(6,8,13,.5) 50%, rgba(6,8,13,.84) 100%);
+    }
+
+    .city-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:.85fr 1.15fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .city-left h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .city-left p{
+      max-width:500px;
+      color:#c0c7cf;
+      line-height:1.75;
+      margin-bottom:2rem;
+    }
+
+    .city-tabs{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:1rem;
+      max-width:460px;
+    }
+
+    .city-tab{
+      min-height:170px;
+      border-radius:20px;
+      padding:1.1rem;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      transition:.35s;
+      text-align:left;
+    }
+
+    .city-tab.active,
+    .city-tab:hover{
+      border-color:rgba(115,231,255,.32);
+      transform:translateY(-6px);
+      background:rgba(115,231,255,.08);
+    }
+
+    .city-tab .mono{
+      color:var(--accent-3);
+      font-size:.74rem;
+      display:block;
+      margin-bottom:.45rem;
+    }
+
+    .city-tab h3{
+      font-size:1.35rem;
+      margin-bottom:.6rem;
+    }
+
+    .city-tab p{
+      color:#b8c0ca;
+      line-height:1.55;
+      font-size:.9rem;
+    }
+
+    .city-panel{
+      border-radius:24px;
+      padding:1.4rem;
+    }
+
+    .city-panel .mono{
+      color:var(--accent);
+      font-size:.82rem;
+      display:block;
+      margin-bottom:.7rem;
+    }
+
+    .city-panel h3{
+      font-size:2rem;
+      line-height:1.08;
+      margin-bottom:.85rem;
+    }
+
+    .city-panel p{
+      color:#c9d0d8;
+      line-height:1.7;
+      margin-bottom:1.2rem;
+    }
+
+    .city-metrics{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:1rem;
+      margin-bottom:1.4rem;
+    }
+
+    .city-box{
+      padding:1rem;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .city-box .label{
+      color:#98a3b0;
+      font-size:.74rem;
+      text-transform:uppercase;
+      margin-bottom:.4rem;
+    }
+
+    .city-box .value{
+      font-family:'JetBrains Mono',monospace;
+      font-size:1.25rem;
+      color:var(--light);
+      font-weight:700;
+    }
+
+    @media(max-width:1024px){
+      .city-layout{
+        grid-template-columns:1fr;
+      }
+      .city-left{
+        text-align:center;
+      }
+      .city-left p{margin-inline:auto;}
+      .city-tabs{
+        max-width:100%;
+      }
+    }
+
+    @media(max-width:768px){
+      .city-tabs{grid-template-columns:1fr;}
+      .city-metrics{grid-template-columns:1fr 1fr;}
+    }
+
+    @media(max-width:520px){
+      .city-metrics{grid-template-columns:1fr;}
+    }
+
+    /* ===============================
+       FOOTER
+       =============================== */
+    #locations-footer .section-overlay{
+      background:linear-gradient(to top,rgba(0,0,0,.96),rgba(0,0,0,.45));
+    }
+
+    .footer-shell{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .footer-left h2{
+      font-size:clamp(3.5rem,11vw,10rem);
+      line-height:.82;
+      text-transform:uppercase;
+      font-weight:800;
+      margin-bottom:1rem;
+    }
+
+    .footer-left h2 span{
+      color:var(--accent);
+      text-shadow:0 0 30px rgba(115,231,255,.22);
+    }
+
+    .footer-left p{
+      max-width:520px;
+      color:#c2c9d1;
+      line-height:1.75;
+      margin-bottom:2rem;
+    }
+
+    .footer-cta-row{
+      display:flex;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+
+    .footer-btn{
+      padding:1rem 1.2rem;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.03);
+      transition:.35s;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.82rem;
+    }
+
+    .footer-btn:hover{
+      background:rgba(115,231,255,.08);
+      border-color:rgba(115,231,255,.28);
+      transform:translateY(-4px);
+    }
+
+    .footer-right{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+      height:68vh;
+    }
+
+    .river{
+      border-radius:20px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      position:relative;
+    }
+
+    .river-track-footer{
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      gap:.8rem;
+      padding:1rem;
+    }
+
+    .river-card{
+      padding:.85rem;
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .river-card .mono{
+      color:var(--accent-2);
+      font-size:.72rem;
+      display:block;
+      margin-bottom:.25rem;
+    }
+
+    .river-card p{
+      color:#bbc3cc;
+      font-size:.84rem;
+      line-height:1.45;
+    }
+
+    @media(max-width:1024px){
+      .footer-shell{
+        grid-template-columns:1fr;
+      }
+      .footer-left{
+        text-align:center;
+      }
+      .footer-left p{
+        margin-inline:auto;
+      }
+      .footer-cta-row{
+        justify-content:center;
+      }
+    }
+
+    @media(max-width:768px){
+      .footer-right{
+        grid-template-columns:1fr;
+        height:auto;
+      }
+      .river{
+        min-height:220px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor"></div>
+
+  <nav>
+    <a href="#" class="nav-brand magnetic hover-target" data-strength="20">MΛGIC.</a>
+    <button class="menu-btn magnetic hover-target" data-strength="30">
+      Menu
+      <div class="hamburger"><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <div class="menu-overlay">
+    <div class="menu-container" id="menu-grid"></div>
+  </div>
+
+  <main id="locations-page">
+
+    <!-- HERO -->
+    <section id="locations-hero">
+      <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2400&auto=format&fit=crop" alt="Locations hero background" class="section-bg hero-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="hero-layout">
+          <div class="hero-left">
+            <div class="pill gsap-up"><span class="pulse"></span> CONTACT / LOCATIONS</div>
+
+            <h1 class="hero-title">
+              <span class="line"><span class="word hero-word">GLOBAL</span></span>
+              <span class="line"><span class="word hero-word outline">PRESENCE</span></span>
+            </h1>
+
+            <p class="hero-desc gsap-up">
+              Find us across strategy, design, motion, and immersive production hubs. This page is built like a spatial office system — not a basic address list.
+            </p>
+
+            <div class="hero-meta gsap-up">
+              <span>NEW YORK / LONDON / TOKYO</span>
+              <span>REMOTE + ON-SITE</span>
+              <span id="heroClock">00:00:00 UTC</span>
+            </div>
+          </div>
+
+          <div class="passport-wrap gsap-up">
+            <div class="passport-card glass hover-target" id="passportCard">
+              <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=1400&auto=format&fit=crop" alt="Location passport">
+
+              <div class="passport-content">
+                <div class="passport-top">
+                  <div class="passport-code">OFFICE PASSPORT</div>
+                  <div class="passport-stamp" id="passportStamp">LONDON / ACTIVE</div>
+                </div>
+
+                <div class="passport-main">
+                  <span class="mono">Current office focus</span>
+                  <h3 id="passportTitle">London Studio</h3>
+                  <p id="passportDesc">Design systems, motion direction, premium UI craft, and high-end campaign production.</p>
+                </div>
+
+                <div class="passport-bottom">
+                  <div class="passport-box">
+                    <div class="label">Timezone</div>
+                    <div class="value" id="passportTz">GMT+0</div>
+                  </div>
+                  <div class="passport-box">
+                    <div class="label">Focus</div>
+                    <div class="value" id="passportFocus">Design</div>
+                  </div>
+                  <div class="passport-box">
+                    <div class="label">Mode</div>
+                    <div class="value" id="passportMode">Hybrid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIGNAL MAP -->
+    <section id="signal-map">
+      <div class="section-overlay"></div>
+      <div class="section-inner">
+        <div class="signal-layout">
+          <div class="signal-head">
+            <div class="pill"><span class="pulse"></span> UNIQUE SECTION / SIGNAL MAP</div>
+            <h2>Our offices as a<br>live network.</h2>
+            <p>
+              This section maps city nodes around a central studio core. Hover or tap locations to inspect local focus, timezone, and team function.
+            </p>
+          </div>
+
+          <div class="signal-stage">
+            <svg class="signal-svg" viewBox="0 0 1000 620" preserveAspectRatio="none">
+              <path id="line-nyc" class="signal-line" d="M180 120 Q310 220 500 310"></path>
+              <path id="line-london" class="signal-line" d="M290 470 Q390 370 500 310"></path>
+              <path id="line-berlin" class="signal-line" d="M500 100 Q500 180 500 310"></path>
+              <path id="line-dubai" class="signal-line" d="M740 120 Q640 220 500 310"></path>
+              <path id="line-tokyo" class="signal-line" d="M840 370 Q670 330 500 310"></path>
+              <path id="line-sydney" class="signal-line" d="M500 540 Q500 440 500 310"></path>
+            </svg>
+
+            <div class="signal-center glass" id="signalCenter">
+              <span class="mono" id="signalLabel">LONDON HUB</span>
+              <h3 id="signalTitle">London Studio</h3>
+              <p id="signalDesc">Design systems, motion direction, premium UI craft, and high-end campaign production.</p>
+
+              <div class="signal-meta">
+                <div class="box">
+                  <div class="label">Timezone</div>
+                  <div class="value" id="signalTime">GMT+0</div>
+                </div>
+                <div class="box">
+                  <div class="label">Focus</div>
+                  <div class="value" id="signalFocus">Design</div>
+                </div>
+                <div class="box">
+                  <div class="label">Team</div>
+                  <div class="value" id="signalTeam">24</div>
+                </div>
+              </div>
+            </div>
+
+            <button class="signal-node sn1 active hover-target visit-target" data-location="nyc" data-line="line-nyc">
+              <span class="mono">NEW YORK</span>
+              <strong>Strategy Hub</strong>
+              <span>Brand systems + client leadership</span>
+            </button>
+
+            <button class="signal-node sn2 hover-target visit-target" data-location="london" data-line="line-london">
+              <span class="mono">LONDON</span>
+              <strong>Design Studio</strong>
+              <span>UI systems + motion craft</span>
+            </button>
+
+            <button class="signal-node sn3 hover-target visit-target" data-location="berlin" data-line="line-berlin">
+              <span class="mono">BERLIN</span>
+              <strong>Engineering Node</strong>
+              <span>Frontend + architecture</span>
+            </button>
+
+            <button class="signal-node sn4 hover-target visit-target" data-location="dubai" data-line="line-dubai">
+              <span class="mono">DUBAI</span>
+              <strong>Growth Office</strong>
+              <span>Regional expansion + partners</span>
+            </button>
+
+            <button class="signal-node sn5 hover-target visit-target" data-location="tokyo" data-line="line-tokyo">
+              <span class="mono">TOKYO</span>
+              <strong>Immersive Lab</strong>
+              <span>3D + spatial production</span>
+            </button>
+
+            <button class="signal-node sn6 hover-target visit-target" data-location="sydney" data-line="line-sydney">
+              <span class="mono">SYDNEY</span>
+              <strong>Delivery Pod</strong>
+              <span>Production + QA systems</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEPARTURE BOARD -->
+    <section id="departure-board">
+      <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2400&auto=format&fit=crop" alt="Departure board background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="board-layout">
+          <div class="board-left">
+            <div class="pill"><span class="pulse"></span> OFFICE TRANSIT BOARD</div>
+            <h2>Locations shown like a<br>departure system.</h2>
+            <p>
+              Instead of standard address cards, this section behaves like a live location board — showing current city rhythm, meeting windows, and studio focus in motion.
+            </p>
+
+            <div class="board-note glass">
+              <span class="mono">How to use this</span>
+              <p>Best for quickly understanding where to route conversations depending on timezone, service type, and delivery focus.</p>
+            </div>
+          </div>
+
+          <div class="board-terminal glass">
+            <div class="board-header">
+              <div>CITY</div>
+              <div>UTC</div>
+              <div>WINDOW</div>
+              <div>STATUS</div>
+            </div>
+
+            <div class="board-body">
+              <div class="board-row">
+                <div class="board-city">New York</div>
+                <div class="flip-cell" id="row1utc">UTC-5</div>
+                <div class="flip-cell" id="row1win">09:00–18:00</div>
+                <div class="flip-cell status-open" id="row1status">OPEN</div>
+              </div>
+
+              <div class="board-row">
+                <div class="board-city">London</div>
+                <div class="flip-cell" id="row2utc">UTC+0</div>
+                <div class="flip-cell" id="row2win">09:00–18:00</div>
+                <div class="flip-cell status-open" id="row2status">OPEN</div>
+              </div>
+
+              <div class="board-row">
+                <div class="board-city">Tokyo</div>
+                <div class="flip-cell" id="row3utc">UTC+9</div>
+                <div class="flip-cell" id="row3win">10:00–19:00</div>
+                <div class="flip-cell status-soon" id="row3status">SOON</div>
+              </div>
+
+              <div class="board-row">
+                <div class="board-city">Dubai</div>
+                <div class="flip-cell" id="row4utc">UTC+4</div>
+                <div class="flip-cell" id="row4win">09:30–18:30</div>
+                <div class="flip-cell status-busy" id="row4status">BUSY</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CITY SELECTOR -->
+    <section id="city-selector">
+      <div class="city-bg-wrap">
+        <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=2400&auto=format&fit=crop" class="city-bg active" id="cityBg1" alt="London bg">
+        <img src="https://images.unsplash.com/photo-1499092346589-b9b6be3e94b2?q=80&w=2400&auto=format&fit=crop" class="city-bg" id="cityBg2" alt="New York bg">
+        <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=2400&auto=format&fit=crop" class="city-bg" id="cityBg3" alt="Tokyo bg">
+        <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=2400&auto=format&fit=crop" class="city-bg" id="cityBg4" alt="Dubai bg">
+      </div>
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="city-layout">
+          <div class="city-left">
+            <div class="pill"><span class="pulse"></span> CITY SELECTOR</div>
+            <h2>Every office has a<br>different energy.</h2>
+            <p>
+              Switch locations to see what each studio is best at, what kind of conversations belong there, and how the studio footprint changes globally.
+            </p>
+
+            <div class="city-tabs">
+              <button class="city-tab active hover-target" data-city="1">
+                <span class="mono">CITY 01</span>
+                <h3>London</h3>
+                <p>Design systems + motion craft</p>
+              </button>
+
+              <button class="city-tab hover-target" data-city="2">
+                <span class="mono">CITY 02</span>
+                <h3>New York</h3>
+                <p>Strategy + client leadership</p>
+              </button>
+
+              <button class="city-tab hover-target" data-city="3">
+                <span class="mono">CITY 03</span>
+                <h3>Tokyo</h3>
+                <p>Immersive lab + R&D</p>
+              </button>
+
+              <button class="city-tab hover-target" data-city="4">
+                <span class="mono">CITY 04</span>
+                <h3>Dubai</h3>
+                <p>Growth + expansion systems</p>
+              </button>
+            </div>
+          </div>
+
+          <div class="city-panel glass" id="cityPanel">
+            <span class="mono" id="cityLabel">LONDON STUDIO</span>
+            <h3 id="cityTitle">Craft-heavy design and motion work.</h3>
+            <p id="cityDesc">
+              The London office leads design systems, premium interfaces, launch motion, and high-fidelity visual output for many of our flagship builds.
+            </p>
+
+            <div class="city-metrics">
+              <div class="city-box">
+                <div class="label">Timezone</div>
+                <div class="value" id="cityMetric1">UTC+0</div>
+              </div>
+              <div class="city-box">
+                <div class="label">Team</div>
+                <div class="value" id="cityMetric2">24</div>
+              </div>
+              <div class="city-box">
+                <div class="label">Focus</div>
+                <div class="value" id="cityMetric3">Design</div>
+              </div>
+              <div class="city-box">
+                <div class="label">Mode</div>
+                <div class="value" id="cityMetric4">Hybrid</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section id="locations-footer">
+      <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2400&auto=format&fit=crop" alt="Footer background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="footer-shell">
+          <div class="footer-left">
+            <div class="pill"><span class="pulse"></span> FIND THE RIGHT HUB</div>
+            <h2>DROP<br><span>BY.</span></h2>
+            <p>
+              Reach the studio that best matches the kind of conversation you want to have — strategic, visual, technical, or immersive.
+            </p>
+
+            <div class="footer-cta-row">
+              <a href="#signal-map" class="footer-btn hover-target">OPEN SIGNAL MAP</a>
+              <a href="#city-selector" class="footer-btn hover-target">VIEW OFFICES</a>
+              <a href="contact-hire-us.html" class="footer-btn hover-target">HIRE US</a>
+            </div>
+          </div>
+
+          <div class="footer-right">
+            <div class="river"><div class="river-track-footer" id="river1"></div></div>
+            <div class="river"><div class="river-track-footer" id="river2"></div></div>
+            <div class="river"><div class="river-track-footer" id="river3"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+  <script>
+    // LENIS
+    const lenis = new Lenis({ duration: 1.35, smooth: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    // CURSOR
+    const cursor = document.querySelector('.cursor');
+
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
+      });
+
+      document.querySelectorAll('a, button, .hover-target, .signal-node').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+
+      document.querySelectorAll('.signal-node, .city-tab').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('visit-mode', 'hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('visit-mode', 'hovered'));
+      });
+    }
+
+    // MAGNETIC
+    function attachMagnetic(){
+      if (window.innerWidth <= 768) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const strength = el.dataset.strength || 20;
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+          gsap.to(el, { x, y, duration: 0.3, ease: "power2.out" });
+        });
+
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+      });
+    }
+
+    // MENU
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+    const menuGrid = document.getElementById('menu-grid');
+    menuData.forEach(item => {
+      const linksHTML = item.links.map(link =>
+        `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`
+      ).join('');
+
+      menuGrid.innerHTML += `
+        <div class="menu-item">
+          <div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div>
+          <div class="dropdown">
+            <div class="dropdown-inner">${linksHTML}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    document.querySelectorAll('.menu-item-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const dropdown = title.nextElementSibling;
+        const inner = dropdown.querySelector('.dropdown-inner');
+
+        document.querySelectorAll('.dropdown').forEach(drop => {
+          if (drop !== dropdown) drop.style.height = '0px';
+        });
+
+        dropdown.style.height = dropdown.clientHeight === 0 ? `${inner.scrollHeight}px` : '0px';
+      });
+    });
+
+    const menuBtn = document.querySelector('.menu-btn');
+    const menuOverlay = document.querySelector('.menu-overlay');
+    let menuOpen = false;
+
+    const menuTl = gsap.timeline({
+      paused:true,
+      onStart: () => {
+        menuOverlay.style.visibility = 'visible';
+        menuOverlay.style.pointerEvents = 'auto';
+      },
+      onReverseComplete: () => {
+        menuOverlay.style.visibility = 'hidden';
+        menuOverlay.style.pointerEvents = 'none';
+      }
+    });
+
+    menuTl
+      .to(menuOverlay, {
+        opacity:1,
+        y:0,
+        duration:0.75,
+        ease:"power4.inOut",
+        onStart: () => gsap.set(menuOverlay, { y: "-100%" })
+      })
+      .to('.menu-item-title', {
+        y:0,
+        opacity:1,
+        duration:0.45,
+        stagger:0.04,
+        ease:"power3.out"
+      }, "-=0.35");
+
+    function toggleMenu(){
+      menuOpen = !menuOpen;
+      menuBtn.classList.toggle('active');
+
+      if(menuOpen){
+        lenis.stop();
+        menuTl.play(0);
+      }else{
+        lenis.start();
+        document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px');
+        menuTl.reverse();
+      }
+    }
+
+    menuBtn.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute('href');
+
+        if(menuOpen) toggleMenu();
+
+        setTimeout(() => {
+          if(targetUrl.startsWith('#')){
+            const target = document.querySelector(targetUrl);
+            if(target) lenis.scrollTo(targetUrl, { duration: 1.2 });
+          } else {
+            window.location.href = targetUrl;
+          }
+        }, 700);
+      });
+    });
+
+    // HERO
+    gsap.to(".hero-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.18,
+      ease: "power4.out",
+      delay: 0.2
+    });
+
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 35,
+      duration: 1,
+      stagger: 0.12,
+      delay: 0.85,
+      ease: "power3.out"
+    });
+
+    gsap.to(".hero-bg", {
+      y: "18%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#locations-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    const passportCard = document.getElementById('passportCard');
+    if(passportCard && window.innerWidth > 768){
+      passportCard.addEventListener('mousemove', (e) => {
+        const rect = passportCard.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+        gsap.to(passportCard, {
+          rotationY: x * 8,
+          rotationX: -y * 8,
+          duration: 0.45,
+          ease: "power2.out"
+        });
+      });
+      passportCard.addEventListener('mouseleave', () => {
+        gsap.to(passportCard, {
+          rotationY: 0,
+          rotationX: 0,
+          duration: 1,
+          ease: "elastic.out(1, 0.3)"
+        });
+      });
+    }
+
+    const heroPassportData = [
+      { stamp:'LONDON / ACTIVE', title:'London Studio', desc:'Design systems, motion direction, premium UI craft, and high-end campaign production.', tz:'GMT+0', focus:'Design', mode:'Hybrid' },
+      { stamp:'NEW YORK / ACTIVE', title:'New York Studio', desc:'Strategy, client leadership, brand architecture, and senior project alignment.', tz:'UTC-5', focus:'Strategy', mode:'Hybrid' },
+      { stamp:'TOKYO / ACTIVE', title:'Tokyo Lab', desc:'Immersive production, experimental 3D, spatial interfaces, and future-facing builds.', tz:'UTC+9', focus:'Immersive', mode:'Hybrid' }
+    ];
+
+    let passportIndex = 0;
+    setInterval(() => {
+      passportIndex = (passportIndex + 1) % heroPassportData.length;
+      const data = heroPassportData[passportIndex];
+
+      gsap.to(['#passportStamp','#passportTitle','#passportDesc','#passportTz','#passportFocus','#passportMode'], {
+        opacity: 0,
+        y: 8,
+        duration: 0.18,
+        stagger: 0.02,
+        onComplete: () => {
+          document.getElementById('passportStamp').textContent = data.stamp;
+          document.getElementById('passportTitle').textContent = data.title;
+          document.getElementById('passportDesc').textContent = data.desc;
+          document.getElementById('passportTz').textContent = data.tz;
+          document.getElementById('passportFocus').textContent = data.focus;
+          document.getElementById('passportMode').textContent = data.mode;
+
+          gsap.to(['#passportStamp','#passportTitle','#passportDesc','#passportTz','#passportFocus','#passportMode'], {
+            opacity: 1,
+            y: 0,
+            duration: 0.28,
+            stagger: 0.02
+          });
+        }
+      });
+    }, 2600);
+
+    function updateHeroClock(){
+      const now = new Date();
+      const h = String(now.getUTCHours()).padStart(2,'0');
+      const m = String(now.getUTCMinutes()).padStart(2,'0');
+      const s = String(now.getUTCSeconds()).padStart(2,'0');
+      document.getElementById('heroClock').textContent = `${h}:${m}:${s} UTC`;
+      requestAnimationFrame(updateHeroClock);
+    }
+    updateHeroClock();
+
+    // SIGNAL MAP
+    const locationData = {
+      nyc: {
+        label:'NEW YORK HUB',
+        title:'New York Studio',
+        desc:'Strategy, client leadership, brand architecture, and senior project alignment for high-stakes engagements.',
+        time:'UTC-5',
+        focus:'Strategy',
+        team:'18',
+        line:'line-nyc'
+      },
+      london: {
+        label:'LONDON HUB',
+        title:'London Studio',
+        desc:'Design systems, motion direction, premium UI craft, and high-end campaign production.',
+        time:'GMT+0',
+        focus:'Design',
+        team:'24',
+        line:'line-london'
+      },
+      berlin: {
+        label:'BERLIN NODE',
+        title:'Berlin Engineering',
+        desc:'Frontend architecture, platform systems, performance optimization, and scalable implementation.',
+        time:'UTC+1',
+        focus:'Engineering',
+        team:'14',
+        line:'line-berlin'
+      },
+      dubai: {
+        label:'DUBAI NODE',
+        title:'Dubai Growth Office',
+        desc:'Regional partnerships, market expansion, rollout strategy, and high-touch commercial operations.',
+        time:'UTC+4',
+        focus:'Growth',
+        team:'11',
+        line:'line-dubai'
+      },
+      tokyo: {
+        label:'TOKYO LAB',
+        title:'Tokyo Immersive Lab',
+        desc:'3D systems, WebGL, spatial interfaces, and technical experimentation for future-facing products.',
+        time:'UTC+9',
+        focus:'Immersive',
+        team:'13',
+        line:'line-tokyo'
+      },
+      sydney: {
+        label:'SYDNEY POD',
+        title:'Sydney Delivery Pod',
+        desc:'Production operations, quality assurance, and downstream delivery support across timezones.',
+        time:'UTC+10',
+        focus:'Delivery',
+        team:'9',
+        line:'line-sydney'
+      }
+    };
+
+    function setLocationNode(key){
+      const d = locationData[key];
+      if(!d) return;
+
+      document.querySelectorAll('.signal-node').forEach(n => n.classList.remove('active'));
+      document.querySelector(`[data-location="${key}"]`).classList.add('active');
+
+      document.querySelectorAll('.signal-line').forEach(l => l.classList.remove('active'));
+      document.getElementById(d.line).classList.add('active');
+
+      gsap.to('#signalCenter', {
+        opacity: 0,
+        y: 8,
+        duration: 0.18,
+        onComplete: () => {
+          document.getElementById('signalLabel').textContent = d.label;
+          document.getElementById('signalTitle').textContent = d.title;
+          document.getElementById('signalDesc').textContent = d.desc;
+          document.getElementById('signalTime').textContent = d.time;
+          document.getElementById('signalFocus').textContent = d.focus;
+          document.getElementById('signalTeam').textContent = d.team;
+          gsap.to('#signalCenter', { opacity: 1, y: 0, duration: 0.28 });
+        }
+      });
+    }
+
+    document.querySelectorAll('.signal-node').forEach(node => {
+      node.addEventListener('click', () => setLocationNode(node.dataset.location));
+      if(window.innerWidth > 768){
+        node.addEventListener('mouseenter', () => setLocationNode(node.dataset.location));
+      }
+    });
+    setLocationNode('nyc');
+
+    // DEPARTURE BOARD
+    const boardStates = [
+      {
+        r1:['UTC-5','09:00–18:00','OPEN'],
+        r2:['UTC+0','09:00–18:00','OPEN'],
+        r3:['UTC+9','10:00–19:00','SOON'],
+        r4:['UTC+4','09:30–18:30','BUSY']
+      },
+      {
+        r1:['UTC-5','10:00–19:00','BUSY'],
+        r2:['UTC+0','08:30–17:30','OPEN'],
+        r3:['UTC+9','11:00–20:00','OPEN'],
+        r4:['UTC+4','10:00–19:00','SOON']
+      },
+      {
+        r1:['UTC-5','09:00–18:00','SOON'],
+        r2:['UTC+0','09:00–18:00','BUSY'],
+        r3:['UTC+9','10:00–19:00','OPEN'],
+        r4:['UTC+4','09:30–18:30','OPEN']
+      }
+    ];
+
+    let boardIndex = 0;
+    function applyBoardState(state){
+      const rows = [
+        ['row1utc','row1win','row1status',state.r1],
+        ['row2utc','row2win','row2status',state.r2],
+        ['row3utc','row3win','row3status',state.r3],
+        ['row4utc','row4win','row4status',state.r4]
+      ];
+
+      rows.forEach(([utc,win,status,data]) => {
+        document.getElementById(utc).textContent = data[0];
+        document.getElementById(win).textContent = data[1];
+        const s = document.getElementById(status);
+        s.textContent = data[2];
+        s.className = 'flip-cell ' + (
+          data[2] === 'OPEN' ? 'status-open' :
+          data[2] === 'BUSY' ? 'status-busy' :
+          'status-soon'
+        );
+      });
+    }
+
+    setInterval(() => {
+      boardIndex = (boardIndex + 1) % boardStates.length;
+      gsap.to('.board-row', {
+        opacity: 0,
+        y: 6,
+        duration: 0.18,
+        stagger: 0.03,
+        onComplete: () => {
+          applyBoardState(boardStates[boardIndex]);
+          gsap.to('.board-row', {
+            opacity: 1,
+            y: 0,
+            duration: 0.28,
+            stagger: 0.03
+          });
+        }
+      });
+    }, 2600);
+
+    // CITY SELECTOR
+    const cityData = {
+      1: {
+        bg:'cityBg1',
+        label:'LONDON STUDIO',
+        title:'Craft-heavy design and motion work.',
+        desc:'The London office leads design systems, premium interfaces, launch motion, and high-fidelity visual output for many flagship builds.',
+        metrics:['UTC+0','24','Design','Hybrid']
+      },
+      2: {
+        bg:'cityBg2',
+        label:'NEW YORK STUDIO',
+        title:'Strategy and senior client alignment.',
+        desc:'The New York office holds narrative direction, strategy, client relationships, and many early-stage roadmap conversations.',
+        metrics:['UTC-5','18','Strategy','Hybrid']
+      },
+      3: {
+        bg:'cityBg3',
+        label:'TOKYO LAB',
+        title:'Immersive and experimental production.',
+        desc:'The Tokyo team focuses on WebGL, spatial interfaces, 3D systems, and future-facing interaction experiments.',
+        metrics:['UTC+9','13','Immersive','Hybrid']
+      },
+      4: {
+        bg:'cityBg4',
+        label:'DUBAI GROWTH OFFICE',
+        title:'Regional expansion and market movement.',
+        desc:'Dubai supports partner growth, expansion strategy, commercial relationships, and rollout systems across key regions.',
+        metrics:['UTC+4','11','Growth','Hybrid']
+      }
+    };
+
+    function setCity(id){
+      const data = cityData[id];
+      if(!data) return;
+
+      document.querySelectorAll('.city-tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelector(`.city-tab[data-city="${id}"]`).classList.add('active');
+
+      document.querySelectorAll('.city-bg').forEach(bg => bg.classList.remove('active'));
+      document.getElementById(data.bg).classList.add('active');
+
+      gsap.to('#cityPanel', {
+        opacity: 0,
+        y: 10,
+        duration: 0.18,
+        onComplete: () => {
+          document.getElementById('cityLabel').textContent = data.label;
+          document.getElementById('cityTitle').textContent = data.title;
+          document.getElementById('cityDesc').textContent = data.desc;
+          document.getElementById('cityMetric1').textContent = data.metrics[0];
+          document.getElementById('cityMetric2').textContent = data.metrics[1];
+          document.getElementById('cityMetric3').textContent = data.metrics[2];
+          document.getElementById('cityMetric4').textContent = data.metrics[3];
+          gsap.to('#cityPanel', { opacity: 1, y: 0, duration: 0.28 });
+        }
+      });
+    }
+
+    document.querySelectorAll('.city-tab').forEach(tab => {
+      tab.addEventListener('click', () => setCity(tab.dataset.city));
+      if(window.innerWidth > 768){
+        tab.addEventListener('mouseenter', () => setCity(tab.dataset.city));
+      }
+    });
+    setCity(1);
+
+    // FOOTER RIVERS
+    const footerLogs = [
+      { category:'LONDON', desc:'Design systems and motion work routed successfully.' },
+      { category:'NEW YORK', desc:'Strategy intake remains open for flagship projects.' },
+      { category:'TOKYO', desc:'Immersive production capacity available this cycle.' },
+      { category:'DUBAI', desc:'Regional partner conversations continue this week.' },
+      { category:'BERLIN', desc:'Engineering scheduling remains aligned across products.' },
+      { category:'SYDNEY', desc:'Delivery pod supporting downstream launch handoffs.' }
+    ];
+
+    function buildFooterRiver(trackId, offset){
+      const track = document.getElementById(trackId);
+      const items = [...footerLogs.slice(offset), ...footerLogs.slice(0, offset), ...footerLogs.slice(offset), ...footerLogs.slice(0, offset)];
+      items.forEach(item => {
+        const el = document.createElement('article');
+        el.className = 'river-card';
+        el.innerHTML = `
+          <span class="mono">${item.category}</span>
+          <p>${item.desc}</p>
+        `;
+        track.appendChild(el);
+      });
+    }
+
+    buildFooterRiver('river1', 0);
+    buildFooterRiver('river2', 2);
+    buildFooterRiver('river3', 4);
+
+    if(window.innerWidth > 768){
+      gsap.to('#river1', { yPercent: -50, duration: 18, repeat: -1, ease: 'none' });
+      gsap.to('#river2', { yPercent: -50, duration: 22, repeat: -1, ease: 'none' });
+      gsap.to('#river3', { yPercent: -50, duration: 16, repeat: -1, ease: 'none' });
+    }
+
+    // HERO REVEAL
+    gsap.to(".hero-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.18,
+      ease: "power4.out",
+      delay: 0.2
+    });
+
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 35,
+      duration: 1,
+      stagger: 0.12,
+      delay: 0.85,
+      ease: "power3.out"
+    });
+
+    attachMagnetic();
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

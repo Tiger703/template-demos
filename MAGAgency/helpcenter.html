@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MΛGAgency | Support / Help Center</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --dark:#06080d;
+      --light:#f4f4f5;
+      --accent:#72f1ff;
+      --accent-2:#7dff9b;
+      --accent-3:#ffb86b;
+      --soft:#a8b3c2;
+      --gray:#12161d;
+      --nav-height:70px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      cursor:none;
+    }
+
+    html.lenis{height:auto;}
+    .lenis.lenis-smooth{scroll-behavior:auto !important;}
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--light);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    h1,h2,h3,h4,h5,h6,.display-font{
+      font-family:'Syne',sans-serif;
+    }
+
+    .mono{font-family:'JetBrains Mono',monospace;}
+    a{text-decoration:none;color:inherit;}
+
+    section{
+      position:relative;
+      width:100vw;
+      min-height:100vh;
+      overflow:hidden;
+    }
+
+    .section-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:0;
+    }
+
+    .section-overlay{
+      position:absolute;
+      inset:0;
+      z-index:1;
+    }
+
+    .section-inner{
+      position:relative;
+      z-index:2;
+      min-height:100vh;
+      width:100%;
+      padding:calc(var(--nav-height) + 4vh) 5vw 6vh 5vw;
+    }
+
+    .glass{
+      background:rgba(14,18,24,.46);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 20px 50px rgba(0,0,0,.38);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid rgba(114,241,255,.24);
+      color:var(--accent);
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:.84rem;
+      font-family:'JetBrains Mono',monospace;
+      width:max-content;
+      margin-bottom:1.2rem;
+    }
+
+    .pulse{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--accent);
+      animation:pulseDot 1.2s infinite;
+    }
+
+    @keyframes pulseDot{
+      0%{transform:scale(1);opacity:1;}
+      50%{transform:scale(.55);opacity:.45;}
+      100%{transform:scale(1);opacity:1;}
+    }
+
+    /* =========================================
+       CURSOR
+       ========================================= */
+    .cursor{
+      position:fixed;
+      top:0;
+      left:0;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:var(--accent);
+      pointer-events:none;
+      z-index:99999;
+      transform:translate(-50%,-50%);
+      transition:width .3s,height .3s,background .3s,border .3s;
+      mix-blend-mode:screen;
+    }
+
+    .cursor.hovered{
+      width:78px;
+      height:78px;
+      background:transparent;
+      border:1px solid var(--accent);
+      mix-blend-mode:normal;
+      backdrop-filter:blur(6px);
+    }
+
+    .cursor.help-mode::after{
+      content:'HELP';
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      font-size:10px;
+      color:var(--accent);
+      font-family:'JetBrains Mono',monospace;
+      font-weight:700;
+      letter-spacing:1px;
+    }
+
+    @media(max-width:768px){
+      .cursor{display:none;}
+      *{cursor:auto !important;}
+    }
+
+    /* =========================================
+       NAV
+       ========================================= */
+    nav{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:var(--nav-height);
+      padding:0 5vw;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:10000;
+      background:rgba(6,8,13,.74);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(114,241,255,.14);
+    }
+
+    .nav-brand{
+      font-size:1.3rem;
+      font-weight:800;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+
+    .menu-btn{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:none;
+      border:none;
+      color:var(--light);
+      font-weight:600;
+      text-transform:uppercase;
+      font-size:.9rem;
+    }
+
+    .hamburger{
+      width:35px;
+      height:8px;
+      position:relative;
+    }
+
+    .hamburger span{
+      position:absolute;
+      width:100%;
+      height:2px;
+      background:var(--light);
+      transition:.4s;
+    }
+
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){bottom:0;}
+
+    .menu-btn.active .hamburger span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);
+      background:var(--dark);
+    }
+
+    .menu-btn.active .hamburger span:nth-child(2){
+      transform:translateY(-3px) rotate(-45deg);
+      background:var(--dark);
+    }
+
+    /* =========================================
+       MENU OVERLAY
+       ========================================= */
+    .menu-overlay{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100vw;
+      height:100vh;
+      background:var(--accent);
+      z-index:9999;
+      display:flex;
+      padding-top:calc(var(--nav-height) + 3vh);
+      clip-path:polygon(0 0,100% 0,100% 0,0 0);
+      overflow-y:auto;
+    }
+
+    .menu-container{
+      width:100%;
+      padding:0 5vw 5vh 5vw;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:2rem 2.5rem;
+      align-content:start;
+    }
+
+    @media(max-width:1200px){
+      .menu-container{grid-template-columns:repeat(3,1fr);}
+    }
+
+    @media(max-width:768px){
+      .menu-container{
+        grid-template-columns:1fr;
+        gap:.5rem;
+        padding:2vh 5vw 10vh 5vw;
+      }
+
+      .menu-item{
+        border-bottom:1px solid rgba(0,0,0,.15);
+        padding:1.5rem 0;
+      }
+
+      .menu-item-title{
+        font-size:2rem !important;
+        font-weight:800 !important;
+      }
+
+      .dropdown a{
+        font-size:1.25rem !important;
+        padding:.8rem 0;
+      }
+    }
+
+    .menu-item{
+      border-bottom:1px solid rgba(0,0,0,.12);
+      padding-bottom:1rem;
+    }
+
+    .menu-item-title{
+      font-size:clamp(1.3rem,2.5vw,2rem);
+      font-weight:700;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:var(--dark);
+      opacity:0;
+      transform:translateY(20px);
+    }
+
+    .menu-item-title span{
+      font-size:1rem;
+      font-family:'Inter',sans-serif;
+      font-weight:500;
+      color:var(--dark);
+    }
+
+    .dropdown{
+      height:0;
+      overflow:hidden;
+      transition:height .4s ease;
+    }
+
+    .dropdown-inner{
+      padding-top:1rem;
+      display:flex;
+      flex-direction:column;
+      gap:.8rem;
+    }
+
+    .dropdown a{
+      color:#1f1f1f;
+      font-size:1.05rem;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      transition:.3s;
+      font-weight:500;
+    }
+
+    .dropdown a i{
+      font-size:1.2rem;
+      color:var(--dark);
+    }
+
+    .dropdown a:hover{
+      padding-left:10px;
+    }
+
+    /* =========================================
+       HERO / COMMAND PALETTE
+       ========================================= */
+    #support-hero .section-overlay{
+      background:
+        linear-gradient(90deg,rgba(6,8,13,.92) 0%, rgba(6,8,13,.48) 48%, rgba(6,8,13,.82) 100%);
+    }
+
+    .hero-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      align-items:center;
+      gap:4vw;
+    }
+
+    .hero-title{
+      font-size:clamp(3.5rem,10vw,8rem);
+      line-height:.9;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .hero-title .line{
+      display:block;
+      overflow:hidden;
+    }
+
+    .hero-title .word{
+      display:inline-block;
+      transform:translateY(110%);
+    }
+
+    .hero-title .outline{
+      color:transparent;
+      -webkit-text-stroke:2px var(--light);
+    }
+
+    .hero-desc{
+      margin-top:1.4rem;
+      max-width:560px;
+      color:#c4cad2;
+      line-height:1.75;
+    }
+
+    .hero-meta{
+      margin-top:2rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:1.2rem 2rem;
+      color:#9ca5af;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.88rem;
+    }
+
+    .command-wrap{
+      display:flex;
+      justify-content:center;
+      perspective:1200px;
+    }
+
+    .command-card{
+      width:min(600px,100%);
+      min-height:66vh;
+      border-radius:28px;
+      overflow:hidden;
+      position:relative;
+      transform-style:preserve-3d;
+      transition:transform .12s;
+      padding:1.2rem;
+    }
+
+    .command-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      padding-bottom:1rem;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      margin-bottom:1rem;
+    }
+
+    .command-dots{
+      display:flex;
+      gap:8px;
+    }
+
+    .command-dots span{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:#2d3340;
+    }
+
+    .command-dots span:nth-child(1){background:var(--accent);}
+    .command-dots span:nth-child(2){background:var(--accent-2);}
+    .command-dots span:nth-child(3){background:var(--accent-3);}
+
+    .command-head .mono{
+      color:#9ba8b5;
+      font-size:.78rem;
+    }
+
+    .command-search{
+      border-radius:18px;
+      padding:1rem 1.1rem;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      margin-bottom:1rem;
+    }
+
+    .command-label{
+      color:var(--accent-2);
+      font-family:'JetBrains Mono',monospace;
+      font-size:.78rem;
+      margin-bottom:.55rem;
+      display:block;
+    }
+
+    .command-line{
+      font-size:1.15rem;
+      color:var(--light);
+      min-height:28px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      flex-wrap:wrap;
+    }
+
+    .blinker{
+      width:10px;
+      height:20px;
+      background:var(--accent);
+      animation:blinkCursor 1s infinite;
+    }
+
+    @keyframes blinkCursor{
+      0%,50%{opacity:1;}
+      51%,100%{opacity:0;}
+    }
+
+    .quick-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:1rem;
+      margin-top:1rem;
+    }
+
+    .quick-card{
+      border-radius:18px;
+      padding:1rem;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      transition:.35s;
+    }
+
+    .quick-card:hover{
+      transform:translateY(-6px);
+      border-color:rgba(114,241,255,.28);
+    }
+
+    .quick-card i{
+      font-size:2rem;
+      color:var(--accent);
+      margin-bottom:.8rem;
+      display:block;
+    }
+
+    .quick-card h3{
+      font-size:1rem;
+      margin-bottom:.4rem;
+    }
+
+    .quick-card p{
+      color:#b9c1cb;
+      font-size:.88rem;
+      line-height:1.45;
+    }
+
+    @media(max-width:1024px){
+      .hero-layout{
+        grid-template-columns:1fr;
+        text-align:center;
+      }
+      .hero-left{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+      }
+      .hero-desc{margin-inline:auto;}
+    }
+
+    @media(max-width:640px){
+      .quick-grid{grid-template-columns:1fr;}
+    }
+
+    /* =========================================
+       SECTION 2 / ISSUE ROUTER
+       ========================================= */
+    #issue-router .section-overlay{
+      background:linear-gradient(180deg,rgba(6,8,13,.82),rgba(6,8,13,.94));
+    }
+
+    .router-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:.9fr 1.1fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .router-panel{
+      padding:1.4rem;
+      border-radius:24px;
+    }
+
+    .router-panel h2{
+      font-size:clamp(2.7rem,5.5vw,4.5rem);
+      line-height:.96;
+      margin-bottom:1rem;
+    }
+
+    .router-panel p{
+      color:#c2c9d1;
+      line-height:1.7;
+      margin-bottom:1.4rem;
+      max-width:500px;
+    }
+
+    .router-meter-wrap{
+      display:flex;
+      align-items:center;
+      gap:1.2rem;
+      flex-wrap:wrap;
+      margin-bottom:1.4rem;
+    }
+
+    .router-meter{
+      --deg: 180deg;
+      width:130px;
+      height:130px;
+      border-radius:50%;
+      position:relative;
+      background:
+        conic-gradient(var(--accent-2) 0deg, var(--accent) var(--deg), rgba(255,255,255,.08) var(--deg), rgba(255,255,255,.08) 360deg);
+      box-shadow:0 0 30px rgba(114,241,255,.12);
+    }
+
+    .router-meter::before{
+      content:'';
+      position:absolute;
+      inset:16px;
+      border-radius:50%;
+      background:rgba(8,10,14,.95);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .router-meter-center{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      z-index:2;
+      text-align:center;
+    }
+
+    .router-meter-center strong{
+      font-size:1.5rem;
+      color:var(--light);
+      font-family:'JetBrains Mono',monospace;
+    }
+
+    .router-meter-center span{
+      color:#9eabb7;
+      font-size:.72rem;
+      text-transform:uppercase;
+    }
+
+    .router-stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+      width:100%;
+      max-width:520px;
+    }
+
+    .router-stat{
+      padding:1rem;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .router-stat .label{
+      color:#9eabb7;
+      font-size:.74rem;
+      text-transform:uppercase;
+      margin-bottom:.35rem;
+    }
+
+    .router-stat .value{
+      font-family:'JetBrains Mono',monospace;
+      font-size:1.2rem;
+      color:var(--light);
+      font-weight:700;
+    }
+
+    .router-list{
+      display:flex;
+      flex-direction:column;
+      gap:1rem;
+    }
+
+    .route-item{
+      padding:1.15rem 1.2rem;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      transform:rotate(-2deg);
+      transition:.35s;
+    }
+
+    .route-item:nth-child(2){transform:rotate(2deg);}
+    .route-item:nth-child(3){transform:rotate(-1deg);}
+    .route-item:nth-child(4){transform:rotate(1.6deg);}
+
+    .route-item.active,
+    .route-item:hover{
+      transform:rotate(0deg) scale(1.01);
+      border-color:rgba(114,241,255,.26);
+      background:rgba(114,241,255,.06);
+      box-shadow:0 20px 40px rgba(0,0,0,.24);
+    }
+
+    .route-item .mono{
+      color:var(--accent-3);
+      font-size:.75rem;
+      display:block;
+      margin-bottom:.35rem;
+    }
+
+    .route-item h3{
+      font-size:1.2rem;
+      margin-bottom:.35rem;
+    }
+
+    .route-item p{
+      color:#b6bec8;
+      line-height:1.55;
+      font-size:.88rem;
+    }
+
+    @media(max-width:1024px){
+      .router-layout{
+        grid-template-columns:1fr;
+      }
+      .router-panel{
+        text-align:center;
+      }
+      .router-panel p{margin-inline:auto;}
+      .router-meter-wrap{justify-content:center;}
+    }
+
+    @media(max-width:768px){
+      .router-stats{grid-template-columns:1fr;}
+    }
+
+    /* =========================================
+       SECTION 3 / SEARCH LAB
+       ========================================= */
+    #search-lab .section-overlay{
+      background:linear-gradient(90deg,rgba(6,8,13,.9) 0%, rgba(6,8,13,.56) 50%, rgba(6,8,13,.84) 100%);
+    }
+
+    .lab-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .lab-left,
+    .lab-right{
+      min-height:70vh;
+      border-radius:26px;
+      padding:1.2rem;
+    }
+
+    .lab-search{
+      border-radius:18px;
+      padding:1rem 1rem;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      margin-bottom:1rem;
+    }
+
+    .lab-search label{
+      display:block;
+      color:var(--accent-2);
+      font-size:.78rem;
+      font-family:'JetBrains Mono',monospace;
+      margin-bottom:.5rem;
+    }
+
+    .lab-search input{
+      width:100%;
+      border:none;
+      outline:none;
+      background:transparent;
+      color:var(--light);
+      font-size:1.05rem;
+      font-family:'Inter',sans-serif;
+    }
+
+    .lab-filters{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.7rem;
+      margin-bottom:1rem;
+    }
+
+    .lab-chip{
+      padding:.6rem .85rem;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      color:#c3cad3;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.76rem;
+      transition:.3s;
+    }
+
+    .lab-chip.active,
+    .lab-chip:hover{
+      background:rgba(114,241,255,.08);
+      border-color:rgba(114,241,255,.3);
+      color:var(--light);
+    }
+
+    .lab-results{
+      display:grid;
+      gap:.8rem;
+      max-height:46vh;
+      overflow:auto;
+      padding-right:.2rem;
+    }
+
+    .lab-results::-webkit-scrollbar{width:6px;}
+    .lab-results::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:999px;}
+
+    .lab-result{
+      padding:1rem;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      transition:.3s;
+    }
+
+    .lab-result:hover{
+      transform:translateX(8px);
+      border-color:rgba(114,241,255,.26);
+    }
+
+    .lab-result .mono{
+      color:var(--accent-3);
+      font-size:.74rem;
+      display:block;
+      margin-bottom:.4rem;
+    }
+
+    .lab-result h3{
+      font-size:1rem;
+      margin-bottom:.3rem;
+    }
+
+    .lab-result p{
+      color:#b8c0ca;
+      line-height:1.5;
+      font-size:.86rem;
+    }
+
+    .featured-card{
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      border-radius:22px;
+      position:relative;
+    }
+
+    .featured-card img{
+      width:100%;
+      height:40%;
+      object-fit:cover;
+      filter:brightness(.75);
+    }
+
+    .featured-body{
+      padding:1.2rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      height:60%;
+    }
+
+    .featured-body .mono{
+      color:var(--accent-2);
+      font-size:.76rem;
+      margin-bottom:.5rem;
+      display:block;
+    }
+
+    .featured-body h3{
+      font-size:1.6rem;
+      margin-bottom:.6rem;
+      line-height:1.08;
+    }
+
+    .featured-body p{
+      color:#c4cad2;
+      line-height:1.65;
+    }
+
+    .featured-meta{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:.8rem;
+      margin-top:1.2rem;
+    }
+
+    .featured-box{
+      padding:.9rem;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .featured-box .label{
+      color:#99a5b2;
+      font-size:.72rem;
+      text-transform:uppercase;
+      margin-bottom:.35rem;
+    }
+
+    .featured-box .value{
+      font-family:'JetBrains Mono',monospace;
+      font-size:1rem;
+      color:var(--light);
+      font-weight:700;
+    }
+
+    .empty-state{
+      padding:1.4rem;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px dashed rgba(255,255,255,.12);
+      color:#b8c0ca;
+      text-align:center;
+    }
+
+    @media(max-width:1024px){
+      .lab-layout{
+        grid-template-columns:1fr;
+      }
+      .lab-left,.lab-right{min-height:auto;}
+    }
+
+    @media(max-width:768px){
+      .featured-meta{grid-template-columns:1fr;}
+    }
+
+    /* =========================================
+       SECTION 4 / ANSWER STREAMS
+       ========================================= */
+    #answer-streams .section-overlay{
+      background:linear-gradient(180deg,rgba(6,8,13,.84),rgba(6,8,13,.95));
+    }
+
+    .streams-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:2rem;
+    }
+
+    .streams-head{
+      text-align:center;
+      max-width:860px;
+      margin:0 auto;
+    }
+
+    .streams-head h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .streams-head p{
+      color:#c0c7cf;
+      line-height:1.75;
+    }
+
+    .streams-stage{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+      height:62vh;
+    }
+
+    .stream-column{
+      border-radius:24px;
+      overflow:hidden;
+      position:relative;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+    }
+
+    .stream-track{
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      gap:1rem;
+      padding:1rem;
+    }
+
+    .stream-card{
+      padding:1rem;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .stream-card .mono{
+      color:var(--accent-2);
+      font-size:.72rem;
+      display:block;
+      margin-bottom:.35rem;
+    }
+
+    .stream-card h3{
+      font-size:1rem;
+      margin-bottom:.3rem;
+    }
+
+    .stream-card p{
+      color:#b8c0ca;
+      font-size:.84rem;
+      line-height:1.45;
+    }
+
+    @media(max-width:900px){
+      .streams-stage{
+        grid-template-columns:1fr;
+        height:auto;
+      }
+      .stream-column{
+        min-height:320px;
+      }
+    }
+
+    /* =========================================
+       FOOTER
+       ========================================= */
+    #s12-contact .section-overlay{
+      background:linear-gradient(to top,rgba(0,0,0,.96),rgba(0,0,0,.45));
+    }
+
+    .footer-shell{
+      min-height:calc(100vh - var(--nav-height));
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .footer-big{
+      margin-top:auto;
+      text-align:center;
+    }
+
+    .footer-big h2{
+      font-size:clamp(3.5rem,14vw,12rem);
+      line-height:.82;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .footer-big h2 span{
+      color:var(--accent-2);
+      text-shadow:0 0 30px rgba(114,241,255,.22);
+    }
+
+    .footer-bottom{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:2rem;
+      padding-top:2rem;
+      border-top:1px solid rgba(255,255,255,.1);
+    }
+
+    .footer-bottom .mono{
+      color:#8f99a4;
+      line-height:1.7;
+      font-size:.88rem;
+    }
+
+    .socials{
+      display:flex;
+      gap:1rem;
+    }
+
+    .social-btn{
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.18);
+      font-size:1.4rem;
+      transition:.35s;
+    }
+
+    .social-btn:hover{
+      background:var(--accent-2);
+      color:var(--dark);
+      border-color:var(--accent-2);
+    }
+
+    @media(max-width:768px){
+      .footer-bottom{
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor"></div>
+
+  <nav>
+    <a href="#" class="nav-brand magnetic hover-target" data-strength="20">MΛGIC.</a>
+    <button class="menu-btn magnetic hover-target" data-strength="30">
+      Menu
+      <div class="hamburger"><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <div class="menu-overlay">
+    <div class="menu-container" id="menu-grid"></div>
+  </div>
+
+  <main id="support-page">
+
+    <!-- HERO -->
+    <section id="support-hero">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2400&auto=format&fit=crop" alt="Support hero background" class="section-bg hero-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="hero-layout">
+          <div class="hero-left">
+            <div class="pill gsap-up"><span class="pulse"></span> SUPPORT COMMAND CENTER</div>
+
+            <h1 class="hero-title">
+              <span class="line"><span class="word hero-word">HELP</span></span>
+              <span class="line"><span class="word hero-word outline">CENTER</span></span>
+            </h1>
+
+            <p class="hero-desc gsap-up">
+              Search-first support, guided issue routing, live documentation discovery, and fast resolution pathways — designed as a premium full-screen service experience.
+            </p>
+
+            <div class="hero-meta gsap-up">
+              <span>24/7 GLOBAL SUPPORT</span>
+              <span>4 CORE ISSUE ROUTES</span>
+              <span>SEARCH + ARTICLES + STATUS</span>
+            </div>
+          </div>
+
+          <div class="command-wrap gsap-up">
+            <div class="command-card glass hover-target" id="commandCard">
+              <div class="command-head">
+                <div class="command-dots">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="mono">SUPPORT // LIVE SEARCH</div>
+              </div>
+
+              <div class="command-search">
+                <span class="command-label">Ask anything</span>
+                <div class="command-line">
+                  <span id="commandText">How do I reset my workspace permissions?</span>
+                  <i class="blinker"></i>
+                </div>
+              </div>
+
+              <div class="quick-grid">
+                <article class="quick-card hover-target">
+                  <i class="ph ph-key"></i>
+                  <h3>Account Access</h3>
+                  <p>Password resets, MFA, email verification, and sign-in troubleshooting.</p>
+                </article>
+
+                <article class="quick-card hover-target">
+                  <i class="ph ph-shield-check"></i>
+                  <h3>Security Help</h3>
+                  <p>Suspicious activity, locked sessions, access controls, and device trust.</p>
+                </article>
+
+                <article class="quick-card hover-target">
+                  <i class="ph ph-credit-card"></i>
+                  <h3>Billing Support</h3>
+                  <p>Invoices, charges, renewals, payment methods, and plan changes.</p>
+                </article>
+
+                <article class="quick-card hover-target">
+                  <i class="ph ph-code"></i>
+                  <h3>API & Dev</h3>
+                  <p>Tokens, webhooks, rate limits, authentication flows, and SDK docs.</p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ISSUE ROUTER -->
+    <section id="issue-router">
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2400&auto=format&fit=crop" alt="Router background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="router-layout">
+          <div class="router-panel glass">
+            <div class="pill gsap-fade"><span class="pulse"></span> ISSUE ROUTER</div>
+            <h2 id="routerTitle" class="gsap-fade">Account & access support.</h2>
+            <p id="routerDesc" class="gsap-fade">
+              Password resets, verification failures, locked accounts, workspace access, and identity confirmation handled through the fastest support lane.
+            </p>
+
+            <div class="router-meter-wrap">
+              <div class="router-meter" id="routerMeter">
+                <div class="router-meter-center">
+                  <strong id="routerMeterValue">92%</strong>
+                  <span>resolved fast</span>
+                </div>
+              </div>
+
+              <div class="router-stats">
+                <div class="router-stat">
+                  <div class="label">Avg Response</div>
+                  <div class="value" id="routerStat1">3m</div>
+                </div>
+                <div class="router-stat">
+                  <div class="label">Avg Fix</div>
+                  <div class="value" id="routerStat2">11m</div>
+                </div>
+                <div class="router-stat">
+                  <div class="label">Escalation</div>
+                  <div class="value" id="routerStat3">Low</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="router-list">
+            <article class="route-item active hover-target" data-route="access">
+              <span class="mono">ROUTE 01</span>
+              <h3>Account & Access</h3>
+              <p>Login issues, verification problems, locked sessions, and role permissions.</p>
+            </article>
+
+            <article class="route-item hover-target" data-route="billing">
+              <span class="mono">ROUTE 02</span>
+              <h3>Billing & Plans</h3>
+              <p>Invoices, renewals, charges, failed payments, credits, and subscription changes.</p>
+            </article>
+
+            <article class="route-item hover-target" data-route="security">
+              <span class="mono">ROUTE 03</span>
+              <h3>Security & Trust</h3>
+              <p>Suspicious activity, MFA, access reviews, security incidents, and trust policies.</p>
+            </article>
+
+            <article class="route-item hover-target" data-route="developer">
+              <span class="mono">ROUTE 04</span>
+              <h3>Developer & API</h3>
+              <p>Keys, webhooks, payload validation, SDK setup, and integration-level troubleshooting.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEARCH LAB -->
+    <section id="search-lab">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2400&auto=format&fit=crop" alt="Search lab background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="lab-layout">
+          <div class="lab-left glass">
+            <div class="pill"><span class="pulse"></span> SEARCH LAB</div>
+
+            <div class="lab-search">
+              <label for="helpSearch">Search articles</label>
+              <input id="helpSearch" type="text" placeholder="Try: billing, API, permissions, reset..." />
+            </div>
+
+            <div class="lab-filters">
+              <button class="lab-chip active hover-target" data-filter="all">All</button>
+              <button class="lab-chip hover-target" data-filter="account">Account</button>
+              <button class="lab-chip hover-target" data-filter="billing">Billing</button>
+              <button class="lab-chip hover-target" data-filter="security">Security</button>
+              <button class="lab-chip hover-target" data-filter="developer">Developer</button>
+            </div>
+
+            <div class="lab-results" id="labResults"></div>
+          </div>
+
+          <div class="lab-right glass">
+            <article class="featured-card" id="featuredCard">
+              <img id="featuredImg" src="" alt="Featured article">
+              <div class="featured-body">
+                <div>
+                  <span class="mono" id="featuredCategory">ARTICLE</span>
+                  <h3 id="featuredTitle">Loading article...</h3>
+                  <p id="featuredDesc">Select a result to inspect the recommended support path.</p>
+                </div>
+
+                <div class="featured-meta">
+                  <div class="featured-box">
+                    <div class="label">Time to read</div>
+                    <div class="value" id="featuredRead">4 min</div>
+                  </div>
+                  <div class="featured-box">
+                    <div class="label">Success rate</div>
+                    <div class="value" id="featuredRate">91%</div>
+                  </div>
+                  <div class="featured-box">
+                    <div class="label">Updated</div>
+                    <div class="value" id="featuredDate">Today</div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANSWER STREAMS -->
+    <section id="answer-streams">
+      <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2400&auto=format&fit=crop" alt="Answer streams background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="streams-layout">
+          <div class="streams-head">
+            <div class="pill gsap-fade"><span class="pulse"></span> ANSWER STREAMS</div>
+            <h2 class="gsap-fade">Knowledge never<br>stops moving.</h2>
+            <p class="gsap-fade">
+              Three continuous article streams moving at different speeds — surfacing account fixes, billing guides, and developer answers like a living knowledge feed.
+            </p>
+          </div>
+
+          <div class="streams-stage">
+            <div class="stream-column">
+              <div class="stream-track" id="streamTrack1"></div>
+            </div>
+            <div class="stream-column">
+              <div class="stream-track" id="streamTrack2"></div>
+            </div>
+            <div class="stream-column">
+              <div class="stream-track" id="streamTrack3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section id="s12-contact">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2400&auto=format&fit=crop" alt="Footer background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="footer-shell">
+          <div class="footer-big">
+            <h2>GET<br><span>UNBLOCKED.</span></h2>
+          </div>
+
+          <div class="footer-bottom">
+            <div class="mono">
+              <div>SUPPORT DESK // MΛGIC AGENCY</div>
+              <div>help@magic.agency</div>
+              <div>GLOBAL HELP CENTER SYSTEM // 2024</div>
+            </div>
+
+            <div class="socials">
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-lifebuoy"></i></a>
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-chat-circle-text"></i></a>
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-file-text"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+  <script>
+    // =========================================
+    // LENIS
+    // =========================================
+    const lenis = new Lenis({ duration: 1.5, smooth: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    // =========================================
+    // CURSOR
+    // =========================================
+    const cursor = document.querySelector('.cursor');
+
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, {
+          x: e.clientX,
+          y: e.clientY,
+          duration: 0.1,
+          ease: "power2.out"
+        });
+      });
+
+      document.querySelectorAll('a, button, .hover-target, .route-item, .lab-result').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+
+      document.querySelectorAll('.lab-result, .route-item, .quick-card').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('help-mode', 'hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('help-mode', 'hovered'));
+      });
+    }
+
+    // =========================================
+    // MAGNETIC
+    // =========================================
+    function attachMagnetic(){
+      if (window.innerWidth <= 768) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const strength = el.dataset.strength || 20;
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+          gsap.to(el, { x, y, duration: 0.3, ease: "power2.out" });
+        });
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+      });
+    }
+
+    // =========================================
+    // MENU
+    // =========================================
+    const menuData = [
+      { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: '#s02-services'}] },
+      { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: '#s03-work'}] },
+      { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: '#s04-studio'}, {name: 'Awards', url: '#s04-studio'}, {name: 'Team', url: '#s04-studio'}] },
+      { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: '#s05-capabilities'}, {name: 'Branding', url: '#s05-capabilities'}, {name: 'SEO', url: '#s05-capabilities'}] },
+      { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: '#s06-industries'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+      { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'labs.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+      { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'insights.html'}, {name: 'Podcasts', url: 'podcasts.html'}, {name: 'News', url: 'news.html'}] },
+      { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'investors-reports.html'}, {name: 'Stocks', url: 'investors-stocks.html'}, {name: 'Governance', url: 'investors-governance.html'}] },
+      { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'partners-agencies.html'}, {name: 'Tech', url: 'partners-tech.html'}, {name: 'Affiliates', url: 'partners-affiliates.html'}] },
+      { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'events-meetups.html'}, {name: 'Webinars', url: 'events-webinars.html'}, {name: 'Conferences', url: 'events-conferences-unique.html'}] },
+      { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'support-help-center.html'}, {name: 'API Docs', url: 'support-api-docs.html'}, {name: 'Status', url: 'support-status.html'}] },
+      { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: '#s12-contact'}, {name: 'Careers', url: '#s12-contact'}, {name: 'Locations', url: '#s12-contact'}] }
+    ];
+
+    const menuGrid = document.getElementById('menu-grid');
+    menuData.forEach(item => {
+      const linksHTML = item.links.map(link =>
+        `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`
+      ).join('');
+
+      menuGrid.innerHTML += `
+        <div class="menu-item">
+          <div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div>
+          <div class="dropdown">
+            <div class="dropdown-inner">${linksHTML}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    document.querySelectorAll('.menu-item-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const dropdown = title.nextElementSibling;
+        const inner = dropdown.querySelector('.dropdown-inner');
+        document.querySelectorAll('.dropdown').forEach(drop => {
+          if (drop !== dropdown) drop.style.height = '0px';
+        });
+        dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+      });
+    });
+
+    const menuBtn = document.querySelector('.menu-btn');
+    let menuOpen = false;
+
+    const menuTl = gsap.timeline({ paused: true })
+      .to('.menu-overlay', {
+        clipPath: 'polygon(0 0,100% 0,100% 100%,0 100%)',
+        duration: 0.8,
+        ease: "power4.inOut"
+      })
+      .to('.menu-item-title', {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.04,
+        ease: "power3.out"
+      }, "-=0.4");
+
+    function toggleMenu(){
+      menuOpen = !menuOpen;
+      menuBtn.classList.toggle('active');
+      if(menuOpen){
+        lenis.stop();
+        menuTl.play();
+      } else {
+        lenis.start();
+        document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px');
+        menuTl.reverse();
+      }
+    }
+
+    menuBtn.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute('href');
+        if(menuOpen) toggleMenu();
+
+        setTimeout(() => {
+          if(targetUrl.startsWith('#')){
+            const target = document.querySelector(targetUrl);
+            if(target) lenis.scrollTo(targetUrl, { duration: 1.5 });
+          } else {
+            window.location.href = targetUrl;
+          }
+        }, 800);
+      });
+    });
+
+    // =========================================
+    // HERO REVEAL
+    // =========================================
+    gsap.to(".hero-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.18,
+      ease: "power4.out",
+      delay: 0.2
+    });
+
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 35,
+      duration: 1,
+      stagger: 0.12,
+      delay: 0.85,
+      ease: "power3.out"
+    });
+
+    gsap.to(".hero-bg", {
+      y: "18%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#support-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // =========================================
+    // HERO COMMAND CARD TILT
+    // =========================================
+    const commandCard = document.getElementById('commandCard');
+    if(commandCard && window.innerWidth > 768){
+      commandCard.addEventListener('mousemove', (e) => {
+        const rect = commandCard.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+
+        gsap.to(commandCard, {
+          rotationY: x * 8,
+          rotationX: -y * 8,
+          duration: 0.45,
+          ease: "power2.out"
+        });
+      });
+
+      commandCard.addEventListener('mouseleave', () => {
+        gsap.to(commandCard, {
+          rotationY: 0,
+          rotationX: 0,
+          duration: 1,
+          ease: "elastic.out(1, 0.3)"
+        });
+      });
+    }
+
+    // =========================================
+    // HERO TYPE SUGGESTIONS
+    // =========================================
+    const commandPhrases = [
+      "How do I reset my workspace permissions?",
+      "Where can I update billing details?",
+      "Why is my API token returning 401?",
+      "How do I enable multi-factor authentication?",
+      "Why was my workspace locked?"
+    ];
+
+    const commandText = document.getElementById('commandText');
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+
+    function typeLoop(){
+      const current = commandPhrases[phraseIndex];
+      if(!deleting){
+        charIndex++;
+        commandText.textContent = current.slice(0, charIndex);
+        if(charIndex === current.length){
+          deleting = true;
+          setTimeout(typeLoop, 1400);
+          return;
+        }
+      } else {
+        charIndex--;
+        commandText.textContent = current.slice(0, charIndex);
+        if(charIndex === 0){
+          deleting = false;
+          phraseIndex = (phraseIndex + 1) % commandPhrases.length;
+        }
+      }
+      setTimeout(typeLoop, deleting ? 35 : 55);
+    }
+    typeLoop();
+
+    // =========================================
+    // ROUTER
+    // =========================================
+    const routeData = {
+      access: {
+        title: "Account & access support.",
+        desc: "Password resets, verification failures, locked accounts, workspace access, and identity confirmation handled through the fastest support lane.",
+        percent: 92,
+        stat1: "3m",
+        stat2: "11m",
+        stat3: "Low"
+      },
+      billing: {
+        title: "Billing & subscription support.",
+        desc: "Charges, invoice history, renewals, credits, failed payments, tax details, and plan switches across teams and organizations.",
+        percent: 88,
+        stat1: "6m",
+        stat2: "18m",
+        stat3: "Medium"
+      },
+      security: {
+        title: "Security & trust operations.",
+        desc: "Suspicious activity, MFA issues, device trust, access review workflows, and incident-level support for sensitive accounts.",
+        percent: 95,
+        stat1: "4m",
+        stat2: "14m",
+        stat3: "Guarded"
+      },
+      developer: {
+        title: "Developer & API troubleshooting.",
+        desc: "API keys, webhook validation, payload structures, SDK configuration, rate limits, and environment-level integration questions.",
+        percent: 84,
+        stat1: "9m",
+        stat2: "26m",
+        stat3: "Higher"
+      }
+    };
+
+    const routerTitle = document.getElementById('routerTitle');
+    const routerDesc = document.getElementById('routerDesc');
+    const routerMeter = document.getElementById('routerMeter');
+    const routerMeterValue = document.getElementById('routerMeterValue');
+    const routerStat1 = document.getElementById('routerStat1');
+    const routerStat2 = document.getElementById('routerStat2');
+    const routerStat3 = document.getElementById('routerStat3');
+
+    function setRoute(key){
+      const data = routeData[key];
+      if(!data) return;
+
+      document.querySelectorAll('.route-item').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.route-item[data-route="${key}"]`).classList.add('active');
+
+      gsap.to([routerTitle, routerDesc, routerStat1, routerStat2, routerStat3, routerMeterValue], {
+        opacity: 0,
+        y: 8,
+        duration: 0.16,
+        stagger: 0.02,
+        onComplete: () => {
+          routerTitle.textContent = data.title;
+          routerDesc.textContent = data.desc;
+          routerMeterValue.textContent = `${data.percent}%`;
+          routerStat1.textContent = data.stat1;
+          routerStat2.textContent = data.stat2;
+          routerStat3.textContent = data.stat3;
+          routerMeter.style.setProperty('--deg', `${data.percent * 3.6}deg`);
+          gsap.to([routerTitle, routerDesc, routerStat1, routerStat2, routerStat3, routerMeterValue], {
+            opacity: 1,
+            y: 0,
+            duration: 0.28,
+            stagger: 0.02
+          });
+        }
+      });
+    }
+
+    routerMeter.style.setProperty('--deg', `${routeData.access.percent * 3.6}deg`);
+
+    document.querySelectorAll('.route-item').forEach(item => {
+      item.addEventListener('click', () => setRoute(item.dataset.route));
+      if(window.innerWidth > 768){
+        item.addEventListener('mouseenter', () => setRoute(item.dataset.route));
+      }
+    });
+
+    // =========================================
+    // SEARCH LAB
+    // =========================================
+    const helpArticles = [
+      {
+        title: "Reset workspace permissions safely",
+        category: "account",
+        desc: "Learn how to change roles, restore access, and fix permission inheritance issues inside a shared workspace.",
+        image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200&auto=format&fit=crop",
+        read: "4 min",
+        rate: "93%",
+        date: "Today"
+      },
+      {
+        title: "Update billing details and invoices",
+        category: "billing",
+        desc: "Change payment methods, retrieve invoices, and handle billing contacts across teams and organizations.",
+        image: "https://images.unsplash.com/photo-1554224154-26032ffc0d07?q=80&w=1200&auto=format&fit=crop",
+        read: "5 min",
+        rate: "89%",
+        date: "2 days"
+      },
+      {
+        title: "Enable multi-factor authentication",
+        category: "security",
+        desc: "Set up MFA, configure backup codes, and resolve common authenticator problems.",
+        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop",
+        read: "3 min",
+        rate: "96%",
+        date: "Today"
+      },
+      {
+        title: "Fix 401 errors with API tokens",
+        category: "developer",
+        desc: "Validate scopes, rotate keys, and confirm environment-specific authentication settings.",
+        image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop",
+        read: "6 min",
+        rate: "87%",
+        date: "1 week"
+      },
+      {
+        title: "Recover a locked organization account",
+        category: "account",
+        desc: "Understand why lock events happen and how admins can restore secure access.",
+        image: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1200&auto=format&fit=crop",
+        read: "5 min",
+        rate: "91%",
+        date: "Yesterday"
+      },
+      {
+        title: "Understand prorated plan changes",
+        category: "billing",
+        desc: "See how upgrades, downgrades, and mid-cycle adjustments affect invoices and credit balances.",
+        image: "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?q=80&w=1200&auto=format&fit=crop",
+        read: "4 min",
+        rate: "86%",
+        date: "4 days"
+      },
+      {
+        title: "Configure webhooks for production",
+        category: "developer",
+        desc: "Best practices for signing, validating, retry handling, and endpoint testing.",
+        image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=1200&auto=format&fit=crop",
+        read: "7 min",
+        rate: "84%",
+        date: "6 days"
+      },
+      {
+        title: "Review suspicious login activity",
+        category: "security",
+        desc: "Investigate recent sessions, device activity, and access anomalies across your account.",
+        image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=1200&auto=format&fit=crop",
+        read: "4 min",
+        rate: "95%",
+        date: "Today"
+      }
+    ];
+
+    const helpSearch = document.getElementById('helpSearch');
+    const labResults = document.getElementById('labResults');
+    let currentFilter = 'all';
+
+    const featuredImg = document.getElementById('featuredImg');
+    const featuredCategory = document.getElementById('featuredCategory');
+    const featuredTitle = document.getElementById('featuredTitle');
+    const featuredDesc = document.getElementById('featuredDesc');
+    const featuredRead = document.getElementById('featuredRead');
+    const featuredRate = document.getElementById('featuredRate');
+    const featuredDate = document.getElementById('featuredDate');
+
+    function setFeatured(article){
+      if(!article) return;
+      featuredImg.src = article.image;
+      featuredCategory.textContent = article.category.toUpperCase();
+      featuredTitle.textContent = article.title;
+      featuredDesc.textContent = article.desc;
+      featuredRead.textContent = article.read;
+      featuredRate.textContent = article.rate;
+      featuredDate.textContent = article.date;
+    }
+
+    function renderArticles(){
+      const q = helpSearch.value.toLowerCase().trim();
+
+      const filtered = helpArticles.filter(article => {
+        const matchesCategory = currentFilter === 'all' || article.category === currentFilter;
+        const matchesText =
+          article.title.toLowerCase().includes(q) ||
+          article.desc.toLowerCase().includes(q) ||
+          article.category.toLowerCase().includes(q);
+        return matchesCategory && matchesText;
+      });
+
+      labResults.innerHTML = '';
+
+      if(filtered.length === 0){
+        labResults.innerHTML = `<div class="empty-state">No help articles matched your search. Try another keyword.</div>`;
+        return;
+      }
+
+      filtered.forEach((article, index) => {
+        const item = document.createElement('article');
+        item.className = 'lab-result hover-target';
+        item.innerHTML = `
+          <span class="mono">${article.category.toUpperCase()}</span>
+          <h3>${article.title}</h3>
+          <p>${article.desc}</p>
+        `;
+        item.addEventListener('mouseenter', () => setFeatured(article));
+        item.addEventListener('click', () => setFeatured(article));
+        labResults.appendChild(item);
+
+        gsap.from(item, {
+          opacity: 0,
+          y: 20,
+          duration: 0.35,
+          delay: index * 0.04,
+          ease: "power2.out"
+        });
+      });
+
+      setFeatured(filtered[0]);
+    }
+
+    document.querySelectorAll('.lab-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.lab-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentFilter = chip.dataset.filter;
+        renderArticles();
+      });
+    });
+
+    helpSearch.addEventListener('input', renderArticles);
+    renderArticles();
+
+    // =========================================
+    // ANSWER STREAMS
+    // =========================================
+    const streamItems = [
+      { category:'ACCOUNT', title:'Restore deleted team member access', desc:'Recover access without breaking workspace ownership.' },
+      { category:'BILLING', title:'Where to download VAT invoices', desc:'Find tax-ready billing records quickly.' },
+      { category:'SECURITY', title:'Rotate backup authentication methods', desc:'Update trusted recovery factors safely.' },
+      { category:'DEVELOPER', title:'Retry strategy for failed webhooks', desc:'Handle downstream errors without duplicate events.' },
+      { category:'ACCOUNT', title:'Change default workspace owner', desc:'Move ownership with clean admin continuity.' },
+      { category:'BILLING', title:'Why a payment was declined', desc:'Understand card failure reasons and fallback steps.' },
+      { category:'SECURITY', title:'Audit recent device sessions', desc:'Inspect and remove unknown sign-ins.' },
+      { category:'DEVELOPER', title:'Sandbox vs production API keys', desc:'Keep environments separated and safe.' }
+    ];
+
+    function buildStream(trackId, items){
+      const track = document.getElementById(trackId);
+      const doubled = [...items, ...items];
+      doubled.forEach(item => {
+        const card = document.createElement('article');
+        card.className = 'stream-card';
+        card.innerHTML = `
+          <span class="mono">${item.category}</span>
+          <h3>${item.title}</h3>
+          <p>${item.desc}</p>
+        `;
+        track.appendChild(card);
+      });
+    }
+
+    buildStream('streamTrack1', streamItems.slice(0, 6));
+    buildStream('streamTrack2', streamItems.slice(2, 8));
+    buildStream('streamTrack3', streamItems.slice(1, 7));
+
+    if(window.innerWidth > 900){
+      gsap.to('#streamTrack1', { yPercent: -50, duration: 18, repeat: -1, ease: 'none' });
+      gsap.to('#streamTrack2', { yPercent: -50, duration: 22, repeat: -1, ease: 'none' });
+      gsap.to('#streamTrack3', { yPercent: -50, duration: 16, repeat: -1, ease: 'none' });
+    }
+
+    // =========================================
+    // INIT
+    // =========================================
+    attachMagnetic();
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MΛGAgency | Investor Stocks</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --dark:#050708;
+      --light:#f4f4f5;
+      --accent:#7CFF4F;
+      --accent-2:#4FD1FF;
+      --danger:#FF5A5A;
+      --gray:#101214;
+      --nav-height:70px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;cursor:none;}
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--light);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+    h1,h2,h3,h4,h5,h6,.display-font{font-family:'Syne',sans-serif;}
+    .mono{font-family:'JetBrains Mono',monospace;}
+    a{text-decoration:none;color:inherit;}
+    section{
+      position:relative;
+      width:100vw;
+      min-height:100vh;
+      overflow:hidden;
+    }
+
+    html.lenis{height:auto;}
+    .lenis.lenis-smooth{scroll-behavior:auto !important;}
+
+    /* =========================
+       CURSOR
+       ========================= */
+    .cursor{
+      position:fixed;
+      top:0;left:0;
+      width:18px;height:18px;
+      border-radius:50%;
+      background:var(--accent);
+      pointer-events:none;
+      z-index:99999;
+      transform:translate(-50%,-50%);
+      transition:width .3s,height .3s,background .3s,border .3s;
+      mix-blend-mode:screen;
+    }
+    .cursor.hovered{
+      width:78px;height:78px;
+      background:transparent;
+      border:1px solid var(--accent);
+      mix-blend-mode:normal;
+      backdrop-filter:blur(4px);
+    }
+    .cursor.trade-mode::after{
+      content:'TRADE';
+      position:absolute;
+      top:50%;left:50%;
+      transform:translate(-50%,-50%);
+      font-size:10px;
+      color:var(--accent);
+      font-family:'JetBrains Mono',monospace;
+      letter-spacing:1px;
+      font-weight:700;
+    }
+    @media(max-width:768px){
+      .cursor{display:none;}
+      *{cursor:auto !important;}
+    }
+
+    /* =========================
+       NAVBAR
+       ========================= */
+    nav{
+      position:fixed;
+      top:0;left:0;
+      width:100%;
+      height:var(--nav-height);
+      padding:0 5vw;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:10000;
+      background:rgba(5,7,8,.72);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(124,255,79,.14);
+    }
+    .nav-brand{
+      font-size:1.3rem;
+      font-weight:800;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+    .menu-btn{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:none;
+      border:none;
+      color:var(--light);
+      font-weight:600;
+      text-transform:uppercase;
+      font-size:.9rem;
+    }
+    .hamburger{
+      width:35px;
+      height:8px;
+      position:relative;
+    }
+    .hamburger span{
+      position:absolute;
+      width:100%;
+      height:2px;
+      background:var(--light);
+      transition:.4s;
+    }
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){bottom:0;}
+    .menu-btn.active .hamburger span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);
+      background:var(--dark);
+    }
+    .menu-btn.active .hamburger span:nth-child(2){
+      transform:translateY(-3px) rotate(-45deg);
+      background:var(--dark);
+    }
+
+    /* =========================
+       MENU OVERLAY
+       ========================= */
+    .menu-overlay{
+      position:fixed;
+      top:0;left:0;
+      width:100vw;height:100vh;
+      background:var(--accent);
+      z-index:9999;
+      display:flex;
+      padding-top:calc(var(--nav-height) + 3vh);
+      clip-path:polygon(0 0,100% 0,100% 0,0 0);
+      overflow-y:auto;
+    }
+    .menu-container{
+      width:100%;
+      padding:0 5vw 5vh 5vw;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:2rem 2.5rem;
+      align-content:start;
+    }
+    @media(max-width:1200px){
+      .menu-container{grid-template-columns:repeat(3,1fr);}
+    }
+    @media(max-width:768px){
+      .menu-container{
+        grid-template-columns:1fr;
+        gap:.5rem;
+        padding:2vh 5vw 10vh 5vw;
+      }
+      .menu-item{
+        border-bottom:1px solid rgba(0,0,0,.15);
+        padding:1.5rem 0;
+      }
+      .menu-item-title{
+        font-size:2rem !important;
+        font-weight:800 !important;
+      }
+      .dropdown a{
+        font-size:1.25rem !important;
+        padding:.8rem 0;
+      }
+    }
+    .menu-item{
+      border-bottom:1px solid rgba(0,0,0,.12);
+      padding-bottom:1rem;
+    }
+    .menu-item-title{
+      font-size:clamp(1.3rem,2.5vw,2rem);
+      font-weight:700;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:var(--dark);
+      opacity:0;
+      transform:translateY(20px);
+    }
+    .menu-item-title span{
+      font-size:1rem;
+      font-family:'Inter',sans-serif;
+      color:var(--dark);
+      font-weight:500;
+    }
+    .dropdown{
+      height:0;
+      overflow:hidden;
+      transition:height .4s ease;
+    }
+    .dropdown-inner{
+      padding-top:1rem;
+      display:flex;
+      flex-direction:column;
+      gap:.8rem;
+    }
+    .dropdown a{
+      color:#252525;
+      font-size:1.05rem;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      transition:.3s;
+      font-weight:500;
+    }
+    .dropdown a i{font-size:1.2rem;color:var(--dark);}
+    .dropdown a:hover{padding-left:10px;}
+
+    /* =========================
+       REUSABLE
+       ========================= */
+    .section-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:0;
+    }
+    .section-overlay{
+      position:absolute;
+      inset:0;
+      z-index:1;
+    }
+    .section-inner{
+      position:relative;
+      z-index:2;
+      min-height:100vh;
+      width:100%;
+      padding:calc(var(--nav-height) + 4vh) 5vw 6vh 5vw;
+    }
+    .glass{
+      background:rgba(11,13,15,.42);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 20px 50px rgba(0,0,0,.38);
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid rgba(124,255,79,.28);
+      color:var(--accent);
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:.85rem;
+      font-family:'JetBrains Mono',monospace;
+      width:max-content;
+      margin-bottom:1.2rem;
+    }
+    .pulse{
+      width:8px;height:8px;border-radius:50%;background:var(--accent);
+      animation:pulseDot 1.2s infinite;
+    }
+    @keyframes pulseDot{
+      0%{transform:scale(1);opacity:1;}
+      50%{transform:scale(.55);opacity:.4;}
+      100%{transform:scale(1);opacity:1;}
+    }
+
+    /* =========================
+       S01 HERO
+       ========================= */
+    #s01-hero .section-overlay{
+      background:
+        linear-gradient(90deg,rgba(5,7,8,.9) 0%, rgba(5,7,8,.42) 48%, rgba(5,7,8,.82) 100%);
+    }
+
+    .hero-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      align-items:center;
+      gap:4vw;
+    }
+
+    .hero-title{
+      font-size:clamp(3.5rem,10vw,8rem);
+      line-height:.9;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+    .hero-title .line{
+      display:block;
+      overflow:hidden;
+    }
+    .hero-title .word{
+      display:inline-block;
+      transform:translateY(110%);
+    }
+    .hero-title .outline{
+      color:transparent;
+      -webkit-text-stroke:2px var(--light);
+    }
+
+    .hero-desc{
+      margin-top:1.4rem;
+      max-width:560px;
+      color:#bcc1c9;
+      line-height:1.75;
+    }
+
+    .hero-right{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .terminal-card{
+      width:min(560px,100%);
+      border-radius:22px;
+      overflow:hidden;
+      position:relative;
+      transform-style:preserve-3d;
+      transition:transform .1s;
+    }
+
+    .terminal-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:1rem 1.2rem;
+      background:rgba(255,255,255,.03);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .terminal-dots{
+      display:flex;gap:8px;
+    }
+    .terminal-dots span{
+      width:10px;height:10px;border-radius:50%;
+      background:#2c3138;
+    }
+    .terminal-dots span:nth-child(1){background:var(--danger);}
+    .terminal-dots span:nth-child(2){background:var(--accent);}
+    .terminal-dots span:nth-child(3){background:var(--accent-2);}
+    .terminal-top .mono{font-size:.8rem;color:#9ca3ab;}
+
+    .terminal-body{
+      padding:1.4rem;
+    }
+
+    .price-main{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:1rem;
+      margin-bottom:1.2rem;
+      flex-wrap:wrap;
+    }
+    .price-main h3{
+      font-size:1.15rem;
+      color:#cad1d8;
+      font-weight:500;
+      margin-bottom:.55rem;
+    }
+    .big-price{
+      font-size:clamp(2.6rem,6vw,4.4rem);
+      color:var(--accent);
+      font-family:'JetBrains Mono',monospace;
+      line-height:1;
+      font-weight:700;
+    }
+    .price-change{
+      font-family:'JetBrains Mono',monospace;
+      color:var(--accent);
+      font-size:1rem;
+      margin-top:.5rem;
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+      margin-top:1rem;
+    }
+    .mini-box{
+      border-radius:14px;
+      padding:1rem;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+    }
+    .mini-box .label{
+      color:#8f969e;
+      font-size:.78rem;
+      text-transform:uppercase;
+      margin-bottom:.5rem;
+    }
+    .mini-box .value{
+      font-size:1.2rem;
+      font-family:'JetBrains Mono',monospace;
+      color:#fff;
+    }
+
+    .ticker-row{
+      margin-top:1.2rem;
+      padding-top:1rem;
+      border-top:1px solid rgba(255,255,255,.06);
+      display:flex;
+      gap:1rem;
+      flex-wrap:wrap;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.85rem;
+      color:#a3aab2;
+    }
+    .up{color:var(--accent);}
+    .down{color:var(--danger);}
+
+    @media(max-width:1024px){
+      .hero-layout{
+        grid-template-columns:1fr;
+        text-align:center;
+      }
+      .hero-left{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+      }
+      .hero-desc{margin-inline:auto;}
+      .mini-grid{grid-template-columns:1fr;}
+    }
+
+    /* =========================
+       S02 DEPTH ENGINE
+       ========================= */
+    #s02-depth .section-overlay{
+      background:linear-gradient(180deg,rgba(5,7,8,.82),rgba(5,7,8,.92));
+    }
+
+    .depth-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:.95fr 1.05fr;
+      align-items:center;
+      gap:2rem;
+    }
+
+    .depth-copy h2{
+      font-size:clamp(2.7rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+    .depth-copy p{
+      max-width:520px;
+      color:#bcc1c9;
+      line-height:1.75;
+    }
+
+    .depth-board{
+      padding:1.2rem;
+      border-radius:20px;
+    }
+
+    .board-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:1rem;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+    .board-head h3{
+      font-size:1.3rem;
+    }
+    .board-head .mono{
+      font-size:.85rem;
+      color:var(--accent-2);
+    }
+
+    .depth-panels{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:1rem;
+    }
+
+    .chart-panel,
+    .order-panel{
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+      padding:1rem;
+    }
+
+    .chart-svg{
+      width:100%;
+      height:260px;
+      display:block;
+    }
+
+    .order-panel h4{
+      font-size:1rem;
+      margin-bottom:1rem;
+      color:#d4d9df;
+    }
+    .order-row{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:10px;
+      padding:.65rem 0;
+      border-bottom:1px solid rgba(255,255,255,.05);
+      font-family:'JetBrains Mono',monospace;
+      font-size:.8rem;
+    }
+    .order-row:last-child{border-bottom:none;}
+    .bid{color:var(--accent);}
+    .ask{color:var(--danger);}
+
+    @media(max-width:1024px){
+      .depth-layout{grid-template-columns:1fr;}
+      .depth-copy{text-align:center;}
+      .depth-copy p{margin-inline:auto;}
+    }
+    @media(max-width:768px){
+      .depth-panels{grid-template-columns:1fr;}
+    }
+
+    /* =========================
+       S03 SECTOR HEATMAP
+       ========================= */
+    #s03-heatmap .section-overlay{
+      background:linear-gradient(180deg,rgba(5,7,8,.78),rgba(5,7,8,.92));
+    }
+
+    .heat-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:2rem;
+    }
+
+    .heat-header{
+      text-align:center;
+      max-width:800px;
+      margin:0 auto;
+    }
+    .heat-header h2{
+      font-size:clamp(2.6rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+    .heat-header p{
+      color:#bcc2c9;
+      line-height:1.75;
+    }
+
+    .heat-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      grid-template-rows:repeat(2,220px);
+      gap:1rem;
+    }
+
+    .heat-card{
+      position:relative;
+      border-radius:20px;
+      overflow:hidden;
+      padding:1.2rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      border:1px solid rgba(255,255,255,.06);
+      transition:.35s;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+    .heat-card:hover{
+      transform:translateY(-8px) scale(1.01);
+      box-shadow:0 20px 40px rgba(0,0,0,.25);
+    }
+    .heat-card.large{grid-column:span 2;grid-row:span 2;}
+    .heat-card.wide{grid-column:span 2;}
+    .heat-card.green{background:linear-gradient(135deg,rgba(124,255,79,.3),rgba(124,255,79,.07));}
+    .heat-card.blue{background:linear-gradient(135deg,rgba(79,209,255,.28),rgba(79,209,255,.08));}
+    .heat-card.red{background:linear-gradient(135deg,rgba(255,90,90,.3),rgba(255,90,90,.08));}
+    .heat-card.dark{background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03));}
+
+    .heat-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:1rem;
+    }
+    .heat-sector{
+      font-size:clamp(1rem,2vw,1.4rem);
+      font-weight:700;
+    }
+    .heat-symbol{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.8rem;
+      color:#dfe4ea;
+      opacity:.85;
+    }
+    .heat-bottom .price{
+      font-size:clamp(1.6rem,3vw,2.6rem);
+      font-family:'JetBrains Mono',monospace;
+      margin-bottom:.45rem;
+      font-weight:700;
+    }
+    .heat-bottom .change{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.9rem;
+    }
+
+    @media(max-width:1024px){
+      .heat-grid{
+        grid-template-columns:repeat(2,1fr);
+        grid-template-rows:auto;
+      }
+    }
+    @media(max-width:768px){
+      .heat-grid{grid-template-columns:1fr;}
+      .heat-card.large,.heat-card.wide{grid-column:span 1;grid-row:span 1;}
+      .heat-card{min-height:180px;}
+    }
+
+    /* =========================
+       S04 ORBIT PORTFOLIO
+       ========================= */
+    #s04-orbit .section-overlay{
+      background:radial-gradient(circle at center,rgba(5,7,8,.45),rgba(5,7,8,.9));
+    }
+
+    .orbit-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:.95fr 1.05fr;
+      align-items:center;
+      gap:2rem;
+    }
+
+    .orbit-copy h2{
+      font-size:clamp(2.7rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+    .orbit-copy p{
+      max-width:520px;
+      color:#bcc2c8;
+      line-height:1.75;
+    }
+
+    .orbit-stage{
+      position:relative;
+      width:min(620px,90vw);
+      aspect-ratio:1;
+      margin:0 auto;
+    }
+
+    .ring{
+      position:absolute;
+      top:50%;left:50%;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+    }
+    .ring.r1{width:30%;height:30%;}
+    .ring.r2{width:55%;height:55%;}
+    .ring.r3{width:82%;height:82%;}
+
+    .core{
+      position:absolute;
+      top:50%;left:50%;
+      width:130px;height:130px;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:radial-gradient(circle,var(--accent),rgba(124,255,79,.2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.95rem;
+      color:#061107;
+      font-weight:700;
+      box-shadow:0 0 60px rgba(124,255,79,.28);
+    }
+
+    .orbit-node{
+      position:absolute;
+      width:120px;height:120px;
+      border-radius:50%;
+      background:rgba(15,18,20,.72);
+      border:1px solid rgba(255,255,255,.08);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      transform:translate(-50%,-50%);
+      transition:.35s;
+    }
+    .orbit-node:hover{
+      transform:translate(-50%,-50%) scale(1.08);
+      border-color:var(--accent);
+    }
+    .orbit-node strong{
+      font-size:1.1rem;
+      font-family:'JetBrains Mono',monospace;
+      color:var(--light);
+    }
+    .orbit-node span{
+      margin-top:.3rem;
+      font-size:.72rem;
+      color:#a6acb4;
+      text-transform:uppercase;
+      letter-spacing:1px;
+    }
+
+    @media(max-width:1024px){
+      .orbit-layout{grid-template-columns:1fr;}
+      .orbit-copy{text-align:center;}
+      .orbit-copy p{margin-inline:auto;}
+    }
+    @media(max-width:768px){
+      .orbit-node{
+        width:92px;height:92px;
+      }
+      .core{
+        width:100px;height:100px;
+        font-size:.8rem;
+      }
+    }
+
+    /* =========================
+       S05 FOOTER
+       ========================= */
+    #s12-contact .section-overlay{
+      background:linear-gradient(to top,rgba(0,0,0,.96),rgba(0,0,0,.45));
+    }
+    .footer-shell{
+      min-height:calc(100vh - var(--nav-height));
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .footer-big{
+      margin-top:auto;
+      text-align:center;
+    }
+    .footer-big h2{
+      font-size:clamp(3.5rem,14vw,12rem);
+      line-height:.82;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+    .footer-big h2 span{
+      color:var(--accent);
+      text-shadow:0 0 30px rgba(124,255,79,.22);
+    }
+    .footer-bottom{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:2rem;
+      padding-top:2rem;
+      border-top:1px solid rgba(255,255,255,.1);
+    }
+    .footer-bottom .mono{
+      color:#9198a0;
+      line-height:1.7;
+      font-size:.88rem;
+    }
+    .socials{
+      display:flex;
+      gap:1rem;
+    }
+    .social-btn{
+      width:60px;height:60px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.18);
+      font-size:1.4rem;
+      transition:.35s;
+    }
+    .social-btn:hover{
+      background:var(--accent);
+      color:var(--dark);
+      border-color:var(--accent);
+    }
+    @media(max-width:768px){
+      .footer-bottom{
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-brand magnetic hover-target" data-strength="20">MΛGIC.</a>
+    <button class="menu-btn magnetic hover-target" data-strength="30">
+      Menu
+      <div class="hamburger"><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <!-- MENU -->
+  <div class="menu-overlay">
+    <div class="menu-container" id="menu-grid"></div>
+  </div>
+
+  <main id="stocks-page">
+
+    <!-- =========================
+         S01 HERO
+         ========================= -->
+    <section id="s01-hero">
+      <img src="https://images.unsplash.com/photo-1642790551116-18e150f248e6?q=80&w=2400&auto=format&fit=crop" alt="Stocks hero background" class="section-bg hero-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="hero-layout">
+          <div class="hero-left">
+            <div class="pill gsap-up"><span class="pulse"></span> LIVE EQUITY MONITOR</div>
+
+            <h1 class="hero-title">
+              <span class="line"><span class="word hero-word">MARKET</span></span>
+              <span class="line"><span class="word hero-word outline">SIGNALS</span></span>
+            </h1>
+
+            <p class="hero-desc gsap-up">
+              Real-time investor storytelling for pricing, momentum, sector movement, and portfolio visibility —
+              presented as an ultra-premium stock dashboard experience.
+            </p>
+          </div>
+
+          <div class="hero-right">
+            <div class="terminal-card glass hover-target" id="terminalCard">
+              <div class="terminal-top">
+                <div class="terminal-dots">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="mono">MGC // NYSE // LIVE</div>
+              </div>
+
+              <div class="terminal-body">
+                <div class="price-main">
+                  <div>
+                    <h3>MΛGIC Holdings Inc.</h3>
+                    <div class="big-price" id="livePrice">$184.22</div>
+                    <div class="price-change" id="liveChange">+2.14%</div>
+                  </div>
+                  <div class="mono" style="color:#99a0a8;">UPDATED: <span id="liveTime">00:00:00</span></div>
+                </div>
+
+                <svg id="heroLineChart" viewBox="0 0 600 180" preserveAspectRatio="none" style="width:100%;height:180px;display:block;">
+                  <defs>
+                    <linearGradient id="heroLineGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#7CFF4F" stop-opacity="0.55"></stop>
+                      <stop offset="100%" stop-color="#7CFF4F" stop-opacity="0"></stop>
+                    </linearGradient>
+                  </defs>
+                  <path id="heroFill" d="" fill="url(#heroLineGrad)"></path>
+                  <path id="heroLine" d="" fill="none" stroke="#7CFF4F" stroke-width="4" stroke-linecap="round"></path>
+                </svg>
+
+                <div class="mini-grid">
+                  <div class="mini-box">
+                    <div class="label">Open</div>
+                    <div class="value">$181.50</div>
+                  </div>
+                  <div class="mini-box">
+                    <div class="label">Volume</div>
+                    <div class="value">8.4M</div>
+                  </div>
+                  <div class="mini-box">
+                    <div class="label">Mkt Cap</div>
+                    <div class="value">$42.1B</div>
+                  </div>
+                </div>
+
+                <div class="ticker-row">
+                  <span>SPX <span class="up">+1.14%</span></span>
+                  <span>NDQ <span class="up">+1.82%</span></span>
+                  <span>VIX <span class="down">-3.21%</span></span>
+                  <span>DXY <span class="down">-0.54%</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         S02 DEPTH ENGINE
+         ========================= -->
+    <section id="s02-depth">
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2400&auto=format&fit=crop" alt="Depth engine background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="depth-layout">
+          <div class="depth-copy">
+            <div class="pill gsap-fade"><span class="pulse"></span> ORDER FLOW</div>
+            <h2 class="gsap-fade">Depth<br>Engine.</h2>
+            <p class="gsap-fade">
+              This section behaves like a trading terminal: candlestick velocity, intraday range, and live order-book style rows.
+              Built as a premium motion dashboard rather than a static investor table.
+            </p>
+          </div>
+
+          <div class="depth-board glass gsap-fade">
+            <div class="board-head">
+              <div>
+                <h3>Intraday Price Action</h3>
+                <div class="mono">15 MIN INTERVAL / SIMULATED LIVE FEED</div>
+              </div>
+              <div class="mono" style="color:var(--accent);">MGC +2.14%</div>
+            </div>
+
+            <div class="depth-panels">
+              <div class="chart-panel">
+                <svg class="chart-svg" viewBox="0 0 720 260" preserveAspectRatio="none">
+                  <g id="candlesGroup"></g>
+                  <path id="maLine" d="" fill="none" stroke="#4FD1FF" stroke-width="3" stroke-linecap="round"></path>
+                </svg>
+              </div>
+
+              <div class="order-panel">
+                <h4>Order Book</h4>
+                <div class="order-row">
+                  <span class="bid">183.98</span>
+                  <span>12,400</span>
+                  <span class="ask">184.04</span>
+                </div>
+                <div class="order-row">
+                  <span class="bid">183.94</span>
+                  <span>18,120</span>
+                  <span class="ask">184.08</span>
+                </div>
+                <div class="order-row">
+                  <span class="bid">183.90</span>
+                  <span>22,850</span>
+                  <span class="ask">184.12</span>
+                </div>
+                <div class="order-row">
+                  <span class="bid">183.86</span>
+                  <span>30,200</span>
+                  <span class="ask">184.16</span>
+                </div>
+                <div class="order-row">
+                  <span class="bid">183.82</span>
+                  <span>44,180</span>
+                  <span class="ask">184.21</span>
+                </div>
+                <div class="order-row">
+                  <span class="bid">183.76</span>
+                  <span>51,600</span>
+                  <span class="ask">184.27</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         S03 HEATMAP
+         ========================= -->
+    <section id="s03-heatmap">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2400&auto=format&fit=crop" alt="Heatmap background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="heat-layout">
+          <div class="heat-header">
+            <div class="pill gsap-heat"><span class="pulse"></span> SECTOR FLOW</div>
+            <h2 class="gsap-heat">Market<br>Heatmap.</h2>
+            <p class="gsap-heat">
+              Sector rotation presented as an institutional visual surface. Each block pulses with its own movement,
+              simulating a live portfolio view across growth, financials, infrastructure, energy, and AI.
+            </p>
+          </div>
+
+          <div class="heat-grid">
+            <div class="heat-card large green hover-target live-heat">
+              <div class="heat-top">
+                <div>
+                  <div class="heat-sector">Artificial Intelligence</div>
+                  <div class="heat-symbol mono">AI-GROWTH</div>
+                </div>
+              </div>
+              <div class="heat-bottom">
+                <div class="price">$12.8B</div>
+                <div class="change up">+4.82%</div>
+              </div>
+            </div>
+
+            <div class="heat-card wide blue hover-target live-heat">
+              <div class="heat-top">
+                <div>
+                  <div class="heat-sector">Cloud Infrastructure</div>
+                  <div class="heat-symbol mono">CLOUD-X</div>
+                </div>
+              </div>
+              <div class="heat-bottom">
+                <div class="price">$8.1B</div>
+                <div class="change up">+2.14%</div>
+              </div>
+            </div>
+
+            <div class="heat-card red hover-target live-heat">
+              <div class="heat-top">
+                <div>
+                  <div class="heat-sector">Energy</div>
+                  <div class="heat-symbol mono">ENR-24</div>
+                </div>
+              </div>
+              <div class="heat-bottom">
+                <div class="price">$2.4B</div>
+                <div class="change down">-1.08%</div>
+              </div>
+            </div>
+
+            <div class="heat-card dark hover-target live-heat">
+              <div class="heat-top">
+                <div>
+                  <div class="heat-sector">Financials</div>
+                  <div class="heat-symbol mono">FIN-CORE</div>
+                </div>
+              </div>
+              <div class="heat-bottom">
+                <div class="price">$4.7B</div>
+                <div class="change up">+0.92%</div>
+              </div>
+            </div>
+
+            <div class="heat-card blue hover-target live-heat">
+              <div class="heat-top">
+                <div>
+                  <div class="heat-sector">Semiconductors</div>
+                  <div class="heat-symbol mono">CHIP-S</div>
+                </div>
+              </div>
+              <div class="heat-bottom">
+                <div class="price">$6.3B</div>
+                <div class="change up">+3.06%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         S04 ORBIT PORTFOLIO
+         ========================= -->
+    <section id="s04-orbit">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2400&auto=format&fit=crop" alt="Orbit background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="orbit-layout">
+          <div class="orbit-copy">
+            <div class="pill gsap-orbit"><span class="pulse"></span> PORTFOLIO ORBIT</div>
+            <h2 class="gsap-orbit">Asset<br>Constellation.</h2>
+            <p class="gsap-orbit">
+              A spatial visualization of allocation around a core holding. Nodes orbit the center using JavaScript motion,
+              turning portfolio balance into a premium full-screen narrative rather than a spreadsheet.
+            </p>
+          </div>
+
+          <div class="orbit-stage" id="orbitStage">
+            <div class="ring r1"></div>
+            <div class="ring r2"></div>
+            <div class="ring r3"></div>
+
+            <div class="core">MGC<br>CORE</div>
+
+            <div class="orbit-node" data-radius="90" data-speed="0.008" data-angle="10">
+              <strong>22%</strong>
+              <span>Tech</span>
+            </div>
+            <div class="orbit-node" data-radius="145" data-speed="-0.006" data-angle="80">
+              <strong>18%</strong>
+              <span>Cloud</span>
+            </div>
+            <div class="orbit-node" data-radius="190" data-speed="0.004" data-angle="150">
+              <strong>16%</strong>
+              <span>Infra</span>
+            </div>
+            <div class="orbit-node" data-radius="220" data-speed="-0.003" data-angle="215">
+              <strong>14%</strong>
+              <span>Fin</span>
+            </div>
+            <div class="orbit-node" data-radius="160" data-speed="0.005" data-angle="290">
+              <strong>12%</strong>
+              <span>Energy</span>
+            </div>
+            <div class="orbit-node" data-radius="110" data-speed="-0.007" data-angle="340">
+              <strong>18%</strong>
+              <span>AI</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         S05 FOOTER
+         ========================= -->
+    <section id="s12-contact">
+      <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=2400&auto=format&fit=crop" alt="Stocks footer background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="footer-shell">
+          <div class="footer-big">
+            <h2>PRICE<br><span>DISCOVERY.</span></h2>
+          </div>
+
+          <div class="footer-bottom">
+            <div class="mono">
+              <div>INVESTOR RELATIONS // STOCK TERMINAL</div>
+              <div>equity@magic.agency</div>
+              <div>LIVE MARKET EXPERIENCE // FY24</div>
+            </div>
+
+            <div class="socials">
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-chart-line-up"></i></a>
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-bank"></i></a>
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-trend-up"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+  <script>
+    // =========================
+    // LENIS
+    // =========================
+    const lenis = new Lenis({ duration: 1.5, smooth: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+    gsap.registerPlugin(ScrollTrigger);
+
+    // =========================
+    // CURSOR
+    // =========================
+    const cursor = document.querySelector('.cursor');
+
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
+      });
+
+      document.querySelectorAll('a, button, .hover-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+
+      document.querySelectorAll('.report-card, .terminal-card, .live-heat').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('trade-mode', 'hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('trade-mode', 'hovered'));
+      });
+    }
+
+    // =========================
+    // MAGNETIC
+    // =========================
+    const attachMagnetic = () => {
+      if (window.innerWidth <= 768) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const strength = el.dataset.strength || 20;
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+          gsap.to(el, { x, y, duration: 0.3, ease: "power2.out" });
+        });
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+      });
+    };
+
+    // =========================
+    // MENU DATA
+    // =========================
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+    const menuGrid = document.getElementById('menu-grid');
+    menuData.forEach(item => {
+      const linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+      menuGrid.innerHTML += `
+        <div class="menu-item">
+          <div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div>
+          <div class="dropdown">
+            <div class="dropdown-inner">${linksHTML}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    document.querySelectorAll('.menu-item-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const dropdown = title.nextElementSibling;
+        const inner = dropdown.querySelector('.dropdown-inner');
+        document.querySelectorAll('.dropdown').forEach(drop => {
+          if (drop !== dropdown) drop.style.height = '0px';
+        });
+        dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+      });
+    });
+
+    const menuBtn = document.querySelector('.menu-btn');
+    let menuOpen = false;
+    const menuTl = gsap.timeline({ paused: true })
+      .to('.menu-overlay', {
+        clipPath: 'polygon(0 0,100% 0,100% 100%,0 100%)',
+        duration: 0.8,
+        ease: "power4.inOut"
+      })
+      .to('.menu-item-title', {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.04,
+        ease: "power3.out"
+      }, "-=0.4");
+
+    const toggleMenu = () => {
+      menuOpen = !menuOpen;
+      menuBtn.classList.toggle('active');
+      if (menuOpen) {
+        lenis.stop();
+        menuTl.play();
+      } else {
+        lenis.start();
+        document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px');
+        menuTl.reverse();
+      }
+    };
+    menuBtn.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute('href');
+        if (menuOpen) toggleMenu();
+
+        setTimeout(() => {
+          if (targetUrl.startsWith('#')) {
+            const target = document.querySelector(targetUrl);
+            if (target) lenis.scrollTo(targetUrl, { duration: 1.5 });
+          } else {
+            window.location.href = targetUrl;
+          }
+        }, 800);
+      });
+    });
+
+    // =========================
+    // HERO CLOCK
+    // =========================
+    function updateLiveTime() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      const time = `${h}:${m}:${s}`;
+      document.getElementById('liveTime').textContent = time;
+      requestAnimationFrame(updateLiveTime);
+    }
+    updateLiveTime();
+
+    // =========================
+    // HERO PRICE FLICKER
+    // =========================
+    let livePrice = 184.22;
+    const priceEl = document.getElementById('livePrice');
+    const changeEl = document.getElementById('liveChange');
+
+    setInterval(() => {
+      const delta = (Math.random() - 0.42) * 0.8;
+      livePrice += delta;
+      const pct = (((livePrice - 180.35) / 180.35) * 100).toFixed(2);
+      const isUp = pct >= 0;
+      priceEl.textContent = `$${livePrice.toFixed(2)}`;
+      changeEl.textContent = `${isUp ? '+' : ''}${pct}%`;
+      changeEl.style.color = isUp ? 'var(--accent)' : 'var(--danger)';
+      priceEl.style.color = isUp ? 'var(--accent)' : 'var(--danger)';
+      setTimeout(() => {
+        priceEl.style.color = 'var(--accent)';
+      }, 250);
+    }, 1400);
+
+    // =========================
+    // HERO CHART GENERATOR
+    // =========================
+    function makeHeroLine() {
+      const points = [];
+      let y = 120;
+      for (let i = 0; i <= 8; i++) {
+        y += (Math.random() - 0.35) * 18;
+        y = Math.max(40, Math.min(150, y));
+        points.push({ x: i * 75, y });
+      }
+      let d = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        const prev = points[i - 1];
+        const curr = points[i];
+        const cx = (prev.x + curr.x) / 2;
+        d += ` Q ${cx} ${prev.y}, ${curr.x} ${curr.y}`;
+      }
+      const fill = `${d} L 600 180 L 0 180 Z`;
+      document.getElementById('heroLine').setAttribute('d', d);
+      document.getElementById('heroFill').setAttribute('d', fill);
+    }
+    makeHeroLine();
+
+    // =========================
+    // HERO CARD TILT
+    // =========================
+    const terminalCard = document.getElementById('terminalCard');
+    if (terminalCard && window.innerWidth > 768) {
+      terminalCard.addEventListener('mousemove', (e) => {
+        const rect = terminalCard.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+        gsap.to(terminalCard, {
+          rotationY: x * 8,
+          rotationX: -y * 8,
+          duration: 0.45,
+          ease: "power2.out"
+        });
+      });
+      terminalCard.addEventListener('mouseleave', () => {
+        gsap.to(terminalCard, {
+          rotationY: 0,
+          rotationX: 0,
+          duration: 1,
+          ease: "elastic.out(1, 0.3)"
+        });
+      });
+    }
+
+    // =========================
+    // HERO REVEAL
+    // =========================
+    gsap.to(".hero-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.18,
+      ease: "power4.out",
+      delay: 0.2
+    });
+
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 35,
+      duration: 1,
+      stagger: 0.12,
+      delay: 0.85,
+      ease: "power3.out"
+    });
+
+    gsap.to(".hero-bg", {
+      y: "18%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#s01-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    gsap.utils.toArray('.gsap-fade').forEach(el => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 70,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 85%"
+        }
+      });
+    });
+
+    gsap.utils.toArray('.gsap-heat').forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 55,
+        duration: 1,
+        delay: i * 0.12,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s03-heatmap",
+          start: "top 72%"
+        }
+      });
+    });
+
+    gsap.utils.toArray('.gsap-orbit').forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 55,
+        duration: 1,
+        delay: i * 0.12,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s04-orbit",
+          start: "top 72%"
+        }
+      });
+    });
+
+    // =========================
+    // CANDLESTICK CHART MAGIC
+    // =========================
+    const candlesGroup = document.getElementById('candlesGroup');
+    const maLine = document.getElementById('maLine');
+
+    function createCandles() {
+      const data = [
+        [180, 192, 176, 188],
+        [188, 202, 184, 198],
+        [198, 206, 193, 195],
+        [195, 212, 190, 209],
+        [209, 220, 204, 216],
+        [216, 226, 210, 221],
+        [221, 228, 215, 218],
+        [218, 236, 214, 232]
+      ];
+
+      const max = 240;
+      const min = 170;
+      const chartHeight = 240;
+      const chartTop = 10;
+      const candleSpace = 78;
+      let linePoints = [];
+
+      candlesGroup.innerHTML = '';
+
+      data.forEach((d, i) => {
+        const [open, high, low, close] = d;
+        const x = 40 + i * candleSpace;
+        const yHigh = chartTop + ((max - high) / (max - min)) * chartHeight;
+        const yLow = chartTop + ((max - low) / (max - min)) * chartHeight;
+        const yOpen = chartTop + ((max - open) / (max - min)) * chartHeight;
+        const yClose = chartTop + ((max - close) / (max - min)) * chartHeight;
+        const bullish = close >= open;
+        const color = bullish ? '#7CFF4F' : '#FF5A5A';
+
+        const wick = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        wick.setAttribute('x1', x);
+        wick.setAttribute('x2', x);
+        wick.setAttribute('y1', yHigh);
+        wick.setAttribute('y2', yLow);
+        wick.setAttribute('stroke', color);
+        wick.setAttribute('stroke-width', '3');
+        candlesGroup.appendChild(wick);
+
+        const body = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        body.setAttribute('x', x - 15);
+        body.setAttribute('y', Math.min(yOpen, yClose));
+        body.setAttribute('width', 30);
+        body.setAttribute('height', Math.max(8, Math.abs(yClose - yOpen)));
+        body.setAttribute('rx', '4');
+        body.setAttribute('fill', color);
+        body.classList.add('candle-body');
+        candlesGroup.appendChild(body);
+
+        linePoints.push({ x, y: (yOpen + yClose) / 2 });
+      });
+
+      let d = `M ${linePoints[0].x} ${linePoints[0].y}`;
+      for (let i = 1; i < linePoints.length; i++) {
+        const prev = linePoints[i - 1];
+        const curr = linePoints[i];
+        const cx = (prev.x + curr.x) / 2;
+        d += ` Q ${cx} ${prev.y}, ${curr.x} ${curr.y}`;
+      }
+      maLine.setAttribute('d', d);
+
+      const len = maLine.getTotalLength();
+      maLine.style.strokeDasharray = len;
+      maLine.style.strokeDashoffset = len;
+    }
+    createCandles();
+
+    gsap.from(".candle-body", {
+      scaleY: 0,
+      transformOrigin: "center bottom",
+      duration: 1,
+      stagger: 0.08,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: "#s02-depth",
+        start: "top 65%"
+      }
+    });
+
+    gsap.to("#maLine", {
+      strokeDashoffset: 0,
+      duration: 1.6,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: "#s02-depth",
+        start: "top 65%"
+      }
+    });
+
+    // =========================
+    // HEATMAP LIVE MAGIC
+    // =========================
+    function pulseHeatmap() {
+      document.querySelectorAll('.live-heat .change').forEach(el => {
+        const up = Math.random() > 0.28;
+        const value = (Math.random() * 4.8).toFixed(2);
+        el.textContent = `${up ? '+' : '-'}${value}%`;
+        el.className = `change ${up ? 'up' : 'down'}`;
+      });
+    }
+    setInterval(pulseHeatmap, 2400);
+
+    gsap.utils.toArray('.heat-card').forEach((card, i) => {
+      gsap.from(card, {
+        opacity: 0,
+        y: 70,
+        duration: 1,
+        delay: i * 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s03-heatmap",
+          start: "top 72%"
+        }
+      });
+    });
+
+    // =========================
+    // ORBIT NODES MAGIC
+    // =========================
+    const orbitStage = document.getElementById('orbitStage');
+    const orbitNodes = gsap.utils.toArray('.orbit-node');
+    let orbitActive = true;
+
+    function updateOrbit() {
+      if (!orbitStage || !orbitActive) {
+        requestAnimationFrame(updateOrbit);
+        return;
+      }
+
+      const rect = orbitStage.getBoundingClientRect();
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+
+      orbitNodes.forEach(node => {
+        let angle = parseFloat(node.dataset.angle);
+        const speed = parseFloat(node.dataset.speed);
+        const radius = parseFloat(node.dataset.radius);
+
+        angle += speed * 20;
+        node.dataset.angle = angle;
+
+        const rad = angle * Math.PI / 180;
+        const x = cx + Math.cos(rad) * radius;
+        const y = cy + Math.sin(rad) * radius;
+
+        node.style.left = `${x}px`;
+        node.style.top = `${y}px`;
+      });
+
+      requestAnimationFrame(updateOrbit);
+    }
+    updateOrbit();
+
+    gsap.from(".orbit-node", {
+      opacity: 0,
+      scale: 0.5,
+      duration: 1.2,
+      stagger: 0.1,
+      ease: "back.out(1.7)",
+      scrollTrigger: {
+        trigger: "#s04-orbit",
+        start: "top 70%"
+      }
+    });
+
+    gsap.to(".ring", {
+      rotation: 360,
+      ease: "none",
+      duration: 30,
+      repeat: -1,
+      transformOrigin: "center center"
+    });
+
+    // =========================
+    // INIT
+    // =========================
+    attachMagnetic();
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

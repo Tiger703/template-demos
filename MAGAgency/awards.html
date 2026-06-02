@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Awards</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Premium Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES & STRICT RESET
+           ========================================= */
+        :root {
+            --dark: #050505;
+            --light: #fdfdfd;
+            --accent: #e6b800; /* Prestige Gold for Awards */
+            --gray: #121212;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden !important; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        section { position: relative; width: 100%; overflow: hidden; }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* =========================================
+           MAGIC CURSOR
+           ========================================= */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; mix-blend-mode: difference; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--accent); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        @media (max-width: 768px) { .cursor { display: none !important; } * { cursor: auto !important; } }
+
+        /* =========================================
+           NAVBAR & MOBILE-OPTIMIZED MENU
+           ========================================= */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5%; z-index: 10000; background: transparent; mix-blend-mode: difference; }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(5,5,5,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5% 5vh 5%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5% 10vh 5%; } .menu-item { padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .menu-item-title span { font-size: 1.2rem !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } .dropdown a i { font-size: 1.8rem !important; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); opacity: 0; transform: translateX(-10px); transition: 0.3s; }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+        .dropdown a:hover i { opacity: 1; transform: translateX(0); }
+
+        /* =========================================
+           UNIQUE S01: PRESTIGE HERO (WITH BG IMAGE)
+           ========================================= */
+        #aw-hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center;
+            padding: 0 5%; position: relative;
+        }
+        .hero-bg-wrapper {
+            position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; z-index: -2;
+        }
+        .aw-hero-bg {
+            width: 100%; height: 100%; object-fit: cover;
+            /* Filters start gray and scaled, JS will animate them to gold */
+            filter: grayscale(100%) sepia(0%); transform: scale(1.3);
+            opacity: 0;
+        }
+        .aw-hero-overlay {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            background: linear-gradient(to right, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0.4) 100%);
+            z-index: -1;
+        }
+        .aw-title {
+            font-size: clamp(3.5rem, 10vw, 10rem); font-weight: 800; line-height: 0.9;
+            text-transform: uppercase; color: var(--light);
+        }
+        .aw-title .line { display: block; overflow: hidden; }
+        .aw-title .word { display: inline-block; transform: translateY(110%); }
+        .aw-desc {
+            margin-top: 2rem; font-size: clamp(1rem, 2vw, 1.5rem); color: #ccc;
+            max-width: 500px; opacity: 0;
+        }
+
+        /* =========================================
+           UNIQUE S02: STICKY YEAR TIMELINE
+           ========================================= */
+        #aw-timeline { padding: 15vh 5%; background: var(--dark); }
+        .timeline-header { font-size: clamp(2rem, 5vw, 4rem); margin-bottom: 10vh; color: var(--accent); }
+        
+        .year-block { display: flex; margin-bottom: 15vh; position: relative; }
+        .year-block:last-child { margin-bottom: 0; }
+        
+        .year-left { width: 40%; position: relative; }
+        .sticky-year {
+            position: sticky; top: 20vh; font-size: clamp(4rem, 10vw, 10rem);
+            font-weight: 800; font-family: 'Syne', sans-serif; line-height: 1;
+            color: rgba(255,255,255,0.05); -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+            transition: 0.4s;
+        }
+        /* When JS marks it active */
+        .sticky-year.active { color: var(--accent); -webkit-text-stroke: 0px; }
+
+        .year-right { width: 60%; display: flex; flex-direction: column; gap: 3rem; padding-top: 2vh; }
+        
+        .award-card {
+            background: #0f0f0f; border: 1px solid #222; border-radius: 16px;
+            padding: 3rem; display: flex; flex-direction: column; gap: 1rem;
+            transition: transform 0.4s, border-color 0.4s;
+        }
+        .award-card:hover { transform: translateY(-10px); border-color: var(--accent); }
+        .ac-category { font-size: 0.9rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; }
+        .ac-title { font-size: clamp(1.5rem, 3vw, 2.5rem); font-family: 'Syne', sans-serif; font-weight: 700; }
+        .ac-project { color: #888; font-size: 1.1rem; }
+
+        @media (max-width: 768px) {
+            .year-block { flex-direction: column; margin-bottom: 8vh; }
+            .year-left { width: 100%; margin-bottom: 2rem; z-index: 10; }
+            .sticky-year { position: sticky; top: var(--nav-height); font-size: 5rem; background: var(--dark); padding: 10px 0; border-bottom: 1px solid #222; }
+            .year-right { width: 100%; gap: 1.5rem; padding-top: 0; }
+            .award-card { padding: 2rem; }
+        }
+
+        /* =========================================
+           UNIQUE S03: CENTER-FOCUS SPOTLIGHT
+           ========================================= */
+        #aw-spotlight {
+            padding: 20vh 5%; background: var(--light); color: var(--dark);
+            min-height: 100vh; position: relative; display: flex; flex-direction: column; justify-content: center;
+        }
+        .spotlight-header { font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 8vh; z-index: 2; position: relative; }
+        
+        /* The Fixed Center Image */
+        .spotlight-img-container {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: clamp(300px, 40vw, 600px); height: clamp(400px, 60vh, 700px);
+            z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.5s;
+        }
+        .spotlight-img-container img {
+            width: 100%; height: 100%; object-fit: cover; border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3); transform: scale(0.9); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .spotlight-img-container.active { opacity: 1; }
+        .spotlight-img-container.active img { transform: scale(1); }
+
+        .spotlight-list { position: relative; z-index: 2; display: flex; flex-direction: column; }
+        .spot-row {
+            padding: 2rem 0; border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex; justify-content: space-between; align-items: center;
+            transition: 0.3s;
+        }
+        .spot-row:hover { padding: 2rem 2%; background: rgba(255,255,255,0.8); }
+        .spot-name { font-size: clamp(2rem, 4vw, 4rem); font-family: 'Syne', sans-serif; font-weight: 800; color: transparent; -webkit-text-stroke: 2px var(--dark); transition: 0.3s; }
+        .spot-row:hover .spot-name { color: var(--dark); -webkit-text-stroke: 0px; }
+        .spot-details { text-align: right; }
+        .spot-org { font-weight: 600; font-size: 1.2rem; }
+        .spot-proj { color: #666; }
+
+        @media (max-width: 768px) {
+            .spotlight-img-container { display: none !important; } /* Disabled on mobile for clean UI */
+            .spot-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 1.5rem 0; }
+            .spot-row:hover { padding: 1.5rem 0; background: transparent; }
+            .spot-name { -webkit-text-stroke: 0px; color: var(--dark); font-size: 2.5rem; }
+            .spot-details { text-align: left; }
+        }
+
+        /* =========================================
+           UNIQUE S04: PARALLAX GLASS STATS (BG IMAGE 2)
+           ========================================= */
+        #aw-stats {
+            padding: 20vh 5%; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        .stats-bg {
+            position: absolute; top: -20%; left: 0; width: 100%; height: 140%;
+            object-fit: cover; z-index: -2; opacity: 0.8;
+            /* A dark sleek image */
+        }
+        .stats-overlay { position: absolute; inset: 0; background: rgba(5,5,5,0.6); z-index: -1; }
+        
+        .glass-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; width: 100%; max-width: 1200px;
+        }
+        .glass-card {
+            background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1);
+            padding: 4rem 2rem; border-radius: 24px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 0.4s, background 0.4s;
+        }
+        .glass-card:hover { transform: translateY(-15px); background: rgba(230, 184, 0, 0.1); border-color: var(--accent); }
+        .gc-num { font-size: clamp(4rem, 8vw, 6rem); font-family: 'Syne', sans-serif; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 1rem; }
+        .gc-text { font-size: 1.2rem; font-weight: 500; color: var(--light); text-transform: uppercase; letter-spacing: 1px; }
+
+        @media (max-width: 768px) {
+            .glass-grid { grid-template-columns: 1fr; }
+            .glass-card { padding: 3rem 2rem; }
+        }
+
+        /* =========================================
+           UNIQUE S05: GOLDEN CTA FOOTER
+           ========================================= */
+        #aw-cta {
+            height: 70vh; background: var(--dark); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 5%;
+        }
+        .cta-title { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 3rem; }
+        
+        .gold-btn {
+            background: transparent; color: var(--accent); font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700;
+            padding: 1.5rem 4rem; border-radius: 100px; border: 2px solid var(--accent); text-transform: uppercase; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 10px; position: relative; overflow: hidden; transition: 0.4s;
+        }
+        .gold-btn::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--accent); z-index: -1; transform: scaleX(0); transform-origin: right; transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+        .gold-btn:hover { color: var(--dark); }
+        .gold-btn:hover::before { transform: scaleX(1); transform-origin: left; }
+
+    </style>
+</head>
+<body>
+
+    <!-- MAGIC CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU -->
+    <div class="menu-overlay"><div class="menu-container" id="menu-grid"></div></div>
+
+    <main>
+
+        <!-- S01: PRESTIGE HERO WITH BG IMAGE -->
+        <section id="aw-hero">
+            <div class="hero-bg-wrapper">
+                <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2564&auto=format&fit=crop" class="aw-hero-bg" alt="Awards Prestige">
+            </div>
+            <div class="aw-hero-overlay"></div>
+            
+            <h1 class="aw-title">
+                <span class="line"><span class="word">A DECADE</span></span><br>
+                <span class="line"><span class="word">OF GLOBAL</span></span><br>
+                <span class="line"><span class="word" style="color: var(--accent);">EXCELLENCE</span></span>
+            </h1>
+            <p class="aw-desc">We don't build for awards. We build to redefine the digital landscape. The trophies are just a byproduct of obsession.</p>
+        </section>
+
+        <!-- S02: STICKY YEAR TIMELINE -->
+        <section id="aw-timeline">
+            
+            <!-- 2024 -->
+            <div class="year-block">
+                <div class="year-left">
+                    <div class="sticky-year">2024</div>
+                </div>
+                <div class="year-right">
+                    <div class="award-card gsap-fade">
+                        <div class="ac-category">Site of the Month</div>
+                        <h3 class="ac-title">Awwwards</h3>
+                        <p class="ac-project">Project: Neon District Experience</p>
+                    </div>
+                    <div class="award-card gsap-fade">
+                        <div class="ac-category">FWA of the Day</div>
+                        <h3 class="ac-title">The FWA</h3>
+                        <p class="ac-project">Project: Aura Acoustics WebGL</p>
+                    </div>
+                    <div class="award-card gsap-fade">
+                        <div class="ac-category">Gold - Digital Craft</div>
+                        <h3 class="ac-title">Cannes Lions</h3>
+                        <p class="ac-project">Project: Cyber Bank App</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2023 -->
+            <div class="year-block">
+                <div class="year-left">
+                    <div class="sticky-year">2023</div>
+                </div>
+                <div class="year-right">
+                    <div class="award-card gsap-fade">
+                        <div class="ac-category">Best Innovation</div>
+                        <h3 class="ac-title">Webby Awards</h3>
+                        <p class="ac-project">Project: Vortex AI Engine</p>
+                    </div>
+                    <div class="award-card gsap-fade">
+                        <div class="ac-category">Developer Award</div>
+                        <h3 class="ac-title">Awwwards</h3>
+                        <p class="ac-project">Project: Synapse UI</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2022 -->
+            <div class="year-block">
+                <div class="year-left">
+                    <div class="sticky-year">2022</div>
+                </div>
+                <div class="year-right">
+                    <div class="award-card gsap-fade">
+                        <div class="ac-category">Agency of the Year</div>
+                        <h3 class="ac-title">CSS Design Awards</h3>
+                        <p class="ac-project">Global Recognition</p>
+                    </div>
+                    <div class="award-card gsap-fade">
+                        <div class="ac-category">Mobile Excellence</div>
+                        <h3 class="ac-title">Awwwards</h3>
+                        <p class="ac-project">Project: Lumina Store</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- S03: CENTER-FOCUS SPOTLIGHT -->
+        <section id="aw-spotlight">
+            <h2 class="display-font spotlight-header">HALL OF FAME</h2>
+            
+            <div class="spotlight-img-container" id="spot-img-box">
+                <img src="" id="spot-img" alt="Award Winning Project">
+            </div>
+
+            <div class="spotlight-list">
+                <div class="spot-row trigger-spot" data-img="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop">
+                    <div class="spot-name">Neon District</div>
+                    <div class="spot-details"><div class="spot-org">Awwwards SOTM</div><div class="spot-proj">2024</div></div>
+                </div>
+                <div class="spot-row trigger-spot" data-img="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop">
+                    <div class="spot-name">Cyber Bank</div>
+                    <div class="spot-details"><div class="spot-org">Cannes Lions Gold</div><div class="spot-proj">2024</div></div>
+                </div>
+                <div class="spot-row trigger-spot" data-img="https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=800&auto=format&fit=crop">
+                    <div class="spot-name">Aura Acoustics</div>
+                    <div class="spot-details"><div class="spot-org">FWA of the Month</div><div class="spot-proj">2023</div></div>
+                </div>
+                <div class="spot-row trigger-spot" data-img="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=800&auto=format&fit=crop">
+                    <div class="spot-name">Vortex Engine</div>
+                    <div class="spot-details"><div class="spot-org">Webby Winner</div><div class="spot-proj">2023</div></div>
+                </div>
+                <div class="spot-row trigger-spot" data-img="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop">
+                    <div class="spot-name">Lumina Store</div>
+                    <div class="spot-details"><div class="spot-org">CSSDA SOTD</div><div class="spot-proj">2022</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S04: PARALLAX GLASS STATS (BG IMAGE 2) -->
+        <section id="aw-stats">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2000&auto=format&fit=crop" class="stats-bg" alt="Studio Background">
+            <div class="stats-overlay"></div>
+            
+            <div class="glass-grid">
+                <div class="glass-card">
+                    <div class="gc-num">120+</div>
+                    <div class="gc-text">Total Awards Won</div>
+                </div>
+                <div class="glass-card">
+                    <div class="gc-num">15</div>
+                    <div class="gc-text">Site of the Month</div>
+                </div>
+                <div class="glass-card">
+                    <div class="gc-num">01</div>
+                    <div class="gc-text">Agency of the Year</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S05: GOLDEN CTA FOOTER -->
+        <section id="aw-cta">
+            <h2 class="display-font cta-title">LET'S BUILD A WINNER</h2>
+            <a href="#" class="gold-btn magnetic" data-strength="30">
+                Start a Project <i class="ph ph-arrow-right"></i>
+            </a>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. Lenis Smooth Scroll
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. Cursor & Magnetic (Desktop Only)
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+            
+            document.querySelectorAll('a, button, .menu-item-title, .award-card').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    gsap.to(el, { x: ((e.clientX - rect.left) / rect.width - 0.5) * strength, y: ((e.clientY - rect.top) / rect.height - 0.5) * strength, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        }
+
+        // 3. Menu Data & Routing
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetUrl = link.getAttribute('href');
+                if(targetUrl !== '#') {
+                    e.preventDefault();
+                    toggleMenu();
+                    setTimeout(() => { 
+                        if (targetUrl.startsWith('#') || targetUrl.includes('.html#')) {
+                            const id = targetUrl.split('#')[1];
+                            const element = document.getElementById(id);
+                            if(element) lenis.scrollTo(element, { duration: 1.5 });
+                            else window.location.href = targetUrl;
+                        } else { window.location.href = targetUrl; }
+                    }, 800);
+                }
+            });
+        });
+
+        // 4. AWARDS MAGIC: Hero Background Color Fade & Zoom
+        const heroTl = gsap.timeline({ delay: 0.2 });
+        // Fades image from B&W to a beautiful golden/sepia hue and scales it down
+        heroTl.to(".aw-hero-bg", { opacity: 1, filter: "grayscale(30%) sepia(80%) hue-rotate(5deg)", scale: 1, duration: 2.5, ease: "power2.out" })
+        heroTl.to(".aw-title .word", { y: "0%", duration: 1.2, stagger: 0.15, ease: "power4.out" }, "-=2")
+              .to(".aw-desc", { opacity: 1, y: -10, duration: 1 }, "-=1.2");
+
+        // 5. AWARDS MAGIC: Year Timeline Highlights
+        // When scrolling past a year block, the giant sticky year text lights up Gold
+        gsap.utils.toArray('.year-block').forEach(block => {
+            const yearText = block.querySelector('.sticky-year');
+            ScrollTrigger.create({
+                trigger: block,
+                start: "top center",
+                end: "bottom center",
+                onEnter: () => yearText.classList.add('active'),
+                onLeave: () => yearText.classList.remove('active'),
+                onEnterBack: () => yearText.classList.add('active'),
+                onLeaveBack: () => yearText.classList.remove('active')
+            });
+        });
+
+        // Standard fade up for award cards
+        gsap.utils.toArray('.gsap-fade').forEach(card => {
+            gsap.fromTo(card, 
+                { opacity: 0, y: 50 },
+                { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: card, start: "top 90%" }}
+            );
+        });
+
+        // 6. AWARDS MAGIC: Center Spotlight Hover Reveal (Desktop Only)
+        if (window.innerWidth > 768) {
+            const spotBox = document.getElementById('spot-img-box');
+            const spotImg = document.getElementById('spot-img');
+            
+            document.querySelectorAll('.trigger-spot').forEach(row => {
+                row.addEventListener('mouseenter', () => {
+                    spotImg.src = row.getAttribute('data-img');
+                    spotBox.classList.add('active');
+                });
+                row.addEventListener('mouseleave', () => {
+                    spotBox.classList.remove('active');
+                });
+            });
+        }
+
+        // 7. AWARDS MAGIC: Parallax Glass Background
+        gsap.to(".stats-bg", {
+            yPercent: 30, // Moves the background image down as user scrolls past it
+            ease: "none",
+            scrollTrigger: {
+                trigger: "#aw-stats",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

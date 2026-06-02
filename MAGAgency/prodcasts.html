@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Podcasts & Audio</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES (Neon Studio Theme)
+           ========================================= */
+        :root {
+            --dark: #05030A;
+            --light: #f4f4f5;
+            --accent: #FF007F; /* Neon Pink */
+            --accent-alt: #8A2BE2; /* Studio Violet */
+            --gray: #111;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Lenis Fix */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* MAGIC CURSOR */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s; mix-blend-mode: screen; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--accent); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        .cursor.play-mode { width: 80px; height: 80px; background: rgba(255,0,127,0.2); border: 1px solid var(--accent); mix-blend-mode: normal; backdrop-filter: blur(5px); }
+        .cursor.play-mode::after { content: 'LISTEN'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10px; font-weight: 600; color: var(--light); font-family: 'JetBrains Mono'; letter-spacing: 1px; }
+        @media (max-width: 768px) { .cursor { display: none; } * { cursor: auto !important; } }
+
+        /* NAV & MENU */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5vw; z-index: 10000; background: rgba(5, 3, 10, 0.5); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 0, 127, 0.15); }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); background: var(--accent); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); background: var(--accent); }
+        
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5,3,10,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5vw 5vh 5vw; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5vw 10vh 5vw; } .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; color: var(--accent); }
+
+        /* =========================================
+           GLOBAL SECTION STYLES
+           ========================================= */
+        section { position: relative; width: 100vw; min-height: 100vh; overflow: hidden; }
+        .section-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+        .section-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,3,10,0.7); z-index: 1; }
+        .section-content { position: relative; z-index: 2; width: 100%; height: 100%; display: flex; padding: var(--nav-height) 5vw 10vh 5vw; }
+
+        /* =========================================
+           S01: HERO SECTION
+           ========================================= */
+        #s01-hero { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        #s01-hero .section-bg { filter: brightness(0.6) contrast(1.2); }
+        
+        /* Interactive Audio Canvas Overlay */
+        #audio-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+        
+        .hero-title { font-size: clamp(3.5rem, 15vw, 12rem); font-weight: 800; line-height: 0.9; text-transform: uppercase; z-index: 3; position: relative; }
+        .hero-title .word { display: inline-block; transform: translateY(110%); }
+        .hero-title span.outline { color: transparent; -webkit-text-stroke: 2px var(--light); }
+        .eyebrow { font-size: 1rem; color: var(--accent); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 2rem; font-family: 'JetBrains Mono'; z-index: 3; position: relative; }
+
+        /* =========================================
+           S02: SCROLL-SYNCED CROSSFADER
+           ========================================= */
+        #s02-episodes { background: var(--dark); padding: 0; }
+        
+        /* The sticky backgrounds */
+        .ep-bg-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .ep-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.8s ease-in-out; filter: grayscale(50%) brightness(0.4); }
+        .ep-bg.active { opacity: 1; }
+        
+        /* The scrolling content */
+        .ep-list-container { position: relative; z-index: 2; width: 100%; padding: 30vh 5vw; display: flex; flex-direction: column; gap: 20vh; }
+        
+        .ep-item { display: flex; flex-direction: column; justify-content: center; height: 50vh; transition: 0.5s; opacity: 0.3; transform: scale(0.95); }
+        .ep-item.active { opacity: 1; transform: scale(1); }
+        
+        .ep-meta { display: flex; align-items: center; gap: 1rem; font-family: 'JetBrains Mono'; color: var(--accent); font-size: 1.2rem; margin-bottom: 1rem; }
+        .ep-play-btn { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; color: var(--accent); transition: 0.3s; }
+        .ep-item.active .ep-play-btn { background: var(--accent); color: var(--dark); }
+        
+        .ep-title { font-size: clamp(2.5rem, 8vw, 7rem); font-family: 'Syne'; font-weight: 800; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.5); transition: 0.5s; line-height: 1; }
+        .ep-item.active .ep-title { color: #fff; -webkit-text-stroke: 0; }
+
+        @media (max-width: 768px) { .ep-list-container { gap: 10vh; padding: 20vh 5vw; } .ep-item { height: auto; } }
+
+        /* =========================================
+           S03: HORIZONTAL TAPE DECK
+           ========================================= */
+        #s03-tape { background: #000; }
+        .horizontal-container { width: 100vw; height: 100vh; display: flex; align-items: center; overflow: hidden; position: relative; z-index: 2; }
+        .horizontal-track { display: flex; width: max-content; padding: 0 5vw; gap: 5vw; align-items: center; }
+        
+        .tape-header { width: 300px; flex-shrink: 0; }
+        .tape-header h2 { font-size: clamp(3rem, 6vw, 5rem); line-height: 1; }
+        .tape-header span { color: var(--accent-alt); font-style: italic; }
+        
+        /* Styled to look like audio highlights */
+        .soundbite-card {
+            width: clamp(300px, 40vw, 500px);
+            background: rgba(10, 5, 20, 0.6);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 20px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+        .soundbite-card:hover { border-color: var(--accent); box-shadow: 0 20px 40px rgba(255,0,127,0.15); transform: translateY(-10px); }
+        
+        /* Fake audio waveform graphic */
+        .fake-wave { width: 100%; height: 60px; background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg"><path d="M0,10 Q5,0 10,10 T20,10 T30,10 T40,10 T50,10 T60,10" stroke="%238A2BE2" fill="none" stroke-width="2"/></svg>') repeat-x center; background-size: contain; opacity: 0.5; margin-bottom: 2rem; transition: 0.4s; }
+        .soundbite-card:hover .fake-wave { opacity: 1; filter: hue-rotate(-50deg); /* turns pink */ }
+        
+        .soundbite-quote { font-size: clamp(1.2rem, 2vw, 1.8rem); font-family: 'Syne'; color: #fff; line-height: 1.4; margin-bottom: 1.5rem; }
+        .soundbite-guest { color: var(--accent); font-family: 'JetBrains Mono'; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
+
+        @media (max-width: 768px) {
+            .horizontal-container { height: auto; padding: 15vh 0; overflow-x: auto; scroll-snap-type: x mandatory; }
+            .horizontal-track { padding: 0 5vw; gap: 2rem; }
+            .tape-header { width: 100%; scroll-snap-align: start; margin-bottom: 2rem; }
+            .soundbite-card { width: 85vw; scroll-snap-align: start; }
+        }
+
+        /* =========================================
+           S04: FOOTER (Full Page)
+           ========================================= */
+        #s04-footer { display: flex; flex-direction: column; justify-content: space-between; padding: var(--nav-height) 5vw 5vh 5vw; background: #020105; }
+        #s04-footer .section-overlay { background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 100%); }
+        
+        .footer-top { position: relative; z-index: 2; text-align: center; margin-top: auto; }
+        .footer-huge { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 15vw, 12rem); font-weight: 800; line-height: 0.8; color: var(--light); }
+        .footer-huge span { color: var(--accent); text-shadow: 0 0 40px var(--accent-glow); }
+        
+        .footer-bottom { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; }
+        .social-links { display: flex; gap: 1rem; }
+        .social-btn { width: 60px; height: 60px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; color: var(--light); font-size: 1.5rem; transition: 0.3s; }
+        .social-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--dark); box-shadow: 0 0 15px var(--accent-glow); }
+        
+        @media (max-width: 768px) { .footer-bottom { flex-direction: column; align-items: center; gap: 2rem; } }
+    </style>
+</head>
+<body>
+
+    <div class="cursor"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="#" class="nav-brand hover-target">MΛGIC.</a>
+        <button class="menu-btn hover-target">
+            Menu
+            <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU -->
+    <div class="menu-overlay">
+        <div class="menu-container" id="menu-grid"></div>
+    </div>
+
+    <!-- MAIN SCROLL JOURNEY -->
+    <main>
+        
+        <!-- S01: HERO SECTION -->
+        <section id="s01-hero">
+            <!-- Background Image -->
+            <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=2564&auto=format&fit=crop" class="section-bg hero-parallax" alt="Studio Setup">
+            <div class="section-overlay" style="background: radial-gradient(circle, rgba(5,3,10,0.4) 0%, rgba(5,3,10,0.9) 100%);"></div>
+            
+            <!-- MAGIC 1: AUDIO VISUALIZER CANVAS -->
+            <canvas id="audio-canvas"></canvas>
+
+            <div class="section-content" style="flex-direction: column; justify-content: center; align-items: center;">
+                <p class="eyebrow gsap-up">► The Podcast Network</p>
+                <h1 class="hero-title">
+                    <span class="line" style="overflow: hidden;"><span class="word gsap-word outline">SONIC</span></span><br>
+                    <span class="line" style="overflow: hidden;"><span class="word gsap-word">FREQUENCIES</span></span>
+                </h1>
+            </div>
+        </section>
+
+        <!-- S02: MAGIC CROSSFADING BACKGROUND LIST -->
+        <section id="s02-episodes">
+            
+            <!-- Fixed Backgrounds that crossfade -->
+            <div class="ep-bg-container" id="bg-container">
+                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=2000&auto=format&fit=crop" class="ep-bg active" id="bg-ep1">
+                <img src="https://images.unsplash.com/photo-1558008258-3256797b43f3?q=80&w=2000&auto=format&fit=crop" class="ep-bg" id="bg-ep2">
+                <img src="https://images.unsplash.com/photo-1516280440502-1262d08a28ce?q=80&w=2000&auto=format&fit=crop" class="ep-bg" id="bg-ep3">
+                <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=2000&auto=format&fit=crop" class="ep-bg" id="bg-ep4">
+                <div class="section-overlay" style="background: rgba(5,3,10,0.75);"></div>
+            </div>
+
+            <div class="ep-list-container">
+                
+                <div class="ep-item play-target" data-bg="bg-ep1">
+                    <div class="ep-meta">
+                        <div class="ep-play-btn"><i class="ph-fill ph-play"></i></div>
+                        EPISODE 01 // 45 MIN
+                    </div>
+                    <h2 class="ep-title">Designing the Metaverse</h2>
+                </div>
+
+                <div class="ep-item play-target" data-bg="bg-ep2">
+                    <div class="ep-meta">
+                        <div class="ep-play-btn"><i class="ph-fill ph-play"></i></div>
+                        EPISODE 02 // 52 MIN
+                    </div>
+                    <h2 class="ep-title">The Death of Flat UI</h2>
+                </div>
+
+                <div class="ep-item play-target" data-bg="bg-ep3">
+                    <div class="ep-meta">
+                        <div class="ep-play-btn"><i class="ph-fill ph-play"></i></div>
+                        EPISODE 03 // 38 MIN
+                    </div>
+                    <h2 class="ep-title">WebGPU Architecture</h2>
+                </div>
+
+                <div class="ep-item play-target" data-bg="bg-ep4">
+                    <div class="ep-meta">
+                        <div class="ep-play-btn"><i class="ph-fill ph-play"></i></div>
+                        EPISODE 04 // 60 MIN
+                    </div>
+                    <h2 class="ep-title">Building Cult Brands</h2>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- S03: HORIZONTAL TAPE DECK -->
+        <section id="s03-tape">
+            <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2000&auto=format&fit=crop" class="section-bg" alt="Tape Background">
+            <div class="section-overlay" style="background: rgba(5,3,10,0.85);"></div>
+
+            <div class="horizontal-container">
+                <div class="horizontal-track">
+                    
+                    <div class="tape-header">
+                        <h2 class="display-font">Sound<br><span>Bites.</span></h2>
+                    </div>
+
+                    <div class="soundbite-card play-target">
+                        <div class="fake-wave"></div>
+                        <p class="soundbite-quote">"If your website doesn't move, it feels dead. In 2025, static HTML is the equivalent of handing someone a brochure."</p>
+                        <div class="soundbite-guest">
+                            <i class="ph-fill ph-microphone-stage" style="font-size: 1.5rem;"></i>
+                            SARAH JENKINS / CREATIVE DIR.
+                        </div>
+                    </div>
+
+                    <div class="soundbite-card play-target">
+                        <div class="fake-wave"></div>
+                        <p class="soundbite-quote">"We stopped writing CSS animations. Everything is routed through the GPU now. The performance difference is staggering."</p>
+                        <div class="soundbite-guest">
+                            <i class="ph-fill ph-microphone-stage" style="font-size: 1.5rem;"></i>
+                            MARCUS CHEN / LEAD DEV.
+                        </div>
+                    </div>
+
+                    <div class="soundbite-card play-target">
+                        <div class="fake-wave"></div>
+                        <p class="soundbite-quote">"The best brands don't just tell you a story. They physically pull you into the narrative using spatial design."</p>
+                        <div class="soundbite-guest">
+                            <i class="ph-fill ph-microphone-stage" style="font-size: 1.5rem;"></i>
+                            ELENA ROSTOVA / STRATEGY
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- S04: FULL PAGE FOOTER -->
+        <section id="s04-footer">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" class="section-bg" style="filter: hue-rotate(280deg);" alt="Footer Background">
+            <div class="section-overlay"></div>
+
+            <div class="footer-top">
+                <h2 class="footer-huge">TUNE<br><span>IN.</span></h2>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="mono" style="color: #888;">
+                    <p>MΛGIC AGENCY // AUDIO LABS</p>
+                    <p style="margin-top: 5px;">BROADCASTING LIVE</p>
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-btn hover-target"><i class="ph ph-spotify-logo"></i></a>
+                    <a href="#" class="social-btn hover-target"><i class="ph ph-apple-podcasts-logo"></i></a>
+                    <a href="#" class="social-btn hover-target"><i class="ph ph-soundcloud-logo"></i></a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. LENIS (Smooth Scrolling)
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. MAGIC CURSOR
+        const cursor = document.querySelector('.cursor');
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { 
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                gsap.to(cursor, { x: mouseX, y: mouseY, duration: 0.1 }); 
+            });
+            
+            document.querySelectorAll('a, button, .hover-target').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+            
+            // Custom "LISTEN" cursor for episodes
+            document.querySelectorAll('.play-target').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('play-mode'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('play-mode'));
+            });
+        }
+
+        // 3. EXACT MENU ARRAY
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+        
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        // ==========================================
+        // S01: MAGIC 1 - INTERACTIVE AUDIO CANVAS
+        // ==========================================
+        const canvas = document.getElementById('audio-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let time = 0;
+
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function drawWave() {
+            ctx.clearRect(0, 0, width, height);
+            time += 0.05;
+
+            // Base properties
+            const centerY = height / 2;
+            const points = 100;
+            const spacing = width / points;
+
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+
+            for (let i = 0; i <= points; i++) {
+                const x = i * spacing;
+                
+                // Calculate distance from mouse to this point on the line
+                const dx = x - mouseX;
+                const dist = Math.abs(dx);
+                
+                // If mouse is close, agitate the wave (simulate frequency spike)
+                let agitation = 1;
+                if (dist < 300 && window.innerWidth > 768) {
+                    agitation = 1 + (300 - dist) / 10;
+                }
+
+                // Complex sine wave math for natural look
+                const y = centerY 
+                          + Math.sin(i * 0.1 + time) * 30 * agitation 
+                          + Math.cos(i * 0.2 - time) * 15 * agitation;
+
+                ctx.lineTo(x, y);
+            }
+
+            // Styling the neon pink wave
+            ctx.strokeStyle = 'rgba(255, 0, 127, 0.8)';
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#FF007F';
+            ctx.stroke();
+
+            requestAnimationFrame(drawWave);
+        }
+        drawWave();
+
+        // Hero Parallax
+        gsap.to(".gsap-word", { y: "0%", duration: 1.2, stagger: 0.2, ease: "power4.out", delay: 0.2 });
+        gsap.from(".gsap-up", { opacity: 0, y: 50, duration: 1, delay: 0.8, ease: "power3.out" });
+        gsap.to(".hero-parallax", { y: "30%", scrollTrigger: { trigger: "#s01-hero", start: "top top", end: "bottom top", scrub: true }});
+
+        // ==========================================
+        // S02: MAGIC 2 - SCROLL-SYNCED CROSSFADER
+        // ==========================================
+        const epItems = gsap.utils.toArray('.ep-item');
+        const epBgs = document.querySelectorAll('.ep-bg');
+
+        // Pin the background container so it stays put while we scroll the list
+        ScrollTrigger.create({
+            trigger: "#s02-episodes",
+            start: "top top",
+            end: "bottom bottom",
+            pin: "#bg-container",
+            pinSpacing: false
+        });
+
+        // For each episode item, when it hits the center of the screen, swap the background
+        epItems.forEach((item) => {
+            ScrollTrigger.create({
+                trigger: item,
+                start: "center 60%", // When item is near center
+                end: "center 40%",
+                onEnter: () => activateEpisode(item),
+                onEnterBack: () => activateEpisode(item)
+            });
+        });
+
+        function activateEpisode(activeItem) {
+            // Remove active classes
+            epItems.forEach(el => el.classList.remove('active'));
+            epBgs.forEach(bg => bg.classList.remove('active'));
+
+            // Add active class to current item
+            activeItem.classList.add('active');
+
+            // Find matching background and activate it
+            const targetBgId = activeItem.getAttribute('data-bg');
+            document.getElementById(targetBgId).classList.add('active');
+        }
+
+        // ==========================================
+        // S03: MAGIC 3 - HORIZONTAL TAPE DECK
+        // ==========================================
+        let mm = gsap.matchMedia();
+        mm.add("(min-width: 769px)", () => {
+            const track = document.querySelector('.horizontal-track');
+            let scrollWidth = track.scrollWidth - window.innerWidth + (window.innerWidth * 0.1); 
+            
+            gsap.to(track, {
+                x: -scrollWidth,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#s03-tape",
+                    start: "top top",
+                    end: () => `+=${scrollWidth}`,
+                    pin: true,
+                    scrub: 1,
+                    invalidateOnRefresh: true
+                }
+            });
+        });
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

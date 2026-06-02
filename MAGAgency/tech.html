@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Tech Industries</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Premium Icons (Phosphor Icons) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES & RESET 
+           ========================================= */
+        :root {
+            --dark: #050505;
+            --light: #f4f4f5;
+            --accent: #ff4b2b;
+            --gray: #1a1a1a;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        section { position: relative; width: 100vw; overflow: hidden; }
+        
+        /* Lenis Fix */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* =========================================
+           MAGIC CURSOR
+           ========================================= */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--light); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; mix-blend-mode: difference; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--light); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        .cursor.view-mode::after { content: 'VIEW'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10px; font-weight: 600; color: var(--light); }
+        @media (max-width: 768px) { .cursor { display: none; } * { cursor: auto !important; } }
+
+        /* =========================================
+           NAVBAR & MEGA MENU 
+           ========================================= */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5vw; z-index: 10000; background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5,5,5,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5vw 5vh 5vw; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5vw 10vh 5vw; } .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } }
+        
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+
+        /* =========================================
+           GLOBAL MODAL
+           ========================================= */
+        .magic-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 100000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.5s ease; backdrop-filter: blur(20px); }
+        .magic-modal.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: var(--gray); padding: 8vw; border-radius: 20px; width: 90vw; max-width: 900px; max-height: 80vh; overflow-y: auto; position: relative; transform: translateY(100px) scale(0.9); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .magic-modal.active .modal-content { transform: translateY(0) scale(1); }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 2rem; background: none; border: none; color: var(--light); }
+
+        /* =========================================
+           PAGE STYLES: TECH
+           ========================================= */
+        
+        /* 1. HERO */
+        #tech-hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding-top: var(--nav-height); }
+        .tech-hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 120%; object-fit: cover; z-index: -2; opacity: 0.4; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(5,5,5,0.1) 0%, rgba(5,5,5,1) 100%); z-index: -1; }
+        .hero-title { font-size: clamp(2.5rem, 12vw, 10rem); font-weight: 800; line-height: 0.9; text-transform: uppercase; padding: 0 5vw; perspective: 1000px; }
+        .hero-title .line { display: block; overflow: hidden; }
+        .hero-title .word { display: inline-block; transform: translateY(110%); }
+        .eyebrow { font-size: clamp(0.8rem, 2vw, 1.2rem); color: var(--accent); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 2rem; opacity: 0; transform: translateY(20px); }
+
+        /* 2. UNIQUE SECTION: MAGIC 3D STACKING CARDS */
+        #magic-stack-section {
+            background-color: var(--dark);
+            /* Important: Height is managed by GSAP pin length, but we set a min-height */
+            min-height: 100vh; 
+        }
+
+        /* Fixed Wide Background for this section */
+        .magic-stack-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100vw; height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .stack-pin-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh; /* Will be pinned to the viewport */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1500px; /* Essential for 3D Javascript magic */
+            z-index: 1;
+        }
+
+        .stack-cards-wrapper {
+            position: relative;
+            width: 90vw;
+            max-width: 1000px;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+        }
+
+        /* The Magic Cards */
+        .stack-card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 75, 43, 0.5); /* Accent highlight */
+            border-radius: 20px;
+            padding: clamp(2rem, 5vw, 4rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* Setup for GSAP hidden state */
+            opacity: 0;
+            transform-origin: center bottom;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .stack-card-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+        }
+
+        .stack-icon { font-size: clamp(3rem, 6vw, 5rem); color: var(--accent); }
+        .stack-text h3 { font-size: clamp(1.8rem, 4vw, 3.5rem); margin-bottom: 1rem; color: #fff; }
+        .stack-text p { font-size: clamp(1rem, 2vw, 1.2rem); color: #aaa; line-height: 1.6; }
+
+        /* Mobile specific fit for cards */
+        @media (max-width: 768px) {
+            .stack-cards-wrapper { height: 70vh; }
+            .stack-card-content { flex-direction: column; gap: 1rem; }
+            .stack-icon { font-size: 3rem; }
+        }
+
+        /* 3. FULL PAGE FOOTER */
+        footer {
+            background: #020202;
+            padding: 10vh 5vw 5vh 5vw;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+            z-index: 5;
+        }
+        .footer-top { display: flex; flex-direction: column; gap: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5vh; margin-bottom: 5vh; }
+        .footer-huge { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 12vw, 10rem); font-weight: 800; line-height: 0.8; color: var(--light); }
+        .footer-huge span { color: var(--accent); }
+        .footer-links-wrapper { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem; }
+        .social-links { display: flex; gap: 1rem; }
+        .social-btn { width: 60px; height: 60px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; color: var(--light); font-size: 1.5rem; transition: 0.3s; }
+        .social-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--dark); }
+        .footer-bottom { display: flex; justify-content: space-between; color: #666; font-size: 0.9rem; }
+        @media (max-width: 768px) { .footer-links-wrapper { flex-direction: column; align-items: flex-start; } .footer-bottom { flex-direction: column; gap: 1rem; text-align: left; } }
+    </style>
+</head>
+<body>
+
+    <!-- MAGIC CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- GLOBAL MODAL -->
+    <div class="magic-modal" id="global-modal" data-lenis-prevent>
+        <div class="modal-content">
+            <button class="close-modal magnetic"><i class="ph ph-x"></i></button>
+            <h2 class="display-font" style="font-size: clamp(1.8rem, 5vw, 3rem); margin-bottom: 1.5rem; color: var(--accent);">Initiate Sequence</h2>
+            <p style="font-size: clamp(1rem, 2.5vw, 1.2rem); line-height: 1.8; color: #ccc;">Start a project with our tech division. Modal is fully responsive.</p>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="#" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu
+            <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU OVERLAY -->
+    <div class="menu-overlay">
+        <div class="menu-container" id="menu-grid"></div>
+    </div>
+
+    <!-- MAIN SCROLL WRAPPER -->
+    <main>
+
+        <!-- S01: TECH HERO -->
+        <section id="tech-hero">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2564&auto=format&fit=crop" class="tech-hero-bg" alt="Tech Background">
+            <div class="hero-overlay"></div>
+            
+            <p class="eyebrow display-font">Industries / Tech</p>
+            <h1 class="hero-title">
+                <span class="line"><span class="word">DIGITAL</span></span>
+                <span class="line"><span class="word" style="color: var(--accent);">FRONTIER</span></span>
+            </h1>
+        </section>
+
+        <!-- S02: UNIQUE SECTION (HIGH JS MAGIC STACKING CARDS) -->
+        <section id="magic-stack-section">
+            
+            <!-- Unique Section Background Image -->
+            <img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=2000&auto=format&fit=crop" class="magic-stack-bg" alt="Abstract Data">
+
+            <!-- Pinned Container -->
+            <div class="stack-pin-container">
+                <div class="stack-cards-wrapper">
+                    
+                    <!-- Card 1 -->
+                    <div class="stack-card">
+                        <div class="stack-card-content">
+                            <i class="ph ph-cpu stack-icon"></i>
+                            <div class="stack-text">
+                                <h3 class="display-font">Artificial Intelligence</h3>
+                                <p>We design intuitive, gorgeous interfaces for complex Large Language Models and data-heavy generative AI startups. We turn raw computation into human magic. Our interfaces bridge the gap between machine logic and human intuition.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="stack-card">
+                        <div class="stack-card-content">
+                            <i class="ph ph-cube stack-icon"></i>
+                            <div class="stack-text">
+                                <h3 class="display-font">Web3 & Blockchain</h3>
+                                <p>Creating trust through high-end design. We build highly secure, visually stunning dApps, smart contract interfaces, and next-generation crypto platforms. Immutable code deserves impeccable design.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="stack-card">
+                        <div class="stack-card-content">
+                            <i class="ph ph-cloud-network stack-icon"></i>
+                            <div class="stack-text">
+                                <h3 class="display-font">Enterprise SaaS</h3>
+                                <p>Transforming clunky B2B dashboards into sleek, dark-mode, high-performance software tools. Your users deserve premium experiences. Increase retention with layouts built for heavy data.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="stack-card">
+                        <div class="stack-card-content">
+                            <i class="ph ph-shield-check stack-icon"></i>
+                            <div class="stack-text">
+                                <h3 class="display-font">Cyber Security</h3>
+                                <p>Visualizing data protection and zero-trust networks with WebGL and Three.js, making invisible security systems tangible, beautiful, and undeniable to your investors and users.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- S03: FULL FOOTER -->
+        <footer>
+            <div class="footer-top">
+                <h2 class="footer-huge">LET'S<br><span>CREATE.</span></h2>
+                <div class="footer-links-wrapper">
+                    <div>
+                        <p style="color: #888; margin-bottom: 10px; font-family: 'Syne', sans-serif;">GENERAL INQUIRIES</p>
+                        <a href="#" class="open-modal-btn" style="color: var(--light); font-size: clamp(1.2rem, 2vw, 1.5rem); text-decoration: none;">hello@magic.agency</a>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-twitter-logo"></i></a>
+                        <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-instagram-logo"></i></a>
+                        <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-linkedin-logo"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MΛGIC AGENCY. ALL RIGHTS RESERVED.</p>
+                <p>CRAFTED IN THE VOID</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. LENIS SETUP
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. CURSOR & MAGNETIC
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+        }
+        
+        const attachCursorHover = () => {
+            if (window.innerWidth <= 768) return;
+            document.querySelectorAll('a, button, .menu-item-title, .stack-card, .social-btn').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+        };
+
+        const attachMagnetic = () => {
+            if (window.innerWidth <= 768) return;
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+                    const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+                    gsap.to(el, { x: x, y: y, duration: 0.3, ease: "power2.out" });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        };
+
+        // 3. MENU LOGIC (EXACT ARRAY AS REQUESTED)
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        // Dropdown Accordion
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        // Menu Toggle Animation (EXACT FROM YOUR TEMPLATE)
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        // Auto-close menu and handle Links vs Scrolling (EXACT FROM YOUR TEMPLATE)
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                const targetUrl = link.getAttribute('href');
+                toggleMenu(); 
+                
+                setTimeout(() => { 
+                    if (targetUrl.startsWith('#')) {
+                        lenis.scrollTo(targetUrl, { duration: 1.5 }); 
+                    } else {
+                        window.location.href = targetUrl;
+                    }
+                }, 800); 
+            });
+        });
+
+        // 4. GLOBAL MODAL
+        const modal = document.getElementById('global-modal');
+        const closeModalBtn = document.querySelector('.close-modal');
+        document.querySelectorAll('.open-modal-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => { e.preventDefault(); modal.classList.add('active'); lenis.stop(); });
+        });
+        closeModalBtn.addEventListener('click', () => { modal.classList.remove('active'); lenis.start(); });
+
+        // ==========================================
+        // TECH PAGE GSAP MAGIC 
+        // ==========================================
+        
+        // Hero Animation
+        gsap.to(".eyebrow", { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.2 });
+        gsap.to(".hero-title .word", { y: "0%", duration: 1.2, stagger: 0.2, ease: "power4.out", delay: 0.4 });
+        gsap.to(".tech-hero-bg", { y: "30%", scrollTrigger: { trigger: "#tech-hero", start: "top top", end: "bottom top", scrub: true } });
+
+        // High Magic: 3D Pinned Stacking Cards
+        let cards = gsap.utils.toArray(".stack-card");
+        
+        // Initial setup: hide all cards except first below screen
+        gsap.set(cards, { y: window.innerHeight, rotationX: -30, opacity: 0, scale: 0.8 });
+        
+        // Reveal the first card instantly when section starts
+        gsap.set(cards[0], { y: 0, rotationX: 0, opacity: 1, scale: 1 });
+
+        // Pin the container and animate cards based on scroll
+        let tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#magic-stack-section",
+                start: "top top",
+                end: "+=" + (cards.length * 100) + "%", // scroll length based on amount of cards
+                pin: true,
+                scrub: 1, // Smooth scrub
+            }
+        });
+
+        // Loop through cards to create the stacking illusion
+        cards.forEach((card, index) => {
+            if (index !== 0) {
+                // Animate current card IN from bottom with 3D flip
+                tl.to(card, {
+                    y: 0,
+                    rotationX: 0,
+                    opacity: 1,
+                    scale: 1,
+                    ease: "none",
+                    duration: 1
+                }, index);
+
+                // Animate previous card OUT (scale down and fade slightly)
+                tl.to(cards[index - 1], {
+                    scale: 0.9 - (0.05 * index), // gets smaller the further back it goes
+                    y: -20 * index, // moves up slightly
+                    opacity: 0.5,
+                    ease: "none",
+                    duration: 1
+                }, index);
+            }
+        });
+
+        // Parallax the background behind the pinned section
+        gsap.to(".magic-stack-bg", {
+            y: "20%",
+            scrollTrigger: {
+                trigger: "#magic-stack-section",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+        // Init Global Listeners
+        attachCursorHover();
+        attachMagnetic();
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

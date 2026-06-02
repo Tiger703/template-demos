@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Web Design</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Premium Icons (Phosphor) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES & RESET
+           ========================================= */
+        :root {
+            --dark: #050505;
+            --light: #f4f4f5;
+            --accent: #ff4b2b;
+            --gray: #121212;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        section { position: relative; width: 100vw; overflow: hidden; }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* =========================================
+           MAGIC CURSOR
+           ========================================= */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--light); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; mix-blend-mode: difference; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--light); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        @media (max-width: 768px) { .cursor { display: none; } * { cursor: auto !important; } }
+
+        /* =========================================
+           NAVBAR & MOBILE-OPTIMIZED MENU (Carried over)
+           ========================================= */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5vw; z-index: 10000; background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5,5,5,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5vw 5vh 5vw; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5vw 10vh 5vw; } .menu-item { padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .menu-item-title span { font-size: 1.2rem !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } .dropdown a i { font-size: 1.8rem !important; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); opacity: 0; transform: translateX(-10px); transition: 0.3s; }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+        .dropdown a:hover i { opacity: 1; transform: translateX(0); }
+
+        /* =========================================
+           UNIQUE PAGE: WEB DESIGN HERO
+           ========================================= */
+        #wd-hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center;
+            padding: 0 5vw; position: relative; background: var(--dark);
+        }
+        .hero-title-container { z-index: 2; position: relative; }
+        .wd-title { font-size: clamp(3rem, 10vw, 12rem); font-weight: 800; line-height: 0.9; text-transform: uppercase; color: var(--light); }
+        .wd-title .line { display: block; overflow: hidden; }
+        .wd-title .word { display: inline-block; transform: translateY(110%); }
+        .wd-desc { margin-top: 2rem; font-size: clamp(1rem, 2vw, 1.5rem); max-width: 500px; color: #888; opacity: 0; }
+        
+        /* Image Reveal Box */
+        .hero-img-box {
+            position: absolute; right: 5vw; top: 50%; transform: translateY(-50%);
+            width: clamp(300px, 40vw, 600px); height: clamp(400px, 60vh, 800px);
+            overflow: hidden; border-radius: 20px; z-index: 1;
+            clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); /* Hidden initially */
+        }
+        .hero-img-box img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.3); }
+
+        @media (max-width: 768px) {
+            #wd-hero { justify-content: flex-end; padding-bottom: 10vh; }
+            .hero-img-box { right: 0; top: 0; transform: none; width: 100%; height: 100%; border-radius: 0; opacity: 0.4; z-index: 0; }
+        }
+
+        /* =========================================
+           UNIQUE PAGE: TEXT HIGHLIGHTER SCROLL
+           ========================================= */
+        #wd-philosophy {
+            min-height: 100vh; background: var(--light); color: var(--dark);
+            display: flex; align-items: center; justify-content: center; padding: 15vh 5vw; text-align: center;
+        }
+        .highlight-paragraph { font-size: clamp(2rem, 5vw, 4.5rem); font-weight: 700; line-height: 1.3; max-width: 1200px; font-family: 'Syne', sans-serif; }
+        .highlight-paragraph .split-word { color: #ccc; transition: color 0.1s; } /* Gray by default */
+
+        /* =========================================
+           UNIQUE PAGE: BENTO GRID UI
+           ========================================= */
+        #wd-bento { padding: 15vh 5vw; background: var(--dark); }
+        .bento-header { margin-bottom: 5vh; }
+        .bento-header h2 { font-size: clamp(2.5rem, 6vw, 5rem); }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 350px);
+            gap: 20px;
+        }
+        
+        .bento-box {
+            background: var(--gray); border-radius: 24px; padding: 2rem;
+            position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);
+            display: flex; flex-direction: column; justify-content: flex-end;
+            transition: transform 0.4s;
+        }
+        .bento-box:hover { transform: translateY(-10px); border-color: rgba(255,255,255,0.2); }
+        
+        /* Specific Box Sizings */
+        .box-large { grid-column: span 2; grid-row: span 2; background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop') center/cover; }
+        .box-large::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
+        .box-wide { grid-column: span 2; }
+        
+        .bento-content { position: relative; z-index: 2; }
+        .bento-icon { font-size: 3rem; color: var(--accent); margin-bottom: 1rem; }
+        .bento-title { font-size: 2rem; margin-bottom: 0.5rem; }
+        .bento-text { color: #888; font-size: 1rem; }
+
+        @media (max-width: 900px) {
+            .bento-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+            .box-large, .box-wide { grid-column: span 1; grid-row: span 1; height: 400px; }
+            .bento-box { height: 300px; }
+        }
+
+        /* =========================================
+           UNIQUE PAGE: INFINITE TECH MARQUEE
+           ========================================= */
+        #wd-marquee { padding: 5vh 0; background: var(--accent); color: var(--light); display: flex; overflow: hidden; }
+        .marquee-track { display: flex; white-space: nowrap; font-size: clamp(3rem, 8vw, 6rem); font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase; align-items: center; }
+        .marquee-item { display: flex; align-items: center; gap: 2rem; padding-right: 2rem; }
+        .marquee-item i { font-size: clamp(3rem, 8vw, 6rem); }
+
+        /* =========================================
+           FOOTER CTA
+           ========================================= */
+        #wd-cta { height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--dark); text-align: center; padding: 0 5vw; }
+        .circle-btn { width: 180px; height: 180px; border-radius: 50%; border: 1px solid var(--accent); background: transparent; color: var(--light); font-size: 1.2rem; font-weight: 600; text-transform: uppercase; display: flex; align-items: center; justify-content: center; margin-top: 3rem; transition: 0.3s; }
+        .circle-btn:hover { background: var(--accent); color: var(--light); }
+
+    </style>
+</head>
+<body>
+
+    <!-- MAGIC CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu
+            <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU -->
+    <div class="menu-overlay"><div class="menu-container" id="menu-grid"></div></div>
+
+    <main>
+
+        <!-- S01: WEB DESIGN HERO -->
+        <section id="wd-hero">
+            <!-- Image masks in from bottom via GSAP -->
+            <div class="hero-img-box">
+                <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=1200&auto=format&fit=crop" class="hero-img" alt="Abstract Web UI">
+            </div>
+
+            <div class="hero-title-container">
+                <h1 class="wd-title">
+                    <span class="line"><span class="word">WEB</span></span><br>
+                    <span class="line"><span class="word" style="color: var(--accent);">DESIGN</span></span>
+                </h1>
+                <p class="wd-desc">We build digital ecosystems. Combining aesthetic precision with cognitive engineering to make your brand unignorable.</p>
+            </div>
+        </section>
+
+        <!-- S02: SCROLL HIGHLIGHTER PHILOSOPHY -->
+        <section id="wd-philosophy">
+            <!-- Words are split by JS to animate individually -->
+            <p class="highlight-paragraph" id="split-text-target">
+                We don't just build websites. We architect immersive digital experiences that dominate the modern web. Every pixel is calculated. Every interaction is intentional. Welcome to the new standard of design.
+            </p>
+        </section>
+
+        <!-- S03: BENTO GRID -->
+        <section id="wd-bento">
+            <div class="bento-header">
+                <h2 class="display-font text-reveal">THE ARCHITECTURE</h2>
+            </div>
+            <div class="bento-grid">
+                
+                <div class="bento-box box-large">
+                    <div class="bento-content">
+                        <h3 class="bento-title display-font">UI / UX Mastery</h3>
+                        <p class="bento-text" style="color: #ddd;">Designing interfaces that feel intuitive, look expensive, and convert effortlessly.</p>
+                    </div>
+                </div>
+
+                <div class="bento-box">
+                    <div class="bento-content">
+                        <i class="ph ph-bezier-curve bento-icon"></i>
+                        <h3 class="bento-title display-font">Wireframing</h3>
+                        <p class="bento-text">Mapping the cognitive journey.</p>
+                    </div>
+                </div>
+
+                <div class="bento-box">
+                    <div class="bento-content">
+                        <i class="ph ph-magic-wand bento-icon"></i>
+                        <h3 class="bento-title display-font">Interaction</h3>
+                        <p class="bento-text">Micro-animations that breathe life.</p>
+                    </div>
+                </div>
+
+                <div class="bento-box box-wide">
+                    <div class="bento-content">
+                        <i class="ph ph-devices bento-icon"></i>
+                        <h3 class="bento-title display-font">Responsive Systems</h3>
+                        <p class="bento-text">Flawless execution across every screen, every device, every time.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- S04: INFINITE MARQUEE -->
+        <section id="wd-marquee">
+            <div class="marquee-track">
+                <!-- Content duplicated by JS for infinite loop -->
+                <div class="marquee-item"><i class="ph ph-figma-logo"></i> FIGMA</div>
+                <div class="marquee-item"><i class="ph ph-code"></i> REACT</div>
+                <div class="marquee-item"><i class="ph ph-cube"></i> WEBGL</div>
+                <div class="marquee-item"><i class="ph ph-wind"></i> GSAP</div>
+                <div class="marquee-item"><i class="ph ph-pen-nib"></i> UI/UX</div>
+            </div>
+        </section>
+
+        <!-- S05: CTA -->
+        <section id="wd-cta">
+            <h2 class="display-font" style="font-size: clamp(3rem, 8vw, 6rem);">READY TO EVOLVE?</h2>
+            <button class="circle-btn magnetic" data-strength="40">Start<br>Project</button>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. Lenis Smooth Scroll
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. Cursor & Magnetic
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+            
+            document.querySelectorAll('a, button, .menu-item-title, .bento-box').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    gsap.to(el, { x: ((e.clientX - rect.left) / rect.width - 0.5) * strength, y: ((e.clientY - rect.top) / rect.height - 0.5) * strength, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        }
+
+        // 3. Menu Data & Logic (Exact same as index for continuity)
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        menuBtn.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        });
+
+        // 4. Hero Animation (Image Mask Reveal + Text)
+        const heroTl = gsap.timeline({ delay: 0.2 });
+        
+        // Mobile skips the complex image mask for better performance
+        if(window.innerWidth > 768) {
+            heroTl.to(".hero-img-box", { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", duration: 1.5, ease: "power4.out" });
+            heroTl.to(".hero-img", { scale: 1, duration: 2, ease: "power3.out" }, "-=1.5");
+        }
+        
+        heroTl.to(".wd-title .word", { y: "0%", duration: 1.2, stagger: 0.2, ease: "power4.out" }, "-=1.2");
+        heroTl.to(".wd-desc", { opacity: 1, y: -20, duration: 1 }, "-=0.8");
+
+        // Image Parallax on Scroll
+        if(window.innerWidth > 768) {
+            gsap.to(".hero-img-box", { y: 150, scrollTrigger: { trigger: "#wd-hero", start: "top top", end: "bottom top", scrub: true }});
+        }
+
+        // 5. Scroll Text Highlighter Magic
+        const textTarget = document.getElementById('split-text-target');
+        // Split text into spans for animation
+        const words = textTarget.innerText.split(' ');
+        textTarget.innerHTML = '';
+        words.forEach(word => { textTarget.innerHTML += `<span class="split-word">${word} </span>`; });
+
+        // Change color from gray to black (since background is light) on scroll
+        gsap.to(".split-word", {
+            color: "#050505", // Turn to black
+            stagger: 0.1,
+            scrollTrigger: {
+                trigger: "#wd-philosophy",
+                start: "top 60%",
+                end: "bottom 80%",
+                scrub: 1
+            }
+        });
+
+        // 6. Infinite Marquee GSAP Magic
+        const track = document.querySelector('.marquee-track');
+        // Duplicate content to create seamless loop
+        track.innerHTML += track.innerHTML; 
+        
+        gsap.to(track, {
+            xPercent: -50, // Move left by 50% (since we duplicated it)
+            ease: "none",
+            duration: 10, // Speed of marquee
+            repeat: -1 // Infinite loop
+        });
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

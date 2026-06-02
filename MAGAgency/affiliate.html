@@ -1,0 +1,2609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MΛGAgency | Partners / Affiliates</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --dark:#06080b;
+      --light:#f4f4f5;
+      --accent:#9CFF4F;
+      --accent-2:#58D6FF;
+      --accent-3:#FFC857;
+      --danger:#FF6A6A;
+      --gray:#11161d;
+      --nav-height:70px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      cursor:none;
+    }
+
+    html.lenis{height:auto;}
+    .lenis.lenis-smooth{scroll-behavior:auto !important;}
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--light);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    h1,h2,h3,h4,h5,h6,.display-font{
+      font-family:'Syne',sans-serif;
+    }
+
+    .mono{
+      font-family:'JetBrains Mono',monospace;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    section{
+      position:relative;
+      width:100vw;
+      min-height:100vh;
+      overflow:hidden;
+    }
+
+    .section-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:0;
+    }
+
+    .section-overlay{
+      position:absolute;
+      inset:0;
+      z-index:1;
+    }
+
+    .section-inner{
+      position:relative;
+      z-index:2;
+      width:100%;
+      min-height:100vh;
+      padding:calc(var(--nav-height) + 4vh) 5vw 6vh 5vw;
+    }
+
+    .glass{
+      background:rgba(15,18,22,.48);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 20px 50px rgba(0,0,0,.38);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid rgba(156,255,79,.26);
+      color:var(--accent);
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:.85rem;
+      font-family:'JetBrains Mono',monospace;
+      width:max-content;
+      margin-bottom:1.2rem;
+    }
+
+    .pulse-dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--accent);
+      animation:pulseDot 1.2s infinite;
+    }
+
+    @keyframes pulseDot{
+      0%{transform:scale(1);opacity:1;}
+      50%{transform:scale(.55);opacity:.45;}
+      100%{transform:scale(1);opacity:1;}
+    }
+
+    /* =========================================
+       CURSOR
+       ========================================= */
+    .cursor{
+      position:fixed;
+      top:0;
+      left:0;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:var(--accent);
+      pointer-events:none;
+      z-index:99999;
+      transform:translate(-50%,-50%);
+      transition:width .3s,height .3s,background .3s,border .3s;
+      mix-blend-mode:screen;
+    }
+
+    .cursor.hovered{
+      width:78px;
+      height:78px;
+      background:transparent;
+      border:1px solid var(--accent);
+      mix-blend-mode:normal;
+      backdrop-filter:blur(6px);
+    }
+
+    .cursor.earn-mode::after{
+      content:'EARN';
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      font-size:10px;
+      color:var(--accent);
+      font-family:'JetBrains Mono',monospace;
+      font-weight:700;
+      letter-spacing:1px;
+    }
+
+    @media(max-width:768px){
+      .cursor{display:none;}
+      *{cursor:auto !important;}
+    }
+
+    /* =========================================
+       NAV
+       ========================================= */
+    nav{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:var(--nav-height);
+      padding:0 5vw;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:10000;
+      background:rgba(6,8,11,.72);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(156,255,79,.14);
+    }
+
+    .nav-brand{
+      font-size:1.3rem;
+      font-weight:800;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+
+    .menu-btn{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:none;
+      border:none;
+      color:var(--light);
+      font-weight:600;
+      text-transform:uppercase;
+      font-size:.9rem;
+    }
+
+    .hamburger{
+      width:35px;
+      height:8px;
+      position:relative;
+    }
+
+    .hamburger span{
+      position:absolute;
+      width:100%;
+      height:2px;
+      background:var(--light);
+      transition:.4s;
+    }
+
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){bottom:0;}
+
+    .menu-btn.active .hamburger span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);
+      background:var(--dark);
+    }
+
+    .menu-btn.active .hamburger span:nth-child(2){
+      transform:translateY(-3px) rotate(-45deg);
+      background:var(--dark);
+    }
+
+    /* =========================================
+       MENU OVERLAY
+       ========================================= */
+    .menu-overlay{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100vw;
+      height:100vh;
+      background:var(--accent);
+      z-index:9999;
+      display:flex;
+      padding-top:calc(var(--nav-height) + 3vh);
+      clip-path:polygon(0 0,100% 0,100% 0,0 0);
+      overflow-y:auto;
+    }
+
+    .menu-container{
+      width:100%;
+      padding:0 5vw 5vh 5vw;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:2rem 2.5rem;
+      align-content:start;
+    }
+
+    @media(max-width:1200px){
+      .menu-container{grid-template-columns:repeat(3,1fr);}
+    }
+
+    @media(max-width:768px){
+      .menu-container{
+        grid-template-columns:1fr;
+        gap:.5rem;
+        padding:2vh 5vw 10vh 5vw;
+      }
+
+      .menu-item{
+        border-bottom:1px solid rgba(0,0,0,.15);
+        padding:1.5rem 0;
+      }
+
+      .menu-item-title{
+        font-size:2rem !important;
+        font-weight:800 !important;
+      }
+
+      .dropdown a{
+        font-size:1.25rem !important;
+        padding:.8rem 0;
+      }
+    }
+
+    .menu-item{
+      border-bottom:1px solid rgba(0,0,0,.12);
+      padding-bottom:1rem;
+    }
+
+    .menu-item-title{
+      font-size:clamp(1.3rem,2.5vw,2rem);
+      font-weight:700;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:var(--dark);
+      opacity:0;
+      transform:translateY(20px);
+    }
+
+    .menu-item-title span{
+      font-size:1rem;
+      font-family:'Inter',sans-serif;
+      font-weight:500;
+      color:var(--dark);
+    }
+
+    .dropdown{
+      height:0;
+      overflow:hidden;
+      transition:height .4s ease;
+    }
+
+    .dropdown-inner{
+      padding-top:1rem;
+      display:flex;
+      flex-direction:column;
+      gap:.8rem;
+    }
+
+    .dropdown a{
+      color:#1f1f1f;
+      font-size:1.05rem;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      transition:.3s;
+      font-weight:500;
+    }
+
+    .dropdown a i{
+      font-size:1.2rem;
+      color:var(--dark);
+    }
+
+    .dropdown a:hover{
+      padding-left:10px;
+    }
+
+    /* =========================================
+       HERO SECTION
+       ========================================= */
+    #s10-affiliates-hero .section-overlay{
+      background:
+        linear-gradient(90deg,rgba(6,8,11,.92) 0%, rgba(6,8,11,.48) 46%, rgba(6,8,11,.84) 100%);
+    }
+
+    .hero-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      align-items:center;
+      gap:4vw;
+    }
+
+    .hero-title{
+      font-size:clamp(3.4rem,10vw,8rem);
+      line-height:.9;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .hero-title .line{
+      display:block;
+      overflow:hidden;
+    }
+
+    .hero-title .word{
+      display:inline-block;
+      transform:translateY(110%);
+    }
+
+    .hero-title .outline{
+      color:transparent;
+      -webkit-text-stroke:2px var(--light);
+    }
+
+    .hero-desc{
+      margin-top:1.4rem;
+      max-width:560px;
+      color:#c0c6cf;
+      line-height:1.75;
+    }
+
+    .hero-meta{
+      margin-top:2rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:1.2rem 2rem;
+      color:#9aa5af;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.88rem;
+    }
+
+    .affiliate-card-wrap{
+      display:flex;
+      justify-content:center;
+      perspective:1300px;
+    }
+
+    .affiliate-card{
+      width:min(580px,100%);
+      min-height:66vh;
+      border-radius:24px;
+      overflow:hidden;
+      position:relative;
+      transform-style:preserve-3d;
+      transition:transform .12s;
+    }
+
+    .affiliate-card img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      filter:brightness(.55) contrast(1.05);
+    }
+
+    .affiliate-card::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top,rgba(6,8,11,.96),rgba(6,8,11,.14));
+    }
+
+    .affiliate-content{
+      position:absolute;
+      left:1.5rem;
+      right:1.5rem;
+      bottom:1.5rem;
+      z-index:2;
+      transform:translateZ(60px);
+    }
+
+    .affiliate-content .mono{
+      color:var(--accent);
+      font-size:.82rem;
+      margin-bottom:.65rem;
+      display:block;
+    }
+
+    .affiliate-content h3{
+      font-size:2rem;
+      line-height:1.06;
+      margin-bottom:.8rem;
+    }
+
+    .affiliate-content p{
+      color:#ccd1d7;
+      line-height:1.55;
+      max-width:440px;
+    }
+
+    .hero-chip{
+      position:absolute;
+      z-index:3;
+      padding:.85rem 1rem;
+      border-radius:16px;
+      background:rgba(10,14,18,.8);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      transform:translateZ(80px);
+      box-shadow:0 18px 32px rgba(0,0,0,.25);
+    }
+
+    .hero-chip .mono{
+      color:#a9b6c4;
+      font-size:.72rem;
+      display:block;
+      margin-bottom:.25rem;
+    }
+
+    .hero-chip strong{
+      color:var(--light);
+      font-size:1.15rem;
+    }
+
+    .hc-a{top:8%;left:6%;}
+    .hc-b{top:15%;right:6%;}
+    .hc-c{bottom:22%;right:9%;}
+    .hc-d{bottom:13%;left:8%;}
+
+    .spark-wrap{
+      margin-top:1rem;
+      border-top:1px solid rgba(255,255,255,.08);
+      padding-top:1rem;
+    }
+
+    .spark-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:1rem;
+      flex-wrap:wrap;
+      margin-bottom:.8rem;
+    }
+
+    .spark-price{
+      font-size:2.8rem;
+      line-height:1;
+      font-family:'JetBrains Mono',monospace;
+      color:var(--accent);
+      font-weight:700;
+    }
+
+    .spark-change{
+      font-family:'JetBrains Mono',monospace;
+      color:var(--accent);
+      font-size:.95rem;
+    }
+
+    .hero-strip{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:3;
+      background:rgba(156,255,79,.92);
+      color:#0d1707;
+      padding:14px 0;
+      overflow:hidden;
+      white-space:nowrap;
+      border-top:1px solid rgba(0,0,0,.3);
+    }
+
+    .hero-strip-track{
+      display:flex;
+      width:max-content;
+      animation:strip 22s linear infinite;
+    }
+
+    .hero-strip-item{
+      display:flex;
+      align-items:center;
+      gap:24px;
+      padding:0 28px;
+      font-family:'JetBrains Mono',monospace;
+      font-weight:700;
+      font-size:.95rem;
+    }
+
+    @keyframes strip{
+      from{transform:translateX(0);}
+      to{transform:translateX(-50%);}
+    }
+
+    @media(max-width:1024px){
+      .hero-layout{
+        grid-template-columns:1fr;
+        text-align:center;
+      }
+      .hero-left{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+      }
+      .hero-desc{margin-inline:auto;}
+      .affiliate-card{min-height:54vh;}
+    }
+
+    /* =========================================
+       SECTION 2 - PULSE BOARD
+       ========================================= */
+    #s10-pulse .section-overlay{
+      background:linear-gradient(180deg,rgba(6,8,11,.82),rgba(6,8,11,.94));
+    }
+
+    .pulse-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:.9fr 1.1fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .pulse-copy h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .pulse-copy p{
+      max-width:520px;
+      color:#c0c7cf;
+      line-height:1.75;
+    }
+
+    .pulse-board{
+      position:relative;
+      border-radius:24px;
+      padding:1.2rem;
+      overflow:hidden;
+    }
+
+    .pulse-scan{
+      position:absolute;
+      left:0;
+      width:100%;
+      height:110px;
+      background:linear-gradient(180deg,rgba(88,214,255,0),rgba(88,214,255,.14),rgba(88,214,255,0));
+      z-index:1;
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
+
+    .pulse-grid{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+    }
+
+    .pulse-card{
+      min-height:190px;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      padding:1rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      position:relative;
+      overflow:hidden;
+      transition:.35s;
+    }
+
+    .pulse-card.large{
+      grid-column:span 2;
+    }
+
+    .pulse-card:hover{
+      transform:translateY(-8px);
+      border-color:rgba(88,214,255,.25);
+    }
+
+    .pulse-card::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg,rgba(88,214,255,.12),transparent 70%);
+      opacity:0;
+      transition:.35s;
+    }
+
+    .pulse-card:hover::before{opacity:1;}
+
+    .pulse-top,
+    .pulse-bottom{
+      position:relative;
+      z-index:1;
+    }
+
+    .pulse-top .mono{
+      color:var(--accent-2);
+      font-size:.74rem;
+      display:block;
+      margin-bottom:.4rem;
+    }
+
+    .pulse-top h3{
+      font-size:1.05rem;
+      line-height:1.2;
+    }
+
+    .pulse-value{
+      font-size:2rem;
+      line-height:1;
+      font-family:'JetBrains Mono',monospace;
+      font-weight:700;
+      margin-bottom:.4rem;
+      color:var(--light);
+    }
+
+    .pulse-note{
+      color:#a9b2bd;
+      font-size:.85rem;
+      font-family:'JetBrains Mono',monospace;
+    }
+
+    .mini-track{
+      margin-top:.8rem;
+      width:100%;
+      height:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      overflow:hidden;
+    }
+
+    .mini-fill{
+      display:block;
+      height:100%;
+      width:30%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent-2),var(--accent));
+    }
+
+    @media(max-width:1024px){
+      .pulse-layout{
+        grid-template-columns:1fr;
+      }
+      .pulse-copy{
+        text-align:center;
+      }
+      .pulse-copy p{margin-inline:auto;}
+    }
+
+    @media(max-width:768px){
+      .pulse-grid{
+        grid-template-columns:1fr;
+      }
+      .pulse-card.large{
+        grid-column:span 1;
+      }
+    }
+
+    /* =========================================
+       SECTION 3 - FUNNEL CASCADE
+       ========================================= */
+    #s10-funnel{
+      min-height:360vh;
+    }
+
+    #s10-funnel .section-overlay{
+      background:linear-gradient(180deg,rgba(6,8,11,.8),rgba(6,8,11,.96));
+    }
+
+    .funnel-pin{
+      position:sticky;
+      top:0;
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:.82fr 1.18fr;
+      gap:2rem;
+      align-items:center;
+      padding:calc(var(--nav-height) + 4vh) 5vw 6vh 5vw;
+      z-index:2;
+    }
+
+    .funnel-left h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .funnel-left p{
+      color:#c0c7cf;
+      line-height:1.75;
+      max-width:460px;
+      margin-bottom:2rem;
+    }
+
+    .funnel-progress{
+      position:relative;
+      width:3px;
+      height:260px;
+      background:rgba(255,255,255,.08);
+      margin-top:1rem;
+    }
+
+    .funnel-progress-fill{
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:0%;
+      background:linear-gradient(180deg,var(--accent),var(--accent-2));
+      box-shadow:0 0 20px rgba(156,255,79,.35);
+    }
+
+    .funnel-dots{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .funnel-dot{
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:var(--gray);
+      border:1px solid rgba(255,255,255,.1);
+      transform:translateX(0);
+    }
+
+    .funnel-dot.active{
+      background:var(--accent);
+      box-shadow:0 0 18px rgba(156,255,79,.45);
+      border-color:var(--accent);
+    }
+
+    .funnel-right{
+      position:relative;
+      height:76vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .funnel-card{
+      position:absolute;
+      inset:0;
+      border-radius:24px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      opacity:0;
+      transform:translateX(120px) scale(.95);
+    }
+
+    .funnel-card img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      filter:brightness(.62);
+    }
+
+    .funnel-card::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top,rgba(6,8,11,.97),rgba(6,8,11,.12));
+    }
+
+    .funnel-card-content{
+      position:relative;
+      z-index:2;
+      padding:1.6rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      height:100%;
+    }
+
+    .funnel-head .mono{
+      color:var(--accent-3);
+      font-size:.78rem;
+      display:block;
+      margin-bottom:.65rem;
+    }
+
+    .funnel-head h3{
+      font-size:2rem;
+      line-height:1.08;
+      margin-bottom:.8rem;
+    }
+
+    .funnel-head p{
+      color:#cad0d8;
+      line-height:1.65;
+      max-width:520px;
+    }
+
+    .funnel-stats{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.8rem;
+      margin-top:1.2rem;
+    }
+
+    .funnel-stats span{
+      padding:.55rem .8rem;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      font-family:'JetBrains Mono',monospace;
+      font-size:.76rem;
+      color:#9eabb7;
+    }
+
+    @media(max-width:1024px){
+      #s10-funnel{
+        min-height:auto;
+      }
+      .funnel-pin{
+        position:relative;
+        grid-template-columns:1fr;
+        min-height:auto;
+      }
+      .funnel-left{
+        text-align:center;
+      }
+      .funnel-left p{margin-inline:auto;}
+      .funnel-progress{
+        display:none;
+      }
+      .funnel-right{
+        height:auto;
+        display:grid;
+        gap:1rem;
+      }
+      .funnel-card{
+        position:relative;
+        inset:auto;
+        opacity:1 !important;
+        transform:none !important;
+        min-height:58vh;
+      }
+    }
+
+    /* =========================================
+       SECTION 4 - TIER SWITCHER
+       ========================================= */
+    #s10-tiers{
+      background:#06080b;
+    }
+
+    .tier-bg-wrap{
+      position:absolute;
+      inset:0;
+      z-index:0;
+    }
+
+    .tier-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      opacity:0;
+      transition:opacity .8s ease;
+      filter:brightness(.42) saturate(1.08);
+    }
+
+    .tier-bg.active{
+      opacity:1;
+    }
+
+    #s10-tiers .section-overlay{
+      background:linear-gradient(90deg,rgba(6,8,11,.9) 0%, rgba(6,8,11,.45) 52%, rgba(6,8,11,.8) 100%);
+    }
+
+    .tier-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:.85fr 1.15fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .tier-left h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .tier-left p{
+      max-width:500px;
+      color:#c0c7cf;
+      line-height:1.75;
+      margin-bottom:2rem;
+    }
+
+    .tier-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:1rem;
+      max-width:430px;
+    }
+
+    .tier-card{
+      min-height:180px;
+      border-radius:20px;
+      padding:1.2rem;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      transition:.35s;
+      text-align:left;
+    }
+
+    .tier-card.active,
+    .tier-card:hover{
+      border-color:rgba(99,255,210,.35);
+      transform:translateY(-6px);
+      background:rgba(99,255,210,.08);
+    }
+
+    .tier-card .mono{
+      color:var(--accent-3);
+      font-size:.75rem;
+      display:block;
+      margin-bottom:.5rem;
+    }
+
+    .tier-card h3{
+      font-size:1.4rem;
+      margin-bottom:.65rem;
+    }
+
+    .tier-card p{
+      color:#b7c0ca;
+      line-height:1.55;
+      font-size:.9rem;
+    }
+
+    .tier-panel{
+      border-radius:24px;
+      padding:1.4rem;
+    }
+
+    .tier-panel .mono{
+      color:var(--accent);
+      font-size:.82rem;
+      display:block;
+      margin-bottom:.7rem;
+    }
+
+    .tier-panel h3{
+      font-size:2rem;
+      margin-bottom:.8rem;
+      line-height:1.08;
+    }
+
+    .tier-panel p{
+      color:#c9d0d8;
+      line-height:1.7;
+      margin-bottom:1.2rem;
+    }
+
+    .tier-metrics{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:1rem;
+      margin-bottom:1.4rem;
+    }
+
+    .tier-box{
+      padding:1rem;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .tier-box .label{
+      color:#98a3b0;
+      font-size:.74rem;
+      text-transform:uppercase;
+      margin-bottom:.4rem;
+    }
+
+    .tier-box .value{
+      font-family:'JetBrains Mono',monospace;
+      font-size:1.3rem;
+      color:var(--light);
+      font-weight:700;
+    }
+
+    .tier-bars{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:1rem;
+      align-items:end;
+      height:170px;
+      margin-top:1rem;
+    }
+
+    .tier-bar{
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      align-items:center;
+      gap:.65rem;
+    }
+
+    .tier-bar i{
+      display:block;
+      width:100%;
+      max-width:52px;
+      height:20%;
+      border-radius:16px 16px 0 0;
+      background:linear-gradient(180deg,var(--accent-2),var(--accent));
+      box-shadow:0 14px 30px rgba(88,214,255,.14);
+      transform-origin:bottom;
+    }
+
+    .tier-bar span{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.75rem;
+      color:#9ca7b4;
+      text-align:center;
+    }
+
+    @media(max-width:1024px){
+      .tier-layout{
+        grid-template-columns:1fr;
+      }
+      .tier-left{
+        text-align:center;
+      }
+      .tier-left p{margin-inline:auto;}
+      .tier-grid{
+        max-width:100%;
+      }
+    }
+
+    @media(max-width:768px){
+      .tier-grid{
+        grid-template-columns:1fr;
+      }
+      .tier-metrics{
+        grid-template-columns:repeat(2,1fr);
+      }
+      .tier-bars{
+        grid-template-columns:repeat(2,1fr);
+        height:auto;
+      }
+      .tier-bar{
+        height:140px;
+      }
+    }
+
+    /* =========================================
+       SECTION 5 - GLOBAL REACH
+       ========================================= */
+    #s10-reach .section-overlay{
+      background:linear-gradient(180deg,rgba(6,8,11,.78),rgba(6,8,11,.9));
+    }
+
+    .reach-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:.9fr 1.1fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .reach-copy h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .reach-copy p{
+      color:#c0c7cf;
+      line-height:1.75;
+      max-width:500px;
+      margin-bottom:1.5rem;
+    }
+
+    .reach-legend{
+      display:grid;
+      gap:.8rem;
+      max-width:420px;
+    }
+
+    .reach-legend-item{
+      padding:1rem 1.1rem;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+    }
+
+    .reach-legend-item strong{
+      font-size:1rem;
+    }
+
+    .reach-legend-item span{
+      color:#a7b0ba;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.78rem;
+    }
+
+    .reach-stage{
+      position:relative;
+      min-height:72vh;
+      border-radius:26px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .reach-stage svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:2;
+      pointer-events:none;
+    }
+
+    .reach-line{
+      fill:none;
+      stroke:rgba(88,214,255,.45);
+      stroke-width:2.5;
+      stroke-linecap:round;
+      stroke-dasharray:8 10;
+    }
+
+    .reach-hub{
+      position:absolute;
+      left:18%;
+      top:58%;
+      width:120px;
+      height:120px;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(156,255,79,.22), rgba(156,255,79,.05));
+      border:1px solid rgba(156,255,79,.32);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      z-index:3;
+      box-shadow:0 0 50px rgba(156,255,79,.18);
+    }
+
+    .reach-hub .mono{
+      color:var(--accent);
+      font-size:.76rem;
+      display:block;
+      margin-bottom:.25rem;
+    }
+
+    .reach-hub strong{
+      font-size:1rem;
+      line-height:1.2;
+    }
+
+    .beacon{
+      position:absolute;
+      transform:translate(-50%,-50%);
+      z-index:4;
+    }
+
+    .beacon-dot{
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      background:var(--accent-2);
+      box-shadow:0 0 16px rgba(88,214,255,.85);
+      position:relative;
+      margin-bottom:.8rem;
+    }
+
+    .beacon-dot::before,
+    .beacon-dot::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      border:1px solid rgba(88,214,255,.45);
+      animation:beaconPulse 2s infinite;
+    }
+
+    .beacon-dot::after{
+      animation-delay:.8s;
+    }
+
+    @keyframes beaconPulse{
+      0%{transform:scale(1);opacity:1;}
+      100%{transform:scale(3.4);opacity:0;}
+    }
+
+    .beacon-card{
+      min-width:160px;
+      padding:.9rem 1rem;
+      border-radius:16px;
+      background:rgba(10,14,18,.82);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      box-shadow:0 16px 34px rgba(0,0,0,.28);
+    }
+
+    .beacon-card .mono{
+      color:var(--accent-3);
+      font-size:.72rem;
+      display:block;
+      margin-bottom:.3rem;
+    }
+
+    .beacon-card strong{
+      display:block;
+      font-size:1rem;
+      margin-bottom:.35rem;
+    }
+
+    .beacon-card span{
+      display:block;
+      color:#b7bfc8;
+      font-size:.82rem;
+      line-height:1.4;
+    }
+
+    .b1{left:44%;top:24%;}
+    .b2{left:66%;top:34%;}
+    .b3{left:73%;top:58%;}
+    .b4{left:50%;top:70%;}
+    .b5{left:84%;top:18%;}
+
+    @media(max-width:1024px){
+      .reach-layout{
+        grid-template-columns:1fr;
+      }
+      .reach-copy{
+        text-align:center;
+      }
+      .reach-copy p,
+      .reach-legend{
+        margin-inline:auto;
+      }
+    }
+
+    @media(max-width:768px){
+      .reach-hub{
+        width:90px;
+        height:90px;
+        left:20%;
+      }
+      .beacon-card{
+        min-width:120px;
+      }
+      .b1{left:52%;top:20%;}
+      .b2{left:72%;top:34%;}
+      .b3{left:74%;top:58%;}
+      .b4{left:48%;top:74%;}
+      .b5{left:76%;top:14%;}
+    }
+
+    /* =========================================
+       FOOTER
+       ========================================= */
+    #s12-contact .section-overlay{
+      background:linear-gradient(to top,rgba(0,0,0,.96),rgba(0,0,0,.45));
+    }
+
+    .footer-shell{
+      min-height:calc(100vh - var(--nav-height));
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .footer-big{
+      margin-top:auto;
+      text-align:center;
+    }
+
+    .footer-big h2{
+      font-size:clamp(3.5rem,14vw,12rem);
+      line-height:.82;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .footer-big h2 span{
+      color:var(--accent);
+      text-shadow:0 0 30px rgba(156,255,79,.22);
+    }
+
+    .footer-bottom{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:2rem;
+      padding-top:2rem;
+      border-top:1px solid rgba(255,255,255,.1);
+    }
+
+    .footer-bottom .mono{
+      color:#8f99a4;
+      line-height:1.7;
+      font-size:.88rem;
+    }
+
+    .socials{
+      display:flex;
+      gap:1rem;
+    }
+
+    .social-btn{
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.18);
+      font-size:1.4rem;
+      transition:.35s;
+    }
+
+    .social-btn:hover{
+      background:var(--accent);
+      color:var(--dark);
+      border-color:var(--accent);
+    }
+
+    @media(max-width:768px){
+      .footer-bottom{
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor"></div>
+
+  <nav>
+    <a href="#" class="nav-brand magnetic hover-target" data-strength="20">MΛGIC.</a>
+    <button class="menu-btn magnetic hover-target" data-strength="30">
+      Menu
+      <div class="hamburger"><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <div class="menu-overlay">
+    <div class="menu-container" id="menu-grid"></div>
+  </div>
+
+  <main id="partners-affiliates-page">
+
+    <!-- HERO -->
+    <section id="s10-affiliates-hero">
+      <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?q=80&w=2400&auto=format&fit=crop" alt="Affiliate hero background" class="section-bg hero-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="hero-layout">
+          <div class="hero-left">
+            <div class="pill gsap-up"><span class="pulse-dot"></span> AFFILIATE GROWTH ENGINE</div>
+
+            <h1 class="hero-title">
+              <span class="line"><span class="word hero-word">PARTNER</span></span>
+              <span class="line"><span class="word hero-word outline">AFFILIATES</span></span>
+            </h1>
+
+            <p class="hero-desc gsap-up">
+              Revenue-share partnerships, creator networks, referral systems, and performance alliances — designed as a premium growth architecture instead of a basic affiliate page.
+            </p>
+
+            <div class="hero-meta gsap-up">
+              <span>12.4K ACTIVE PARTNERS</span>
+              <span>54 COUNTRIES</span>
+              <span>REV-SHARE + CPA + HYBRID</span>
+            </div>
+          </div>
+
+          <div class="affiliate-card-wrap gsap-up">
+            <div class="affiliate-card glass hover-target" id="affiliateHeroCard">
+              <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1400&auto=format&fit=crop" alt="Affiliate dashboard">
+
+              <div class="hero-chip hc-a">
+                <span class="mono">CLICKS</span>
+                <strong id="hcClicks">142K</strong>
+              </div>
+              <div class="hero-chip hc-b">
+                <span class="mono">LEADS</span>
+                <strong id="hcLeads">18.2K</strong>
+              </div>
+              <div class="hero-chip hc-c">
+                <span class="mono">CONV.</span>
+                <strong id="hcConv">12.8%</strong>
+              </div>
+              <div class="hero-chip hc-d">
+                <span class="mono">PAYOUT</span>
+                <strong id="hcPayout">$84K</strong>
+              </div>
+
+              <div class="affiliate-content">
+                <span class="mono">AFFILIATE DASHBOARD / LIVE CYCLE</span>
+                <h3>Traffic becomes revenue.</h3>
+                <p>
+                  Built for brands, publishers, creators, and referral partners who need premium tracking, transparent rewards, and scalable growth systems.
+                </p>
+
+                <div class="spark-wrap">
+                  <div class="spark-head">
+                    <div>
+                      <div class="spark-price" id="liveRevenue">$84,250</div>
+                      <div class="spark-change" id="liveRevenueChange">+3.42% today</div>
+                    </div>
+                    <div class="mono" id="liveClock">00:00:00</div>
+                  </div>
+
+                  <svg viewBox="0 0 600 180" preserveAspectRatio="none" style="width:100%;height:160px;display:block;">
+                    <defs>
+                      <linearGradient id="heroSparkGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#9CFF4F" stop-opacity="0.55"></stop>
+                        <stop offset="100%" stop-color="#9CFF4F" stop-opacity="0"></stop>
+                      </linearGradient>
+                    </defs>
+                    <path id="heroSparkFill" d="" fill="url(#heroSparkGrad)"></path>
+                    <path id="heroSparkLine" d="" fill="none" stroke="#9CFF4F" stroke-width="4" stroke-linecap="round"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-strip">
+        <div class="hero-strip-track">
+          <div class="hero-strip-item">
+            CPA PROGRAMS <i class="ph ph-dot-outline-fill"></i>
+            REV-SHARE PARTNERS <i class="ph ph-dot-outline-fill"></i>
+            CREATOR AFFILIATES <i class="ph ph-dot-outline-fill"></i>
+            PERFORMANCE NETWORKS <i class="ph ph-dot-outline-fill"></i>
+            GLOBAL TRACKING <i class="ph ph-dot-outline-fill"></i>
+          </div>
+          <div class="hero-strip-item">
+            CPA PROGRAMS <i class="ph ph-dot-outline-fill"></i>
+            REV-SHARE PARTNERS <i class="ph ph-dot-outline-fill"></i>
+            CREATOR AFFILIATES <i class="ph ph-dot-outline-fill"></i>
+            PERFORMANCE NETWORKS <i class="ph ph-dot-outline-fill"></i>
+            GLOBAL TRACKING <i class="ph ph-dot-outline-fill"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PULSE BOARD -->
+    <section id="s10-pulse">
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2400&auto=format&fit=crop" alt="Pulse background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="pulse-layout">
+          <div class="pulse-copy">
+            <div class="pill gsap-fade"><span class="pulse-dot"></span> REFERRAL PULSE BOARD</div>
+            <h2 class="gsap-fade">Track the<br>machine.</h2>
+            <p class="gsap-fade">
+              This live board visualizes affiliate system health across clicks, conversions, payout timing, partner activation, regional momentum, and fraud filtering.
+            </p>
+          </div>
+
+          <div class="pulse-board glass gsap-fade">
+            <div class="pulse-scan" id="pulseScan"></div>
+
+            <div class="pulse-grid">
+              <article class="pulse-card large hover-target tech-target">
+                <div class="pulse-top">
+                  <span class="mono">REAL-TIME CLICKS</span>
+                  <h3>Incoming referral traffic</h3>
+                </div>
+                <div class="pulse-bottom">
+                  <div class="pulse-value live-pulse-value" data-type="number" data-base="182430">182,430</div>
+                  <div class="pulse-note">+2.8% vs previous cycle</div>
+                  <div class="mini-track"><i class="mini-fill" style="width:72%"></i></div>
+                </div>
+              </article>
+
+              <article class="pulse-card hover-target tech-target">
+                <div class="pulse-top">
+                  <span class="mono">ACTIVE CREATORS</span>
+                  <h3>Publisher pool</h3>
+                </div>
+                <div class="pulse-bottom">
+                  <div class="pulse-value live-pulse-value" data-type="number" data-base="12480">12,480</div>
+                  <div class="pulse-note">network live</div>
+                  <div class="mini-track"><i class="mini-fill" style="width:58%"></i></div>
+                </div>
+              </article>
+
+              <article class="pulse-card hover-target tech-target">
+                <div class="pulse-top">
+                  <span class="mono">CONVERSION RATE</span>
+                  <h3>Primary funnel</h3>
+                </div>
+                <div class="pulse-bottom">
+                  <div class="pulse-value live-pulse-value" data-type="percent" data-base="12.8">12.8%</div>
+                  <div class="pulse-note">stable acceleration</div>
+                  <div class="mini-track"><i class="mini-fill" style="width:68%"></i></div>
+                </div>
+              </article>
+
+              <article class="pulse-card hover-target tech-target">
+                <div class="pulse-top">
+                  <span class="mono">PAYOUT QUEUE</span>
+                  <h3>Scheduled release</h3>
+                </div>
+                <div class="pulse-bottom">
+                  <div class="pulse-value live-pulse-value" data-type="money" data-base="84250">$84,250</div>
+                  <div class="pulse-note">next batch in 05:12</div>
+                  <div class="mini-track"><i class="mini-fill" style="width:81%"></i></div>
+                </div>
+              </article>
+
+              <article class="pulse-card hover-target tech-target">
+                <div class="pulse-top">
+                  <span class="mono">TOP REGION</span>
+                  <h3>North America</h3>
+                </div>
+                <div class="pulse-bottom">
+                  <div class="pulse-value">38%</div>
+                  <div class="pulse-note">share of volume</div>
+                  <div class="mini-track"><i class="mini-fill" style="width:38%"></i></div>
+                </div>
+              </article>
+
+              <article class="pulse-card hover-target tech-target">
+                <div class="pulse-top">
+                  <span class="mono">QUALITY FILTER</span>
+                  <h3>Fraud block rate</h3>
+                </div>
+                <div class="pulse-bottom">
+                  <div class="pulse-value live-pulse-value" data-type="percent" data-base="1.7">1.7%</div>
+                  <div class="pulse-note">clean traffic preserved</div>
+                  <div class="mini-track"><i class="mini-fill" style="width:26%"></i></div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FUNNEL -->
+    <section id="s10-funnel">
+      <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?q=80&w=2400&auto=format&fit=crop" alt="Funnel background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="funnel-pin">
+        <div class="funnel-left">
+          <div class="pill"><span class="pulse-dot"></span> CONVERSION CASCADE</div>
+          <h2>From click<br>to commission.</h2>
+          <p>
+            Scroll through the affiliate funnel. Each layer reveals how audience attention moves from traffic to lead capture, conversion, attribution, and payout.
+          </p>
+
+          <div class="funnel-progress">
+            <div class="funnel-progress-fill" id="funnelProgressFill"></div>
+            <div class="funnel-dots">
+              <i class="funnel-dot active"></i>
+              <i class="funnel-dot"></i>
+              <i class="funnel-dot"></i>
+              <i class="funnel-dot"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="funnel-right">
+          <article class="funnel-card glass hover-target">
+            <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1400&auto=format&fit=crop" alt="Traffic stage">
+            <div class="funnel-card-content">
+              <div class="funnel-head">
+                <span class="mono">STEP 01 / TRAFFIC ENTRY</span>
+                <h3>Discovery at scale.</h3>
+                <p>
+                  High-intent traffic enters through creators, editorial placements, newsletters, paid partnerships, and brand-adjacent communities.
+                </p>
+              </div>
+              <div class="funnel-stats">
+                <span>CHANNEL TAGGING</span>
+                <span>LINK ROTATION</span>
+                <span>CLICK TRACKING</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="funnel-card glass hover-target">
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1400&auto=format&fit=crop" alt="Lead stage">
+            <div class="funnel-card-content">
+              <div class="funnel-head">
+                <span class="mono">STEP 02 / LEAD QUALIFICATION</span>
+                <h3>Intent becomes signal.</h3>
+                <p>
+                  Attribution, landing behavior, and identity checks clarify which users carry high conversion probability and clean source quality.
+                </p>
+              </div>
+              <div class="funnel-stats">
+                <span>ATTRIBUTION</span>
+                <span>QUALITY SCORE</span>
+                <span>FORM SIGNALS</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="funnel-card glass hover-target">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1400&auto=format&fit=crop" alt="Conversion stage">
+            <div class="funnel-card-content">
+              <div class="funnel-head">
+                <span class="mono">STEP 03 / VERIFIED CONVERSION</span>
+                <h3>Revenue is assigned precisely.</h3>
+                <p>
+                  Once the conversion event resolves, commission logic applies by tier, product class, geography, and partner agreement.
+                </p>
+              </div>
+              <div class="funnel-stats">
+                <span>CPA</span>
+                <span>REV SHARE</span>
+                <span>HYBRID MODELS</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="funnel-card glass hover-target">
+            <img src="https://images.unsplash.com/photo-1554224154-26032ffc0d07?q=80&w=1400&auto=format&fit=crop" alt="Payout stage">
+            <div class="funnel-card-content">
+              <div class="funnel-head">
+                <span class="mono">STEP 04 / PAYOUT + RETENTION</span>
+                <h3>Transparency compounds loyalty.</h3>
+                <p>
+                  Fast reporting, clean payout windows, and visibility into lifetime value create a system partners actually trust and scale with.
+                </p>
+              </div>
+              <div class="funnel-stats">
+                <span>PAYOUT CYCLES</span>
+                <span>LTV VISIBILITY</span>
+                <span>RETENTION GROWTH</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIER SWITCHER -->
+    <section id="s10-tiers">
+      <div class="tier-bg-wrap">
+        <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=2400&auto=format&fit=crop" class="tier-bg active" id="tierBg1" alt="Starter bg">
+        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2400&auto=format&fit=crop" class="tier-bg" id="tierBg2" alt="Growth bg">
+        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2400&auto=format&fit=crop" class="tier-bg" id="tierBg3" alt="Pro bg">
+        <img src="https://images.unsplash.com/photo-1554224154-26032ffc0d07?q=80&w=2400&auto=format&fit=crop" class="tier-bg" id="tierBg4" alt="Enterprise bg">
+      </div>
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="tier-layout">
+          <div class="tier-left">
+            <div class="pill gsap-spec"><span class="pulse-dot"></span> COMMISSION TIERS</div>
+            <h2 class="gsap-spec">Different partners.<br>Different rewards.</h2>
+            <p class="gsap-spec">
+              Not every affiliate behaves the same. Switch tiers to see how volume, payout rate, reporting depth, and support level evolve with performance.
+            </p>
+
+            <div class="tier-grid">
+              <button class="tier-card active hover-target" data-tier="1">
+                <span class="mono">TIER 01</span>
+                <h3>Starter</h3>
+                <p>Fast onboarding for new creators and publishers.</p>
+              </button>
+
+              <button class="tier-card hover-target" data-tier="2">
+                <span class="mono">TIER 02</span>
+                <h3>Growth</h3>
+                <p>Higher upside for consistent monthly performance.</p>
+              </button>
+
+              <button class="tier-card hover-target" data-tier="3">
+                <span class="mono">TIER 03</span>
+                <h3>Pro</h3>
+                <p>Custom support and premium revenue-share logic.</p>
+              </button>
+
+              <button class="tier-card hover-target" data-tier="4">
+                <span class="mono">TIER 04</span>
+                <h3>Enterprise</h3>
+                <p>Global agreements for networks and strategic partners.</p>
+              </button>
+            </div>
+          </div>
+
+          <div class="tier-panel glass" id="tierPanel">
+            <span class="mono" id="tierLabel">STARTER TIER</span>
+            <h3 id="tierTitle">Launch fast with low-friction entry.</h3>
+            <p id="tierDesc">
+              Ideal for emerging affiliates that need trust, clean reporting, and a straightforward pathway to scale performance quickly.
+            </p>
+
+            <div class="tier-metrics">
+              <div class="tier-box">
+                <div class="label" id="tLabel1">Rate</div>
+                <div class="value" id="tVal1">8%</div>
+              </div>
+              <div class="tier-box">
+                <div class="label" id="tLabel2">Payout</div>
+                <div class="value" id="tVal2">30d</div>
+              </div>
+              <div class="tier-box">
+                <div class="label" id="tLabel3">Support</div>
+                <div class="value" id="tVal3">Basic</div>
+              </div>
+              <div class="tier-box">
+                <div class="label" id="tLabel4">Volume</div>
+                <div class="value" id="tVal4">10K</div>
+              </div>
+            </div>
+
+            <div class="tier-bars">
+              <div class="tier-bar">
+                <i id="tb1" style="height:42%"></i>
+                <span>Rate</span>
+              </div>
+              <div class="tier-bar">
+                <i id="tb2" style="height:60%"></i>
+                <span>Speed</span>
+              </div>
+              <div class="tier-bar">
+                <i id="tb3" style="height:38%"></i>
+                <span>Support</span>
+              </div>
+              <div class="tier-bar">
+                <i id="tb4" style="height:34%"></i>
+                <span>Scale</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GLOBAL REACH -->
+    <section id="s10-reach">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2400&auto=format&fit=crop" alt="Reach background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="reach-layout">
+          <div class="reach-copy">
+            <div class="pill gsap-fade"><span class="pulse-dot"></span> GLOBAL REACH GRID</div>
+            <h2 class="gsap-fade">Affiliate corridors<br>worldwide.</h2>
+            <p class="gsap-fade">
+              Regional hubs coordinate affiliate traffic, compliance, payout timings, and local growth strategy across a distributed network of markets.
+            </p>
+
+            <div class="reach-legend">
+              <div class="reach-legend-item">
+                <strong>North America</strong>
+                <span>HIGH VOLUME / FAST PAYOUT</span>
+              </div>
+              <div class="reach-legend-item">
+                <strong>Europe</strong>
+                <span>COMPLIANCE HEAVY / PREMIUM LTV</span>
+              </div>
+              <div class="reach-legend-item">
+                <strong>Middle East</strong>
+                <span>RAPID SCALE / PARTNER NETWORKS</span>
+              </div>
+              <div class="reach-legend-item">
+                <strong>APAC</strong>
+                <span>CREATOR EXPANSION / MOBILE-FIRST</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="reach-stage glass gsap-fade">
+            <svg viewBox="0 0 1000 700" preserveAspectRatio="none">
+              <path id="reachLine1" class="reach-line" d="M180 420 Q300 260 420 180"></path>
+              <path id="reachLine2" class="reach-line" d="M180 420 Q380 300 620 250"></path>
+              <path id="reachLine3" class="reach-line" d="M180 420 Q420 420 690 410"></path>
+              <path id="reachLine4" class="reach-line" d="M180 420 Q360 510 500 540"></path>
+              <path id="reachLine5" class="reach-line" d="M180 420 Q470 180 790 130"></path>
+            </svg>
+
+            <div class="reach-hub">
+              <div>
+                <span class="mono">MAIN HUB</span>
+                <strong>MΛGIC<br>Affiliate Core</strong>
+              </div>
+            </div>
+
+            <div class="beacon b1 hover-target tech-target">
+              <div class="beacon-dot"></div>
+              <div class="beacon-card">
+                <span class="mono">EUROPE</span>
+                <strong>Compliance Cluster</strong>
+                <span>High-LTV publisher and editorial ecosystems.</span>
+              </div>
+            </div>
+
+            <div class="beacon b2 hover-target tech-target">
+              <div class="beacon-dot"></div>
+              <div class="beacon-card">
+                <span class="mono">MIDDLE EAST</span>
+                <strong>Partner Expansion</strong>
+                <span>Fast partner onboarding and regional scale.</span>
+              </div>
+            </div>
+
+            <div class="beacon b3 hover-target tech-target">
+              <div class="beacon-dot"></div>
+              <div class="beacon-card">
+                <span class="mono">APAC</span>
+                <strong>Creator Velocity</strong>
+                <span>Mobile-first affiliate and creator traffic.</span>
+              </div>
+            </div>
+
+            <div class="beacon b4 hover-target tech-target">
+              <div class="beacon-dot"></div>
+              <div class="beacon-card">
+                <span class="mono">LATAM</span>
+                <strong>Growth Corridor</strong>
+                <span>High-expansion opportunity with hybrid models.</span>
+              </div>
+            </div>
+
+            <div class="beacon b5 hover-target tech-target">
+              <div class="beacon-dot"></div>
+              <div class="beacon-card">
+                <span class="mono">NORTH AMERICA</span>
+                <strong>Revenue Core</strong>
+                <span>Highest volume, fastest verified payout cycle.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section id="s12-contact">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2400&auto=format&fit=crop" alt="Footer background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="footer-shell">
+          <div class="footer-big">
+            <h2>GROW<br><span>TOGETHER.</span></h2>
+          </div>
+
+          <div class="footer-bottom">
+            <div class="mono">
+              <div>AFFILIATE PARTNERSHIP DESK // MΛGIC AGENCY</div>
+              <div>affiliates@magic.agency</div>
+              <div>GLOBAL PERFORMANCE ALLIANCE SYSTEM // 2024</div>
+            </div>
+
+            <div class="socials">
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-linkedin-logo"></i></a>
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-users-three"></i></a>
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-trend-up"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+  <script>
+    // =========================================
+    // LENIS
+    // =========================================
+    const lenis = new Lenis({ duration: 1.5, smooth: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    // =========================================
+    // CURSOR
+    // =========================================
+    const cursor = document.querySelector('.cursor');
+
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, {
+          x: e.clientX,
+          y: e.clientY,
+          duration: 0.1,
+          ease: "power2.out"
+        });
+      });
+
+      document.querySelectorAll('a, button, .hover-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+
+      document.querySelectorAll('.tech-target, .funnel-card, .tier-card').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('earn-mode', 'hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('earn-mode', 'hovered'));
+      });
+    }
+
+    // =========================================
+    // MAGNETIC
+    // =========================================
+    function attachMagnetic(){
+      if (window.innerWidth <= 768) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const strength = el.dataset.strength || 20;
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+          gsap.to(el, { x, y, duration: 0.3, ease: "power2.out" });
+        });
+
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+      });
+    }
+
+    // =========================================
+    // MENU
+    // =========================================
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+    const menuGrid = document.getElementById('menu-grid');
+    menuData.forEach(item => {
+      const linksHTML = item.links.map(link =>
+        `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`
+      ).join('');
+
+      menuGrid.innerHTML += `
+        <div class="menu-item">
+          <div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div>
+          <div class="dropdown">
+            <div class="dropdown-inner">${linksHTML}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    document.querySelectorAll('.menu-item-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const dropdown = title.nextElementSibling;
+        const inner = dropdown.querySelector('.dropdown-inner');
+        document.querySelectorAll('.dropdown').forEach(drop => {
+          if (drop !== dropdown) drop.style.height = '0px';
+        });
+        dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+      });
+    });
+
+    const menuBtn = document.querySelector('.menu-btn');
+    let menuOpen = false;
+
+    const menuTl = gsap.timeline({ paused: true })
+      .to('.menu-overlay', {
+        clipPath: 'polygon(0 0,100% 0,100% 100%,0 100%)',
+        duration: 0.8,
+        ease: "power4.inOut"
+      })
+      .to('.menu-item-title', {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.04,
+        ease: "power3.out"
+      }, "-=0.4");
+
+    function toggleMenu(){
+      menuOpen = !menuOpen;
+      menuBtn.classList.toggle('active');
+      if(menuOpen){
+        lenis.stop();
+        menuTl.play();
+      }else{
+        lenis.start();
+        document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px');
+        menuTl.reverse();
+      }
+    }
+
+    menuBtn.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute('href');
+        if(menuOpen) toggleMenu();
+
+        setTimeout(() => {
+          if(targetUrl.startsWith('#')){
+            const target = document.querySelector(targetUrl);
+            if(target) lenis.scrollTo(targetUrl, { duration: 1.5 });
+          } else {
+            window.location.href = targetUrl;
+          }
+        }, 800);
+      });
+    });
+
+    // =========================================
+    // HERO REVEAL
+    // =========================================
+    gsap.to(".hero-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.18,
+      ease: "power4.out",
+      delay: 0.2
+    });
+
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 35,
+      duration: 1,
+      stagger: 0.12,
+      delay: 0.85,
+      ease: "power3.out"
+    });
+
+    gsap.to(".hero-bg", {
+      y: "18%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#s10-affiliates-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // =========================================
+    // HERO CARD TILT
+    // =========================================
+    const affiliateHeroCard = document.getElementById('affiliateHeroCard');
+    const heroChips = affiliateHeroCard ? affiliateHeroCard.querySelectorAll('.hero-chip') : [];
+
+    if(affiliateHeroCard && window.innerWidth > 768){
+      affiliateHeroCard.addEventListener('mousemove', (e) => {
+        const rect = affiliateHeroCard.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+
+        gsap.to(affiliateHeroCard, {
+          rotationY: x * 8,
+          rotationX: -y * 8,
+          duration: 0.45,
+          ease: "power2.out"
+        });
+
+        heroChips.forEach((chip, i) => {
+          gsap.to(chip, {
+            x: x * (10 + i * 5),
+            y: y * (-10 - i * 5),
+            duration: 0.45,
+            ease: "power2.out"
+          });
+        });
+      });
+
+      affiliateHeroCard.addEventListener('mouseleave', () => {
+        gsap.to(affiliateHeroCard, {
+          rotationY: 0,
+          rotationX: 0,
+          duration: 1,
+          ease: "elastic.out(1, 0.3)"
+        });
+        gsap.to(heroChips, {
+          x: 0,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out"
+        });
+      });
+    }
+
+    heroChips.forEach((chip, i) => {
+      gsap.to(chip, {
+        y: i % 2 === 0 ? -10 : 10,
+        duration: 2 + i * 0.25,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+    });
+
+    // =========================================
+    // HERO LIVE DATA
+    // =========================================
+    function updateClock(){
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('liveClock').textContent = `${h}:${m}:${s}`;
+      requestAnimationFrame(updateClock);
+    }
+    updateClock();
+
+    let liveRevenue = 84250;
+
+    function makeSparkline(){
+      const points = [];
+      let y = 110;
+      for(let i = 0; i <= 8; i++){
+        y += (Math.random() - 0.35) * 16;
+        y = Math.max(35, Math.min(145, y));
+        points.push({ x: i * 75, y });
+      }
+
+      let d = `M ${points[0].x} ${points[0].y}`;
+      for(let i = 1; i < points.length; i++){
+        const prev = points[i - 1];
+        const curr = points[i];
+        const cx = (prev.x + curr.x) / 2;
+        d += ` Q ${cx} ${prev.y}, ${curr.x} ${curr.y}`;
+      }
+
+      const fill = `${d} L 600 180 L 0 180 Z`;
+      document.getElementById('heroSparkLine').setAttribute('d', d);
+      document.getElementById('heroSparkFill').setAttribute('d', fill);
+    }
+    makeSparkline();
+
+    setInterval(() => {
+      liveRevenue += (Math.random() - 0.35) * 900;
+      const formatted = `$${Math.round(liveRevenue).toLocaleString()}`;
+      document.getElementById('liveRevenue').textContent = formatted;
+
+      const pct = ((Math.random() * 6) + 1).toFixed(2);
+      document.getElementById('liveRevenueChange').textContent = `+${pct}% today`;
+
+      document.getElementById('hcClicks').textContent = `${(120 + Math.floor(Math.random()*40))}K`;
+      document.getElementById('hcLeads').textContent = `${(14 + Math.random()*8).toFixed(1)}K`;
+      document.getElementById('hcConv').textContent = `${(10 + Math.random()*5).toFixed(1)}%`;
+      document.getElementById('hcPayout').textContent = `$${(70 + Math.floor(Math.random()*30))}K`;
+
+      makeSparkline();
+    }, 1800);
+
+    // =========================================
+    // PULSE BOARD
+    // =========================================
+    gsap.utils.toArray('.gsap-fade').forEach(el => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 70,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 85%"
+        }
+      });
+    });
+
+    gsap.to("#pulseScan", {
+      y: 500,
+      duration: 2.8,
+      ease: "none",
+      repeat: -1,
+      repeatDelay: 0.2
+    });
+
+    const pulseValues = document.querySelectorAll('.live-pulse-value');
+    const pulseFills = document.querySelectorAll('.mini-fill');
+
+    function formatPulseValue(type, value){
+      if(type === 'money') return `$${Math.round(value).toLocaleString()}`;
+      if(type === 'percent') return `${value.toFixed(1)}%`;
+      return `${Math.round(value).toLocaleString()}`;
+    }
+
+    function updatePulseBoard(){
+      pulseValues.forEach(el => {
+        const type = el.dataset.type;
+        const base = parseFloat(el.dataset.base);
+        let next = base;
+
+        if(type === 'money') next = base + (Math.random() - 0.35) * 6000;
+        if(type === 'percent') next = base + (Math.random() - 0.5) * 1.2;
+        if(type === 'number') next = base + (Math.random() - 0.35) * 8000;
+
+        el.textContent = formatPulseValue(type, next);
+      });
+
+      pulseFills.forEach(fill => {
+        gsap.to(fill, {
+          width: `${25 + Math.random() * 70}%`,
+          duration: 1,
+          ease: "power2.out"
+        });
+      });
+    }
+    updatePulseBoard();
+    setInterval(updatePulseBoard, 2200);
+
+    // =========================================
+    // FUNNEL CASCADE
+    // =========================================
+    const funnelCards = gsap.utils.toArray('.funnel-card');
+    const funnelDots = gsap.utils.toArray('.funnel-dot');
+    const funnelProgressFill = document.getElementById('funnelProgressFill');
+
+    const funnelMM = gsap.matchMedia();
+
+    funnelMM.add("(min-width: 1025px)", () => {
+      gsap.set(funnelCards, { autoAlpha: 0, x: 120, scale: 0.95 });
+      gsap.set(funnelCards[0], { autoAlpha: 1, x: 0, scale: 1 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#s10-funnel",
+          start: "top top",
+          end: "+=300%",
+          pin: true,
+          scrub: 1
+        }
+      });
+
+      tl.to(funnelProgressFill, { height: "25%", duration: 1 }, 0)
+        .to(funnelDots[0], { className: "funnel-dot active", duration: 0.1 }, 0)
+
+        .to(funnelCards[0], { autoAlpha: 0.2, x: -40, scale: 0.94, duration: 1 }, 1)
+        .to(funnelCards[1], { autoAlpha: 1, x: 0, scale: 1, duration: 1 }, 1)
+        .to(funnelProgressFill, { height: "50%", duration: 1 }, 1)
+        .to(funnelDots[1], { className: "funnel-dot active", duration: 0.1 }, 1)
+
+        .to(funnelCards[1], { autoAlpha: 0.2, x: -40, scale: 0.94, duration: 1 }, 2)
+        .to(funnelCards[2], { autoAlpha: 1, x: 0, scale: 1, duration: 1 }, 2)
+        .to(funnelProgressFill, { height: "75%", duration: 1 }, 2)
+        .to(funnelDots[2], { className: "funnel-dot active", duration: 0.1 }, 2)
+
+        .to(funnelCards[2], { autoAlpha: 0.2, x: -40, scale: 0.94, duration: 1 }, 3)
+        .to(funnelCards[3], { autoAlpha: 1, x: 0, scale: 1, duration: 1 }, 3)
+        .to(funnelProgressFill, { height: "100%", duration: 1 }, 3)
+        .to(funnelDots[3], { className: "funnel-dot active", duration: 0.1 }, 3);
+    });
+
+    funnelMM.add("(max-width: 1024px)", () => {
+      gsap.utils.toArray('.funnel-card').forEach(card => {
+        gsap.from(card, {
+          opacity: 0,
+          y: 60,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 85%"
+          }
+        });
+      });
+    });
+
+    // =========================================
+    // TIER SWITCHER
+    // =========================================
+    const tierData = {
+      1: {
+        bg:'tierBg1',
+        label:'STARTER TIER',
+        title:'Launch fast with low-friction entry.',
+        desc:'Ideal for emerging affiliates that need trust, clean reporting, and a straightforward pathway to scale performance quickly.',
+        metrics:[
+          {label:'Rate', value:'8%'},
+          {label:'Payout', value:'30d'},
+          {label:'Support', value:'Basic'},
+          {label:'Volume', value:'10K'}
+        ],
+        bars:[42,60,38,34]
+      },
+      2: {
+        bg:'tierBg2',
+        label:'GROWTH TIER',
+        title:'Accelerate with stronger incentives.',
+        desc:'Designed for affiliates generating consistent qualified traffic and repeat performance across multiple channels.',
+        metrics:[
+          {label:'Rate', value:'14%'},
+          {label:'Payout', value:'21d'},
+          {label:'Support', value:'Priority'},
+          {label:'Volume', value:'50K'}
+        ],
+        bars:[64,72,62,58]
+      },
+      3: {
+        bg:'tierBg3',
+        label:'PRO TIER',
+        title:'Built for elite affiliate operators.',
+        desc:'Higher rev-share models, custom tracking logic, and enhanced strategic support for partners operating at serious scale.',
+        metrics:[
+          {label:'Rate', value:'22%'},
+          {label:'Payout', value:'14d'},
+          {label:'Support', value:'Managed'},
+          {label:'Volume', value:'180K'}
+        ],
+        bars:[82,78,86,76]
+      },
+      4: {
+        bg:'tierBg4',
+        label:'ENTERPRISE TIER',
+        title:'Custom economics for global networks.',
+        desc:'Enterprise-grade agreements for affiliate groups, media networks, platform aggregators, and strategic revenue-sharing partners.',
+        metrics:[
+          {label:'Rate', value:'Custom'},
+          {label:'Payout', value:'7d'},
+          {label:'Support', value:'Dedicated'},
+          {label:'Volume', value:'1M+'}
+        ],
+        bars:[94,92,98,90]
+      }
+    };
+
+    const tierCards = document.querySelectorAll('.tier-card');
+    const tierBgs = document.querySelectorAll('.tier-bg');
+
+    function setTier(id){
+      const data = tierData[id];
+      if(!data) return;
+
+      tierCards.forEach(card => card.classList.remove('active'));
+      document.querySelector(`.tier-card[data-tier="${id}"]`).classList.add('active');
+
+      tierBgs.forEach(bg => bg.classList.remove('active'));
+      document.getElementById(data.bg).classList.add('active');
+
+      gsap.to("#tierPanel", {
+        opacity: 0,
+        y: 8,
+        duration: 0.2,
+        onComplete: () => {
+          document.getElementById('tierLabel').textContent = data.label;
+          document.getElementById('tierTitle').textContent = data.title;
+          document.getElementById('tierDesc').textContent = data.desc;
+
+          document.getElementById('tLabel1').textContent = data.metrics[0].label;
+          document.getElementById('tLabel2').textContent = data.metrics[1].label;
+          document.getElementById('tLabel3').textContent = data.metrics[2].label;
+          document.getElementById('tLabel4').textContent = data.metrics[3].label;
+
+          document.getElementById('tVal1').textContent = data.metrics[0].value;
+          document.getElementById('tVal2').textContent = data.metrics[1].value;
+          document.getElementById('tVal3').textContent = data.metrics[2].value;
+          document.getElementById('tVal4').textContent = data.metrics[3].value;
+
+          gsap.to('#tb1', { height: `${data.bars[0]}%`, duration: 0.8, ease: "power3.out" });
+          gsap.to('#tb2', { height: `${data.bars[1]}%`, duration: 0.8, ease: "power3.out" });
+          gsap.to('#tb3', { height: `${data.bars[2]}%`, duration: 0.8, ease: "power3.out" });
+          gsap.to('#tb4', { height: `${data.bars[3]}%`, duration: 0.8, ease: "power3.out" });
+
+          gsap.to("#tierPanel", { opacity: 1, y: 0, duration: 0.3 });
+        }
+      });
+    }
+
+    tierCards.forEach(card => {
+      card.addEventListener('click', () => setTier(card.dataset.tier));
+      if(window.innerWidth > 768){
+        card.addEventListener('mouseenter', () => setTier(card.dataset.tier));
+      }
+    });
+
+    setTier(1);
+
+    gsap.utils.toArray('.gsap-spec').forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 55,
+        duration: 1,
+        delay: i * 0.12,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s10-tiers",
+          start: "top 72%"
+        }
+      });
+    });
+
+    // =========================================
+    // REACH LINES
+    // =========================================
+    const reachLines = ['reachLine1','reachLine2','reachLine3','reachLine4','reachLine5'];
+    reachLines.forEach(id => {
+      const path = document.getElementById(id);
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+
+      gsap.to(path, {
+        strokeDashoffset: 0,
+        duration: 1.4,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: "#s10-reach",
+          start: "top 70%"
+        }
+      });
+    });
+
+    gsap.utils.toArray('.beacon').forEach((beacon, i) => {
+      gsap.from(beacon, {
+        opacity: 0,
+        scale: 0.7,
+        duration: 1,
+        delay: i * 0.12,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: "#s10-reach",
+          start: "top 70%"
+        }
+      });
+
+      gsap.to(beacon, {
+        y: i % 2 === 0 ? -10 : 10,
+        duration: 2 + i * 0.2,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+    });
+
+    // =========================================
+    // INIT
+    // =========================================
+    attachMagnetic();
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

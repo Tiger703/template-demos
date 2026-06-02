@@ -1,1 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency Premium  | The Masterpiece</title>
 
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Premium Icons (Phosphor Icons) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES & RESET
+           ========================================= */
+        :root {
+            --dark: #050505;
+            --light: #f4f4f5;
+            --accent: #ff4b2b;
+            --gray: #1a1a1a;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        section { position: relative; width: 100vw; overflow: hidden; }
+        
+        /* Lenis Smooth Scroll Fix */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* =========================================
+           MAGIC CURSOR (Hidden on Mobile)
+           ========================================= */
+        .cursor {
+            position: fixed; top: 0; left: 0; width: 20px; height: 20px;
+            background: var(--light); border-radius: 50%; pointer-events: none;
+            z-index: 99999; transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s;
+            mix-blend-mode: difference;
+        }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--light); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        .cursor.view-mode::after { content: 'VIEW'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10px; font-weight: 600; color: var(--light); }
+        @media (max-width: 768px) { .cursor { display: none; } * { cursor: auto !important; } }
+
+        /* =========================================
+           NAVBAR & MEGA MENU (FULLY MOBILE OPTIMIZED)
+           ========================================= */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height);
+            display: flex; justify-content: space-between; align-items: center; padding: 0 5vw;
+            z-index: 10000; background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+        .menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(5,5,5,0.98); backdrop-filter: blur(10px); z-index: 9999;
+            display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+            overflow-y: auto;
+        }
+        
+        /* DESKTOP: 4 Columns - All 12 Options Fit Perfectly */
+        .menu-container { width: 100%; padding: 0 5vw 5vh 5vw; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        
+        /* TABLET: 3 Columns */
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        
+        /* MOBILE: 1 Column - BIG & PROMPT */
+        @media (max-width: 768px) { 
+            .menu-container { 
+                grid-template-columns: 1fr; 
+                gap: 0.5rem; 
+                padding: 2vh 5vw 10vh 5vw; 
+            }
+            .menu-item { 
+                border-bottom: 1px solid rgba(255, 255, 255, 0.15); 
+                padding: 1.5rem 0;
+            }
+            .menu-item-title { 
+                font-size: 2rem !important; 
+                font-weight: 800 !important;
+                padding: 0.5rem 0;
+            }
+            .menu-item-title span { 
+                font-size: 1.2rem !important; 
+            }
+            .dropdown-inner { gap: 1rem; padding-top: 1.5rem; }
+            .dropdown a { 
+                font-size: 1.3rem !important; 
+                padding: 0.8rem 0;
+                font-weight: 500;
+            }
+            .dropdown a i { font-size: 1.8rem !important; }
+        }
+
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); opacity: 0; transform: translateX(-10px); transition: 0.3s; }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+        .dropdown a:hover i { opacity: 1; transform: translateX(0); }
+
+        /* =========================================
+           GLOBAL MODAL (MAGIC OVERLAY - Mobile Responsive)
+           ========================================= */
+        .magic-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 100000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.5s ease; backdrop-filter: blur(20px); }
+        .magic-modal.active { opacity: 1; pointer-events: all; }
+        .modal-content { 
+            background: var(--gray); 
+            padding: 8vw; 
+            border-radius: 20px; 
+            width: 90vw; 
+            max-width: 900px; 
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative; 
+            transform: translateY(100px) scale(0.9); 
+            transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+        @media (max-width: 768px) { .modal-content { padding: 6vw; width: 95vw; } }
+        .magic-modal.active .modal-content { transform: translateY(0) scale(1); }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 2rem; background: none; border: none; color: var(--light); }
+
+        /* =========================================
+           S01: HERO SECTION (Mobile Responsive)
+           ========================================= */
+        #s01-hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding-top: var(--nav-height); }
+        .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 120%; object-fit: cover; z-index: -2; opacity: 0.5; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(5,5,5,0.2) 0%, rgba(5,5,5,1) 100%); z-index: -1; }
+        .hero-title { font-size: clamp(2.5rem, 15vw, 15rem); font-weight: 800; line-height: 0.9; text-transform: uppercase; padding: 0 5vw; }
+        .hero-title .line { display: block; overflow: hidden; }
+        .hero-title .word { display: inline-block; transform: translateY(110%); }
+        .hero-icons { margin-top: 2rem; display: flex; gap: clamp(1rem, 4vw, 2rem); font-size: clamp(1.5rem, 5vw, 2.5rem); color: var(--accent); opacity: 0; }
+        
+        /* =========================================
+           S02: SERVICES (Horizontal Scroll - Mobile Fixed)
+           ========================================= */
+        #s02-services { background: var(--dark); padding: 15vh 0; }
+        .svc-header { padding: 0 5vw; margin-bottom: 8vh; }
+        .svc-header h2 { font-size: clamp(2rem, 8vw, 6rem); font-weight: 800; }
+        .horizontal-scroll-container { width: 100vw; overflow: hidden; }
+        .horizontal-track { display: flex; width: max-content; padding: 0 5vw; gap: 5vw; }
+        .svc-card {
+            width: clamp(280px, 80vw, 400px);
+            height: clamp(400px, 70vh, 500px);
+            background: var(--gray); border-radius: 20px;
+            padding: clamp(2rem, 5vw, 3rem); display: flex; flex-direction: column; justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden;
+        }
+        .svc-icon { font-size: clamp(2.5rem, 6vw, 4rem); color: var(--accent); margin-bottom: 1rem; }
+        .svc-card h3 { font-size: clamp(1.5rem, 4vw, 2.5rem); margin-bottom: 1rem; z-index: 2; }
+        .svc-card p { color: #888; font-size: clamp(0.9rem, 2.5vw, 1.1rem); line-height: 1.6; z-index: 2; }
+        .svc-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent); transform: translateY(100%); transition: 0.4s; z-index: 1; }
+        .svc-card:hover::before { transform: translateY(0%); }
+        .svc-card:hover h3, .svc-card:hover p, .svc-card:hover .svc-icon { color: var(--dark); }
+
+        /* =========================================
+           S03: WORK (Masonry Grid - Mobile Fixed)
+           ========================================= */
+        #s03-work { background: var(--light); color: var(--dark); padding: 20vh 5vw; }
+        #s03-work h2 { font-size: clamp(2rem, 10vw, 8rem); margin-bottom: 8vh; }
+        .work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+        @media (max-width: 768px) { .work-grid { grid-template-columns: 1fr; gap: 3rem; } .work-item:nth-child(even) { transform: translateY(0) !important; } }
+        .work-item { position: relative; height: clamp(300px, 50vh, 60vh); border-radius: 12px; overflow: hidden; background: #ddd; }
+        @media (min-width: 769px) { .work-item:nth-child(even) { transform: translateY(10vh); } }
+        .work-img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; }
+        .work-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,75,43,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; opacity: 0; transition: 0.5s; color: var(--light); padding: 2rem; }
+        .work-item:hover .work-img { transform: scale(1.1); }
+        .work-item:hover .work-overlay { opacity: 1; }
+        
+        /* =========================================
+           S04: STUDIO (Sticky Split Scroll - Mobile Fixed)
+           ========================================= */
+        #s04-studio { display: flex; min-height: 200vh; background: var(--dark); position: relative; }
+        .studio-left { width: 50%; height: 100vh; position: sticky; top: 0; padding: 15vh 5vw; display: flex; flex-direction: column; justify-content: center; }
+        .studio-right { width: 50%; display: flex; flex-direction: column; }
+        .studio-left h2 { font-size: clamp(2rem, 7vw, 6rem); color: var(--accent); }
+        .studio-left p { font-size: clamp(1rem, 2.5vw, 1.5rem); color: #aaa; margin-top: 2rem; max-width: 500px; }
+        .studio-img { width: 100%; height: 100vh; object-fit: cover; }
+        @media (max-width: 768px) { 
+            #s04-studio { flex-direction: column; min-height: auto; } 
+            .studio-left { width: 100%; position: relative; height: auto; padding: 15vh 5vw 8vh 5vw; }
+            .studio-right { width: 100%; } 
+            .studio-img { height: 50vh; } 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MAGIC CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- GLOBAL MODAL -->
+    <div class="magic-modal" id="global-modal" data-lenis-prevent>
+        <div class="modal-content">
+            <button class="close-modal magnetic"><i class="ph ph-x"></i></button>
+            <h2 class="display-font" style="font-size: clamp(1.8rem, 5vw, 3rem); margin-bottom: 1.5rem; color: var(--accent);">Project Details</h2>
+            <p style="font-size: clamp(1rem, 2.5vw, 1.2rem); line-height: 1.8; color: #ccc;">This modal is perfectly mobile responsive. You can load specific case study data or contact forms dynamically into this space without leaving the page.</p>
+            <div style="margin-top: 2rem; display: flex; gap: 1.5rem;">
+                <i class="ph ph-behance-logo" style="font-size: 2.5rem;"></i>
+                <i class="ph ph-dribbble-logo" style="font-size: 2.5rem;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="#" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu
+            <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU OVERLAY (Generated by JS) -->
+    <div class="menu-overlay">
+        <div class="menu-container" id="menu-grid"></div>
+    </div>
+
+    <!-- MAIN SCROLL WRAPPER -->
+    <main>
+
+        <!-- S01: HERO -->
+        <section id="s01-hero">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" class="hero-bg" alt="Hero Background">
+            <div class="hero-overlay"></div>
+            
+            <h1 class="hero-title">
+                <span class="line"><span class="word">LIMITLESS</span></span>
+                <span class="line"><span class="word" style="color: var(--accent);">CREATION</span></span>
+            </h1>
+            
+            <div class="hero-icons">
+                <i class="ph ph-sparkle"></i>
+                <i class="ph ph-cube"></i>
+                <i class="ph ph-planet"></i>
+            </div>
+        </section>
+
+        <!-- S02: SERVICES -->
+        <section id="s02-services">
+            <div class="svc-header">
+                <h2 class="display-font text-reveal">OUR SERVICES</h2>
+            </div>
+            <div class="horizontal-scroll-container">
+                <div class="horizontal-track">
+                    <div class="svc-card magnetic" data-strength="15">
+                        <i class="ph ph-layout svc-icon"></i><h3 class="display-font">Web Design</h3><p>Immersive, highly animated user interfaces.</p>
+                    </div>
+                    <div class="svc-card magnetic" data-strength="15">
+                        <i class="ph ph-video-camera svc-icon"></i><h3 class="display-font">Motion</h3><p>Advanced GSAP, Three.js, and WebGL experiences.</p>
+                    </div>
+                    <div class="svc-card magnetic" data-strength="15">
+                        <i class="ph ph-code svc-icon"></i><h3 class="display-font">Development</h3><p>Blazing fast front-end architectures.</p>
+                    </div>
+                    <div class="svc-card magnetic" data-strength="15">
+                        <i class="ph ph-rocket-launch svc-icon"></i><h3 class="display-font">Branding</h3><p>Complete digital identities and logo design.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S03: WORK -->
+        <section id="s03-work">
+            <h2 class="display-font text-reveal">SELECTED WORK</h2>
+            <div class="work-grid">
+                <div class="work-item open-modal-btn"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop" class="work-img"><div class="work-overlay"><h3 class="display-font">Project Alpha</h3><i class="ph ph-arrow-up-right" style="font-size: 3rem; margin-top: 1rem;"></i></div></div>
+                <div class="work-item open-modal-btn"><img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=1000&auto=format&fit=crop" class="work-img"><div class="work-overlay"><h3 class="display-font">Cyber Core</h3><i class="ph ph-arrow-up-right" style="font-size: 3rem; margin-top: 1rem;"></i></div></div>
+                <div class="work-item open-modal-btn"><img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=1000&auto=format&fit=crop" class="work-img"><div class="work-overlay"><h3 class="display-font">Neon Void</h3><i class="ph ph-arrow-up-right" style="font-size: 3rem; margin-top: 1rem;"></i></div></div>
+                <div class="work-item open-modal-btn"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop" class="work-img"><div class="work-overlay"><h3 class="display-font">Holo UI</h3><i class="ph ph-arrow-up-right" style="font-size: 3rem; margin-top: 1rem;"></i></div></div>
+            </div>
+        </section>
+
+        <!-- S04: STUDIO -->
+        <section id="s04-studio">
+            <div class="studio-left">
+                <h2 class="display-font">INSIDE THE LAB</h2>
+                <p>We are a remote collective building the future of the web. pure digital mastery.</p>
+                <div style="margin-top: 3rem; display: flex; gap: clamp(20px, 5vw, 40px);">
+                    <div><h3 style="font-size: clamp(2rem, 5vw, 3rem); color: var(--light);">15+</h3><span style="color: #666;">Awards</span></div>
+                    <div><h3 style="font-size: clamp(2rem, 5vw, 3rem); color: var(--light);">40</h3><span style="color: #666;">Creatives</span></div>
+                </div>
+            </div>
+            <div class="studio-right">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1000&auto=format&fit=crop" class="studio-img">
+                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop" class="studio-img">
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!--  PASTE PART 2 EXACTLY HERE WHEN YOU SAY "CONTINUE"       -->
+        <!-- ======================================================== -->
+
+    </main> <!-- END OF MAIN WRAPPER -->
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. Lenis Smooth Scroll Setup
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. Custom Cursor (Only on Desktop)
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+        }
+        
+        const attachCursorHover = () => {
+            if (window.innerWidth <= 768) return;
+            document.querySelectorAll('a, button, .menu-item-title, .svc-card').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+            document.querySelectorAll('.work-item').forEach(el => {
+                el.addEventListener('mouseenter', () => { cursor.classList.add('hovered', 'view-mode'); });
+                el.addEventListener('mouseleave', () => { cursor.classList.remove('hovered', 'view-mode'); });
+            });
+        };
+
+        // 3. Magnetic Elements (Only on Desktop)
+        const attachMagnetic = () => {
+            if (window.innerWidth <= 768) return;
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+                    const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+                    gsap.to(el, { x: x, y: y, duration: 0.3, ease: "power2.out" });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        };
+
+        // 4. Populate 12-Option Menu (Exactly 3 Links Each - BIG on Mobile)
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        // Dropdown Accordion
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        // Menu Toggle Animation
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        // Auto-close menu when a link is clicked
+        // Auto-close menu and handle Links vs Scrolling
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault(); // Stop instant jump
+                const targetUrl = link.getAttribute('href');
+                toggleMenu(); // Close the menu with animation
+                
+                setTimeout(() => { 
+                    if (targetUrl.startsWith('#')) {
+                        // If it has a #, smooth scroll down the page
+                        lenis.scrollTo(targetUrl, { duration: 1.5 }); 
+                    } else {
+                        // If it's a real file (like web-design.html), go to the new page!
+                        window.location.href = targetUrl;
+                    }
+                }, 800); // Wait 800ms for menu closing animation to finish
+            });
+        });
+
+        // 5. Global Modal Logic
+        const modal = document.getElementById('global-modal');
+        const closeModalBtn = document.querySelector('.close-modal');
+        document.querySelectorAll('.open-modal-btn').forEach(btn => {
+            btn.addEventListener('click', () => { modal.classList.add('active'); lenis.stop(); });
+        });
+        closeModalBtn.addEventListener('click', () => { modal.classList.remove('active'); lenis.start(); });
+
+        // 6. Section 1: Hero Animations
+        gsap.to(".hero-title .word", { y: "0%", duration: 1.2, stagger: 0.2, ease: "power4.out", delay: 0.2 });
+        gsap.to(".hero-icons", { opacity: 1, y: -20, duration: 1, delay: 1 });
+        gsap.to(".hero-bg", { y: "30%", scrollTrigger: { trigger: "#s01-hero", start: "top top", end: "bottom top", scrub: true } });
+
+        // 7. Section 2: Horizontal Scroll
+        const track = document.querySelector('.horizontal-track');
+        gsap.to(track, {
+            x: () => -(track.scrollWidth - window.innerWidth + (window.innerWidth > 768 ? window.innerWidth * 0.08 : 20)),
+            ease: "none",
+            scrollTrigger: { trigger: "#s02-services", start: "center center", end: () => "+=" + track.scrollWidth, pin: true, scrub: 1, invalidateOnRefresh: true }
+        });
+
+        // Initialize Global Events
+        attachCursorHover();
+        attachMagnetic();
+
+        // --- PASTE JS PART 2 AT THE BOTTOM OF THIS SCRIPT TAG LATER ---
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

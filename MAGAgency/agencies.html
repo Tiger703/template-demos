@@ -1,0 +1,2195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MΛGAgency | Partners / Agencies</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --dark:#06070c;
+      --light:#f4f4f5;
+      --accent:#7C8CFF;
+      --accent-2:#63FFD2;
+      --gold:#DCC07A;
+      --gray:#11141b;
+      --nav-height:70px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      cursor:none;
+    }
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--light);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    h1,h2,h3,h4,h5,h6,.display-font{
+      font-family:'Syne',sans-serif;
+    }
+
+    .mono{
+      font-family:'JetBrains Mono',monospace;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    section{
+      position:relative;
+      width:100vw;
+      min-height:100vh;
+      overflow:hidden;
+    }
+
+    html.lenis{height:auto;}
+    .lenis.lenis-smooth{scroll-behavior:auto !important;}
+
+    /* =========================================
+       CURSOR
+       ========================================= */
+    .cursor{
+      position:fixed;
+      top:0;
+      left:0;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:var(--accent-2);
+      pointer-events:none;
+      z-index:99999;
+      transform:translate(-50%,-50%);
+      transition:width .3s,height .3s,background .3s,border .3s;
+      mix-blend-mode:screen;
+    }
+
+    .cursor.hovered{
+      width:78px;
+      height:78px;
+      background:transparent;
+      border:1px solid var(--accent-2);
+      mix-blend-mode:normal;
+      backdrop-filter:blur(6px);
+    }
+
+    .cursor.partner-mode::after{
+      content:'ALLY';
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      font-size:10px;
+      color:var(--accent-2);
+      font-family:'JetBrains Mono',monospace;
+      font-weight:700;
+      letter-spacing:1px;
+    }
+
+    @media (max-width:768px){
+      .cursor{display:none;}
+      *{cursor:auto !important;}
+    }
+
+    /* =========================================
+       NAVBAR
+       ========================================= */
+    nav{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:var(--nav-height);
+      padding:0 5vw;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:10000;
+      background:rgba(6,7,12,.72);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(124,140,255,.14);
+    }
+
+    .nav-brand{
+      font-size:1.3rem;
+      font-weight:800;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+
+    .menu-btn{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:none;
+      border:none;
+      color:var(--light);
+      font-weight:600;
+      text-transform:uppercase;
+      font-size:.9rem;
+    }
+
+    .hamburger{
+      width:35px;
+      height:8px;
+      position:relative;
+    }
+
+    .hamburger span{
+      position:absolute;
+      width:100%;
+      height:2px;
+      background:var(--light);
+      transition:.4s;
+    }
+
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){bottom:0;}
+
+    .menu-btn.active .hamburger span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);
+      background:var(--dark);
+    }
+
+    .menu-btn.active .hamburger span:nth-child(2){
+      transform:translateY(-3px) rotate(-45deg);
+      background:var(--dark);
+    }
+
+    /* =========================================
+       MENU OVERLAY
+       ========================================= */
+    .menu-overlay{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100vw;
+      height:100vh;
+      background:var(--accent);
+      z-index:9999;
+      display:flex;
+      padding-top:calc(var(--nav-height) + 3vh);
+      clip-path:polygon(0 0,100% 0,100% 0,0 0);
+      overflow-y:auto;
+    }
+
+    .menu-container{
+      width:100%;
+      padding:0 5vw 5vh 5vw;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:2rem 2.5rem;
+      align-content:start;
+    }
+
+    @media(max-width:1200px){
+      .menu-container{
+        grid-template-columns:repeat(3,1fr);
+      }
+    }
+
+    @media(max-width:768px){
+      .menu-container{
+        grid-template-columns:1fr;
+        gap:.5rem;
+        padding:2vh 5vw 10vh 5vw;
+      }
+      .menu-item{
+        border-bottom:1px solid rgba(0,0,0,.15);
+        padding:1.5rem 0;
+      }
+      .menu-item-title{
+        font-size:2rem !important;
+        font-weight:800 !important;
+      }
+      .dropdown a{
+        font-size:1.25rem !important;
+        padding:.8rem 0;
+      }
+    }
+
+    .menu-item{
+      border-bottom:1px solid rgba(0,0,0,.12);
+      padding-bottom:1rem;
+    }
+
+    .menu-item-title{
+      font-size:clamp(1.3rem,2.5vw,2rem);
+      font-weight:700;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:var(--dark);
+      opacity:0;
+      transform:translateY(20px);
+    }
+
+    .menu-item-title span{
+      font-size:1rem;
+      font-family:'Inter',sans-serif;
+      font-weight:500;
+      color:var(--dark);
+    }
+
+    .dropdown{
+      height:0;
+      overflow:hidden;
+      transition:height .4s ease;
+    }
+
+    .dropdown-inner{
+      padding-top:1rem;
+      display:flex;
+      flex-direction:column;
+      gap:.8rem;
+    }
+
+    .dropdown a{
+      color:#1f1f1f;
+      font-size:1.05rem;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      transition:.3s;
+      font-weight:500;
+    }
+
+    .dropdown a i{
+      font-size:1.2rem;
+      color:var(--dark);
+    }
+
+    .dropdown a:hover{
+      padding-left:10px;
+    }
+
+    /* =========================================
+       GLOBAL REUSABLE
+       ========================================= */
+    .section-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:0;
+    }
+
+    .section-overlay{
+      position:absolute;
+      inset:0;
+      z-index:1;
+    }
+
+    .section-inner{
+      position:relative;
+      z-index:2;
+      width:100%;
+      min-height:100vh;
+      padding:calc(var(--nav-height) + 4vh) 5vw 6vh 5vw;
+    }
+
+    .glass{
+      background:rgba(14,18,26,.45);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 20px 50px rgba(0,0,0,.38);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid rgba(99,255,210,.25);
+      color:var(--accent-2);
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:.85rem;
+      font-family:'JetBrains Mono',monospace;
+      width:max-content;
+      margin-bottom:1.2rem;
+    }
+
+    .pulse{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--accent-2);
+      animation:pulseDot 1.2s infinite;
+    }
+
+    @keyframes pulseDot{
+      0%{transform:scale(1);opacity:1;}
+      50%{transform:scale(.55);opacity:.45;}
+      100%{transform:scale(1);opacity:1;}
+    }
+
+    /* =========================================
+       HERO SECTION
+       ========================================= */
+    #s10-partners .section-overlay{
+      background:
+        linear-gradient(90deg,rgba(6,7,12,.92) 0%, rgba(6,7,12,.45) 48%, rgba(6,7,12,.82) 100%);
+    }
+
+    .hero-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      align-items:center;
+      gap:4vw;
+    }
+
+    .hero-title{
+      font-size:clamp(3.4rem,10vw,8rem);
+      line-height:.9;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .hero-title .line{
+      display:block;
+      overflow:hidden;
+    }
+
+    .hero-title .word{
+      display:inline-block;
+      transform:translateY(110%);
+    }
+
+    .hero-title .outline{
+      color:transparent;
+      -webkit-text-stroke:2px var(--light);
+    }
+
+    .hero-desc{
+      margin-top:1.4rem;
+      max-width:560px;
+      color:#c0c6cf;
+      line-height:1.75;
+    }
+
+    .hero-meta{
+      margin-top:2rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:1.2rem 2rem;
+      color:#9ca4af;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.88rem;
+    }
+
+    .dossier-wrap{
+      display:flex;
+      justify-content:center;
+      perspective:1300px;
+    }
+
+    .dossier{
+      width:min(560px,100%);
+      min-height:66vh;
+      border-radius:24px;
+      overflow:hidden;
+      position:relative;
+      transform-style:preserve-3d;
+      transition:transform .12s;
+    }
+
+    .dossier img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      filter:brightness(.72) contrast(1.05);
+    }
+
+    .dossier::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top,rgba(6,7,12,.96),rgba(6,7,12,.16));
+    }
+
+    .dossier-content{
+      position:absolute;
+      left:1.5rem;
+      right:1.5rem;
+      bottom:1.5rem;
+      z-index:2;
+      transform:translateZ(60px);
+    }
+
+    .dossier-content .mono{
+      color:var(--accent-2);
+      font-size:.82rem;
+      margin-bottom:.65rem;
+      display:block;
+    }
+
+    .dossier-content h3{
+      font-size:2rem;
+      margin-bottom:.75rem;
+      line-height:1.06;
+    }
+
+    .dossier-content p{
+      color:#c8ced6;
+      line-height:1.55;
+      max-width:430px;
+    }
+
+    .dossier-chip{
+      position:absolute;
+      z-index:3;
+      padding:.85rem 1rem;
+      border-radius:16px;
+      background:rgba(10,14,18,.78);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      transform:translateZ(80px);
+      box-shadow:0 18px 32px rgba(0,0,0,.25);
+    }
+
+    .dossier-chip .mono{
+      color:#9ab0c9;
+      font-size:.72rem;
+      display:block;
+      margin-bottom:.25rem;
+    }
+
+    .dossier-chip strong{
+      color:var(--light);
+      font-size:1.15rem;
+    }
+
+    .chip-a{top:8%;left:6%;}
+    .chip-b{top:15%;right:6%;}
+    .chip-c{bottom:22%;right:9%;}
+    .chip-d{bottom:13%;left:8%;}
+
+    .hero-strip{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:3;
+      background:rgba(124,140,255,.92);
+      color:#111426;
+      padding:14px 0;
+      overflow:hidden;
+      white-space:nowrap;
+      border-top:1px solid rgba(0,0,0,.3);
+    }
+
+    .hero-strip-track{
+      display:flex;
+      width:max-content;
+      animation:strip 22s linear infinite;
+    }
+
+    .hero-strip-item{
+      display:flex;
+      align-items:center;
+      gap:24px;
+      padding:0 28px;
+      font-family:'JetBrains Mono',monospace;
+      font-weight:700;
+      font-size:.95rem;
+    }
+
+    @keyframes strip{
+      from{transform:translateX(0);}
+      to{transform:translateX(-50%);}
+    }
+
+    @media(max-width:1024px){
+      .hero-layout{
+        grid-template-columns:1fr;
+        text-align:center;
+      }
+      .hero-left{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+      }
+      .hero-desc{margin-inline:auto;}
+      .dossier{min-height:52vh;}
+    }
+
+    /* =========================================
+       SECTION 2 - CONSTELLATION
+       ========================================= */
+    #s10-constellation .section-overlay{
+      background:radial-gradient(circle at center,rgba(6,7,12,.45),rgba(6,7,12,.92));
+    }
+
+    .constellation-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:2rem;
+    }
+
+    .constellation-head{
+      text-align:center;
+      max-width:850px;
+      margin:0 auto;
+    }
+
+    .constellation-head h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .constellation-head p{
+      color:#c0c7cf;
+      line-height:1.75;
+    }
+
+    .constellation-stage{
+      position:relative;
+      width:100%;
+      height:60vh;
+      border-radius:28px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(9,14,20,.35);
+      backdrop-filter:blur(12px);
+    }
+
+    #constellationCanvas{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:1;
+    }
+
+    .constellation-core{
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:170px;
+      height:170px;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      background:radial-gradient(circle, rgba(99,255,210,.18), rgba(99,255,210,.04));
+      border:1px solid rgba(99,255,210,.3);
+      box-shadow:0 0 60px rgba(99,255,210,.12);
+      z-index:3;
+    }
+
+    .constellation-core .mono{
+      color:var(--accent-2);
+      font-size:.8rem;
+      margin-bottom:.25rem;
+      display:block;
+    }
+
+    .constellation-core strong{
+      font-size:1.2rem;
+      display:block;
+      line-height:1.2;
+    }
+
+    .orbit-ring{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.08);
+      z-index:1;
+    }
+
+    .orbit-r1{width:220px;height:220px;}
+    .orbit-r2{width:360px;height:360px;}
+    .orbit-r3{width:520px;height:520px;}
+
+    .const-node{
+      position:absolute;
+      min-width:160px;
+      padding:1rem 1.05rem;
+      border-radius:18px;
+      background:rgba(15,19,28,.85);
+      border:1px solid rgba(255,255,255,.08);
+      transform:translate(-50%,-50%);
+      z-index:4;
+      box-shadow:0 16px 34px rgba(0,0,0,.28);
+      transition:.35s;
+    }
+
+    .const-node:hover{
+      transform:translate(-50%,-50%) scale(1.06);
+      border-color:rgba(99,255,210,.34);
+    }
+
+    .const-node .mono{
+      color:var(--accent-2);
+      font-size:.72rem;
+      display:block;
+      margin-bottom:.3rem;
+    }
+
+    .const-node strong{
+      display:block;
+      font-size:1rem;
+      margin-bottom:.35rem;
+    }
+
+    .const-node span{
+      display:block;
+      color:#b7bfc8;
+      font-size:.83rem;
+      line-height:1.4;
+    }
+
+    @media(max-width:900px){
+      .constellation-stage{height:78vh;}
+      .orbit-r3{width:420px;height:420px;}
+      .const-node{
+        min-width:130px;
+        padding:.8rem .85rem;
+      }
+    }
+
+    /* =========================================
+       SECTION 3 - STICKY RAIL
+       ========================================= */
+    #s10-rail .section-overlay{
+      background:linear-gradient(180deg,rgba(6,7,12,.8),rgba(6,7,12,.95));
+    }
+
+    .rail-layout{
+      display:grid;
+      grid-template-columns:.8fr 1.2fr;
+      gap:2rem;
+      min-height:200vh;
+      padding-bottom:8vh;
+    }
+
+    .rail-left{
+      position:sticky;
+      top:110px;
+      align-self:start;
+      height:max-content;
+      padding-top:4vh;
+    }
+
+    .rail-left h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .rail-left p{
+      color:#c0c6ce;
+      line-height:1.75;
+      max-width:460px;
+    }
+
+    .rail-right{
+      display:flex;
+      flex-direction:column;
+      gap:16vh;
+      padding-top:10vh;
+    }
+
+    .rail-card{
+      min-height:72vh;
+      border-radius:24px;
+      overflow:hidden;
+      position:relative;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 24px 50px rgba(0,0,0,.38);
+    }
+
+    .rail-card:nth-child(2){transform:translateX(8%);}
+    .rail-card:nth-child(3){transform:translateX(-6%);}
+    .rail-card:nth-child(4){transform:translateX(10%);}
+
+    .rail-card img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      filter:brightness(.72);
+    }
+
+    .rail-card::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top,rgba(6,7,12,.96),rgba(6,7,12,.14));
+    }
+
+    .rail-card-content{
+      position:absolute;
+      left:1.5rem;
+      right:1.5rem;
+      bottom:1.5rem;
+      z-index:2;
+      max-width:520px;
+    }
+
+    .rail-card-content .mono{
+      color:var(--gold);
+      font-size:.8rem;
+      margin-bottom:.6rem;
+      display:block;
+    }
+
+    .rail-card-content h3{
+      font-size:2rem;
+      margin-bottom:.7rem;
+      line-height:1.08;
+    }
+
+    .rail-card-content p{
+      color:#c9d0d8;
+      line-height:1.6;
+      margin-bottom:1rem;
+    }
+
+    .rail-tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.7rem;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.78rem;
+      color:#9aa5b2;
+    }
+
+    .rail-tags span{
+      padding:.45rem .7rem;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    @media(max-width:1024px){
+      .rail-layout{
+        grid-template-columns:1fr;
+        min-height:auto;
+      }
+      .rail-left{
+        position:relative;
+        top:auto;
+        text-align:center;
+      }
+      .rail-left p{margin-inline:auto;}
+      .rail-right{
+        padding-top:2vh;
+        gap:2rem;
+      }
+      .rail-card,
+      .rail-card:nth-child(2),
+      .rail-card:nth-child(3),
+      .rail-card:nth-child(4){
+        transform:none;
+      }
+      .rail-card{min-height:56vh;}
+    }
+
+    /* =========================================
+       SECTION 4 - HORIZONTAL MODELS
+       ========================================= */
+    #s10-models .section-overlay{
+      background:linear-gradient(180deg,rgba(6,7,12,.78),rgba(6,7,12,.9));
+    }
+
+    .model-stage{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      overflow:hidden;
+      position:relative;
+      z-index:2;
+    }
+
+    .model-track{
+      display:flex;
+      width:max-content;
+      gap:4vw;
+      padding:0 5vw;
+      align-items:center;
+    }
+
+    .model-intro{
+      width:360px;
+      flex-shrink:0;
+    }
+
+    .model-intro h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .model-intro p{
+      color:#c0c7d0;
+      line-height:1.75;
+    }
+
+    .model-card{
+      width:min(420px,80vw);
+      min-height:64vh;
+      border-radius:22px;
+      overflow:hidden;
+      background:rgba(13,16,22,.68);
+      backdrop-filter:blur(14px);
+      border:1px solid rgba(255,255,255,.08);
+      flex-shrink:0;
+      box-shadow:0 25px 50px rgba(0,0,0,.42);
+      transition:.35s;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .model-card:hover{
+      transform:translateY(-10px);
+      border-color:rgba(124,140,255,.3);
+    }
+
+    .model-card img{
+      width:100%;
+      height:46%;
+      object-fit:cover;
+      filter:brightness(.82);
+    }
+
+    .model-body{
+      padding:1.5rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      height:54%;
+    }
+
+    .model-body .mono{
+      color:var(--accent-2);
+      font-size:.78rem;
+      margin-bottom:.8rem;
+      display:block;
+    }
+
+    .model-body h3{
+      font-size:1.7rem;
+      line-height:1.08;
+      margin-bottom:.9rem;
+    }
+
+    .model-body p{
+      color:#c3cad1;
+      line-height:1.65;
+      font-size:.95rem;
+    }
+
+    .model-stats{
+      margin-top:1.2rem;
+      display:flex;
+      gap:1rem;
+      flex-wrap:wrap;
+      font-family:'JetBrains Mono',monospace;
+      color:#94a0ad;
+      font-size:.8rem;
+      padding-top:1rem;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    @media(max-width:768px){
+      .model-stage{
+        min-height:auto;
+        padding:12vh 0;
+        overflow-x:auto;
+        scroll-snap-type:x mandatory;
+      }
+      .model-track{gap:1.4rem;}
+      .model-intro,.model-card{scroll-snap-align:start;}
+      .model-card{min-height:58vh;}
+    }
+
+    /* =========================================
+       SECTION 5 - MATCHMAKER
+       ========================================= */
+    #s10-matchmaker{
+      background:#06070c;
+    }
+
+    .match-bg-wrap{
+      position:absolute;
+      inset:0;
+      z-index:0;
+    }
+
+    .match-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      opacity:0;
+      transition:opacity .8s ease;
+      filter:brightness(.42) saturate(1.05);
+    }
+
+    .match-bg.active{
+      opacity:1;
+    }
+
+    #s10-matchmaker .section-overlay{
+      background:linear-gradient(90deg,rgba(6,7,12,.88) 0%, rgba(6,7,12,.45) 52%, rgba(6,7,12,.78) 100%);
+    }
+
+    .match-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:.85fr 1.15fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .match-left h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .match-left p{
+      max-width:500px;
+      color:#c0c7cf;
+      line-height:1.75;
+      margin-bottom:2rem;
+    }
+
+    .match-tabs{
+      display:flex;
+      flex-direction:column;
+      gap:.8rem;
+      max-width:360px;
+    }
+
+    .match-tab{
+      padding:1rem 1.1rem;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      color:#d3d8de;
+      text-align:left;
+      font-family:'Inter',sans-serif;
+      font-size:1rem;
+      transition:.3s;
+    }
+
+    .match-tab.active,
+    .match-tab:hover{
+      border-color:rgba(99,255,210,.35);
+      color:var(--light);
+      background:rgba(99,255,210,.08);
+    }
+
+    .match-panel{
+      padding:1.4rem;
+      border-radius:24px;
+    }
+
+    .match-content{
+      display:none;
+      animation:fadeInPanel .45s ease;
+    }
+
+    .match-content.active{
+      display:block;
+    }
+
+    @keyframes fadeInPanel{
+      from{opacity:0;transform:translateY(14px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    .match-content .mono{
+      color:var(--accent-2);
+      font-size:.82rem;
+      display:block;
+      margin-bottom:.7rem;
+    }
+
+    .match-content h3{
+      font-size:2rem;
+      margin-bottom:.9rem;
+      line-height:1.08;
+    }
+
+    .match-content p{
+      color:#c8cfd7;
+      line-height:1.7;
+      margin-bottom:1.2rem;
+    }
+
+    .match-metrics{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+      margin-top:1rem;
+    }
+
+    .metric-box{
+      padding:1rem;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .metric-box .label{
+      color:#98a3b0;
+      font-size:.74rem;
+      text-transform:uppercase;
+      margin-bottom:.4rem;
+    }
+
+    .metric-box .value{
+      font-family:'JetBrains Mono',monospace;
+      font-size:1.3rem;
+      color:var(--light);
+      font-weight:700;
+    }
+
+    @media(max-width:1024px){
+      .match-layout{
+        grid-template-columns:1fr;
+      }
+      .match-left{
+        text-align:center;
+      }
+      .match-left p{
+        margin-inline:auto;
+      }
+      .match-tabs{
+        max-width:100%;
+      }
+    }
+
+    @media(max-width:640px){
+      .match-metrics{
+        grid-template-columns:1fr;
+      }
+    }
+
+    /* =========================================
+       FOOTER
+       ========================================= */
+    #s12-contact .section-overlay{
+      background:linear-gradient(to top,rgba(0,0,0,.96),rgba(0,0,0,.45));
+    }
+
+    .footer-shell{
+      min-height:calc(100vh - var(--nav-height));
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .footer-big{
+      margin-top:auto;
+      text-align:center;
+    }
+
+    .footer-big h2{
+      font-size:clamp(3.5rem,14vw,12rem);
+      line-height:.82;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .footer-big h2 span{
+      color:var(--accent-2);
+      text-shadow:0 0 30px rgba(99,255,210,.22);
+    }
+
+    .footer-bottom{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:2rem;
+      padding-top:2rem;
+      border-top:1px solid rgba(255,255,255,.1);
+    }
+
+    .footer-bottom .mono{
+      color:#8f99a4;
+      line-height:1.7;
+      font-size:.88rem;
+    }
+
+    .socials{
+      display:flex;
+      gap:1rem;
+    }
+
+    .social-btn{
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.18);
+      font-size:1.4rem;
+      transition:.35s;
+    }
+
+    .social-btn:hover{
+      background:var(--accent-2);
+      color:var(--dark);
+      border-color:var(--accent-2);
+    }
+
+    @media(max-width:768px){
+      .footer-bottom{
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor"></div>
+
+  <nav>
+    <a href="#" class="nav-brand magnetic hover-target" data-strength="20">MΛGIC.</a>
+    <button class="menu-btn magnetic hover-target" data-strength="30">
+      Menu
+      <div class="hamburger"><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <div class="menu-overlay">
+    <div class="menu-container" id="menu-grid"></div>
+  </div>
+
+  <main id="partner-page">
+
+    <!-- HERO -->
+    <section id="s10-partners">
+      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2400&auto=format&fit=crop" alt="Agency partnership hero" class="section-bg hero-parallax">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="hero-layout">
+          <div class="hero-left">
+            <div class="pill gsap-up"><span class="pulse"></span> AGENCY ALLIANCE PROGRAM</div>
+
+            <h1 class="hero-title">
+              <span class="line"><span class="word hero-word">PARTNER</span></span>
+              <span class="line"><span class="word hero-word outline">AGENCIES</span></span>
+            </h1>
+
+            <p class="hero-desc gsap-up">
+              A premium collaboration system for branding studios, campaign agencies, strategy consultancies, and production teams that need high-craft digital execution.
+            </p>
+
+            <div class="hero-meta gsap-up">
+              <span>148 ACTIVE AGENCIES</span>
+              <span>32 COUNTRIES</span>
+              <span>92% REPEAT COLLABORATION</span>
+            </div>
+          </div>
+
+          <div class="dossier-wrap gsap-up">
+            <div class="dossier glass hover-target" id="dossierCard">
+              <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1400&auto=format&fit=crop" alt="Alliance dossier">
+
+              <div class="dossier-chip chip-a">
+                <span class="mono">NETWORK</span>
+                <strong>148</strong>
+              </div>
+              <div class="dossier-chip chip-b">
+                <span class="mono">REGIONS</span>
+                <strong>32</strong>
+              </div>
+              <div class="dossier-chip chip-c">
+                <span class="mono">AVG BUILD</span>
+                <strong>11 WKS</strong>
+              </div>
+              <div class="dossier-chip chip-d">
+                <span class="mono">RETENTION</span>
+                <strong>92%</strong>
+              </div>
+
+              <div class="dossier-content">
+                <span class="mono">GLOBAL ALLIANCE DOSSIER / 2024</span>
+                <h3>Creative delivery without friction.</h3>
+                <p>White-label production, embedded pods, and premium digital systems for agencies that need more capacity without compromising craft.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-strip">
+        <div class="hero-strip-track">
+          <div class="hero-strip-item">
+            BRAND STUDIOS <i class="ph ph-dot-outline-fill"></i>
+            CAMPAIGN AGENCIES <i class="ph ph-dot-outline-fill"></i>
+            CREATIVE CONSULTANCIES <i class="ph ph-dot-outline-fill"></i>
+            GLOBAL DELIVERY PODS <i class="ph ph-dot-outline-fill"></i>
+            WHITE-LABEL EXECUTION <i class="ph ph-dot-outline-fill"></i>
+          </div>
+          <div class="hero-strip-item">
+            BRAND STUDIOS <i class="ph ph-dot-outline-fill"></i>
+            CAMPAIGN AGENCIES <i class="ph ph-dot-outline-fill"></i>
+            CREATIVE CONSULTANCIES <i class="ph ph-dot-outline-fill"></i>
+            GLOBAL DELIVERY PODS <i class="ph ph-dot-outline-fill"></i>
+            WHITE-LABEL EXECUTION <i class="ph ph-dot-outline-fill"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONSTELLATION -->
+    <section id="s10-constellation">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2400&auto=format&fit=crop" alt="Constellation background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="constellation-layout">
+          <div class="constellation-head">
+            <div class="pill gsap-net"><span class="pulse"></span> ALLIANCE CONSTELLATION</div>
+            <h2 class="gsap-net">A living<br>partner system.</h2>
+            <p class="gsap-net">
+              Not a list — a network. This section visualizes how agencies orbit around shared capability, connected by production, motion, strategy, and engineering.
+            </p>
+          </div>
+
+          <div class="constellation-stage glass" id="constellationStage">
+            <canvas id="constellationCanvas"></canvas>
+
+            <div class="orbit-ring orbit-r1"></div>
+            <div class="orbit-ring orbit-r2"></div>
+            <div class="orbit-ring orbit-r3"></div>
+
+            <div class="constellation-core">
+              <div>
+                <span class="mono">CORE HUB</span>
+                <strong>MΛGIC<br>Alliance</strong>
+              </div>
+            </div>
+
+            <article class="const-node hover-target partner-target" data-radius="130" data-angle="15" data-speed="0.35">
+              <span class="mono">LONDON</span>
+              <strong>Brand Systems</strong>
+              <span>Naming, brand platforms, launch systems.</span>
+            </article>
+
+            <article class="const-node hover-target partner-target" data-radius="210" data-angle="80" data-speed="-0.25">
+              <span class="mono">BERLIN</span>
+              <strong>UI Studios</strong>
+              <span>Design systems and product interfaces.</span>
+            </article>
+
+            <article class="const-node hover-target partner-target" data-radius="250" data-angle="145" data-speed="0.22">
+              <span class="mono">TOKYO</span>
+              <strong>3D Motion</strong>
+              <span>Spatial visuals, immersive campaigns.</span>
+            </article>
+
+            <article class="const-node hover-target partner-target" data-radius="175" data-angle="220" data-speed="-0.32">
+              <span class="mono">NEW YORK</span>
+              <strong>Campaign Labs</strong>
+              <span>Fast launch teams and film-first ideas.</span>
+            </article>
+
+            <article class="const-node hover-target partner-target" data-radius="280" data-angle="285" data-speed="0.18">
+              <span class="mono">DUBAI</span>
+              <strong>Growth Ops</strong>
+              <span>Localization, rollout, performance systems.</span>
+            </article>
+
+            <article class="const-node hover-target partner-target" data-radius="150" data-angle="330" data-speed="-0.28">
+              <span class="mono">SYDNEY</span>
+              <strong>Build Pods</strong>
+              <span>Delivery, QA, frontend acceleration.</span>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STICKY RAIL -->
+    <section id="s10-rail">
+      <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2400&auto=format&fit=crop" alt="Rail background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="rail-layout">
+          <div class="rail-left">
+            <div class="pill gsap-rail"><span class="pulse"></span> CAPABILITY RAIL</div>
+            <h2 class="gsap-rail">How the<br>collaboration works.</h2>
+            <p class="gsap-rail">
+              Scroll through the partnership rail. Each card represents a different collaboration layer — from hidden white-label execution to embedded specialist pods and strategic alliance builds.
+            </p>
+          </div>
+
+          <div class="rail-right">
+            <article class="rail-card hover-target gsap-rail-card">
+              <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1400&auto=format&fit=crop" alt="Rail 1">
+              <div class="rail-card-content">
+                <span class="mono">MODEL 01 / WHITE-LABEL DELIVERY</span>
+                <h3>Invisible production under your banner.</h3>
+                <p>
+                  We build behind the curtain while your team owns client communication, approvals, and relationship management.
+                </p>
+                <div class="rail-tags">
+                  <span>PRIVATE DELIVERY</span>
+                  <span>LOW FRICTION</span>
+                  <span>FAST ONBOARDING</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="rail-card hover-target gsap-rail-card">
+              <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1400&auto=format&fit=crop" alt="Rail 2">
+              <div class="rail-card-content">
+                <span class="mono">MODEL 02 / EMBEDDED PODS</span>
+                <h3>A specialist team inside your workflow.</h3>
+                <p>
+                  Motion designers, front-end developers, QA, and producers plug directly into your pipeline for high-pressure launches.
+                </p>
+                <div class="rail-tags">
+                  <span>MOTION</span>
+                  <span>FRONT-END</span>
+                  <span>DELIVERY POD</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="rail-card hover-target gsap-rail-card">
+              <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1400&auto=format&fit=crop" alt="Rail 3">
+              <div class="rail-card-content">
+                <span class="mono">MODEL 03 / STRATEGIC ALLIANCE</span>
+                <h3>Pitch support and shared roadmaps.</h3>
+                <p>
+                  We partner earlier — helping shape scopes, pitch decks, interaction direction, and long-range delivery strategy.
+                </p>
+                <div class="rail-tags">
+                  <span>PITCH SUPPORT</span>
+                  <span>SCOPE DESIGN</span>
+                  <span>LONG-RANGE</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="rail-card hover-target gsap-rail-card">
+              <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1400&auto=format&fit=crop" alt="Rail 4">
+              <div class="rail-card-content">
+                <span class="mono">MODEL 04 / OVERFLOW SCALING</span>
+                <h3>Capacity when your pipeline spikes.</h3>
+                <p>
+                  We absorb production pressure while maintaining premium execution, reducing internal bottlenecks during major campaign windows.
+                </p>
+                <div class="rail-tags">
+                  <span>SCALABLE</span>
+                  <span>ENTERPRISE READY</span>
+                  <span>CRAFT LOCKED</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HORIZONTAL MODELS -->
+    <section id="s10-models">
+      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2400&auto=format&fit=crop" alt="Deal models background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="model-stage">
+        <div class="model-track" id="modelTrack">
+          <div class="model-intro">
+            <div class="pill"><span class="pulse"></span> COLLABORATION FORMATS</div>
+            <h2 class="display-font">Engagement<br>models.</h2>
+            <p>
+              Scroll through our four premium partner formats — designed for agencies that need precision support, speed, and premium execution.
+            </p>
+          </div>
+
+          <article class="model-card hover-target partner-target">
+            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200&auto=format&fit=crop" alt="White label">
+            <div class="model-body">
+              <div>
+                <span class="mono">MODEL 01 / WHITE-LABEL</span>
+                <h3>Invisible execution.</h3>
+                <p>We build under your banner while your team leads client-facing strategy, relationships, and approvals.</p>
+              </div>
+              <div class="model-stats">
+                <span>LOW FRICTION</span>
+                <span>FAST ONBOARDING</span>
+                <span>PRIVATE DELIVERY</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="model-card hover-target partner-target">
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop" alt="Specialist pod">
+            <div class="model-body">
+              <div>
+                <span class="mono">MODEL 02 / POD</span>
+                <h3>Embedded team support.</h3>
+                <p>A dedicated creative-dev pod plugs directly into your workflow for launch windows and high-pressure deadlines.</p>
+              </div>
+              <div class="model-stats">
+                <span>MOTION</span>
+                <span>FRONT-END</span>
+                <span>QA + DELIVERY</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="model-card hover-target partner-target">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop" alt="Strategic alliance">
+            <div class="model-body">
+              <div>
+                <span class="mono">MODEL 03 / ALLIANCE</span>
+                <h3>Co-authored growth.</h3>
+                <p>We partner upstream on pitch strategy, scoping, and roadmap architecture for long-term shared delivery.</p>
+              </div>
+              <div class="model-stats">
+                <span>PITCH SUPPORT</span>
+                <span>SCOPE DESIGN</span>
+                <span>LONG-RANGE</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="model-card hover-target partner-target">
+            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1200&auto=format&fit=crop" alt="Production relay">
+            <div class="model-body">
+              <div>
+                <span class="mono">MODEL 04 / RELAY</span>
+                <h3>Overflow without compromise.</h3>
+                <p>When your pipeline spikes, we absorb production load while preserving craft, consistency, and speed.</p>
+              </div>
+              <div class="model-stats">
+                <span>SCALABLE</span>
+                <span>QUALITY LOCKED</span>
+                <span>ENTERPRISE READY</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATCHMAKER -->
+    <section id="s10-matchmaker">
+      <div class="match-bg-wrap">
+        <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=2400&auto=format&fit=crop" class="match-bg active" id="matchBg1" alt="Boutique bg">
+        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2400&auto=format&fit=crop" class="match-bg" id="matchBg2" alt="Campaign bg">
+        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2400&auto=format&fit=crop" class="match-bg" id="matchBg3" alt="Enterprise bg">
+        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2400&auto=format&fit=crop" class="match-bg" id="matchBg4" alt="Production bg">
+      </div>
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="match-layout">
+          <div class="match-left">
+            <div class="pill gsap-match"><span class="pulse"></span> AGENCY MATCHMAKER</div>
+            <h2 class="gsap-match">Find your<br>best fit.</h2>
+            <p class="gsap-match">
+              Every agency partnership is different. Choose a lane below and the page reconfigures to show how we best collaborate with that type of team.
+            </p>
+
+            <div class="match-tabs">
+              <button class="match-tab active hover-target" data-match="1">Boutique Brand Studio</button>
+              <button class="match-tab hover-target" data-match="2">Campaign Agency</button>
+              <button class="match-tab hover-target" data-match="3">Enterprise Consultancy</button>
+              <button class="match-tab hover-target" data-match="4">Production Collective</button>
+            </div>
+          </div>
+
+          <div class="match-panel glass">
+            <div class="match-content active" id="matchContent1">
+              <span class="mono">BOUTIQUE BRAND STUDIO</span>
+              <h3>Premium execution without growing headcount.</h3>
+              <p>Perfect for identity-led agencies that need world-class digital launch execution while keeping their internal team lean and highly strategic.</p>
+              <div class="match-metrics">
+                <div class="metric-box">
+                  <div class="label">Best For</div>
+                  <div class="value">Brand Launches</div>
+                </div>
+                <div class="metric-box">
+                  <div class="label">Setup</div>
+                  <div class="value">7 Days</div>
+                </div>
+                <div class="metric-box">
+                  <div class="label">Model</div>
+                  <div class="value">White-Label</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="match-content" id="matchContent2">
+              <span class="mono">CAMPAIGN AGENCY</span>
+              <h3>Fast launch capacity with motion-first delivery.</h3>
+              <p>Built for high-pressure campaign timelines where interactive microsites, product reveals, and launch assets need to move from concept to deployment quickly.</p>
+              <div class="match-metrics">
+                <div class="metric-box">
+                  <div class="label">Best For</div>
+                  <div class="value">Launch Windows</div>
+                </div>
+                <div class="metric-box">
+                  <div class="label">Setup</div>
+                  <div class="value">72 HRS</div>
+                </div>
+                <div class="metric-box">
+                  <div class="label">Model</div>
+                  <div class="value">Embedded Pod</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="match-content" id="matchContent3">
+              <span class="mono">ENTERPRISE CONSULTANCY</span>
+              <h3>Specialist craft layered onto strategic frameworks.</h3>
+              <p>Best when strategy is already robust but the final user experience, motion system, premium interface, or technical front-end build needs elite execution.</p>
+              <div class="match-metrics">
+                <div class="metric-box">
+                  <div class="label">Best For</div>
+                  <div class="value">Transformation</div>
+                </div>
+                <div class="metric-box">
+                  <div class="label">Setup</div>
+                  <div class="value">2 Weeks</div>
+                </div>
+                <div class="metric-box">
+                  <div class="label">Model</div>
+                  <div class="value">Strategic Ally</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="match-content" id="matchContent4">
+              <span class="mono">PRODUCTION COLLECTIVE</span>
+              <h3>Overflow support without sacrificing craft quality.</h3>
+              <p>Ideal for production-led teams that need extra high-end front-end, motion, or QA support across multiple simultaneous client streams.</p>
+              <div class="match-metrics">
+                <div class="metric-box">
+                  <div class="label">Best For</div>
+                  <div class="value">Volume Scale</div>
+                </div>
+                <div class="metric-box">
+                  <div class="label">Setup</div>
+                  <div class="value">5 Days</div>
+                </div>
+                <div class="metric-box">
+                  <div class="label">Model</div>
+                  <div class="value">Overflow Relay</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section id="s12-contact">
+      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2400&auto=format&fit=crop" alt="Footer background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="footer-shell">
+          <div class="footer-big">
+            <h2>BUILD<br><span>TOGETHER.</span></h2>
+          </div>
+
+          <div class="footer-bottom">
+            <div class="mono">
+              <div>PARTNERSHIP DESK // MΛGIC AGENCY</div>
+              <div>agencies@magic.agency</div>
+              <div>GLOBAL AGENCY ALLIANCE SYSTEM // 2024</div>
+            </div>
+
+            <div class="socials">
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-linkedin-logo"></i></a>
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-handshake"></i></a>
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-briefcase"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+  <script>
+    // =========================================
+    // LENIS
+    // =========================================
+    const lenis = new Lenis({ duration: 1.5, smooth: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    // =========================================
+    // CURSOR
+    // =========================================
+    const cursor = document.querySelector('.cursor');
+
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, {
+          x: e.clientX,
+          y: e.clientY,
+          duration: 0.1,
+          ease: "power2.out"
+        });
+      });
+
+      document.querySelectorAll('a, button, .hover-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+
+      document.querySelectorAll('.partner-target, .const-node, .rail-card').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('partner-mode', 'hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('partner-mode', 'hovered'));
+      });
+    }
+
+    // =========================================
+    // MAGNETIC
+    // =========================================
+    function attachMagnetic(){
+      if (window.innerWidth <= 768) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const strength = el.dataset.strength || 20;
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+          gsap.to(el, { x, y, duration: 0.3, ease: "power2.out" });
+        });
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+      });
+    }
+
+    // =========================================
+    // MENU DATA
+    // =========================================
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+    const menuGrid = document.getElementById('menu-grid');
+    menuData.forEach(item => {
+      const linksHTML = item.links.map(link =>
+        `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`
+      ).join('');
+
+      menuGrid.innerHTML += `
+        <div class="menu-item">
+          <div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div>
+          <div class="dropdown">
+            <div class="dropdown-inner">${linksHTML}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    document.querySelectorAll('.menu-item-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const dropdown = title.nextElementSibling;
+        const inner = dropdown.querySelector('.dropdown-inner');
+        document.querySelectorAll('.dropdown').forEach(drop => {
+          if (drop !== dropdown) drop.style.height = '0px';
+        });
+        dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+      });
+    });
+
+    const menuBtn = document.querySelector('.menu-btn');
+    let menuOpen = false;
+
+    const menuTl = gsap.timeline({ paused: true })
+      .to('.menu-overlay', {
+        clipPath: 'polygon(0 0,100% 0,100% 100%,0 100%)',
+        duration: 0.8,
+        ease: "power4.inOut"
+      })
+      .to('.menu-item-title', {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.04,
+        ease: "power3.out"
+      }, "-=0.4");
+
+    function toggleMenu(){
+      menuOpen = !menuOpen;
+      menuBtn.classList.toggle('active');
+      if(menuOpen){
+        lenis.stop();
+        menuTl.play();
+      } else {
+        lenis.start();
+        document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px');
+        menuTl.reverse();
+      }
+    }
+
+    menuBtn.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute('href');
+        if(menuOpen) toggleMenu();
+
+        setTimeout(() => {
+          if(targetUrl.startsWith('#')){
+            const target = document.querySelector(targetUrl);
+            if(target) lenis.scrollTo(targetUrl, { duration: 1.5 });
+          } else {
+            window.location.href = targetUrl;
+          }
+        }, 800);
+      });
+    });
+
+    // =========================================
+    // HERO REVEAL
+    // =========================================
+    gsap.to(".hero-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.18,
+      ease: "power4.out",
+      delay: 0.2
+    });
+
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 35,
+      duration: 1,
+      stagger: 0.12,
+      delay: 0.85,
+      ease: "power3.out"
+    });
+
+    gsap.to(".hero-parallax", {
+      y: "18%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#s10-partners",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // =========================================
+    // HERO DOSSIER TILT
+    // =========================================
+    const dossierCard = document.getElementById('dossierCard');
+    const dossierChips = dossierCard ? dossierCard.querySelectorAll('.dossier-chip') : [];
+
+    if(dossierCard && window.innerWidth > 768){
+      dossierCard.addEventListener('mousemove', (e) => {
+        const rect = dossierCard.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+
+        gsap.to(dossierCard, {
+          rotationY: x * 8,
+          rotationX: -y * 8,
+          duration: 0.45,
+          ease: "power2.out"
+        });
+
+        dossierChips.forEach((chip, i) => {
+          gsap.to(chip, {
+            x: x * (10 + i * 5),
+            y: y * (-10 - i * 5),
+            duration: 0.45,
+            ease: "power2.out"
+          });
+        });
+      });
+
+      dossierCard.addEventListener('mouseleave', () => {
+        gsap.to(dossierCard, {
+          rotationY: 0,
+          rotationX: 0,
+          duration: 1,
+          ease: "elastic.out(1, 0.3)"
+        });
+        gsap.to(dossierChips, {
+          x: 0,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out"
+        });
+      });
+    }
+
+    dossierChips.forEach((chip, i) => {
+      gsap.to(chip, {
+        y: i % 2 === 0 ? -10 : 10,
+        duration: 2 + i * 0.25,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+    });
+
+    // =========================================
+    // CONSTELLATION HEAD
+    // =========================================
+    gsap.utils.toArray('.gsap-net').forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 60,
+        duration: 1,
+        delay: i * 0.12,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s10-constellation",
+          start: "top 72%"
+        }
+      });
+    });
+
+    // =========================================
+    // CONSTELLATION SYSTEM
+    // =========================================
+    const constellationStage = document.getElementById('constellationStage');
+    const constellationCanvas = document.getElementById('constellationCanvas');
+    const cctx = constellationCanvas.getContext('2d');
+    const constellationNodes = gsap.utils.toArray('.const-node');
+    let orbitScrollFactor = 0;
+
+    function resizeConstellation(){
+      constellationCanvas.width = constellationStage.offsetWidth;
+      constellationCanvas.height = constellationStage.offsetHeight;
+    }
+    resizeConstellation();
+    window.addEventListener('resize', resizeConstellation);
+
+    ScrollTrigger.create({
+      trigger: "#s10-constellation",
+      start: "top bottom",
+      end: "bottom top",
+      scrub: 1,
+      onUpdate: self => {
+        orbitScrollFactor = self.progress * Math.PI * 2.5;
+      }
+    });
+
+    function animateConstellation(){
+      if(!constellationStage){
+        requestAnimationFrame(animateConstellation);
+        return;
+      }
+
+      const w = constellationStage.offsetWidth;
+      const h = constellationStage.offsetHeight;
+      const cx = w / 2;
+      const cy = h / 2;
+
+      cctx.clearRect(0, 0, constellationCanvas.width, constellationCanvas.height);
+
+      const centers = [];
+
+      constellationNodes.forEach((node) => {
+        const radius = parseFloat(node.dataset.radius);
+        const baseAngle = parseFloat(node.dataset.angle) * Math.PI / 180;
+        const speed = parseFloat(node.dataset.speed);
+        const t = performance.now() * 0.0002;
+
+        const angle = baseAngle + orbitScrollFactor + t * speed * 10;
+        const x = cx + Math.cos(angle) * radius;
+        const y = cy + Math.sin(angle) * (radius * 0.72);
+
+        node.style.left = `${x}px`;
+        node.style.top = `${y}px`;
+
+        centers.push({x, y});
+      });
+
+      centers.forEach((p) => {
+        cctx.beginPath();
+        cctx.moveTo(cx, cy);
+        cctx.lineTo(p.x, p.y);
+        cctx.strokeStyle = 'rgba(99,255,210,0.18)';
+        cctx.lineWidth = 1;
+        cctx.stroke();
+      });
+
+      for(let i = 0; i < centers.length; i++){
+        for(let j = i + 1; j < centers.length; j++){
+          const dx = centers[i].x - centers[j].x;
+          const dy = centers[i].y - centers[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if(dist < 240){
+            cctx.beginPath();
+            cctx.moveTo(centers[i].x, centers[i].y);
+            cctx.lineTo(centers[j].x, centers[j].y);
+            cctx.strokeStyle = `rgba(124,140,255,${0.18 - dist / 1800})`;
+            cctx.lineWidth = 1;
+            cctx.stroke();
+          }
+        }
+      }
+
+      centers.forEach((p) => {
+        cctx.beginPath();
+        cctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        cctx.fillStyle = 'rgba(124,140,255,0.95)';
+        cctx.shadowBlur = 16;
+        cctx.shadowColor = 'rgba(124,140,255,0.8)';
+        cctx.fill();
+        cctx.shadowBlur = 0;
+      });
+
+      requestAnimationFrame(animateConstellation);
+    }
+    animateConstellation();
+
+    // =========================================
+    // RAIL SECTION ANIMATION
+    // =========================================
+    gsap.utils.toArray('.gsap-rail').forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 60,
+        duration: 1,
+        delay: i * 0.12,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s10-rail",
+          start: "top 70%"
+        }
+      });
+    });
+
+    gsap.utils.toArray('.gsap-rail-card').forEach((card) => {
+      gsap.from(card, {
+        opacity: 0,
+        y: 100,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: card,
+          start: "top 82%"
+        }
+      });
+    });
+
+    // =========================================
+    // HORIZONTAL MODELS
+    // =========================================
+    let mm = gsap.matchMedia();
+    mm.add("(min-width: 769px)", () => {
+      const modelTrack = document.getElementById('modelTrack');
+      if(!modelTrack) return;
+
+      const distance = modelTrack.scrollWidth - window.innerWidth + (window.innerWidth * 0.08);
+
+      gsap.to(modelTrack, {
+        x: -distance,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#s10-models",
+          start: "top top",
+          end: () => `+=${distance}`,
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true
+        }
+      });
+
+      gsap.utils.toArray('.model-card').forEach((card, i) => {
+        gsap.from(card, {
+          opacity: 0,
+          y: 80,
+          duration: 1,
+          delay: i * 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: "#s10-models",
+            start: "top 75%"
+          }
+        });
+      });
+    });
+
+    // =========================================
+    // MATCHMAKER ANIMS
+    // =========================================
+    gsap.utils.toArray('.gsap-match').forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 60,
+        duration: 1,
+        delay: i * 0.12,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s10-matchmaker",
+          start: "top 72%"
+        }
+      });
+    });
+
+    const tabs = document.querySelectorAll('.match-tab');
+    const contents = document.querySelectorAll('.match-content');
+    const backgrounds = document.querySelectorAll('.match-bg');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.match;
+
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        contents.forEach(c => c.classList.remove('active'));
+        document.getElementById(`matchContent${id}`).classList.add('active');
+
+        backgrounds.forEach(bg => bg.classList.remove('active'));
+        document.getElementById(`matchBg${id}`).classList.add('active');
+      });
+    });
+
+    // =========================================
+    // INIT
+    // =========================================
+    attachMagnetic();
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

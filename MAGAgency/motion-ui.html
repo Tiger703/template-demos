@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Motion UI</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Premium Icons (Phosphor) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES & RESET
+           ========================================= */
+        :root {
+            --dark: #050505;
+            --light: #f4f4f5;
+            --accent: #ff4b2b; /* Keeping brand consistency */
+            --accent-alt: #8a2be2; /* Secondary purple for motion vibe */
+            --gray: #121212;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        section { position: relative; width: 100vw; overflow: hidden; }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* =========================================
+           MAGIC CURSOR
+           ========================================= */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--light); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; mix-blend-mode: difference; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--light); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        @media (max-width: 768px) { .cursor { display: none; } * { cursor: auto !important; } }
+
+        /* =========================================
+           NAVBAR & MOBILE-OPTIMIZED MENU
+           ========================================= */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5vw; z-index: 10000; background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5,5,5,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5vw 5vh 5vw; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5vw 10vh 5vw; } .menu-item { padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .menu-item-title span { font-size: 1.2rem !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } .dropdown a i { font-size: 1.8rem !important; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); opacity: 0; transform: translateX(-10px); transition: 0.3s; }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+        .dropdown a:hover i { opacity: 1; transform: translateX(0); }
+
+        /* =========================================
+           UNIQUE: MOTION HERO
+           ========================================= */
+        #motion-hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            padding: 0 5vw; background: var(--dark);
+        }
+        .motion-bg {
+            position: absolute; top: 0; left: 0; width: 100vw; height: 120vh;
+            /* Stunning 3D fluid/motion image */
+            background: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2564&auto=format&fit=crop') center/cover;
+            opacity: 0.4; z-index: -2;
+            transform: scale(1.2); /* For JS scale-down effect */
+        }
+        .motion-overlay { position: absolute; inset: 0; background: radial-gradient(circle, rgba(5,5,5,0.2) 0%, rgba(5,5,5,0.9) 100%); z-index: -1; }
+        .motion-title {
+            font-size: clamp(3.5rem, 12vw, 12rem); font-weight: 800; line-height: 0.85;
+            letter-spacing: -0.02em; overflow: hidden;
+        }
+        .motion-title span { display: inline-block; transform: translateY(110%); }
+        .motion-badge {
+            margin-bottom: 2rem; display: inline-block; padding: 8px 16px; 
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 50px; 
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;
+            opacity: 0; transform: translateY(20px);
+        }
+
+        /* =========================================
+           UNIQUE: FLOATING PHYSICS GRID
+           ========================================= */
+        #motion-physics { padding: 15vh 5vw; background: var(--dark); }
+        .physics-header { text-align: center; margin-bottom: 8vh; }
+        .physics-header h2 { font-size: clamp(2.5rem, 6vw, 5rem); }
+        .physics-header p { color: #888; margin-top: 1rem; font-size: clamp(1rem, 2vw, 1.2rem); max-width: 600px; margin-inline: auto; }
+        
+        .physics-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; max-width: 1200px; margin: 0 auto;
+        }
+        .physics-card {
+            background: var(--gray); padding: 3rem 2rem; border-radius: 20px;
+            text-align: center; border: 1px solid rgba(255,255,255,0.05);
+            /* These will float via JS */
+        }
+        .physics-icon {
+            width: 80px; height: 80px; background: rgba(255,75,43,0.1); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem auto;
+            color: var(--accent); font-size: 2.5rem;
+        }
+        .physics-card h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .physics-card p { color: #aaa; font-size: 0.95rem; line-height: 1.6; }
+
+        @media (max-width: 900px) {
+            .physics-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .physics-card { padding: 2rem 1.5rem; }
+        }
+
+        /* =========================================
+           UNIQUE: THE STICKY REEL
+           ========================================= */
+        #motion-reel { display: flex; background: #0a0a0a; position: relative; }
+        .reel-left {
+            width: 45%; height: 100vh; position: sticky; top: 0;
+            display: flex; flex-direction: column; justify-content: center; padding: 0 5vw;
+        }
+        .reel-right { width: 55%; padding: 10vh 5vw 10vh 0; display: flex; flex-direction: column; gap: 5vh; }
+        
+        .reel-left h2 { font-size: clamp(3rem, 6vw, 6rem); line-height: 0.9; margin-bottom: 2rem; color: var(--accent-alt); }
+        .reel-left p { font-size: clamp(1rem, 2vw, 1.3rem); color: #ccc; max-width: 400px; }
+        
+        .reel-item {
+            width: 100%; height: 80vh; border-radius: 20px; overflow: hidden;
+            position: relative;
+        }
+        .reel-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(50%); transition: 0.5s; }
+        .reel-item:hover img { filter: grayscale(0%); transform: scale(1.05); }
+        .reel-caption { position: absolute; bottom: 2rem; left: 2rem; background: rgba(0,0,0,0.8); padding: 10px 20px; border-radius: 50px; font-weight: 600; backdrop-filter: blur(10px); }
+
+        /* Mobile Fix for Sticky Reel */
+        @media (max-width: 768px) {
+            #motion-reel { flex-direction: column; }
+            .reel-left { width: 100%; height: auto; position: relative; padding: 15vh 5vw 5vh 5vw; }
+            .reel-right { width: 100%; padding: 0 5vw 10vh 5vw; gap: 3vh; }
+            .reel-item { height: 50vh; }
+        }
+
+        /* =========================================
+           UNIQUE: SCROLL-SCRUB CTA
+           ========================================= */
+        #motion-cta {
+            height: 70vh; background: var(--accent); color: var(--dark);
+            display: flex; flex-direction: column; justify-content: center; overflow: hidden;
+        }
+        .scrub-text {
+            font-size: clamp(6rem, 20vw, 20rem); font-weight: 800; white-space: nowrap;
+            font-family: 'Syne', sans-serif; text-transform: uppercase; line-height: 0.8;
+            color: var(--dark); opacity: 0.9;
+        }
+        .cta-btn-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; }
+        .circle-btn {
+            width: clamp(120px, 30vw, 180px); height: clamp(120px, 30vw, 180px);
+            border-radius: 50%; border: none; background: var(--dark); color: var(--light);
+            font-size: clamp(1rem, 2vw, 1.2rem); font-weight: 600; text-transform: uppercase;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .circle-btn:hover { transform: scale(1.1); background: var(--light); color: var(--dark); }
+
+    </style>
+</head>
+<body>
+
+    <!-- MAGIC CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu
+            <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU -->
+    <div class="menu-overlay"><div class="menu-container" id="menu-grid"></div></div>
+
+    <main>
+
+        <!-- S01: MOTION HERO -->
+        <section id="motion-hero">
+            <div class="motion-bg"></div>
+            <div class="motion-overlay"></div>
+            
+            <div class="motion-badge">The Future of Interaction</div>
+            <h1 class="motion-title">
+                <span class="m-word">MOTION</span><br>
+                <span class="m-word" style="color: var(--accent);">INTERFACE</span>
+            </h1>
+        </section>
+
+        <!-- S02: FLOATING PHYSICS GRID -->
+        <section id="motion-physics">
+            <div class="physics-header">
+                <h2 class="display-font">PHYSICS IN CODE</h2>
+                <p>We don't just animate. We simulate reality. Using advanced math and WebGL, we create digital environments that feel completely natural and deeply engaging.</p>
+            </div>
+            
+            <div class="physics-grid">
+                <!-- These cards will float up and down via JS -->
+                <div class="physics-card float-item">
+                    <div class="physics-icon"><i class="ph ph-wind"></i></div>
+                    <h3 class="display-font">Fluid Dynamics</h3>
+                    <p>Liquid transitions and soft-body physics that react instantly to user touch and scroll momentum.</p>
+                </div>
+                <div class="physics-card float-item">
+                    <div class="physics-icon"><i class="ph ph-cube"></i></div>
+                    <h3 class="display-font">3D WebGL</h3>
+                    <p>Rendering interactive three-dimensional objects directly in the DOM using Three.js and custom shaders.</p>
+                </div>
+                <div class="physics-card float-item">
+                    <div class="physics-icon"><i class="ph ph-magic-wand"></i></div>
+                    <h3 class="display-font">Micro-Interactions</h3>
+                    <p>Tiny, satisfying animated details that provide immediate cognitive feedback to the user.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- S03: THE STICKY REEL -->
+        <section id="motion-reel">
+            <div class="reel-left">
+                <h2 class="display-font">KINETIC<br>GALLERY</h2>
+                <p>Scroll to explore how we blend heavy graphic design with lightweight, high-performance motion engines.</p>
+            </div>
+            <div class="reel-right">
+                <!-- Different Premium Abstracts -->
+                <div class="reel-item">
+                    <img src="https://images.unsplash.com/photo-1618005192384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop" alt="Abstract">
+                    <div class="reel-caption display-font">Project: Nebula</div>
+                </div>
+                <div class="reel-item">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop" alt="Abstract">
+                    <div class="reel-caption display-font">Project: Echo</div>
+                </div>
+                <div class="reel-item">
+                    <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=1200&auto=format&fit=crop" alt="Abstract">
+                    <div class="reel-caption display-font">Project: Pulse</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S04: SCROLL-SCRUB CTA -->
+        <section id="motion-cta">
+            <div class="scrub-text scrub-left">LET'S BUILD SOMETHING BEAUTIFUL</div>
+            <div class="scrub-text scrub-right" style="color: rgba(5,5,5,0.3);">LET'S BUILD SOMETHING BEAUTIFUL</div>
+            
+            <div class="cta-btn-wrapper">
+                <button class="circle-btn magnetic" data-strength="50">Start</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. Lenis Smooth Scroll
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. Cursor & Magnetic (Desktop Only)
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+            
+            document.querySelectorAll('a, button, .menu-item-title, .physics-card, .reel-item').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    gsap.to(el, { x: ((e.clientX - rect.left) / rect.width - 0.5) * strength, y: ((e.clientY - rect.top) / rect.height - 0.5) * strength, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        }
+
+        // 3. Menu Data & Corrected Routing Logic
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        // Fixed Menu Routing Logic (Scroll vs Page Load)
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetUrl = link.getAttribute('href');
+                if(targetUrl !== '#') {
+                    e.preventDefault();
+                    toggleMenu();
+                    setTimeout(() => { 
+                        if (targetUrl.startsWith('#') || targetUrl.includes('.html#')) {
+                            // If it's on the same page, scroll to it.
+                            const id = targetUrl.split('#')[1];
+                            const element = document.getElementById(id);
+                            if(element) lenis.scrollTo(element, { duration: 1.5 });
+                            else window.location.href = targetUrl;
+                        } else {
+                            window.location.href = targetUrl;
+                        }
+                    }, 800);
+                }
+            });
+        });
+
+        // 4. MOTION MAGIC: Hero Animations
+        const heroTl = gsap.timeline({ delay: 0.2 });
+        heroTl.to(".motion-badge", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" });
+        heroTl.to(".m-word", { y: "0%", duration: 1.2, stagger: 0.15, ease: "power4.out" }, "-=0.5");
+        
+        // Background slow scale down
+        gsap.to(".motion-bg", { scale: 1, duration: 3, ease: "power2.out" });
+        
+        // Background Parallax on scroll
+        gsap.to(".motion-bg", { y: "20%", scrollTrigger: { trigger: "#motion-hero", start: "top top", end: "bottom top", scrub: true }});
+
+        // 5. MOTION MAGIC: Floating Physics Cards (Sine Wave Loop)
+        gsap.to(".float-item", {
+            y: -20, // Move up 20px
+            duration: 2, // Take 2 seconds
+            yoyo: true, // Go back down
+            repeat: -1, // Infinite loop
+            ease: "sine.inOut", // Smooth physics-like curve
+            stagger: 0.3 // Delay each card slightly so they wave organically
+        });
+
+        // 6. MOTION MAGIC: Scroll-Scrub Text
+        gsap.to(".scrub-left", {
+            xPercent: -30, // Move left
+            scrollTrigger: { trigger: "#motion-cta", start: "top bottom", end: "bottom top", scrub: 1 }
+        });
+        
+        gsap.to(".scrub-right", {
+            xPercent: 30, // Move right
+            scrollTrigger: { trigger: "#motion-cta", start: "top bottom", end: "bottom top", scrub: 1 }
+        });
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Spatial Web Journey</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- REAL THREE.JS LIBRARY -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES (Spatial Neon Cyan Theme)
+           ========================================= */
+        :root {
+            --dark: #020205;
+            --light: #f4f4f5;
+            --accent: #00E5FF; /* Electric Cyan */
+            --accent-glow: rgba(0, 229, 255, 0.4);
+            --gray: #0a0a0f;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Lenis Fix */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* CURSOR */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; mix-blend-mode: screen; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--accent); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        .cursor.view-mode::after { content: 'ENTER'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10px; font-weight: 600; color: var(--accent); font-family: 'JetBrains Mono'; }
+        @media (max-width: 768px) { .cursor { display: none; } * { cursor: auto !important; } }
+
+        /* NAV & MENU */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5vw; z-index: 10000; background: rgba(2, 2, 5, 0.5); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0, 229, 255, 0.15); }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); background: var(--accent); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); background: var(--accent); }
+        
+        /* MEGA MENU */
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(2,2,5,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5vw 5vh 5vw; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5vw 10vh 5vw; } .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; text-shadow: 0 0 10px var(--accent-glow); }
+
+        /* MODAL */
+        .magic-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 100000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.5s ease; backdrop-filter: blur(20px); }
+        .magic-modal.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: rgba(10,10,15,0.8); padding: 8vw; border-radius: 20px; width: 90vw; max-width: 900px; max-height: 80vh; overflow-y: auto; position: relative; transform: translateY(100px) scale(0.9); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid var(--accent); box-shadow: 0 0 40px var(--accent-glow); backdrop-filter: blur(20px); }
+        .magic-modal.active .modal-content { transform: translateY(0) scale(1); }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 2rem; background: none; border: none; color: var(--light); }
+
+        /* =========================================
+           THE UNIFIED 3D WORLD (FIXED BACKGROUND)
+           ========================================= */
+        #webgl-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0; /* Sits behind everything */
+            pointer-events: none; /* Lets you click HTML elements */
+        }
+        canvas { display: block; }
+
+        /* =========================================
+           HTML CONTENT SECTIONS (SCROLL OVER 3D)
+           ========================================= */
+        main { position: relative; z-index: 1; }
+
+        /* Glassmorphism Reusable Classes */
+        .glass-panel {
+            background: rgba(10, 10, 15, 0.3);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 16px;
+            padding: clamp(2rem, 5vw, 4rem);
+        }
+
+        /* --- SECTION 1: HERO (With Background Image) --- */
+        #sec-hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
+        
+        .hero-bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; opacity: 0.4; filter: brightness(0.5) contrast(1.2); }
+        .hero-gradient { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 60%, var(--dark) 100%); z-index: -1; }
+
+        .hero-title { font-size: clamp(3rem, 12vw, 10rem); font-weight: 800; line-height: 0.9; text-transform: uppercase; text-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .hero-title span { color: transparent; -webkit-text-stroke: 1px var(--light); }
+        .eyebrow { font-size: clamp(0.8rem, 2vw, 1.2rem); color: var(--accent); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 1rem; }
+
+        /* --- SECTION 2: CRYSTALS (Floating Objects) --- */
+        #sec-crystals { min-height: 100vh; display: flex; align-items: center; padding: 10vh 5vw; }
+        .crystal-content { width: 50%; max-width: 600px; }
+        @media (max-width: 768px) { .crystal-content { width: 100%; margin-top: 40vh; text-align: center; } }
+        
+        /* --- SECTION 3: WAVE (Particles) --- */
+        #sec-wave { min-height: 120vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10vh 5vw; }
+        .wave-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; width: 100%; max-width: 1000px; margin-top: 5vh; }
+        @media (max-width: 768px) { .wave-grid { grid-template-columns: 1fr; } }
+        .wave-card { transition: 0.4s; }
+        .wave-card:hover { border-color: var(--accent); box-shadow: 0 10px 40px var(--accent-glow); transform: translateY(-10px); }
+
+        /* --- SECTION 4: MATRIX (Geometry Rings) --- */
+        #sec-matrix { min-height: 120vh; display: flex; align-items: center; justify-content: flex-end; padding: 10vh 5vw; text-align: right; }
+        .matrix-content { width: 50%; max-width: 600px; }
+        @media (max-width: 768px) { #sec-matrix { justify-content: center; text-align: left; } .matrix-content { width: 100%; margin-bottom: 40vh; } }
+
+        /* --- SECTION 5: CORE (The Pre-Footer Void) --- */
+        #sec-core { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 5vw; }
+        .huge-cta { font-size: clamp(3rem, 8vw, 7rem); font-family: 'Syne'; margin-bottom: 2rem; color: var(--accent); text-shadow: 0 0 40px var(--accent-glow); }
+
+        /* =========================================
+           FOOTER
+           ========================================= */
+        footer { background: #010103; padding: 10vh 5vw 5vh 5vw; border-top: 1px solid rgba(0, 229, 255, 0.2); position: relative; z-index: 5; }
+        .footer-top { display: flex; flex-direction: column; gap: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5vh; margin-bottom: 5vh; }
+        .footer-huge { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 12vw, 10rem); font-weight: 800; line-height: 0.8; color: var(--light); }
+        .footer-huge span { color: var(--accent); text-shadow: 0 0 20px var(--accent-glow); }
+        .footer-links-wrapper { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem; }
+        .social-links { display: flex; gap: 1rem; }
+        .social-btn { width: 60px; height: 60px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; color: var(--light); font-size: 1.5rem; transition: 0.3s; }
+        .social-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--dark); box-shadow: 0 0 15px var(--accent-glow); }
+        .footer-bottom { display: flex; justify-content: space-between; color: #666; font-size: 0.9rem; }
+        @media (max-width: 768px) { .footer-links-wrapper { flex-direction: column; align-items: flex-start; } .footer-bottom { flex-direction: column; gap: 1rem; text-align: left; } }
+    </style>
+</head>
+<body>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- GLOBAL MODAL -->
+    <div class="magic-modal" id="global-modal" data-lenis-prevent>
+        <div class="modal-content">
+            <button class="close-modal magnetic"><i class="ph ph-x"></i></button>
+            <h2 class="display-font" style="font-size: clamp(1.8rem, 5vw, 3rem); margin-bottom: 1.5rem; color: var(--accent);">Spatial System Access</h2>
+            <p style="font-size: clamp(1rem, 2.5vw, 1.2rem); line-height: 1.8; color: #ccc;">You are interacting with the WebXR & Three.js unified framework. All 5 sections on this page are rendering from a single WebGL context to ensure 60fps performance on mobile devices.</p>
+            <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(0, 229, 255, 0.05); border-left: 3px solid var(--accent); border-radius: 4px;">
+                <p class="mono" style="color: var(--accent);">> CAMERA: Z-AXIS SCROLL SYNCED</p>
+                <p class="mono" style="color: #888; margin-top: 5px;">> POST-PROCESSING: ACTIVE</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="#" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu
+            <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU OVERLAY -->
+    <div class="menu-overlay">
+        <div class="menu-container" id="menu-grid"></div>
+    </div>
+
+    <!-- THE UNIFIED THREE.JS BACKGROUND CANVAS -->
+    <div id="webgl-container"></div>
+
+    <!-- THE 5 HTML SCROLL SECTIONS -->
+    <main id="scroll-wrapper">
+        
+        <!-- SECTION 1: HERO -->
+        <section id="sec-hero">
+            <!-- Top Background Image -->
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" class="hero-bg-img" alt="Spatial Background">
+            <div class="hero-gradient"></div>
+            
+            <p class="eyebrow mono gsap-up">► SECTION 1: THE PLANET</p>
+            <h1 class="hero-title gsap-up">
+                SPATIAL<br><span>COMPUTING</span>
+            </h1>
+            <p style="margin-top: 2rem; color: #aaa; max-width: 500px;" class="gsap-up">Scroll down to journey through 5 unique dimensions rendered in a single Three.js universe.</p>
+        </section>
+
+        <!-- SECTION 2: CRYSTALS -->
+        <section id="sec-crystals">
+            <div class="crystal-content glass-panel open-modal-btn view-target gsap-fade">
+                <p class="mono" style="color: var(--accent); margin-bottom: 1rem;">► SECTION 2: MATERIALS</p>
+                <h2 class="display-font" style="font-size: clamp(2rem, 5vw, 4rem); margin-bottom: 1.5rem;">Physical Render.</h2>
+                <p style="color: #bbb; line-height: 1.6;">Look to the right (or above on mobile). These geometric knots use MeshPhysicalMaterial, reacting to virtual point lights in real time. We build physics-based glass, metal, and plastic materials.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: WAVE PARTICLES -->
+        <section id="sec-wave">
+            <div style="text-align: center;" class="gsap-fade">
+                <p class="mono" style="color: var(--accent); margin-bottom: 1rem;">► SECTION 3: PARTICLES</p>
+                <h2 class="display-font" style="font-size: clamp(2rem, 5vw, 4rem);">Data Waves.</h2>
+            </div>
+            
+            <div class="wave-grid">
+                <div class="glass-panel wave-card open-modal-btn view-target gsap-fade">
+                    <i class="ph ph-wave-sine" style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></i>
+                    <h3 class="display-font" style="font-size: 1.8rem; margin-bottom: 0.5rem;">PointsMaterial</h3>
+                    <p style="color: #aaa;">The wave passing behind us is built from thousands of individual vertices mathematically undulating via Math.sin().</p>
+                </div>
+                <div class="glass-panel wave-card open-modal-btn view-target gsap-fade">
+                    <i class="ph ph-cpu" style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></i>
+                    <h3 class="display-font" style="font-size: 1.8rem; margin-bottom: 0.5rem;">High Performance</h3>
+                    <p style="color: #aaa;">Because it's rendering on the GPU, you get 60fps animations that native HTML/CSS could never handle.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: THE MATRIX RINGS -->
+        <section id="sec-matrix">
+            <div class="matrix-content glass-panel open-modal-btn view-target gsap-fade">
+                <p class="mono" style="color: var(--accent); margin-bottom: 1rem;">► SECTION 4: GEOMETRY</p>
+                <h2 class="display-font" style="font-size: clamp(2rem, 5vw, 4rem); margin-bottom: 1.5rem;">Interlocking Arrays.</h2>
+                <p style="color: #bbb; line-height: 1.6;">By layering geometries and manipulating their rotation on the Z-axis, we create massive architectural structures in the browser. Perfect for visualizing crypto chains or tech stacks.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 5: THE CORE -->
+        <section id="sec-core">
+            <p class="mono gsap-fade" style="color: var(--accent); margin-bottom: 1rem;">► SECTION 5: THE CORE</p>
+            <h2 class="huge-cta display-font gsap-fade">ENTER THE VOID.</h2>
+            <button class="glass-panel magnetic open-modal-btn view-target gsap-fade" data-strength="30" style="background: transparent; color: #fff; text-transform: uppercase; font-weight: 600; font-size: 1.2rem; display: inline-block;">Initialize Sequence</button>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-top">
+                <h2 class="footer-huge">START<br><span>RENDER.</span></h2>
+                <div class="footer-links-wrapper">
+                    <div>
+                        <p class="mono" style="color: #888; margin-bottom: 10px;">> /CONTACT/SPATIAL</p>
+                        <a href="#" class="open-modal-btn" style="color: var(--light); font-size: clamp(1.2rem, 2vw, 1.5rem); text-decoration: none;">spatial@magic.agency</a>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-github-logo"></i></a>
+                        <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-twitter-logo"></i></a>
+                        <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-discord-logo"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom mono">
+                <p>&copy; 2024 MΛGIC AGENCY // SPATIAL DIVISION</p>
+                <p>CAMERA SYNC: TRUE</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. LENIS (Smooth Scroll)
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. CURSOR & MAGNETIC
+        const cursor = document.querySelector('.cursor');
+        let mouseX = 0; let mouseY = 0;
+
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { 
+                gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); 
+                // Normalize for Three.js (-1 to 1)
+                mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+            });
+        }
+        
+        const attachCursorHover = () => {
+            if (window.innerWidth <= 768) return;
+            document.querySelectorAll('a, button, .menu-item-title, .social-btn').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+            document.querySelectorAll('.view-target').forEach(el => {
+                el.addEventListener('mouseenter', () => { cursor.classList.add('hovered', 'view-mode'); });
+                el.addEventListener('mouseleave', () => { cursor.classList.remove('hovered', 'view-mode'); });
+            });
+        };
+
+        const attachMagnetic = () => {
+            if (window.innerWidth <= 768) return;
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+                    const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+                    gsap.to(el, { x: x, y: y, duration: 0.3, ease: "power2.out" });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        };
+
+        // 3. EXACT MENU ARRAY
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+        
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetUrl = link.getAttribute('href');
+                toggleMenu();
+                setTimeout(() => {
+                    if (targetUrl.startsWith('#')) { lenis.scrollTo(targetUrl, { duration: 1.5 }); }
+                    else { window.location.href = targetUrl; }
+                }, 800);
+            });
+        });
+
+        // 4. MODAL
+        const modal = document.getElementById('global-modal');
+        const closeModalBtn = document.querySelector('.close-modal');
+        document.querySelectorAll('.open-modal-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => { e.preventDefault(); modal.classList.add('active'); lenis.stop(); });
+        });
+        closeModalBtn.addEventListener('click', () => { modal.classList.remove('active'); lenis.start(); });
+
+        // 5. HTML GSAP ANIMATIONS
+        gsap.to('.hero-bg-img', { y: "30%", scrollTrigger: { trigger: "#sec-hero", start: "top top", end: "bottom top", scrub: true }});
+        gsap.utils.toArray('.gsap-up').forEach((el, i) => {
+            gsap.from(el, { opacity: 0, y: 50, duration: 1, delay: 0.2 + (i*0.2), ease: "power3.out" });
+        });
+        gsap.utils.toArray('.gsap-fade').forEach(el => {
+            gsap.from(el, { opacity: 0, y: 100, duration: 1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 85%" } });
+        });
+
+        // ==========================================
+        // HIGH MAGIC: THE UNIFIED THREE.JS SCENE
+        // ==========================================
+        
+        const container = document.getElementById('webgl-container');
+        
+        // Setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 2);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0x00E5FF, 3, 100);
+        pointLight.position.set(10, 10, 10);
+        scene.add(pointLight);
+        const pointLight2 = new THREE.PointLight(0xffffff, 1, 100);
+        pointLight2.position.set(-10, -10, -10);
+        scene.add(pointLight2);
+
+        // --- BIOME 1 (Hero): The Wireframe Planet ---
+        // Y Position: 0
+        const geom1 = new THREE.IcosahedronGeometry(8, 2);
+        const mat1 = new THREE.MeshBasicMaterial({ color: 0x00E5FF, wireframe: true, transparent: true, opacity: 0.4 });
+        const planet = new THREE.Mesh(geom1, mat1);
+        planet.position.set(window.innerWidth > 768 ? 5 : 0, 0, -10); // Offset to right on desktop
+        scene.add(planet);
+
+        // --- BIOME 2 (Crystals): Physical Knots ---
+        // Y Position: -30
+        const geom2 = new THREE.TorusKnotGeometry(4, 1.5, 100, 16);
+        const mat2 = new THREE.MeshPhysicalMaterial({ 
+            color: 0x00E5FF, metalness: 0.9, roughness: 0.1, 
+            transmission: 0.9, thickness: 0.5, clearcoat: 1.0 
+        });
+        const crystalGroup = new THREE.Group();
+        const crystal1 = new THREE.Mesh(geom2, mat2);
+        const crystal2 = new THREE.Mesh(geom2, mat2);
+        crystal1.position.set(window.innerWidth > 768 ? 8 : 0, -30, -15);
+        crystal2.position.set(window.innerWidth > 768 ? 2 : 0, -35, -25);
+        crystal2.scale.set(0.5, 0.5, 0.5);
+        crystalGroup.add(crystal1, crystal2);
+        scene.add(crystalGroup);
+
+        // --- BIOME 3 (Wave): Particles ---
+        // Y Position: -60
+        const geom3 = new THREE.BufferGeometry();
+        const particlesCount = 2000;
+        const posArray = new Float32Array(particlesCount * 3);
+        for(let i=0; i<particlesCount; i++) {
+            posArray[i*3] = (Math.random() - 0.5) * 40; // X
+            posArray[i*3+1] = -60 + (Math.random() - 0.5) * 10; // Y base
+            posArray[i*3+2] = (Math.random() - 0.5) * 40; // Z
+        }
+        geom3.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const mat3 = new THREE.PointsMaterial({ size: 0.1, color: 0x00E5FF });
+        const particleWave = new THREE.Points(geom3, mat3);
+        scene.add(particleWave);
+
+        // --- BIOME 4 (Matrix): Geometric Rings ---
+        // Y Position: -90
+        const ringGroup = new THREE.Group();
+        const mat4 = new THREE.MeshBasicMaterial({ color: 0x00E5FF, wireframe: true, transparent: true, opacity: 0.3 });
+        for(let i=0; i<5; i++) {
+            const geom4 = new THREE.TorusGeometry(6 + (i*2), 0.1, 16, 100);
+            const ring = new THREE.Mesh(geom4, mat4);
+            ring.rotation.x = Math.random() * Math.PI;
+            ring.rotation.y = Math.random() * Math.PI;
+            ringGroup.add(ring);
+        }
+        ringGroup.position.set(window.innerWidth > 768 ? -8 : 0, -90, -15);
+        scene.add(ringGroup);
+
+        // --- BIOME 5 (The Core): Glowing Sun ---
+        // Y Position: -120
+        const geom5 = new THREE.SphereGeometry(6, 32, 32);
+        const mat5 = new THREE.MeshBasicMaterial({ color: 0x00E5FF });
+        const core = new THREE.Mesh(geom5, mat5);
+        core.position.set(0, -120, -20);
+        scene.add(core);
+
+        // CAMERA SETUP
+        camera.position.z = 5;
+        camera.position.y = 0; // Starts at top (Biome 1)
+
+        // THE MAGIC: TIE CAMERA Y TO PAGE SCROLL
+        ScrollTrigger.create({
+            trigger: "#scroll-wrapper",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1, // Smooth scrub
+            onUpdate: (self) => {
+                // Move Camera Down from 0 to -120 to match the biomes!
+                camera.position.y = -(self.progress * 120);
+
+                // Spin specific objects based on scroll progress
+                planet.rotation.y = self.progress * Math.PI * 2;
+                crystalGroup.rotation.y = self.progress * Math.PI * 4;
+                ringGroup.rotation.x = self.progress * Math.PI * 2;
+                ringGroup.rotation.y = self.progress * Math.PI * 2;
+            }
+        });
+
+        // Animation Loop
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
+
+            // Idle Rotations
+            planet.rotation.x += 0.001;
+            crystalGroup.children[0].rotation.x += 0.005;
+            crystalGroup.children[1].rotation.y -= 0.008;
+            core.scale.set(1 + Math.sin(time)*0.1, 1 + Math.sin(time)*0.1, 1 + Math.sin(time)*0.1); // Pulsing core
+
+            // Make Particles Wave
+            const positions = particleWave.geometry.attributes.position.array;
+            for(let i = 0; i < particlesCount; i++) {
+                const x = positions[i*3];
+                const z = positions[i*3+2];
+                // Math.sin wave formula
+                positions[i*3+1] = -60 + Math.sin(time + x*0.2 + z*0.2) * 2; 
+            }
+            particleWave.geometry.attributes.position.needsUpdate = true;
+
+            // Interactive Mouse Parallax (Tilts camera slightly)
+            if (window.innerWidth > 768) {
+                camera.position.x += (mouseX * 2 - camera.position.x) * 0.05;
+                // We don't tilt Y because Y is strictly controlled by GSAP ScrollTrigger
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            // Adjust positions for mobile on resize
+            if(window.innerWidth <= 768) {
+                planet.position.x = 0;
+                crystalGroup.children[0].position.x = 0;
+                ringGroup.position.x = 0;
+            } else {
+                planet.position.x = 5;
+                crystalGroup.children[0].position.x = 8;
+                ringGroup.position.x = -8;
+            }
+        });
+
+        animate();
+
+        // Init Setup
+        attachCursorHover();
+        attachMagnetic();
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

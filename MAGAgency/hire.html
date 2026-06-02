@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MΛGAgency | Contact / Hire Us</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --dark:#050506;
+      --light:#f4f4f5;
+      --accent:#ff6b35;
+      --accent-2:#ffd166;
+      --accent-3:#00d4ff;
+      --accent-4:#8b5cf6;
+      --gray:#121418;
+      --nav-height:70px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;cursor:none;}
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--light);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+    h1,h2,h3,h4,h5,h6,.display-font{font-family:'Syne',sans-serif;}
+    .mono{font-family:'JetBrains Mono',monospace;}
+
+    html.lenis{height:auto;}
+    .lenis.lenis-smooth{scroll-behavior:auto !important;}
+
+    .cursor{
+      position:fixed;top:0;left:0;width:20px;height:20px;border-radius:50%;
+      background:var(--light);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);
+      transition:width .3s,height .3s,background .3s,border .3s;
+      mix-blend-mode:difference;
+    }
+    .cursor.hovered{
+      width:80px;height:80px;background:transparent;border:1px solid var(--accent);
+      mix-blend-mode:normal;backdrop-filter:grayscale(1);
+    }
+    .cursor.view-mode::after{
+      content:'SEND';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      font-size:10px;font-weight:600;color:var(--light);font-family:'JetBrains Mono';letter-spacing:1px;
+    }
+    @media (max-width:768px){
+      .cursor{display:none;}
+      *{cursor:auto !important;}
+    }
+
+    nav{
+      position:fixed;top:0;left:0;width:100%;height:var(--nav-height);
+      display:flex;justify-content:space-between;align-items:center;padding:0 5vw;
+      z-index:10000;background:rgba(5,5,6,.8);backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(255,107,53,.12);
+    }
+    .nav-brand{
+      font-size:1.3rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;
+      color:var(--light);text-decoration:none;
+    }
+    .menu-btn{
+      display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--light);
+      font-weight:600;text-transform:uppercase;font-size:.9rem;
+    }
+    .hamburger{width:35px;height:8px;position:relative;}
+    .hamburger span{
+      position:absolute;width:100%;height:2px;background:var(--light);transition:.4s;
+    }
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){bottom:0;}
+    .menu-btn.active .hamburger span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);background:var(--accent);
+    }
+    .menu-btn.active .hamburger span:nth-child(2){
+      transform:translateY(-3px) rotate(-45deg);background:var(--accent);
+    }
+
+    .menu-overlay{
+      position:fixed;top:0;left:0;width:100vw;height:100vh;
+      background:rgba(5,5,6,.98);backdrop-filter:blur(10px);z-index:9999;display:flex;
+      padding-top:calc(var(--nav-height) + 3vh);
+      clip-path:polygon(0 0,100% 0,100% 0,0 0);
+      overflow-y:auto;
+      pointer-events:none;
+    }
+    .menu-overlay.active{pointer-events:auto;}
+    .menu-container{
+      width:100%;padding:0 5vw 5vh 5vw;display:grid;grid-template-columns:repeat(4,1fr);
+      gap:2rem 2.5rem;align-content:start;
+    }
+    @media (max-width:1200px){.menu-container{grid-template-columns:repeat(3,1fr);}}
+    @media (max-width:768px){
+      .menu-container{grid-template-columns:1fr;gap:.5rem;padding:2vh 5vw 10vh 5vw;}
+      .menu-item{border-bottom:1px solid rgba(255,255,255,.15);padding:1.5rem 0;}
+      .menu-item-title{font-size:2rem !important;font-weight:800 !important;}
+      .dropdown a{font-size:1.05rem !important;padding:.75rem 0;}
+    }
+    .menu-item{border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:1rem;}
+    .menu-item-title{
+      font-size:clamp(1.3rem,2.5vw,2rem);font-weight:700;display:flex;justify-content:space-between;
+      align-items:center;opacity:0;transform:translateY(20px);
+    }
+    .menu-item-title span{
+      font-size:1rem;font-family:'Inter',sans-serif;font-weight:400;color:var(--accent);
+    }
+    .dropdown{height:0;overflow:hidden;transition:height .4s ease;}
+    .dropdown-inner{padding-top:1rem;display:flex;flex-direction:column;gap:.8rem;}
+    .dropdown a{
+      color:#aaa;text-decoration:none;font-size:1.1rem;display:flex;align-items:center;gap:10px;transition:.3s;
+      word-break:break-word;
+    }
+    .dropdown a i{font-size:1.4rem;color:var(--accent);flex-shrink:0;}
+    .dropdown a:hover{color:var(--light);padding-left:10px;}
+
+    section{
+      position:relative;width:100vw;min-height:100vh;overflow:hidden;
+    }
+    .section-bg{
+      position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;
+    }
+    .section-overlay{
+      position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;background:rgba(5,5,6,.58);
+    }
+    .section-content{
+      position:relative;z-index:2;width:100%;height:100%;padding:calc(var(--nav-height) + 4vh) 5vw 8vh 5vw;
+      display:flex;
+    }
+
+    /* HERO */
+    #s01-hero .section-overlay{
+      background:
+        radial-gradient(circle at 72% 28%, rgba(255,107,53,.12), transparent 30%),
+        linear-gradient(180deg, rgba(5,5,6,.08) 0%, rgba(5,5,6,.92) 100%);
+    }
+    #s01-hero .section-content{
+      flex-direction:column;justify-content:center;align-items:flex-start;
+    }
+    .hero-eyebrow{
+      color:var(--accent-2);font-family:'JetBrains Mono';font-size:.95rem;letter-spacing:4px;text-transform:uppercase;
+      margin-bottom:1.4rem;
+    }
+    .hero-title{
+      font-size:clamp(3.4rem,10vw,9rem);line-height:.88;text-transform:uppercase;font-weight:800;
+      max-width:1100px;
+    }
+    .hero-title .line{display:block;overflow:hidden;}
+    .hero-title .word{display:inline-block;transform:translateY(110%);}
+    .hero-title .outline{color:transparent;-webkit-text-stroke:2px var(--light);}
+    .hero-sub{
+      margin-top:1.6rem;max-width:760px;color:#b6bfce;font-size:clamp(1rem,2vw,1.18rem);line-height:1.75;
+    }
+    .hero-contact-bar{
+      margin-top:2rem;
+      display:flex;gap:1rem;flex-wrap:wrap;
+    }
+    .hero-chip{
+      padding:.85rem 1rem;border-radius:999px;background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);font-family:'JetBrains Mono';font-size:.82rem;
+    }
+
+    /* UNIQUE SECTION 2: TARGET BOARD */
+    #s02-target{
+      background:#06080d;
+      min-height:150vh;
+    }
+    .target-stage{
+      position:sticky;
+      top:0;
+      height:100vh;
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      z-index:2;
+    }
+    .target-grid{
+      position:absolute;inset:0;
+      background:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size:42px 42px;
+      opacity:.55;
+    }
+    .target-board{
+      position:relative;
+      width:min(80vw,820px);
+      height:min(80vw,820px);
+      max-height:78vh;
+      max-width:78vh;
+      min-width:260px;
+      min-height:260px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle, rgba(255,107,53,.18) 0 12%, transparent 12% 22%, rgba(0,212,255,.10) 22% 36%, transparent 36% 48%, rgba(123,92,246,.10) 48% 64%, transparent 64% 76%, rgba(255,255,255,.04) 76%);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 0 60px rgba(255,107,53,.12);
+      backdrop-filter:blur(18px);
+      z-index:3;
+    }
+    .target-center{
+      position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      width:190px;height:190px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, rgba(255,107,53,.30), rgba(255,107,53,.08));
+      border:1px solid rgba(255,255,255,.12);
+      display:flex;align-items:center;justify-content:center;text-align:center;
+      box-shadow:0 0 30px rgba(255,107,53,.18);
+    }
+    .target-center h3{font-size:1.2rem;line-height:1.08;}
+    .target-center p{margin-top:.35rem;font-size:.76rem;font-family:'JetBrains Mono';color:#ffd9cc;}
+
+    .orbit-card{
+      position:absolute;
+      width:200px;
+      padding:1rem;
+      border-radius:18px;
+      background:rgba(17,20,27,.84);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(16px);
+      transform:translate(-50%,-50%);
+      box-shadow:0 20px 40px rgba(0,0,0,.24);
+      transition:.35s;
+      z-index:4;
+    }
+    .orbit-card:hover{
+      transform:translate(-50%,-50%) scale(1.05);
+      border-color:rgba(255,107,53,.25);
+    }
+    .orbit-card .mini{
+      color:var(--accent-3);font-family:'JetBrains Mono';font-size:.72rem;margin-bottom:.35rem;
+    }
+    .orbit-card h4{
+      font-size:1rem;line-height:1.15;margin-bottom:.35rem;
+    }
+    .orbit-card p{
+      color:#aab2c4;font-size:.82rem;line-height:1.45;
+    }
+    .oc-1{top:18%;left:50%;}
+    .oc-2{top:34%;left:80%;}
+    .oc-3{top:68%;left:78%;}
+    .oc-4{top:82%;left:50%;}
+    .oc-5{top:68%;left:22%;}
+    .oc-6{top:34%;left:20%;}
+
+    .target-copy{
+      position:absolute;left:5vw;bottom:8vh;max-width:430px;z-index:5;
+    }
+    .target-copy h2{
+      font-size:clamp(2.4rem,5vw,4.8rem);line-height:.95;margin-bottom:1rem;
+    }
+    .target-copy p{
+      color:#a8b0c2;line-height:1.7;
+    }
+
+    @media (max-width:1024px){
+      #s02-target{min-height:185vh;}
+      .orbit-card{width:165px;padding:.85rem;}
+      .target-center{width:150px;height:150px;}
+    }
+    @media (max-width:768px){
+      #s02-target{min-height:220vh;}
+      .target-stage{align-items:flex-start;padding-top:16vh;}
+      .target-board{
+        width:88vw;height:88vw;
+        min-width:220px;min-height:220px;
+      }
+      .target-center{width:120px;height:120px;}
+      .orbit-card{
+        width:130px;padding:.72rem;
+      }
+      .orbit-card h4{font-size:.84rem;}
+      .orbit-card p{font-size:.72rem;}
+      .oc-1{top:0%;left:50%;}
+      .oc-2{top:22%;left:88%;}
+      .oc-3{top:68%;left:86%;}
+      .oc-4{top:100%;left:50%;}
+      .oc-5{top:68%;left:14%;}
+      .oc-6{top:22%;left:12%;}
+      .target-copy{
+        position:relative;left:auto;bottom:auto;
+        margin:92vh 5vw 0 5vw;max-width:none;
+      }
+    }
+
+    /* SECTION 3: CONTACT CHANNELS AS TOWERS */
+    #s03-towers{
+      background:#07080c;
+    }
+    .towers-wrap{
+      width:100%;display:flex;flex-direction:column;justify-content:center;
+    }
+    .towers-head{
+      display:flex;justify-content:space-between;align-items:end;gap:2rem;flex-wrap:wrap;margin-bottom:4vh;
+    }
+    .towers-head h2{
+      font-size:clamp(2.8rem,6vw,5.8rem);line-height:.92;
+    }
+    .towers-head p{
+      max-width:540px;color:#a9b1c1;line-height:1.75;
+    }
+    .tower-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;align-items:end;
+      min-height:60vh;
+    }
+    .channel-tower{
+      position:relative;background:#12161d;border:1px solid rgba(255,255,255,.06);
+      border-radius:22px 22px 0 0;padding:1.2rem;transition:.35s;overflow:hidden;
+      display:flex;flex-direction:column;justify-content:flex-end;
+    }
+    .channel-tower::before{
+      content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,.02), transparent 40%);
+      pointer-events:none;
+    }
+    .channel-tower:hover{
+      transform:translateY(-10px);border-color:rgba(0,194,255,.26);box-shadow:0 20px 50px rgba(0,0,0,.26);
+    }
+    .channel-tower.t1{height:320px;}
+    .channel-tower.t2{height:420px;}
+    .channel-tower.t3{height:520px;}
+    .channel-tower.t4{height:380px;}
+    .tower-icon{
+      width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.05);
+      display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--accent);margin-bottom:1rem;
+    }
+    .tower-mini{
+      color:var(--accent-4);font-family:'JetBrains Mono';font-size:.72rem;margin-bottom:.4rem;
+    }
+    .channel-tower h3{
+      font-size:1.2rem;line-height:1.12;margin-bottom:.5rem;
+    }
+    .channel-tower p{
+      color:#a4acbd;font-size:.88rem;line-height:1.5;
+    }
+    @media (max-width:1024px){
+      .tower-grid{grid-template-columns:repeat(2,1fr);}
+    }
+    @media (max-width:768px){
+      .tower-grid{grid-template-columns:1fr;}
+      .channel-tower,
+      .channel-tower.t1,
+      .channel-tower.t2,
+      .channel-tower.t3,
+      .channel-tower.t4{
+        height:auto;min-height:240px;border-radius:22px;
+      }
+    }
+
+    /* SECTION 4: PATHWAY */
+    #s04-pathway{
+      background:#06070a;
+    }
+    .pathway-wrap{
+      width:100%;display:flex;align-items:center;justify-content:space-between;gap:2rem;
+    }
+    .path-copy{
+      width:34%;display:flex;flex-direction:column;gap:1rem;
+    }
+    .path-copy h2{
+      font-size:clamp(2.8rem,5vw,5.8rem);line-height:.94;
+    }
+    .path-copy p{
+      color:#a9b1c1;line-height:1.75;max-width:430px;
+    }
+    .path-stage{
+      width:60%;height:76vh;position:relative;display:flex;align-items:center;justify-content:center;
+    }
+    .path-line{
+      position:absolute;left:10%;right:10%;top:50%;height:4px;border-radius:999px;
+      background:linear-gradient(90deg, rgba(255,107,53,.45), rgba(0,212,255,.35), rgba(123,92,246,.35));
+    }
+    .path-node{
+      position:absolute;width:170px;padding:1rem;border-radius:18px;background:rgba(17,20,27,.84);
+      border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(16px);transform:translate(-50%,-50%);
+      box-shadow:0 18px 36px rgba(0,0,0,.22);
+    }
+    .path-node .mini{
+      color:var(--accent-2);font-family:'JetBrains Mono';font-size:.72rem;margin-bottom:.35rem;
+    }
+    .path-node h4{
+      font-size:.98rem;line-height:1.15;margin-bottom:.35rem;
+    }
+    .path-node p{
+      color:#aab2c4;font-size:.8rem;line-height:1.45;
+    }
+    .pn1{top:34%;left:16%;}
+    .pn2{top:64%;left:34%;}
+    .pn3{top:34%;left:52%;}
+    .pn4{top:64%;left:70%;}
+    .pn5{top:34%;left:88%;}
+    @media (max-width:1024px){
+      .pathway-wrap{flex-direction:column;justify-content:center;}
+      .path-copy,.path-stage{width:100%;}
+      .path-copy{text-align:center;}
+      .path-copy p{margin:0 auto;}
+      .path-stage{height:86vh;}
+    }
+    @media (max-width:768px){
+      .path-stage{height:100vh;}
+      .path-line{left:50%;right:auto;top:8%;bottom:8%;width:4px;height:auto;transform:translateX(-50%);}
+      .path-node{width:150px;}
+      .pn1{top:12%;left:50%;}
+      .pn2{top:30%;left:50%;}
+      .pn3{top:48%;left:50%;}
+      .pn4{top:66%;left:50%;}
+      .pn5{top:84%;left:50%;}
+    }
+
+    /* SECTION 5: FORM CLUSTERS */
+    #s05-form{
+      background:#08090d;
+    }
+    .form-wrap{
+      width:100%;display:flex;flex-direction:column;justify-content:center;
+    }
+    .form-head{
+      display:flex;justify-content:space-between;align-items:end;gap:2rem;flex-wrap:wrap;margin-bottom:4vh;
+    }
+    .form-head h2{
+      font-size:clamp(2.6rem,6vw,5.5rem);line-height:.94;
+    }
+    .form-head p{
+      max-width:520px;color:#a8afbf;line-height:1.75;
+    }
+    .cluster-form{
+      display:grid;grid-template-columns:1.1fr .9fr;gap:1.2rem;
+    }
+    .form-panel,
+    .info-panel{
+      background:#12161d;border:1px solid rgba(255,255,255,.06);border-radius:24px;padding:1.4rem;
+      position:relative;overflow:hidden;
+    }
+    .form-panel::before,
+    .info-panel::before{
+      content:'';position:absolute;inset:0;background:radial-gradient(circle at top right, rgba(255,107,53,.10), transparent 40%);
+      pointer-events:none;
+    }
+    .field-grid{
+      display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1rem;
+    }
+    .field{
+      display:flex;flex-direction:column;gap:.5rem;
+    }
+    .field.full{grid-column:span 2;}
+    .field label{
+      font-size:.78rem;color:#98a1b4;text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono';
+    }
+    .field input,.field textarea,.field select{
+      width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+      color:var(--light);border-radius:16px;padding:1rem;font-size:.95rem;outline:none;
+    }
+    .field textarea{min-height:150px;resize:none;}
+    .submit-btn{
+      margin-top:1rem;width:100%;height:58px;border:none;border-radius:18px;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#041117;font-weight:700;font-family:'JetBrains Mono';font-size:.9rem;
+    }
+    .info-stack{
+      display:flex;flex-direction:column;gap:1rem;margin-top:1rem;
+    }
+    .info-box{
+      padding:1rem;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+    }
+    .info-box .mini{
+      color:var(--accent-2);font-family:'JetBrains Mono';font-size:.74rem;margin-bottom:.35rem;
+    }
+    .info-box h4{
+      font-size:1rem;line-height:1.16;margin-bottom:.35rem;
+    }
+    .info-box p{
+      color:#a8b0c2;font-size:.86rem;line-height:1.5;
+    }
+    @media (max-width:1024px){
+      .cluster-form{grid-template-columns:1fr;}
+    }
+    @media (max-width:768px){
+      .field-grid{grid-template-columns:1fr;}
+      .field.full{grid-column:span 1;}
+    }
+
+    /* FOOTER */
+    #s06-footer{background:#020304;}
+    #s06-footer .section-overlay{
+      background:linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,.45) 100%);
+    }
+    .footer-main{
+      position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;
+      padding:calc(var(--nav-height) + 2vh) 5vw 5vh 5vw;
+    }
+    .footer-title{
+      margin-top:auto;text-align:center;font-size:clamp(3rem,14vw,11rem);line-height:.8;font-weight:800;
+    }
+    .footer-title span{color:var(--accent);}
+    .footer-bottom{
+      display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap;
+      border-top:1px solid rgba(255,255,255,.1);padding-top:2rem;margin-top:auto;
+    }
+    .social-links{display:flex;gap:1rem;}
+    .social-btn{
+      width:60px;height:60px;border-radius:50%;border:1px solid rgba(255,255,255,.2);
+      display:flex;justify-content:center;align-items:center;color:var(--light);font-size:1.5rem;transition:.3s;
+    }
+    .social-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+  </style>
+</head>
+<body>
+  <div class="cursor"></div>
+
+  <nav>
+    <a href="#" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+    <button class="menu-btn magnetic" data-strength="30">
+      Menu
+      <div class="hamburger"><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <div class="menu-overlay" id="menuOverlay">
+    <div class="menu-container" id="menu-grid"></div>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section id="s01-hero">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2200&auto=format&fit=crop" class="section-bg hero-bg" alt="Hire Us Hero">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="hero-eyebrow gsap-up">► CONTACT / HIRE US</div>
+
+        <h1 class="hero-title">
+          <span class="line"><span class="word gsap-word">LET'S</span></span>
+          <span class="line"><span class="word gsap-word outline">BUILD</span></span>
+        </h1>
+
+        <p class="hero-sub gsap-up">
+          This is not a basic contact page. It’s a high-end hiring funnel with a target board, communication towers,
+          project pathway, and structured inquiry form — each section designed differently to feel intentional and premium.
+        </p>
+
+        <div class="hero-contact-bar">
+          <div class="hero-chip gsap-up hover-target">Fast Response</div>
+          <div class="hero-chip gsap-up hover-target">Global Projects</div>
+          <div class="hero-chip gsap-up hover-target">Brand + Product + Code</div>
+          <div class="hero-chip gsap-up hover-target">Strategy to Launch</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TARGET BOARD -->
+    <section id="s02-target">
+      <div class="section-overlay" style="background:radial-gradient(circle at center, rgba(255,107,53,.07) 0%, rgba(5,5,6,.94) 72%);"></div>
+
+      <div class="target-stage">
+        <div class="target-grid"></div>
+
+        <div class="target-board" id="targetBoard">
+          <div class="target-center hover-target">
+            <div>
+              <h3 class="display-font">Hire<br>MΛGIC</h3>
+              <p>PROJECT TARGET</p>
+            </div>
+          </div>
+
+          <article class="orbit-card oc-1 view-target">
+            <div class="mini">GOAL 01</div>
+            <h4 class="display-font">Define the vision</h4>
+            <p>Tell us what you want to launch, improve, or redesign.</p>
+          </article>
+
+          <article class="orbit-card oc-2 view-target">
+            <div class="mini">GOAL 02</div>
+            <h4 class="display-font">Scope the system</h4>
+            <p>We map product, brand, motion, and engineering needs.</p>
+          </article>
+
+          <article class="orbit-card oc-3 view-target">
+            <div class="mini">GOAL 03</div>
+            <h4 class="display-font">Build the roadmap</h4>
+            <p>From strategy to delivery, we create a realistic execution path.</p>
+          </article>
+
+          <article class="orbit-card oc-4 view-target">
+            <div class="mini">GOAL 04</div>
+            <h4 class="display-font">Launch with clarity</h4>
+            <p>Every phase aligns to business outcomes and creative quality.</p>
+          </article>
+
+          <article class="orbit-card oc-5 view-target">
+            <div class="mini">GOAL 05</div>
+            <h4 class="display-font">Scale post-launch</h4>
+            <p>Growth loops, optimization, and expansion stay built into the plan.</p>
+          </article>
+
+          <article class="orbit-card oc-6 view-target">
+            <div class="mini">GOAL 06</div>
+            <h4 class="display-font">Stay collaborative</h4>
+            <p>Direct communication, fast iteration, and zero-chaos delivery.</p>
+          </article>
+        </div>
+
+        <div class="target-copy">
+          <h2 class="display-font">Aim The Project.</h2>
+          <p>
+            We turned the inquiry process into a target board — because hiring the right team is about focus.
+            Every orbit around the core reflects the outcomes we align before a single pixel or line of code is shipped.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMMUNICATION TOWERS -->
+    <section id="s03-towers">
+      <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.06;" alt="Towers Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="towers-wrap">
+          <div class="towers-head">
+            <h2 class="display-font">Contact<br>Towers.</h2>
+            <p>
+              Different ways to reach us are represented as vertical communication towers — a totally different layout from cards or ordinary contact blocks.
+            </p>
+          </div>
+
+          <div class="tower-grid">
+            <article class="channel-tower t1 view-target">
+              <div class="tower-icon"><i class="ph ph-envelope-simple"></i></div>
+              <div class="tower-mini">EMAIL</div>
+              <h3 class="display-font">Project Inquiry</h3>
+              <p>Best for detailed briefs, documentation, and formal project requests.</p>
+            </article>
+
+            <article class="channel-tower t2 view-target">
+              <div class="tower-icon"><i class="ph ph-chat-circle-dots"></i></div>
+              <div class="tower-mini">DISCOVERY</div>
+              <h3 class="display-font">Strategy Call</h3>
+              <p>Ideal when you need help defining scope, direction, and business priorities.</p>
+            </article>
+
+            <article class="channel-tower t3 view-target">
+              <div class="tower-icon"><i class="ph ph-monitor-play"></i></div>
+              <div class="tower-mini">REMOTE</div>
+              <h3 class="display-font">Live Workshop</h3>
+              <p>Collaborative video sessions for brand, product, and technical planning.</p>
+            </article>
+
+            <article class="channel-tower t4 view-target">
+              <div class="tower-icon"><i class="ph ph-map-pin"></i></div>
+              <div class="tower-mini">IN PERSON</div>
+              <h3 class="display-font">City Meetings</h3>
+              <p>For partnerships, enterprise clients, and strategic in-person engagements.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECT PATHWAY -->
+    <section id="s04-pathway">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.05;" alt="Pathway Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="pathway-wrap">
+          <div class="path-copy">
+            <div class="hero-eyebrow">► PROJECT PATHWAY</div>
+            <h2 class="display-font">What Happens<br>Next.</h2>
+            <p>
+              A visual project path instead of a boring numbered list. This section shows the route from first message to launch.
+            </p>
+          </div>
+
+          <div class="path-stage">
+            <div class="path-line"></div>
+
+            <article class="path-node pn1 view-target">
+              <div class="mini">STEP 01</div>
+              <h4 class="display-font">Send the brief</h4>
+              <p>Share your goals, timeline, and starting context.</p>
+            </article>
+
+            <article class="path-node pn2 view-target">
+              <div class="mini">STEP 02</div>
+              <h4 class="display-font">We review scope</h4>
+              <p>We assess fit, complexity, and opportunity.</p>
+            </article>
+
+            <article class="path-node pn3 view-target">
+              <div class="mini">STEP 03</div>
+              <h4 class="display-font">Strategy session</h4>
+              <p>Together we shape the right direction.</p>
+            </article>
+
+            <article class="path-node pn4 view-target">
+              <div class="mini">STEP 04</div>
+              <h4 class="display-font">Proposal & plan</h4>
+              <p>Scope, phases, timing, and investment are aligned.</p>
+            </article>
+
+            <article class="path-node pn5 view-target">
+              <div class="mini">STEP 05</div>
+              <h4 class="display-font">Build & launch</h4>
+              <p>Execution begins with clarity and momentum.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORM CLUSTERS -->
+    <section id="s05-form">
+      <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.06;" alt="Form Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="form-wrap">
+          <div class="form-head">
+            <h2 class="display-font">Start The<br>Conversation.</h2>
+            <p>
+              A structured project inquiry form with supporting context so it feels more like entering a serious creative partnership than filling out a basic contact form.
+            </p>
+          </div>
+
+          <div class="cluster-form">
+            <div class="form-panel view-target">
+              <div class="hero-eyebrow" style="margin-bottom:0;">► PROJECT FORM</div>
+
+              <div class="field-grid">
+                <div class="field">
+                  <label>Name</label>
+                  <input type="text" placeholder="Your name" />
+                </div>
+                <div class="field">
+                  <label>Email</label>
+                  <input type="email" placeholder="you@company.com" />
+                </div>
+                <div class="field">
+                  <label>Company</label>
+                  <input type="text" placeholder="Company / Brand" />
+                </div>
+                <div class="field">
+                  <label>Budget Range</label>
+                  <select>
+                    <option>Select budget</option>
+                    <option>$10k - $25k</option>
+                    <option>$25k - $50k</option>
+                    <option>$50k - $100k</option>
+                    <option>$100k+</option>
+                  </select>
+                </div>
+                <div class="field full">
+                  <label>Project Type</label>
+                  <input type="text" placeholder="Branding, Web Design, Product, Motion, Development..." />
+                </div>
+                <div class="field full">
+                  <label>Tell us about the project</label>
+                  <textarea placeholder="Goals, context, timeline, challenge, what success looks like..."></textarea>
+                </div>
+              </div>
+
+              <button class="submit-btn hover-target">SEND INQUIRY</button>
+            </div>
+
+            <div class="info-panel view-target">
+              <div class="hero-eyebrow" style="margin-bottom:0;">► BEFORE YOU SEND</div>
+
+              <div class="info-stack">
+                <div class="info-box">
+                  <div class="mini">BEST FIT</div>
+                  <h4 class="display-font">Complex digital-first projects</h4>
+                  <p>We are strongest when brand, product, motion, and engineering intersect.</p>
+                </div>
+
+                <div class="info-box">
+                  <div class="mini">TIMELINE</div>
+                  <h4 class="display-font">Clarity speeds everything up</h4>
+                  <p>If you know launch timing or internal milestones, tell us up front.</p>
+                </div>
+
+                <div class="info-box">
+                  <div class="mini">PARTNERSHIP</div>
+                  <h4 class="display-font">We like close collaboration</h4>
+                  <p>We work best with teams that value quality, speed, and shared thinking.</p>
+                </div>
+
+                <div class="info-box">
+                  <div class="mini">RESPONSE</div>
+                  <h4 class="display-font">You’ll hear back quickly</h4>
+                  <p>Qualified inquiries usually receive a response within 1–2 business days.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section id="s06-footer">
+      <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="filter:brightness(.42) hue-rotate(12deg);" alt="Footer Background">
+      <div class="section-overlay"></div>
+
+      <div class="footer-main">
+        <h2 class="footer-title display-font">LET'S.<br><span>MAKE.</span></h2>
+
+        <div class="footer-bottom">
+          <div class="mono" style="color:#919aae;">
+            <p>MΛGIC AGENCY // HIRE US</p>
+            <p style="margin-top:6px;">START YOUR NEXT PROJECT</p>
+          </div>
+
+          <div class="social-links">
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-paper-plane-tilt"></i></a>
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-chat-circle-dots"></i></a>
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-briefcase"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+  <script>
+    // LENIS
+    const lenis = new Lenis({ duration: 1.5, smooth: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+    gsap.registerPlugin(ScrollTrigger);
+
+    // CURSOR
+    const cursor = document.querySelector('.cursor');
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+      });
+
+      document.querySelectorAll('a, button, .hover-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+
+      document.querySelectorAll('.view-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered','view-mode'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered','view-mode'));
+      });
+    }
+
+    // MAGNETIC
+    const attachMagnetic = () => {
+      if (window.innerWidth <= 768) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const strength = el.dataset.strength || 20;
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+          gsap.to(el, { x, y, duration: 0.3, ease: "power2.out" });
+        });
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+      });
+    };
+
+    // MENU DATA EXACT
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+    const menuGrid = document.getElementById('menu-grid');
+    menuData.forEach(item => {
+      let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+      menuGrid.innerHTML += `
+        <div class="menu-item">
+          <div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div>
+          <div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div>
+        </div>
+      `;
+    });
+
+    document.querySelectorAll('.menu-item-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const dropdown = title.nextElementSibling;
+        const inner = dropdown.querySelector('.dropdown-inner');
+        document.querySelectorAll('.dropdown').forEach(drop => {
+          if (drop !== dropdown) drop.style.height = '0px';
+        });
+        dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+      });
+    });
+
+    const menuBtn = document.querySelector('.menu-btn');
+    const menuOverlay = document.getElementById('menuOverlay');
+    let menuOpen = false;
+
+    const menuTl = gsap.timeline({ paused: true, reversed: true })
+      .to(menuOverlay, {
+        clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+        duration: 0.8,
+        ease: "power4.inOut",
+        onStart: () => menuOverlay.classList.add('active')
+      })
+      .to('.menu-item-title', {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.04,
+        ease: "power3.out"
+      }, "-=0.4");
+
+    const closeMenu = () => {
+      menuOpen = false;
+      menuBtn.classList.remove('active');
+      document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px');
+      lenis.start();
+      menuTl.reverse();
+      setTimeout(() => {
+        if (!menuOpen) menuOverlay.classList.remove('active');
+      }, 850);
+    };
+
+    const openMenu = () => {
+      menuOpen = true;
+      menuBtn.classList.add('active');
+      lenis.stop();
+      menuOverlay.classList.add('active');
+      menuTl.play();
+    };
+
+    menuBtn.addEventListener('click', () => {
+      if (menuOpen) closeMenu();
+      else openMenu();
+    });
+
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute('href');
+        closeMenu();
+        setTimeout(() => {
+          if (targetUrl.startsWith('#')) lenis.scrollTo(targetUrl, { duration: 1.5 });
+          else window.location.href = targetUrl;
+        }, 850);
+      });
+    });
+
+    // HERO
+    gsap.to(".gsap-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.2,
+      ease: "power4.out",
+      delay: 0.2
+    });
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      delay: 0.8,
+      stagger: 0.1,
+      ease: "power3.out"
+    });
+    gsap.to(".hero-bg", {
+      y: "18%",
+      scrollTrigger: {
+        trigger: "#s01-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // TARGET BOARD
+    gsap.to("#targetBoard", {
+      rotate: 8,
+      scale: 1.04,
+      scrollTrigger: {
+        trigger: "#s02-target",
+        start: "top center",
+        end: "bottom center",
+        scrub: true
+      }
+    });
+
+    gsap.utils.toArray('.orbit-card').forEach((card, i) => {
+      gsap.from(card, {
+        opacity: 0,
+        scale: 0.8,
+        y: 40,
+        duration: 1,
+        delay: i * 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s02-target",
+          start: "top 60%"
+        }
+      });
+    });
+
+    // TOWERS
+    gsap.utils.toArray('.channel-tower').forEach((tower, i) => {
+      gsap.from(tower, {
+        opacity: 0,
+        y: 90,
+        duration: 1,
+        delay: i * 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s03-towers",
+          start: "top 72%"
+        }
+      });
+    });
+
+    // PATHWAY
+    gsap.utils.toArray('.path-node').forEach((node, i) => {
+      gsap.from(node, {
+        opacity: 0,
+        scale: 0.8,
+        y: 40,
+        duration: 0.9,
+        delay: i * 0.1,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: "#s04-pathway",
+          start: "top 72%"
+        }
+      });
+    });
+
+    // FORM PANELS
+    gsap.from('.form-panel', {
+      opacity: 0,
+      x: -80,
+      duration: 1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: "#s05-form",
+        start: "top 72%"
+      }
+    });
+
+    gsap.from('.info-panel', {
+      opacity: 0,
+      x: 80,
+      duration: 1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: "#s05-form",
+        start: "top 72%"
+      }
+    });
+
+    attachMagnetic();
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

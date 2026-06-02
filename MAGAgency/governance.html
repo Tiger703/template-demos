@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MΛGAgency | Investors Governance</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --dark:#05070b;
+      --light:#f4f4f5;
+      --accent:#7C4DFF;
+      --accent-2:#12D6DF;
+      --gold:#E8C468;
+      --gray:#12151c;
+      --nav-height:70px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;cursor:none;}
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--light);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+    h1,h2,h3,h4,h5,h6,.display-font{font-family:'Syne',sans-serif;}
+    .mono{font-family:'JetBrains Mono',monospace;}
+
+    html.lenis{height:auto;}
+    .lenis.lenis-smooth{scroll-behavior:auto !important;}
+
+    .cursor{
+      position:fixed;top:0;left:0;width:20px;height:20px;border-radius:50%;
+      background:var(--light);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);
+      transition:width .3s,height .3s,background .3s,border .3s;
+      mix-blend-mode:difference;
+    }
+    .cursor.hovered{
+      width:80px;height:80px;background:transparent;border:1px solid var(--accent);
+      mix-blend-mode:normal;backdrop-filter:grayscale(1);
+    }
+    .cursor.view-mode::after{
+      content:'VIEW';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      font-size:10px;font-weight:600;color:var(--light);font-family:'JetBrains Mono';
+    }
+    @media (max-width:768px){
+      .cursor{display:none;}
+      *{cursor:auto !important;}
+    }
+
+    nav{
+      position:fixed;top:0;left:0;width:100%;height:var(--nav-height);
+      display:flex;justify-content:space-between;align-items:center;padding:0 5vw;
+      z-index:10000;background:rgba(5,7,11,.78);backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(124,77,255,.16);
+    }
+    .nav-brand{
+      font-size:1.3rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;
+      color:var(--light);text-decoration:none;
+    }
+    .menu-btn{
+      display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--light);
+      font-weight:600;text-transform:uppercase;font-size:.9rem;
+    }
+    .hamburger{width:35px;height:8px;position:relative;}
+    .hamburger span{
+      position:absolute;width:100%;height:2px;background:var(--light);transition:.4s;
+    }
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){bottom:0;}
+    .menu-btn.active .hamburger span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);background:var(--accent);
+    }
+    .menu-btn.active .hamburger span:nth-child(2){
+      transform:translateY(-3px) rotate(-45deg);background:var(--accent);
+    }
+
+    .menu-overlay{
+      position:fixed;top:0;left:0;width:100vw;height:100vh;
+      background:rgba(5,7,11,.98);backdrop-filter:blur(10px);z-index:9999;display:flex;
+      padding-top:calc(var(--nav-height) + 3vh);
+      clip-path:polygon(0 0,100% 0,100% 0,0 0);
+      overflow-y:auto;
+    }
+    .menu-container{
+      width:100%;padding:0 5vw 5vh 5vw;display:grid;grid-template-columns:repeat(4,1fr);
+      gap:2rem 2.5rem;align-content:start;
+    }
+    @media (max-width:1200px){.menu-container{grid-template-columns:repeat(3,1fr);}}
+    @media (max-width:768px){
+      .menu-container{grid-template-columns:1fr;gap:.5rem;padding:2vh 5vw 10vh 5vw;}
+      .menu-item{border-bottom:1px solid rgba(255,255,255,.15);padding:1.5rem 0;}
+      .menu-item-title{font-size:2rem !important;font-weight:800 !important;}
+      .dropdown a{font-size:1.3rem !important;padding:.8rem 0;}
+    }
+    .menu-item{border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:1rem;}
+    .menu-item-title{
+      font-size:clamp(1.3rem,2.5vw,2rem);font-weight:700;display:flex;justify-content:space-between;
+      align-items:center;opacity:0;transform:translateY(20px);
+    }
+    .menu-item-title span{
+      font-size:1rem;font-family:'Inter',sans-serif;font-weight:400;color:var(--accent);
+    }
+    .dropdown{height:0;overflow:hidden;transition:height .4s ease;}
+    .dropdown-inner{padding-top:1rem;display:flex;flex-direction:column;gap:.8rem;}
+    .dropdown a{
+      color:#aaa;text-decoration:none;font-size:1.1rem;display:flex;align-items:center;gap:10px;transition:.3s;
+    }
+    .dropdown a i{font-size:1.4rem;color:var(--accent);}
+    .dropdown a:hover{color:var(--light);padding-left:10px;}
+
+    section{
+      position:relative;width:100vw;min-height:100vh;overflow:hidden;
+    }
+    .section-bg{
+      position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;
+    }
+    .section-overlay{
+      position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;background:rgba(5,7,11,.62);
+    }
+    .section-content{
+      position:relative;z-index:2;width:100%;height:100%;padding:calc(var(--nav-height) + 4vh) 5vw 8vh 5vw;
+      display:flex;
+    }
+
+    /* HERO */
+    #s01-hero .section-overlay{
+      background:linear-gradient(180deg, rgba(5,7,11,.16) 0%, rgba(5,7,11,.9) 100%);
+    }
+    #s01-hero .section-content{
+      flex-direction:column;justify-content:center;align-items:flex-start;
+    }
+    .hero-eyebrow{
+      color:var(--gold);font-family:'JetBrains Mono';font-size:.95rem;letter-spacing:4px;text-transform:uppercase;
+      margin-bottom:1.4rem;
+    }
+    .hero-title{
+      font-size:clamp(3.2rem,10vw,9rem);line-height:.88;text-transform:uppercase;font-weight:800;
+      max-width:1100px;
+    }
+    .hero-title .line{display:block;overflow:hidden;}
+    .hero-title .word{display:inline-block;transform:translateY(110%);}
+    .hero-title .outline{color:transparent;-webkit-text-stroke:2px var(--light);}
+    .hero-sub{
+      margin-top:1.6rem;max-width:700px;color:#b2b9cb;font-size:clamp(1rem,2vw,1.2rem);line-height:1.75;
+    }
+
+    .hero-cards{
+      margin-top:2.5rem;width:min(100%,980px);display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
+    }
+    .hero-card{
+      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);border-radius:18px;padding:1.2rem 1.3rem;
+    }
+    .hero-card .label{color:#9098ac;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;}
+    .hero-card .value{margin-top:.55rem;font-size:clamp(1.3rem,2.6vw,2.2rem);font-weight:700;}
+    @media (max-width:900px){.hero-cards{grid-template-columns:1fr;}}
+
+    /* S02 BOARD STRUCTURE */
+    #s02-board .section-overlay{
+      background:linear-gradient(90deg, rgba(5,7,11,.95) 0%, rgba(5,7,11,.62) 55%, rgba(5,7,11,.9) 100%);
+    }
+    #s02-board .section-content{
+      align-items:center;justify-content:space-between;gap:2rem;
+    }
+    .board-left{
+      width:34%;display:flex;flex-direction:column;gap:1rem;
+    }
+    .board-left h2{
+      font-size:clamp(2.5rem,5vw,5.5rem);line-height:.95;
+    }
+    .board-left p{
+      color:#a1a9bb;line-height:1.7;max-width:430px;
+    }
+    .board-right{
+      width:60%;display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;
+    }
+    .govern-tile{
+      min-height:220px;background:rgba(11,14,20,.68);backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:1.4rem;
+      display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;
+      transition:.35s;
+    }
+    .govern-tile::before{
+      content:'';position:absolute;inset:0;background:radial-gradient(circle at top right, rgba(124,77,255,.12), transparent 42%);
+      pointer-events:none;
+    }
+    .govern-tile:hover{
+      transform:translateY(-8px);border-color:rgba(124,77,255,.3);
+      box-shadow:0 20px 40px rgba(0,0,0,.25);
+    }
+    .govern-meta{
+      display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;
+    }
+    .govern-title{
+      font-size:1.12rem;font-weight:700;color:var(--light);
+    }
+    .govern-sub{
+      font-size:.82rem;color:#98a2b6;font-family:'JetBrains Mono';margin-top:.25rem;
+    }
+    .govern-badge{
+      padding:.45rem .7rem;border-radius:999px;background:rgba(18,214,223,.12);border:1px solid rgba(18,214,223,.24);
+      color:var(--accent-2);font-size:.74rem;font-family:'JetBrains Mono';
+    }
+    .govern-score{
+      font-size:clamp(1.8rem,3vw,3rem);font-weight:800;color:var(--light);
+    }
+    .govern-desc{
+      color:#a5acbe;line-height:1.6;font-size:.94rem;
+    }
+    @media (max-width:1024px){
+      #s02-board .section-content{flex-direction:column;justify-content:center;}
+      .board-left,.board-right{width:100%;}
+      .board-left{text-align:center;}
+      .board-left p{margin:0 auto;}
+    }
+    @media (max-width:768px){
+      .board-right{grid-template-columns:1fr;}
+    }
+
+    /* S03 NETWORK */
+    #s03-network{
+      background:#06080e;
+    }
+    .network-wrap{
+      width:100%;display:flex;align-items:center;justify-content:space-between;gap:2rem;
+    }
+    .network-copy{
+      width:34%;display:flex;flex-direction:column;gap:1rem;
+    }
+    .network-copy h2{
+      font-size:clamp(2.5rem,5vw,5.3rem);line-height:.95;
+    }
+    .network-copy p{
+      color:#a6adbf;line-height:1.7;max-width:430px;
+    }
+    .network-stage{
+      width:60%;height:72vh;border-radius:24px;position:relative;overflow:hidden;
+      background:rgba(10,12,18,.6);backdrop-filter:blur(18px);border:1px solid rgba(18,214,223,.16);
+      box-shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+    #networkCanvas{
+      width:100%;height:100%;display:block;
+    }
+    .network-label{
+      position:absolute;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);padding:.85rem 1rem;border-radius:14px;
+      font-family:'JetBrains Mono';font-size:.8rem;color:var(--light);
+      box-shadow:0 10px 25px rgba(0,0,0,.25);
+    }
+    .nl-1{top:14%;left:10%;}
+    .nl-2{top:20%;right:12%;}
+    .nl-3{bottom:22%;left:16%;}
+    .nl-4{bottom:14%;right:16%;}
+    @media (max-width:1024px){
+      .network-wrap{flex-direction:column;justify-content:center;}
+      .network-copy,.network-stage{width:100%;}
+      .network-copy{text-align:center;}
+      .network-copy p{margin:0 auto;}
+      .network-stage{height:58vh;}
+    }
+
+    /* S04 POLICY REEL */
+    #s04-policy{background:#05070b;}
+    .policy-shell{
+      width:100%;display:flex;flex-direction:column;justify-content:center;gap:4vh;
+    }
+    .policy-head{
+      display:flex;justify-content:space-between;align-items:end;gap:2rem;flex-wrap:wrap;
+    }
+    .policy-head h2{
+      font-size:clamp(2.7rem,6vw,5.8rem);line-height:.92;
+    }
+    .policy-head p{
+      max-width:520px;color:#a3abbd;line-height:1.7;
+    }
+    .policy-rows{display:flex;flex-direction:column;gap:1rem;}
+    .policy-row{
+      width:100%;overflow:hidden;white-space:nowrap;border-top:1px solid rgba(255,255,255,.08);
+      border-bottom:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);
+    }
+    .policy-track{
+      display:inline-flex;gap:1rem;align-items:center;padding:1rem 0;animation:policyLeft 24s linear infinite;
+    }
+    .policy-row.reverse .policy-track{animation:policyRight 24s linear infinite;}
+    .policy-chip{
+      padding:1rem 1.2rem;border-radius:14px;background:rgba(124,77,255,.1);border:1px solid rgba(124,77,255,.2);
+      display:flex;align-items:center;gap:1rem;min-width:290px;
+    }
+    .policy-chip .dot{
+      width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px rgba(124,77,255,.5);
+      flex-shrink:0;
+    }
+    .policy-chip strong{font-size:1rem;color:var(--light);}
+    .policy-chip span{font-size:.82rem;color:#a0a8ba;font-family:'JetBrains Mono';}
+    @keyframes policyLeft{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+    @keyframes policyRight{from{transform:translateX(-50%);}to{transform:translateX(0);}}
+
+    /* S05 GOVERNANCE ARCHIVE */
+    #s05-archive{background:#06070b;}
+    .archive-wrap{
+      width:100%;display:flex;flex-direction:column;justify-content:center;
+    }
+    .archive-head{
+      display:flex;justify-content:space-between;align-items:end;gap:2rem;flex-wrap:wrap;margin-bottom:5vh;
+    }
+    .archive-head h2{font-size:clamp(2.6rem,6vw,5.5rem);line-height:.94;}
+    .archive-head p{max-width:520px;color:#a2aabd;line-height:1.7;}
+    .archive-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;
+    }
+    .archive-card{
+      background:#0f131b;border:1px solid rgba(255,255,255,.06);border-radius:18px;overflow:hidden;
+      transition:.4s;position:relative;
+    }
+    .archive-card:hover{
+      transform:translateY(-10px);border-color:rgba(18,214,223,.28);box-shadow:0 22px 50px rgba(0,0,0,.35);
+    }
+    .archive-card img{
+      width:100%;height:220px;object-fit:cover;filter:grayscale(18%);transition:.4s;
+    }
+    .archive-card:hover img{filter:grayscale(0);}
+    .archive-body{padding:1.35rem;}
+    .archive-top{
+      display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem;color:var(--gold);
+      font-size:.82rem;font-family:'JetBrains Mono';
+    }
+    .archive-body h3{
+      font-size:1.35rem;line-height:1.2;margin-bottom:.8rem;
+    }
+    .archive-body p{
+      color:#99a2b5;line-height:1.6;font-size:.95rem;
+    }
+    @media (max-width:1024px){.archive-grid{grid-template-columns:repeat(2,1fr);}}
+    @media (max-width:768px){.archive-grid{grid-template-columns:1fr;}}
+
+    /* FOOTER */
+    #s06-footer{background:#020305;}
+    #s06-footer .section-overlay{
+      background:linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,.45) 100%);
+    }
+    .footer-main{
+      position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;
+      padding:calc(var(--nav-height) + 2vh) 5vw 5vh 5vw;
+    }
+    .footer-title{
+      margin-top:auto;text-align:center;font-size:clamp(3rem,14vw,11rem);line-height:.8;font-weight:800;
+    }
+    .footer-title span{color:var(--accent-2);}
+    .footer-bottom{
+      display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap;
+      border-top:1px solid rgba(255,255,255,.1);padding-top:2rem;margin-top:auto;
+    }
+    .social-links{display:flex;gap:1rem;}
+    .social-btn{
+      width:60px;height:60px;border-radius:50%;border:1px solid rgba(255,255,255,.2);
+      display:flex;justify-content:center;align-items:center;color:var(--light);font-size:1.5rem;transition:.3s;
+    }
+    .social-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+  </style>
+</head>
+<body>
+  <div class="cursor"></div>
+
+  <nav>
+    <a href="#" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+    <button class="menu-btn magnetic" data-strength="30">
+      Menu
+      <div class="hamburger"><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <div class="menu-overlay">
+    <div class="menu-container" id="menu-grid"></div>
+  </div>
+
+  <main>
+    <!-- S01 HERO -->
+    <section id="s01-hero">
+      <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2200&auto=format&fit=crop" class="section-bg hero-bg" alt="Governance Hero">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="hero-eyebrow gsap-up">► INVESTOR RELATIONS / GOVERNANCE</div>
+
+        <h1 class="hero-title">
+          <span class="line"><span class="word gsap-word">TRUST</span></span>
+          <span class="line"><span class="word gsap-word outline">STRUCTURED</span></span>
+        </h1>
+
+        <p class="hero-sub gsap-up">
+          A full-screen governance experience focused on transparency, board design, committee oversight, policy integrity,
+          and institutional-grade disclosure. Clean, modern, and built for investor confidence.
+        </p>
+
+        <div class="hero-cards">
+          <div class="hero-card gsap-up hover-target">
+            <div class="label">Board Members</div>
+            <div class="value">12</div>
+          </div>
+          <div class="hero-card gsap-up hover-target">
+            <div class="label">Independent Directors</div>
+            <div class="value">83%</div>
+          </div>
+          <div class="hero-card gsap-up hover-target">
+            <div class="label">Committees Active</div>
+            <div class="value">4</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S02 GOVERNANCE BOARD -->
+    <section id="s02-board">
+      <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.1;" alt="Governance Board Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="board-left">
+          <div class="hero-eyebrow">► GOVERNANCE SYSTEM</div>
+          <h2 class="display-font">Board<br>Architecture.</h2>
+          <p>
+            A premium governance dashboard presenting board composition, committee supervision, ethics control, and accountability structures in a refined full-page system.
+          </p>
+        </div>
+
+        <div class="board-right">
+          <div class="govern-tile hover-target">
+            <div class="govern-meta">
+              <div>
+                <div class="govern-title">Board Independence</div>
+                <div class="govern-sub">STRUCTURE / OVERSIGHT</div>
+              </div>
+              <div class="govern-badge">CORE</div>
+            </div>
+            <div class="govern-score">83%</div>
+            <div class="govern-desc">Independent composition aligned with global investor expectations and balanced decision authority.</div>
+          </div>
+
+          <div class="govern-tile hover-target">
+            <div class="govern-meta">
+              <div>
+                <div class="govern-title">Audit Committee</div>
+                <div class="govern-sub">RISK / REPORTING</div>
+              </div>
+              <div class="govern-badge">ACTIVE</div>
+            </div>
+            <div class="govern-score">4.9/5</div>
+            <div class="govern-desc">Financial oversight, internal controls, disclosures, and annual independent auditor coordination.</div>
+          </div>
+
+          <div class="govern-tile hover-target">
+            <div class="govern-meta">
+              <div>
+                <div class="govern-title">Compensation Governance</div>
+                <div class="govern-sub">INCENTIVES / ETHICS</div>
+              </div>
+              <div class="govern-badge">ALIGN</div>
+            </div>
+            <div class="govern-score">92%</div>
+            <div class="govern-desc">Executive remuneration aligned with long-term shareholder value creation and risk discipline.</div>
+          </div>
+
+          <div class="govern-tile hover-target">
+            <div class="govern-meta">
+              <div>
+                <div class="govern-title">Policy Compliance</div>
+                <div class="govern-sub">GLOBAL / INTERNAL</div>
+              </div>
+              <div class="govern-badge">CLEAR</div>
+            </div>
+            <div class="govern-score">100%</div>
+            <div class="govern-desc">Global ethics policy framework, anti-bribery, whistleblower process, and review cadence fully maintained.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S03 NETWORK -->
+    <section id="s03-network">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.08;" alt="Governance Network Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="network-wrap">
+          <div class="network-copy">
+            <div class="hero-eyebrow">► INTERLOCKED OVERSIGHT</div>
+            <h2 class="display-font">Control<br>Network.</h2>
+            <p>
+              This interactive network visualizes governance as a living system — board, audit, risk, compensation, and shareholders all linked through accountability flows.
+            </p>
+          </div>
+
+          <div class="network-stage hover-target">
+            <canvas id="networkCanvas"></canvas>
+            <div class="network-label nl-1">BOARD OVERSIGHT</div>
+            <div class="network-label nl-2">AUDIT CONTROL</div>
+            <div class="network-label nl-3">RISK COMMITTEE</div>
+            <div class="network-label nl-4">SHAREHOLDER RIGHTS</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S04 POLICY REEL -->
+    <section id="s04-policy">
+      <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.08;" alt="Policy Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="policy-shell">
+          <div class="policy-head">
+            <h2 class="display-font">Policy<br>Framework.</h2>
+            <p>
+              A continuous governance reel showcasing policies, charters, rights, reviews, and institutional protections in a modern full-width disclosure layout.
+            </p>
+          </div>
+
+          <div class="policy-rows">
+            <div class="policy-row">
+              <div class="policy-track">
+                <div class="policy-chip"><span class="dot"></span><div><strong>Code of Ethics</strong><span>Global conduct, integrity, and reporting framework</span></div></div>
+                <div class="policy-chip"><span class="dot"></span><div><strong>Whistleblower Policy</strong><span>Confidential reporting & audit escalation route</span></div></div>
+                <div class="policy-chip"><span class="dot"></span><div><strong>Board Charter</strong><span>Role clarity, tenure logic, and accountability rules</span></div></div>
+                <div class="policy-chip"><span class="dot"></span><div><strong>Voting Rights</strong><span>Transparent annual ballot and proxy processes</span></div></div>
+
+                <div class="policy-chip"><span class="dot"></span><div><strong>Code of Ethics</strong><span>Global conduct, integrity, and reporting framework</span></div></div>
+                <div class="policy-chip"><span class="dot"></span><div><strong>Whistleblower Policy</strong><span>Confidential reporting & audit escalation route</span></div></div>
+                <div class="policy-chip"><span class="dot"></span><div><strong>Board Charter</strong><span>Role clarity, tenure logic, and accountability rules</span></div></div>
+                <div class="policy-chip"><span class="dot"></span><div><strong>Voting Rights</strong><span>Transparent annual ballot and proxy processes</span></div></div>
+              </div>
+            </div>
+
+            <div class="policy-row reverse">
+              <div class="policy-track">
+                <div class="policy-chip"><span class="dot"></span><div><strong>Compensation Charter</strong><span>Executive pay alignment with long-term returns</span></div></div>
+                <div class="policy-chip"><span class="dot"></span><div><strong>Audit Oversight</strong><span>Controls, disclosures, and assurance reviews</span></div></div>
+                <div class="policy-chip"><span class="dot"></span><div><strong>Succession Planning</strong><span>Leadership continuity & board renewal process</span></div></div>
+                <div class="policy-chip"><span class="dot"></span><div><strong>Risk Escalation</strong><span>Multi-layer monitoring for strategic threats</span></div></div>
+
+                <div class="policy-chip"><span class="dot"></span><div><strong>Compensation Charter</strong><span>Executive pay alignment with long-term returns</span></div></div>
+                <div class="policy-chip"><span class="dot"></span><div><strong>Audit Oversight</strong><span>Controls, disclosures, and assurance reviews</span></div></div>
+                <div class="policy-chip"><span class="dot"></span><div><strong>Succession Planning</strong><span>Leadership continuity & board renewal process</span></div></div>
+                <div class="policy-chip"><span class="dot"></span><div><strong>Risk Escalation</strong><span>Multi-layer monitoring for strategic threats</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S05 ARCHIVE -->
+    <section id="s05-archive">
+      <img src="https://images.unsplash.com/photo-1551836022-4c4c79ecde51?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.08;" alt="Archive Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="archive-wrap">
+          <div class="archive-head">
+            <h2 class="display-font">Governance<br>Archive.</h2>
+            <p>
+              A structured archive of charters, ethics frameworks, shareholder rights, audit reviews, and institutional governance disclosures.
+            </p>
+          </div>
+
+          <div class="archive-grid">
+            <article class="archive-card view-target">
+              <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop" alt="Board Charter">
+              <div class="archive-body">
+                <div class="archive-top"><span>CHARTER</span><span>BOARD</span></div>
+                <h3 class="display-font">Board Charter & Responsibilities.</h3>
+                <p>Structure, role clarity, appointment process, independence definitions, and operating scope.</p>
+              </div>
+            </article>
+
+            <article class="archive-card view-target">
+              <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1200&auto=format&fit=crop" alt="Audit Committee">
+              <div class="archive-body">
+                <div class="archive-top"><span>COMMITTEE</span><span>AUDIT</span></div>
+                <h3 class="display-font">Audit Committee Charter.</h3>
+                <p>Oversight design for financial controls, external audit processes, and reporting integrity.</p>
+              </div>
+            </article>
+
+            <article class="archive-card view-target">
+              <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200&auto=format&fit=crop" alt="Ethics">
+              <div class="archive-body">
+                <div class="archive-top"><span>ETHICS</span><span>GLOBAL</span></div>
+                <h3 class="display-font">Code of Business Conduct.</h3>
+                <p>Integrity rules, anti-corruption measures, disclosure obligations, and conduct expectations.</p>
+              </div>
+            </article>
+
+            <article class="archive-card view-target">
+              <img src="https://images.unsplash.com/photo-1554224154-22dec7ec8818?q=80&w=1200&auto=format&fit=crop" alt="Whistleblower">
+              <div class="archive-body">
+                <div class="archive-top"><span>REPORTING</span><span>SECURE</span></div>
+                <h3 class="display-font">Whistleblower & Reporting Channels.</h3>
+                <p>Confidential incident reporting design, independence safeguards, and escalation governance.</p>
+              </div>
+            </article>
+
+            <article class="archive-card view-target">
+              <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop" alt="Compensation">
+              <div class="archive-body">
+                <div class="archive-top"><span>PAY</span><span>ALIGNMENT</span></div>
+                <h3 class="display-font">Compensation Governance Summary.</h3>
+                <p>Executive incentive architecture tied to performance, stewardship, and value preservation.</p>
+              </div>
+            </article>
+
+            <article class="archive-card view-target">
+              <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1200&auto=format&fit=crop" alt="Shareholder Rights">
+              <div class="archive-body">
+                <div class="archive-top"><span>RIGHTS</span><span>SHAREHOLDER</span></div>
+                <h3 class="display-font">Shareholder Rights Framework.</h3>
+                <p>Voting mechanisms, proposal rights, disclosure cadence, and annual governance review process.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S06 FOOTER -->
+    <section id="s06-footer">
+      <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="filter:brightness(.42) hue-rotate(15deg);" alt="Footer Background">
+      <div class="section-overlay"></div>
+
+      <div class="footer-main">
+        <h2 class="footer-title display-font">ETHICS.<br><span>PROTECTED.</span></h2>
+
+        <div class="footer-bottom">
+          <div class="mono" style="color:#919aae;">
+            <p>MΛGIC AGENCY // GOVERNANCE RELATIONS</p>
+            <p style="margin-top:6px;">INSTITUTIONAL DISCLOSURE EXPERIENCE</p>
+          </div>
+
+          <div class="social-links">
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-shield-check"></i></a>
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-scales"></i></a>
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-buildings"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+  <script>
+    // LENIS
+    const lenis = new Lenis({ duration: 1.5, smooth: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+    gsap.registerPlugin(ScrollTrigger);
+
+    // CURSOR
+    const cursor = document.querySelector('.cursor');
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+      });
+
+      document.querySelectorAll('a, button, .hover-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+
+      document.querySelectorAll('.view-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered','view-mode'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered','view-mode'));
+      });
+    }
+
+    // MAGNETIC
+    const attachMagnetic = () => {
+      if (window.innerWidth <= 768) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const strength = el.dataset.strength || 20;
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+          gsap.to(el, { x, y, duration: 0.3, ease: "power2.out" });
+        });
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+      });
+    };
+
+    // MENU DATA EXACT
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+    const menuGrid = document.getElementById('menu-grid');
+    menuData.forEach(item => {
+      let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+      menuGrid.innerHTML += `
+        <div class="menu-item">
+          <div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div>
+          <div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div>
+        </div>
+      `;
+    });
+
+    document.querySelectorAll('.menu-item-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const dropdown = title.nextElementSibling;
+        const inner = dropdown.querySelector('.dropdown-inner');
+        document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+        dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+      });
+    });
+
+    const menuBtn = document.querySelector('.menu-btn');
+    let menuOpen = false;
+    const menuTl = gsap.timeline({ paused: true })
+      .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+      .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+    const toggleMenu = () => {
+      menuOpen = !menuOpen;
+      menuBtn.classList.toggle('active');
+      if (menuOpen) {
+        lenis.stop();
+        menuTl.play();
+      } else {
+        lenis.start();
+        document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px');
+        menuTl.reverse();
+      }
+    };
+    menuBtn.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute('href');
+        toggleMenu();
+        setTimeout(() => {
+          if (targetUrl.startsWith('#')) lenis.scrollTo(targetUrl, { duration: 1.5 });
+          else window.location.href = targetUrl;
+        }, 800);
+      });
+    });
+
+    // HERO
+    gsap.to(".gsap-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.2,
+      ease: "power4.out",
+      delay: 0.2
+    });
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      delay: 0.8,
+      stagger: 0.15,
+      ease: "power3.out"
+    });
+    gsap.to(".hero-bg", {
+      y: "18%",
+      scrollTrigger: {
+        trigger: "#s01-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // NETWORK CANVAS
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+    let nodes = [];
+    let pointer = { x: null, y: null };
+
+    function resizeCanvas(){
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      initNodes();
+    }
+
+    function initNodes(){
+      nodes = [];
+      const count = window.innerWidth > 768 ? 48 : 26;
+      for(let i=0;i<count;i++){
+        nodes.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.6,
+          vy: (Math.random() - 0.5) * 0.6,
+          r: Math.random() * 2.3 + 1.5
+        });
+      }
+    }
+
+    function drawNetwork(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      nodes.forEach(n => {
+        n.x += n.vx;
+        n.y += n.vy;
+
+        if(n.x < 0 || n.x > canvas.width) n.vx *= -1;
+        if(n.y < 0 || n.y > canvas.height) n.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+        ctx.fillStyle = 'rgba(18,214,223,0.8)';
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = '#12D6DF';
+        ctx.fill();
+      });
+
+      for(let i=0;i<nodes.length;i++){
+        for(let j=i+1;j<nodes.length;j++){
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if(dist < 140){
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(124,77,255,${(1 - dist / 140) * 0.35})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+
+        if(pointer.x !== null){
+          const dxp = nodes[i].x - pointer.x;
+          const dyp = nodes[i].y - pointer.y;
+          const distp = Math.sqrt(dxp*dxp + dyp*dyp);
+          if(distp < 180){
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(pointer.x, pointer.y);
+            ctx.strokeStyle = `rgba(232,196,104,${(1 - distp / 180) * 0.5})`;
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(drawNetwork);
+    }
+
+    canvas.parentElement.addEventListener('mousemove', e => {
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = e.clientX - rect.left;
+      pointer.y = e.clientY - rect.top;
+    });
+    canvas.parentElement.addEventListener('mouseleave', () => {
+      pointer.x = null;
+      pointer.y = null;
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    drawNetwork();
+
+    // ARCHIVE ENTRY
+    gsap.utils.toArray('.archive-card').forEach((card, i) => {
+      gsap.from(card, {
+        opacity: 0,
+        y: 70,
+        duration: 1,
+        delay: i * 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s05-archive",
+          start: "top 70%"
+        }
+      });
+    });
+
+    attachMagnetic();
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Concepts</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Premium Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES & STRICT RESET
+           ========================================= */
+        :root {
+            --dark: #020202;
+            --light: #f4f4f5;
+            --accent: #00f0ff; /* Electric Cyan for Concepts */
+            --gray: #111111;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden !important; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        section { position: relative; width: 100%; overflow: hidden; }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* =========================================
+           MAGIC CURSOR
+           ========================================= */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--light); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; mix-blend-mode: difference; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--light); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        .cursor.view-mode::after { content: 'DISCOVER'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 9px; font-weight: 800; color: var(--light); letter-spacing: 1px; }
+        @media (max-width: 768px) { .cursor { display: none !important; } * { cursor: auto !important; } }
+
+        /* =========================================
+           NAVBAR & MOBILE-OPTIMIZED MENU
+           ========================================= */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5%; z-index: 10000; background: transparent; mix-blend-mode: difference; }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(2,2,2,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5% 5vh 5%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5% 10vh 5%; } .menu-item { padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .menu-item-title span { font-size: 1.2rem !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } .dropdown a i { font-size: 1.8rem !important; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); opacity: 0; transform: translateX(-10px); transition: 0.3s; }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+        .dropdown a:hover i { opacity: 1; transform: translateX(0); }
+
+        /* =========================================
+           UNIQUE: SPLIT-SCREEN DRAWER MODAL
+           ========================================= */
+        .drawer-modal {
+            position: fixed; top: 100vh; left: 0; width: 100%; height: 100vh;
+            background: var(--dark); z-index: 100000; display: flex;
+            transition: top 0.8s cubic-bezier(0.87, 0, 0.13, 1);
+        }
+        .drawer-modal.active { top: 0; }
+        
+        .drawer-left { width: 50%; height: 100%; position: relative; overflow: hidden; }
+        .drawer-left img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); }
+        
+        .drawer-right { width: 50%; height: 100%; padding: 10% 5%; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; background: var(--gray); }
+        
+        .close-drawer {
+            position: absolute; top: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--light);
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem; z-index: 10;
+            transition: 0.3s;
+        }
+        .close-drawer:hover { background: var(--light); color: var(--dark); }
+
+        .drawer-tag { color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+        .drawer-title { font-size: clamp(3rem, 6vw, 5rem); line-height: 1; margin-bottom: 2rem; }
+        .drawer-desc { font-size: clamp(1rem, 1.5vw, 1.2rem); color: #aaa; line-height: 1.8; margin-bottom: 3rem; max-width: 600px; }
+        .drawer-btn { background: var(--light); color: var(--dark); padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 600; font-family: 'Syne', sans-serif; display: inline-block; width: max-content; }
+
+        @media (max-width: 768px) {
+            .drawer-modal { flex-direction: column; }
+            .drawer-left { width: 100%; height: 40%; }
+            .drawer-right { width: 100%; height: 60%; padding: 10% 5%; }
+            .close-drawer { top: 20px; right: 20px; background: rgba(0,0,0,0.5); }
+        }
+
+        /* =========================================
+           UNIQUE S01: BLUR REVEAL HERO
+           ========================================= */
+        #con-hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; background: var(--dark); padding: 0 5%;
+        }
+        .blur-text {
+            font-size: clamp(3rem, 12vw, 12rem); font-weight: 800; line-height: 0.9;
+            text-transform: uppercase; color: var(--light);
+            filter: blur(20px); opacity: 0; transform: scale(1.1);
+        }
+        .hero-sub { margin-top: 2rem; font-size: clamp(1rem, 2vw, 1.2rem); color: #888; max-width: 600px; opacity: 0; }
+
+        /* Floating glass orb */
+        .glass-orb {
+            position: absolute; width: clamp(200px, 40vw, 400px); height: clamp(200px, 40vw, 400px);
+            border-radius: 50%; background: linear-gradient(135deg, rgba(0, 240, 255, 0.4), rgba(123, 44, 191, 0.4));
+            filter: blur(40px); z-index: -1; animation: floatOrb 8s infinite alternate ease-in-out;
+        }
+        @keyframes floatOrb { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, -50px) scale(1.2); } }
+
+        /* =========================================
+           UNIQUE S02: THE FLUID ACCORDION
+           ========================================= */
+        #con-accordion { height: 100vh; display: flex; width: 100%; background: var(--dark); }
+        .acc-panel {
+            flex: 1; height: 100%; position: relative; overflow: hidden;
+            border-right: 1px solid rgba(255,255,255,0.1); transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .acc-panel:last-child { border: none; }
+        .acc-panel:hover { flex: 3; } /* Expands massively on hover */
+        
+        .acc-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; transition: 0.6s; filter: grayscale(100%); }
+        .acc-panel:hover .acc-img { opacity: 1; filter: grayscale(0%); transform: scale(1.05); }
+        
+        .acc-content {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 3rem 2rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            display: flex; flex-direction: column; gap: 1rem;
+        }
+        .acc-title { font-size: clamp(1.5rem, 3vw, 3rem); font-weight: 700; font-family: 'Syne', sans-serif; white-space: nowrap; }
+        .acc-desc { font-size: 1rem; color: #ccc; opacity: 0; transform: translateY(20px); transition: 0.4s; max-width: 400px; }
+        .acc-panel:hover .acc-desc { opacity: 1; transform: translateY(0); transition-delay: 0.2s; }
+
+        @media (max-width: 768px) {
+            #con-accordion { flex-direction: column; }
+            .acc-panel { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            /* On mobile, touching expands the height, not width */
+            .acc-panel:active, .acc-panel:focus, .acc-panel.active-mobile { flex: 3; }
+        }
+
+        /* =========================================
+           UNIQUE S03: FLOATING PARALLAX CANVAS
+           ========================================= */
+        #con-canvas { height: 150vh; background: #050505; position: relative; overflow: hidden; padding: 10vh 5%; display: flex; align-items: center; justify-content: center; }
+        .canvas-title { position: absolute; top: 15vh; text-align: center; width: 100%; font-size: clamp(2rem, 5vw, 4rem); z-index: 10; pointer-events: none; mix-blend-mode: difference; }
+        
+        .canvas-img { position: absolute; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .canvas-img img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Arbitrary sizes and placements for artistic overlap */
+        .c-1 { width: 30vw; height: 40vh; top: 20%; left: 10%; z-index: 1; }
+        .c-2 { width: 40vw; height: 50vh; top: 40%; right: 10%; z-index: 2; }
+        .c-3 { width: 25vw; height: 35vh; bottom: 15%; left: 20%; z-index: 3; }
+
+        @media (max-width: 768px) {
+            .c-1 { width: 70vw; height: 30vh; top: 15%; left: 5%; }
+            .c-2 { width: 80vw; height: 35vh; top: 45%; right: 5%; }
+            .c-3 { width: 60vw; height: 25vh; bottom: 5%; left: 10%; }
+        }
+
+        /* =========================================
+           UNIQUE S04: 3D TILTED CAROUSEL
+           ========================================= */
+        #con-carousel { padding: 20vh 0; background: var(--dark); overflow: hidden; display: flex; align-items: center; perspective: 1000px; }
+        .carousel-track {
+            display: flex; gap: 2rem; width: max-content;
+            transform: rotateZ(-5deg) rotateX(10deg);
+        }
+        .carousel-item {
+            width: clamp(250px, 30vw, 400px); height: clamp(350px, 40vh, 500px);
+            border-radius: 15px; overflow: hidden; opacity: 0.7; transition: 0.4s;
+        }
+        .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
+        .carousel-item:hover { opacity: 1; transform: scale(1.05); }
+
+        @media (max-width: 768px) {
+            .carousel-track { transform: rotateZ(-2deg) rotateX(5deg); gap: 1rem; }
+        }
+
+        /* =========================================
+           UNIQUE S05: BIG TEXT CTA
+           ========================================= */
+        #con-cta { height: 70vh; background: var(--accent); color: var(--dark); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 5%; }
+        .cta-title { font-size: clamp(3rem, 10vw, 8rem); font-weight: 800; line-height: 0.9; margin-bottom: 2rem; text-transform: uppercase; }
+        .cta-btn { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; display: inline-flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--dark); padding-bottom: 5px; text-decoration: none; color: var(--dark); transition: 0.3s; }
+        .cta-btn:hover { gap: 20px; }
+
+    </style>
+</head>
+<body>
+
+    <!-- MAGIC CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- THE UNIQUE DRAWER MODAL -->
+    <div class="drawer-modal" id="concept-drawer" data-lenis-prevent>
+        <button class="close-drawer magnetic" data-strength="30"><i class="ph ph-x"></i></button>
+        <div class="drawer-left">
+            <img src="" id="drawer-img" alt="Concept View">
+        </div>
+        <div class="drawer-right">
+            <div class="drawer-tag" id="drawer-tag">R&D Initiative</div>
+            <h2 class="display-font drawer-title" id="drawer-title">Project Name</h2>
+            <p class="drawer-desc" id="drawer-desc">Detailed description of the conceptual framework, the technologies explored, and the ultimate vision for this unreleased interactive piece.</p>
+            <a href="#" class="drawer-btn magnetic" data-strength="20">View Prototype</a>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU -->
+    <div class="menu-overlay"><div class="menu-container" id="menu-grid"></div></div>
+
+    <main>
+
+        <!-- S01: BLUR REVEAL HERO -->
+        <section id="con-hero">
+            <div class="glass-orb"></div>
+            <h1 class="display-font blur-text">THE LAB</h1>
+            <p class="hero-sub">Where reality bends. An exclusive look at our internal concepts, prototypes, and unreleased digital experiments.</p>
+        </section>
+
+        <!-- S02: THE FLUID ACCORDION -->
+        <section id="con-accordion">
+            
+            <div class="acc-panel trigger-concept" 
+                 data-img="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=2000&auto=format&fit=crop"
+                 data-title="Neon Glass"
+                 data-tag="Material Study"
+                 data-desc="Exploring the intersection of brutalist typography and highly reflective, dispersive 3D glass materials rendered in real-time WebGL.">
+                <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=1000&auto=format&fit=crop" class="acc-img">
+                <div class="acc-content">
+                    <h2 class="acc-title">Neon Glass</h2>
+                    <p class="acc-desc">Click to open full concept breakdown.</p>
+                </div>
+            </div>
+
+            <div class="acc-panel trigger-concept" 
+                 data-img="https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=2000&auto=format&fit=crop"
+                 data-title="Fluid Geometry"
+                 data-tag="Motion R&D"
+                 data-desc="A study on soft-body physics integrated into standard DOM elements to create websites that feel organic and alive.">
+                <img src="https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=1000&auto=format&fit=crop" class="acc-img">
+                <div class="acc-content">
+                    <h2 class="acc-title">Fluid Geo</h2>
+                    <p class="acc-desc">Click to open full concept breakdown.</p>
+                </div>
+            </div>
+
+            <div class="acc-panel trigger-concept" 
+                 data-img="https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2000&auto=format&fit=crop"
+                 data-title="Holo Interface"
+                 data-tag="UI Concept"
+                 data-desc="Prototyping what interfaces will look like in spatial computing environments, heavily relying on transparency and depth.">
+                <img src="https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=1000&auto=format&fit=crop" class="acc-img">
+                <div class="acc-content">
+                    <h2 class="acc-title">Holo UI</h2>
+                    <p class="acc-desc">Click to open full concept breakdown.</p>
+                </div>
+            </div>
+
+            <div class="acc-panel trigger-concept" 
+                 data-img="https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=2000&auto=format&fit=crop"
+                 data-title="Data Void"
+                 data-tag="Data Vis"
+                 data-desc="Visualizing complex backend data streams as beautiful, immersive particle systems using custom GLSL shaders.">
+                <img src="https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=1000&auto=format&fit=crop" class="acc-img">
+                <div class="acc-content">
+                    <h2 class="acc-title">Data Void</h2>
+                    <p class="acc-desc">Click to open full concept breakdown.</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- S03: FLOATING PARALLAX CANVAS -->
+        <section id="con-canvas">
+            <h2 class="display-font canvas-title">ABSTRACT STUDIES</h2>
+            
+            <div class="canvas-img c-1 p-slow">
+                <img src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=1000&auto=format&fit=crop" alt="Abstract">
+            </div>
+            
+            <div class="canvas-img c-2 p-fast">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" alt="Abstract">
+            </div>
+            
+            <div class="canvas-img c-3 p-med">
+                <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000&auto=format&fit=crop" alt="Abstract">
+            </div>
+        </section>
+
+        <!-- S04: 3D TILTED CAROUSEL -->
+        <section id="con-carousel">
+            <div class="carousel-track">
+                <!-- Using varied high-end abstract images -->
+                <div class="carousel-item"><img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=800&auto=format&fit=crop"></div>
+                <div class="carousel-item"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop"></div>
+                <div class="carousel-item"><img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop"></div>
+                <div class="carousel-item"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop"></div>
+                <div class="carousel-item"><img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=800&auto=format&fit=crop"></div>
+            </div>
+        </section>
+
+        <!-- S05: BIG TEXT CTA -->
+        <section id="con-cta">
+            <h2 class="display-font cta-title">BRING IDEAS TO LIFE</h2>
+            <a href="#" class="cta-btn magnetic" data-strength="20">Collaborate with us <i class="ph ph-arrow-right"></i></a>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. Lenis Smooth Scroll
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. Cursor & Magnetic (Desktop Only)
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+            
+            document.querySelectorAll('a, button, .menu-item-title, .carousel-item').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+
+            // Special View Cursor for Accordion
+            document.querySelectorAll('.trigger-concept').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered', 'view-mode'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered', 'view-mode'));
+            });
+
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    gsap.to(el, { x: ((e.clientX - rect.left) / rect.width - 0.5) * strength, y: ((e.clientY - rect.top) / rect.height - 0.5) * strength, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        }
+
+        // 3. Menu Data & Routing
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetUrl = link.getAttribute('href');
+                if(targetUrl !== '#') {
+                    e.preventDefault();
+                    toggleMenu();
+                    setTimeout(() => { 
+                        if (targetUrl.startsWith('#') || targetUrl.includes('.html#')) {
+                            const id = targetUrl.split('#')[1];
+                            const element = document.getElementById(id);
+                            if(element) lenis.scrollTo(element, { duration: 1.5 });
+                            else window.location.href = targetUrl;
+                        } else { window.location.href = targetUrl; }
+                    }, 800);
+                }
+            });
+        });
+
+        // 4. CONCEPTS MAGIC: The Drawer Modal
+        const drawer = document.getElementById('concept-drawer');
+        const dImg = document.getElementById('drawer-img');
+        const dTitle = document.getElementById('drawer-title');
+        const dTag = document.getElementById('drawer-tag');
+        const dDesc = document.getElementById('drawer-desc');
+        
+        // Open Drawer
+        document.querySelectorAll('.trigger-concept').forEach(item => {
+            item.addEventListener('click', () => {
+                // Populate data dynamically
+                dImg.src = item.getAttribute('data-img');
+                dTitle.innerText = item.getAttribute('data-title');
+                dTag.innerText = item.getAttribute('data-tag');
+                dDesc.innerText = item.getAttribute('data-desc');
+                
+                drawer.classList.add('active');
+                lenis.stop(); // Stop background scrolling
+            });
+        });
+
+        // Close Drawer
+        document.querySelector('.close-drawer').addEventListener('click', () => {
+            drawer.classList.remove('active');
+            lenis.start();
+        });
+
+        // 5. CONCEPTS MAGIC: Blur Reveal Hero
+        const heroTl = gsap.timeline({ delay: 0.3 });
+        heroTl.to(".blur-text", { filter: "blur(0px)", opacity: 1, scale: 1, duration: 1.5, ease: "power3.out" })
+              .to(".hero-sub", { opacity: 1, y: -10, duration: 1 }, "-=0.8");
+
+        // 6. CONCEPTS MAGIC: Floating Parallax Canvas
+        gsap.to(".p-slow", { yPercent: -20, scrollTrigger: { trigger: "#con-canvas", scrub: 1 } });
+        gsap.to(".p-med", { yPercent: -40, scrollTrigger: { trigger: "#con-canvas", scrub: 1 } });
+        gsap.to(".p-fast", { yPercent: -70, scrollTrigger: { trigger: "#con-canvas", scrub: 1 } });
+
+        // 7. CONCEPTS MAGIC: 3D Tilted Continuous Carousel
+        const track = document.querySelector('.carousel-track');
+        track.innerHTML += track.innerHTML; // Duplicate for infinite loop
+        gsap.to(track, {
+            xPercent: -50,
+            ease: "none",
+            duration: 15, // Speed of rotation
+            repeat: -1
+        });
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

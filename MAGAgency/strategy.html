@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Strategy</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Premium Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES & STRICT RESET
+           ========================================= */
+        :root {
+            --dark: #020617; /* Deep architectural navy/black */
+            --light: #f8fafc;
+            --accent: #38bdf8; /* Electric Blueprint Blue */
+            --gray: #0f172a;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden !important; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        .mono-font { font-family: 'Space Mono', monospace; }
+        section { position: relative; width: 100%; overflow: hidden; }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* =========================================
+           MAGIC CURSOR
+           ========================================= */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; mix-blend-mode: difference; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--accent); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        @media (max-width: 768px) { .cursor { display: none !important; } * { cursor: auto !important; } }
+
+        /* =========================================
+           NAVBAR & MOBILE-OPTIMIZED MENU
+           ========================================= */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5%; z-index: 10000; background: transparent; mix-blend-mode: difference; }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(2,6,23,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5% 5vh 5%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5% 10vh 5%; } .menu-item { padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .menu-item-title span { font-size: 1.2rem !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } .dropdown a i { font-size: 1.8rem !important; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); opacity: 0; transform: translateX(-10px); transition: 0.3s; }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+        .dropdown a:hover i { opacity: 1; transform: translateX(0); }
+
+        /* =========================================
+           UNIQUE S01: BLUEPRINT RADAR HERO
+           ========================================= */
+        #strat-hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center;
+            padding: 0 5%; background-color: var(--dark);
+            /* Architectural Blueprint Grid */
+            background-image: 
+                linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .hero-bg-img {
+            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+            opacity: 0.2; z-index: 0; filter: grayscale(100%) contrast(150%);
+        }
+        
+        .radar-svg {
+            position: absolute; top: -10%; right: -10%; width: 60vw; height: 60vw;
+            opacity: 0.1; z-index: 0; animation: spinRadar 40s linear infinite; pointer-events: none;
+        }
+        @keyframes spinRadar { 100% { transform: rotate(360deg); } }
+
+        .strat-content { position: relative; z-index: 2; }
+        .strat-tag { font-family: 'Space Mono', monospace; color: var(--accent); font-size: 1rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0; }
+        .strat-title { font-size: clamp(3.5rem, 12vw, 10rem); font-weight: 800; line-height: 0.9; text-transform: uppercase; }
+        .strat-title .line { display: block; overflow: hidden; }
+        .strat-title .word { display: inline-block; transform: translateY(110%); }
+        .strat-desc { margin-top: 2rem; font-size: clamp(1rem, 2vw, 1.5rem); color: #aaa; max-width: 600px; opacity: 0; }
+
+        @media (max-width: 768px) {
+            .radar-svg { width: 150vw; height: 150vw; top: 10%; right: -50%; }
+        }
+
+        /* =========================================
+           UNIQUE S02: THE PATHFINDER SPINE
+           ========================================= */
+        #strat-spine {
+            padding: 15vh 5%; background: var(--dark); position: relative; min-height: 100vh;
+        }
+        .spine-header { text-align: center; margin-bottom: 15vh; font-size: clamp(2.5rem, 5vw, 4rem); }
+        
+        .spine-container { position: relative; max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 15vh; }
+        
+        /* The Central Drawing Line */
+        .spine-line {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 2px; height: 100%; background: rgba(255,255,255,0.05); z-index: 0;
+        }
+        .spine-progress {
+            position: absolute; top: 0; left: 0; width: 100%; height: 0%;
+            background: var(--accent); box-shadow: 0 0 15px var(--accent);
+        }
+
+        .node-row { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; width: 100%; }
+        
+        .node-content {
+            width: 42%; background: var(--gray); border: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem; border-radius: 12px; opacity: 0;
+            transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        /* Alternating sides */
+        .node-row:nth-child(odd) .node-content { transform: translateX(-50px); }
+        .node-row:nth-child(even) .node-content { transform: translateX(50px); margin-left: auto; }
+        
+        /* When active via ScrollTrigger */
+        .node-row.active .node-content { opacity: 1; transform: translateX(0); border-color: rgba(56, 189, 248, 0.3); }
+
+        .n-num { font-family: 'Space Mono', monospace; color: var(--accent); font-size: 1.5rem; margin-bottom: 1rem; }
+        .n-title { font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom: 1rem; font-family: 'Syne', sans-serif; }
+        .n-desc { color: #888; font-size: 1rem; line-height: 1.6; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .spine-line { left: 0; transform: none; }
+            .node-row { flex-direction: column; align-items: flex-start; padding-left: 10vw; }
+            .node-content { width: 100%; padding: 2rem; transform: translateX(30px) !important; }
+            .node-row:nth-child(even) .node-content { margin-left: 0; }
+        }
+
+        /* =========================================
+           UNIQUE S03: CONCENTRIC CONVERGENCE
+           ========================================= */
+        #strat-converge {
+            height: 150vh; background: #01030a; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        .conv-title {
+            position: absolute; top: 15vh; width: 100%; text-align: center;
+            font-size: clamp(2rem, 5vw, 4rem); z-index: 10; pointer-events: none;
+        }
+        
+        .circle-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; pointer-events: none; }
+        
+        .conv-circle {
+            position: absolute; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-family: 'Syne', sans-serif; font-size: clamp(1.5rem, 3vw, 3rem); font-weight: 800; text-transform: uppercase;
+            mix-blend-mode: screen; /* Makes overlaps glow brightly */
+        }
+        
+        /* Initial Scattered Positions */
+        .c-biz {
+            width: clamp(300px, 40vw, 600px); height: clamp(300px, 40vw, 600px);
+            border: 2px solid rgba(56, 189, 248, 0.8); background: rgba(56, 189, 248, 0.1);
+            top: 10%; left: 10%; /* JS moves to center */
+        }
+        .c-user {
+            width: clamp(250px, 35vw, 500px); height: clamp(250px, 35vw, 500px);
+            border: 2px solid rgba(168, 85, 247, 0.8); background: rgba(168, 85, 247, 0.1);
+            bottom: 10%; right: 10%;
+        }
+        .c-tech {
+            width: clamp(200px, 30vw, 450px); height: clamp(200px, 30vw, 450px);
+            border: 2px solid rgba(236, 72, 153, 0.8); background: rgba(236, 72, 153, 0.1);
+            bottom: 20%; left: 20%;
+        }
+
+        .center-dot {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            font-size: clamp(2rem, 4vw, 4rem); font-weight: 800; color: #fff; z-index: 10;
+            font-family: 'Syne', sans-serif; opacity: 0; text-shadow: 0 0 20px #fff;
+        }
+
+        @media (max-width: 768px) {
+            #strat-converge { height: 100vh; }
+            .c-biz { top: 5%; left: -10%; }
+            .c-user { bottom: 5%; right: -10%; }
+            .c-tech { bottom: 40%; left: -20%; }
+        }
+
+        /* =========================================
+           UNIQUE S04: FULL-SCREEN HOVER INDEX
+           ========================================= */
+        #strat-deliver {
+            padding: 15vh 5%; min-height: 100vh; background: var(--dark); position: relative;
+        }
+        /* The container holding the background images */
+        .hover-bg-container {
+            position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
+        }
+        .h-bg {
+            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+            opacity: 0; transition: opacity 0.6s ease; filter: grayscale(50%) brightness(0.4);
+        }
+        .h-bg.active { opacity: 1; }
+
+        .deliver-content { position: relative; z-index: 2; }
+        .deliver-header { font-size: clamp(2rem, 5vw, 4rem); margin-bottom: 10vh; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 2rem; }
+        
+        .deliver-list { display: flex; flex-direction: column; }
+        .d-item {
+            font-size: clamp(2.5rem, 6vw, 6rem); font-family: 'Syne', sans-serif; font-weight: 800;
+            text-transform: uppercase; color: rgba(255,255,255,0.3); line-height: 1.1;
+            transition: 0.4s; position: relative; margin-bottom: 1rem;
+        }
+        .d-item:hover { color: var(--light); padding-left: 3vw; }
+        .d-item span { font-family: 'Space Mono', monospace; font-size: 1rem; vertical-align: top; color: var(--accent); margin-right: 1rem; opacity: 0; transition: 0.4s; }
+        .d-item:hover span { opacity: 1; }
+
+        @media (max-width: 768px) {
+            .hover-bg-container { display: none; } /* Disable BG hover on mobile */
+            .d-item { color: var(--light); margin-bottom: 2rem; font-size: 3rem; }
+            .d-item span { opacity: 1; display: block; margin-bottom: 5px; }
+            .d-item:hover { padding-left: 0; }
+        }
+
+        /* =========================================
+           UNIQUE S05: SONAR CTA FOOTER
+           ========================================= */
+        #strat-cta {
+            height: 80vh; background: var(--gray); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 5%; position: relative; overflow: hidden;
+        }
+        
+        /* CSS Sonar Rings */
+        .sonar-ring {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            border-radius: 50%; border: 1px solid var(--accent); opacity: 0;
+            animation: sonarAnim 4s infinite cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none;
+        }
+        .sonar-ring:nth-child(2) { animation-delay: 1s; }
+        .sonar-ring:nth-child(3) { animation-delay: 2s; }
+        
+        @keyframes sonarAnim {
+            0% { width: 0; height: 0; opacity: 0.8; }
+            100% { width: 100vw; height: 100vw; opacity: 0; }
+        }
+
+        .cta-content { z-index: 2; }
+        .cta-title { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 3rem; }
+        .huge-btn {
+            background: var(--light); color: var(--dark); font-family: 'Syne', sans-serif;
+            font-size: 1.2rem; font-weight: 700; padding: 1.5rem 4rem; border-radius: 100px;
+            text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; gap: 1rem;
+            transition: 0.3s;
+        }
+        .huge-btn:hover { background: var(--accent); color: var(--dark); transform: scale(1.05); }
+
+    </style>
+</head>
+<body>
+
+    <!-- MAGIC CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU -->
+    <div class="menu-overlay"><div class="menu-container" id="menu-grid"></div></div>
+
+    <main>
+
+        <!-- S01: BLUEPRINT RADAR HERO -->
+        <section id="strat-hero">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2000&auto=format&fit=crop" class="hero-bg-img" alt="Architecture">
+            
+            <!-- Spinning SVG Radar -->
+            <svg class="radar-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="48" fill="none" stroke="var(--accent)" stroke-width="0.5" stroke-dasharray="2 4"/>
+                <circle cx="50" cy="50" r="35" fill="none" stroke="var(--accent)" stroke-width="0.5"/>
+                <circle cx="50" cy="50" r="20" fill="none" stroke="var(--accent)" stroke-width="0.5" stroke-dasharray="5 5"/>
+                <line x1="50" y1="0" x2="50" y2="100" stroke="var(--accent)" stroke-width="0.5" opacity="0.5"/>
+                <line x1="0" y1="50" x2="100" y2="50" stroke="var(--accent)" stroke-width="0.5" opacity="0.5"/>
+            </svg>
+
+            <div class="strat-content">
+                <div class="strat-tag">01 // Architectural Vision</div>
+                <h1 class="strat-title">
+                    <span class="line"><span class="word">MAPPING</span></span><br>
+                    <span class="line"><span class="word">THE</span></span><br>
+                    <span class="line"><span class="word" style="color: var(--accent);">UNKNOWN</span></span>
+                </h1>
+                <p class="strat-desc">We don't guess. We analyze, blueprint, and architect digital roadmaps based on hard data and human psychology.</p>
+            </div>
+        </section>
+
+        <!-- S02: THE PATHFINDER SPINE -->
+        <section id="strat-spine">
+            <h2 class="display-font spine-header">THE METHODOLOGY</h2>
+            
+            <div class="spine-container">
+                <div class="spine-line"><div class="spine-progress"></div></div>
+
+                <div class="node-row">
+                    <div class="node-content">
+                        <div class="n-num">01_</div>
+                        <h3 class="n-title">Discovery</h3>
+                        <p class="n-desc">Deep-dive audits into your current architecture, market positioning, and direct competitors. We extract the raw truth.</p>
+                    </div>
+                </div>
+
+                <div class="node-row">
+                    <div class="node-content">
+                        <div class="n-num">02_</div>
+                        <h3 class="n-title">Synthesis</h3>
+                        <p class="n-desc">Translating raw data into actionable insights. Defining target personas, user journeys, and technical constraints.</p>
+                    </div>
+                </div>
+
+                <div class="node-row">
+                    <div class="node-content">
+                        <div class="n-num">03_</div>
+                        <h3 class="n-title">Architecture</h3>
+                        <p class="n-desc">Wireframing the cognitive experience. Mapping the information architecture and creating the structural blueprint.</p>
+                    </div>
+                </div>
+
+                <div class="node-row">
+                    <div class="node-content">
+                        <div class="n-num">04_</div>
+                        <h3 class="n-title">Deployment Strategy</h3>
+                        <p class="n-desc">Structuring the tech stack, server infrastructure, and go-to-market rollout plan for absolute maximum impact.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S03: CONCENTRIC CONVERGENCE -->
+        <section id="strat-converge">
+            <h2 class="display-font conv-title">THE SWEET SPOT</h2>
+            
+            <div class="circle-wrapper">
+                <div class="conv-circle c-biz">Business</div>
+                <div class="conv-circle c-user">User</div>
+                <div class="conv-circle c-tech">Tech</div>
+            </div>
+            
+            <div class="center-dot">MAGIC</div>
+        </section>
+
+        <!-- S04: FULL-SCREEN HOVER INDEX -->
+        <section id="strat-deliver">
+            
+            <div class="hover-bg-container">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000&auto=format&fit=crop" class="h-bg" id="bg-1">
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2000&auto=format&fit=crop" class="h-bg" id="bg-2">
+                <img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=2000&auto=format&fit=crop" class="h-bg" id="bg-3">
+                <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2000&auto=format&fit=crop" class="h-bg" id="bg-4">
+            </div>
+
+            <div class="deliver-content">
+                <h2 class="display-font deliver-header">DELIVERABLES</h2>
+                
+                <div class="deliver-list">
+                    <div class="d-item hover-trigger" data-target="bg-1"><span>01/</span> Data & Analytics</div>
+                    <div class="d-item hover-trigger" data-target="bg-2"><span>02/</span> Brand Positioning</div>
+                    <div class="d-item hover-trigger" data-target="bg-3"><span>03/</span> UX Roadmapping</div>
+                    <div class="d-item hover-trigger" data-target="bg-4"><span>04/</span> Tech Architecture</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S05: SONAR CTA FOOTER -->
+        <section id="strat-cta">
+            <div class="sonar-ring"></div>
+            <div class="sonar-ring"></div>
+            <div class="sonar-ring"></div>
+            
+            <div class="cta-content">
+                <h2 class="display-font cta-title">READY TO ARCHITECT?</h2>
+                <a href="#" class="huge-btn magnetic" data-strength="30">
+                    Initiate Sequence <i class="ph ph-arrow-right"></i>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. Lenis Smooth Scroll
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. Cursor & Magnetic (Desktop Only)
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+            
+            document.querySelectorAll('a, button, .menu-item-title, .d-item').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    gsap.to(el, { x: ((e.clientX - rect.left) / rect.width - 0.5) * strength, y: ((e.clientY - rect.top) / rect.height - 0.5) * strength, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        }
+
+        // 3. Menu Data & Routing
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetUrl = link.getAttribute('href');
+                if(targetUrl !== '#') {
+                    e.preventDefault();
+                    toggleMenu();
+                    setTimeout(() => { 
+                        if (targetUrl.startsWith('#') || targetUrl.includes('.html#')) {
+                            const id = targetUrl.split('#')[1];
+                            const element = document.getElementById(id);
+                            if(element) lenis.scrollTo(element, { duration: 1.5 });
+                            else window.location.href = targetUrl;
+                        } else { window.location.href = targetUrl; }
+                    }, 800);
+                }
+            });
+        });
+
+        // 4. STRATEGY MAGIC: Hero Sequence
+        const heroTl = gsap.timeline({ delay: 0.2 });
+        heroTl.to(".strat-tag", { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" })
+              .to(".strat-title .word", { y: "0%", duration: 1.2, stagger: 0.15, ease: "power4.out" }, "-=0.5")
+              .to(".strat-desc", { opacity: 1, y: -10, duration: 1 }, "-=0.8");
+
+        // 5. STRATEGY MAGIC: Pathfinder Spine
+        const spineContainer = document.querySelector('.spine-container');
+        
+        // Draw the center line
+        gsap.to(".spine-progress", {
+            height: "100%", ease: "none",
+            scrollTrigger: { trigger: spineContainer, start: "top center", end: "bottom center", scrub: true }
+        });
+
+        // Slide in nodes
+        gsap.utils.toArray('.node-row').forEach(row => {
+            ScrollTrigger.create({
+                trigger: row, start: "top 70%",
+                onEnter: () => row.classList.add('active')
+            });
+        });
+
+        // 6. STRATEGY MAGIC: Concentric Convergence
+        const convTl = gsap.timeline({
+            scrollTrigger: { trigger: "#strat-converge", start: "top top", end: "+=100%", pin: true, scrub: 1 }
+        });
+
+        // Pull them all perfectly to the center
+        convTl.to(".c-biz", { top: "50%", left: "50%", xPercent: -50, yPercent: -50 }, 0)
+              .to(".c-user", { bottom: "auto", right: "auto", top: "50%", left: "50%", xPercent: -50, yPercent: -50 }, 0)
+              .to(".c-tech", { bottom: "auto", left: "50%", top: "50%", xPercent: -50, yPercent: -50 }, 0)
+              // Fade in the magic text inside the Venn overlap
+              .to(".center-dot", { opacity: 1, scale: 1, duration: 0.5 }, 0.8);
+
+        // 7. STRATEGY MAGIC: Full Screen Hover Index (Desktop Only)
+        if (window.innerWidth > 768) {
+            document.querySelectorAll('.hover-trigger').forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    const targetId = item.getAttribute('data-target');
+                    // Hide all
+                    document.querySelectorAll('.h-bg').forEach(bg => bg.classList.remove('active'));
+                    // Show target
+                    document.getElementById(targetId).classList.add('active');
+                });
+                
+                // Clear on leave container
+                document.querySelector('.deliver-list').addEventListener('mouseleave', () => {
+                    document.querySelectorAll('.h-bg').forEach(bg => bg.classList.remove('active'));
+                });
+            });
+        }
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

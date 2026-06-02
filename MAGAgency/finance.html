@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Finance Industries</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES (Finance Theme)
+           ========================================= */
+        :root {
+            --dark: #050505;
+            --light: #f4f4f5;
+            --accent: #D4AF37; /* Premium Gold */
+            --green: #00ff88; /* Bull Market */
+            --red: #ff3b3b;   /* Bear Market */
+            --gray: #0d0d0d;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        section { position: relative; width: 100vw; overflow: hidden; }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* CURSOR */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--light); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; mix-blend-mode: difference; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--light); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        .cursor.view-mode::after { content: 'VIEW'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10px; font-weight: 600; color: var(--light); }
+        @media (max-width: 768px) { .cursor { display: none; } * { cursor: auto !important; } }
+
+        /* NAV & MENU */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5vw; z-index: 10000; background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(212, 175, 55, 0.1); }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5,5,5,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5vw 5vh 5vw; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5vw 10vh 5vw; } .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+
+        /* MODAL */
+        .magic-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 100000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.5s ease; backdrop-filter: blur(20px); }
+        .magic-modal.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: var(--gray); padding: 8vw; border-radius: 20px; width: 90vw; max-width: 900px; max-height: 80vh; overflow-y: auto; position: relative; transform: translateY(100px) scale(0.9); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid var(--accent); }
+        .magic-modal.active .modal-content { transform: translateY(0) scale(1); }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 2rem; background: none; border: none; color: var(--light); }
+
+        /* =========================================
+           FINANCE PAGE STYLES
+           ========================================= */
+
+        /* HERO */
+        #fin-hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left; padding: var(--nav-height) 5vw 0 5vw; }
+        .fin-hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 120%; object-fit: cover; z-index: -2; opacity: 0.3; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(110deg, rgba(5,5,5,1) 0%, rgba(5,5,5,0.4) 50%, rgba(5,5,5,0.9) 100%); z-index: -1; }
+        .hero-title { font-size: clamp(2.5rem, 11vw, 9rem); font-weight: 800; line-height: 0.9; text-transform: uppercase; max-width: 1200px; }
+        .hero-title .line { display: block; overflow: hidden; }
+        .hero-title .word { display: inline-block; transform: translateY(110%); }
+        .eyebrow { font-size: clamp(0.8rem, 1.5vw, 1.2rem); color: var(--accent); letter-spacing: 6px; text-transform: uppercase; margin-bottom: 2rem; opacity: 0; transform: translateY(20px); font-family: 'JetBrains Mono', monospace; }
+
+        /* Live Ticker Bar (Top of page) */
+        .ticker-bar {
+            position: absolute;
+            bottom: 5vh;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.6);
+            border-top: 1px solid var(--accent);
+            border-bottom: 1px solid var(--accent);
+            padding: 15px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            z-index: 2;
+        }
+        .ticker-track { display: inline-block; animation: tickerScroll 40s linear infinite; }
+        .ticker-item { display: inline-block; padding: 0 30px; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; color: #ccc; }
+        .ticker-item .up { color: var(--green); }
+        .ticker-item .down { color: var(--red); }
+        @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* UNIQUE SECTION: TRADING TERMINAL */
+        #fin-terminal {
+            padding: 15vh 5vw;
+            background: var(--dark);
+            position: relative;
+        }
+        .fin-terminal-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 0.1; z-index: 0;
+        }
+        .terminal-header { text-align: center; margin-bottom: 8vh; position: relative; z-index: 1; }
+        .terminal-header h2 { font-size: clamp(2rem, 7vw, 5rem); margin-bottom: 1rem; }
+        .terminal-header h2 span { color: var(--accent); }
+        .terminal-header p { color: #888; max-width: 600px; margin: 0 auto; font-size: clamp(1rem, 2vw, 1.2rem); }
+
+        .terminal-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        @media (max-width: 1024px) { .terminal-grid { grid-template-columns: 1fr; } }
+
+        /* Big Chart Panel */
+        .chart-panel {
+            background: rgba(13, 13, 13, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .chart-title { display: flex; align-items: center; gap: 1rem; }
+        .chart-title h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
+        .pulse-dot { width: 10px; height: 10px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,255,136,0.7); } 70% { box-shadow: 0 0 0 15px rgba(0,255,136,0); } 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0); } }
+        .chart-price { font-family: 'JetBrains Mono', monospace; font-size: clamp(1.5rem, 4vw, 2.5rem); color: var(--green); font-weight: 700; }
+        
+        /* The Magic SVG Chart */
+        .svg-chart { width: 100%; height: 300px; }
+        .chart-line { fill: none; stroke: var(--green); stroke-width: 2; }
+        .chart-fill { fill: url(#chartGradient); opacity: 0.3; }
+
+        /* Side Stats */
+        .stats-panel { display: flex; flex-direction: column; gap: 1rem; }
+        .stat-card {
+            background: rgba(13, 13, 13, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
+            min-height: 140px;
+            transition: 0.3s;
+        }
+        .stat-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .stat-card .label { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card .value { font-family: 'JetBrains Mono', monospace; font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 700; color: var(--light); margin-top: 0.5rem; }
+        .stat-card .change { color: var(--green); font-size: 0.95rem; font-family: 'JetBrains Mono', monospace; }
+        .stat-card.negative .change { color: var(--red); }
+        .stat-card.gold .value { color: var(--accent); }
+
+        /* Services Cards */
+        #fin-services {
+            padding: 15vh 5vw;
+            background: linear-gradient(180deg, var(--dark) 0%, #0a0a0a 100%);
+        }
+        .services-header { margin-bottom: 8vh; }
+        .services-header h2 { font-size: clamp(2rem, 8vw, 6rem); }
+        .services-header h2 span { color: var(--accent); font-style: italic; }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        @media (max-width: 1024px) { .services-grid { grid-template-columns: 1fr; } }
+
+        .svc-finance-card {
+            position: relative;
+            padding: 3rem 2rem;
+            background: var(--gray);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.5s;
+            overflow: hidden;
+            cursor: none;
+        }
+        .svc-finance-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--accent) 0%, #b8941c 100%);
+            transform: translateY(100%);
+            transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 0;
+        }
+        .svc-finance-card:hover::before { transform: translateY(0); }
+        .svc-finance-card > * { position: relative; z-index: 1; }
+        .svc-finance-card:hover h3, .svc-finance-card:hover p, .svc-finance-card:hover .svc-num, .svc-finance-card:hover .svc-fin-icon { color: var(--dark); }
+        .svc-num { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 1rem; margin-bottom: 2rem; transition: 0.3s; }
+        .svc-fin-icon { font-size: 3rem; color: var(--accent); margin-bottom: 1.5rem; transition: 0.3s; }
+        .svc-finance-card h3 { font-size: clamp(1.5rem, 2.5vw, 2rem); margin-bottom: 1rem; transition: 0.3s; }
+        .svc-finance-card p { color: #888; line-height: 1.6; transition: 0.3s; }
+
+        /* FOOTER */
+        footer { background: #020202; padding: 10vh 5vw 5vh 5vw; border-top: 1px solid var(--accent); position: relative; z-index: 5; }
+        .footer-top { display: flex; flex-direction: column; gap: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5vh; margin-bottom: 5vh; }
+        .footer-huge { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 12vw, 10rem); font-weight: 800; line-height: 0.8; color: var(--light); }
+        .footer-huge span { color: var(--accent); }
+        .footer-links-wrapper { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem; }
+        .social-links { display: flex; gap: 1rem; }
+        .social-btn { width: 60px; height: 60px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; color: var(--light); font-size: 1.5rem; transition: 0.3s; }
+        .social-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--dark); }
+        .footer-bottom { display: flex; justify-content: space-between; color: #666; font-size: 0.9rem; }
+        @media (max-width: 768px) { .footer-links-wrapper { flex-direction: column; align-items: flex-start; } .footer-bottom { flex-direction: column; gap: 1rem; text-align: left; } }
+    </style>
+</head>
+<body>
+
+    <div class="cursor"></div>
+
+    <!-- MODAL -->
+    <div class="magic-modal" id="global-modal" data-lenis-prevent>
+        <div class="modal-content">
+            <button class="close-modal magnetic"><i class="ph ph-x"></i></button>
+            <h2 class="display-font" style="font-size: clamp(1.8rem, 5vw, 3rem); margin-bottom: 1.5rem; color: var(--accent);">Portfolio Analysis</h2>
+            <p style="font-size: clamp(1rem, 2.5vw, 1.2rem); line-height: 1.8; color: #ccc;">Connect with our finance division for a tailored portfolio analysis and digital banking experience consultation.</p>
+            <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(212,175,55,0.05); border-left: 3px solid var(--accent); border-radius: 4px;">
+                <p class="mono" style="color: var(--green);">► STATUS: Markets Open</p>
+                <p class="mono" style="color: #888; margin-top: 5px;">► AUM: $4.2B Managed</p>
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <a href="#" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu
+            <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <div class="menu-overlay">
+        <div class="menu-container" id="menu-grid"></div>
+    </div>
+
+    <main>
+        
+        <!-- HERO -->
+        <section id="fin-hero">
+            <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2070&auto=format&fit=crop" class="fin-hero-bg" alt="Finance Background">
+            <div class="hero-overlay"></div>
+            
+            <p class="eyebrow display-font">► Industries / Finance</p>
+            <h1 class="hero-title">
+                <span class="line"><span class="word">WEALTH</span></span>
+                <span class="line"><span class="word" style="color: var(--accent); font-style: italic;">REDEFINED.</span></span>
+            </h1>
+
+            <!-- Live Ticker -->
+            <div class="ticker-bar">
+                <div class="ticker-track">
+                    <span class="ticker-item">AAPL <span class="up">+2.34%</span> $189.45</span>
+                    <span class="ticker-item">TSLA <span class="down">-1.12%</span> $245.30</span>
+                    <span class="ticker-item">BTC <span class="up">+4.78%</span> $67,890</span>
+                    <span class="ticker-item">ETH <span class="up">+3.21%</span> $3,456</span>
+                    <span class="ticker-item">GOLD <span class="up">+0.89%</span> $2,034</span>
+                    <span class="ticker-item">NVDA <span class="up">+5.67%</span> $890.12</span>
+                    <span class="ticker-item">META <span class="down">-0.45%</span> $498.76</span>
+                    <span class="ticker-item">SP500 <span class="up">+1.23%</span> $5,234</span>
+                    <!-- Duplicate for seamless loop -->
+                    <span class="ticker-item">AAPL <span class="up">+2.34%</span> $189.45</span>
+                    <span class="ticker-item">TSLA <span class="down">-1.12%</span> $245.30</span>
+                    <span class="ticker-item">BTC <span class="up">+4.78%</span> $67,890</span>
+                    <span class="ticker-item">ETH <span class="up">+3.21%</span> $3,456</span>
+                    <span class="ticker-item">GOLD <span class="up">+0.89%</span> $2,034</span>
+                    <span class="ticker-item">NVDA <span class="up">+5.67%</span> $890.12</span>
+                    <span class="ticker-item">META <span class="down">-0.45%</span> $498.76</span>
+                    <span class="ticker-item">SP500 <span class="up">+1.23%</span> $5,234</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- UNIQUE SECTION: TRADING TERMINAL -->
+        <section id="fin-terminal">
+            <img src="https://images.unsplash.com/photo-1640340434855-6084b1f4901c?q=80&w=2070&auto=format&fit=crop" class="fin-terminal-bg" alt="Terminal Background">
+            
+            <div class="terminal-header">
+                <h2 class="display-font">Live <span>Performance</span> Terminal</h2>
+                <p>Real-time analytics and portfolio data — the same dashboards we build for top hedge funds.</p>
+            </div>
+
+            <div class="terminal-grid">
+                <!-- Big Chart -->
+                <div class="chart-panel">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <span class="pulse-dot"></span>
+                            <h3 class="display-font">MAGIC INDEX</h3>
+                        </div>
+                        <div class="chart-price" id="livePrice">$0.00</div>
+                    </div>
+                    
+                    <svg class="svg-chart" viewBox="0 0 800 300" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#00ff88" stop-opacity="0.6"/>
+                                <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                        <path class="chart-fill" id="chartFill" d=""/>
+                        <path class="chart-line" id="chartLine" d=""/>
+                    </svg>
+
+                    <div style="display: flex; justify-content: space-between; margin-top: 1rem; color: #666; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">
+                        <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span>
+                    </div>
+                </div>
+
+                <!-- Side Stats -->
+                <div class="stats-panel">
+                    <div class="stat-card gold open-modal-btn magnetic" data-strength="10">
+                        <div class="label">► Assets Managed</div>
+                        <div>
+                            <div class="value" data-count="4200">$0M</div>
+                            <div class="change">+12.4% YTD</div>
+                        </div>
+                    </div>
+                    <div class="stat-card open-modal-btn magnetic" data-strength="10">
+                        <div class="label">► Active Clients</div>
+                        <div>
+                            <div class="value" data-count="847">0</div>
+                            <div class="change">+24 this month</div>
+                        </div>
+                    </div>
+                    <div class="stat-card negative open-modal-btn magnetic" data-strength="10">
+                        <div class="label">► Risk Score</div>
+                        <div>
+                            <div class="value" data-count="23">0%</div>
+                            <div class="change">-2.1% MoM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="fin-services">
+            <div class="services-header">
+                <h2 class="display-font">Finance <span>Solutions.</span></h2>
+            </div>
+            <div class="services-grid">
+                <div class="svc-finance-card open-modal-btn">
+                    <div class="svc-num">01</div>
+                    <i class="ph ph-bank svc-fin-icon"></i>
+                    <h3 class="display-font">Digital Banking</h3>
+                    <p>Modern banking platforms with biometric security, AI fraud detection, and instant transfers across 50+ currencies.</p>
+                </div>
+                <div class="svc-finance-card open-modal-btn">
+                    <div class="svc-num">02</div>
+                    <i class="ph ph-trend-up svc-fin-icon"></i>
+                    <h3 class="display-font">Trading Platforms</h3>
+                    <p>High-frequency trading interfaces with real-time data visualization, custom charts, and millisecond execution.</p>
+                </div>
+                <div class="svc-finance-card open-modal-btn">
+                    <div class="svc-num">03</div>
+                    <i class="ph ph-coin-vertical svc-fin-icon"></i>
+                    <h3 class="display-font">Wealth Management</h3>
+                    <p>Premium portfolio dashboards for high-net-worth clients, with personalized reports and tax optimization tools.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-top">
+                <h2 class="footer-huge">SCALE<br><span>CAPITAL.</span></h2>
+                <div class="footer-links-wrapper">
+                    <div>
+                        <p style="color: #888; margin-bottom: 10px; font-family: 'Syne', sans-serif;">FINANCE INQUIRIES</p>
+                        <a href="#" class="open-modal-btn" style="color: var(--light); font-size: clamp(1.2rem, 2vw, 1.5rem); text-decoration: none;">capital@magic.agency</a>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-twitter-logo"></i></a>
+                        <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-linkedin-logo"></i></a>
+                        <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-discord-logo"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MΛGIC AGENCY · FINRA REGISTERED</p>
+                <p>BUILT FOR THE ELITE</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. LENIS
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. CURSOR
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+        }
+        const attachCursorHover = () => {
+            if (window.innerWidth <= 768) return;
+            document.querySelectorAll('a, button, .menu-item-title, .svc-finance-card, .stat-card, .social-btn').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+        };
+
+        // 3. MAGNETIC
+        const attachMagnetic = () => {
+            if (window.innerWidth <= 768) return;
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+                    const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+                    gsap.to(el, { x: x, y: y, duration: 0.3, ease: "power2.out" });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        };
+
+        // 4. MENU
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+        
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetUrl = link.getAttribute('href');
+                toggleMenu();
+                setTimeout(() => {
+                    if (targetUrl.startsWith('#')) { lenis.scrollTo(targetUrl, { duration: 1.5 }); }
+                    else { window.location.href = targetUrl; }
+                }, 800);
+            });
+        });
+
+        // 5. MODAL
+        const modal = document.getElementById('global-modal');
+        const closeModalBtn = document.querySelector('.close-modal');
+        document.querySelectorAll('.open-modal-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => { e.preventDefault(); modal.classList.add('active'); lenis.stop(); });
+        });
+        closeModalBtn.addEventListener('click', () => { modal.classList.remove('active'); lenis.start(); });
+
+        // ==========================================
+        // FINANCE PAGE MAGIC
+        // ==========================================
+
+        // Hero
+        gsap.to(".eyebrow", { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.2 });
+        gsap.to(".hero-title .word", { y: "0%", duration: 1.2, stagger: 0.2, ease: "power4.out", delay: 0.4 });
+        gsap.to(".fin-hero-bg", { y: "30%", scrollTrigger: { trigger: "#fin-hero", start: "top top", end: "bottom top", scrub: true } });
+
+        // ===== MAGIC SVG CHART GENERATOR =====
+        function generateChartData(points) {
+            let data = [];
+            let value = 150;
+            for (let i = 0; i <= points; i++) {
+                value += (Math.random() - 0.45) * 30;
+                value = Math.max(50, Math.min(250, value));
+                data.push({ x: (i / points) * 800, y: value });
+            }
+            return data;
+        }
+
+        const chartData = generateChartData(50);
+        const chartLine = document.getElementById('chartLine');
+        const chartFill = document.getElementById('chartFill');
+        
+        // Build path
+        let linePath = `M ${chartData[0].x} ${chartData[0].y}`;
+        chartData.forEach((p, i) => { if (i > 0) linePath += ` L ${p.x} ${p.y}`; });
+        let fillPath = linePath + ` L 800 300 L 0 300 Z`;
+        
+        chartLine.setAttribute('d', linePath);
+        chartFill.setAttribute('d', fillPath);
+
+        // Animate line drawing on scroll
+        const pathLength = chartLine.getTotalLength();
+        chartLine.style.strokeDasharray = pathLength;
+        chartLine.style.strokeDashoffset = pathLength;
+        
+        gsap.to(chartLine, {
+            strokeDashoffset: 0,
+            duration: 2,
+            ease: "power2.inOut",
+            scrollTrigger: {
+                trigger: "#fin-terminal",
+                start: "top 60%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        gsap.from(chartFill, {
+            opacity: 0,
+            duration: 2,
+            scrollTrigger: {
+                trigger: "#fin-terminal",
+                start: "top 60%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        // Live Price Flickering
+        let basePrice = 8459.32;
+        const priceEl = document.getElementById('livePrice');
+        setInterval(() => {
+            basePrice += (Math.random() - 0.5) * 25;
+            priceEl.textContent = '$' + basePrice.toFixed(2);
+            priceEl.style.color = Math.random() > 0.5 ? 'var(--green)' : 'var(--red)';
+            setTimeout(() => { priceEl.style.color = 'var(--green)'; }, 200);
+        }, 1500);
+
+        // ===== MAGIC COUNTERS =====
+        gsap.utils.toArray('[data-count]').forEach(el => {
+            const target = parseInt(el.dataset.count);
+            const prefix = el.textContent.includes('$') ? '$' : '';
+            const suffix = el.textContent.includes('%') ? '%' : (el.textContent.includes('M') ? 'M' : '');
+            
+            ScrollTrigger.create({
+                trigger: el,
+                start: "top 85%",
+                onEnter: () => {
+                    let counter = { val: 0 };
+                    gsap.to(counter, {
+                        val: target,
+                        duration: 2.5,
+                        ease: "power2.out",
+                        onUpdate: () => {
+                            el.textContent = prefix + Math.floor(counter.val).toLocaleString() + suffix;
+                        }
+                    });
+                },
+                once: true
+            });
+        });
+
+        // Stat Cards Fade In
+        gsap.utils.toArray('.stat-card').forEach((card, i) => {
+            gsap.from(card, {
+                opacity: 0, x: 50, duration: 1, delay: i * 0.15,
+                scrollTrigger: { trigger: card, start: "top 85%" }
+            });
+        });
+
+        // Services Cards
+        gsap.utils.toArray('.svc-finance-card').forEach((card, i) => {
+            gsap.from(card, {
+                opacity: 0, y: 80, duration: 1, delay: i * 0.15, ease: "power3.out",
+                scrollTrigger: { trigger: '.services-grid', start: "top 80%" }
+            });
+        });
+
+        // Init
+        attachCursorHover();
+        attachMagnetic();
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

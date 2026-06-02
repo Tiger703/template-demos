@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Inside the Lab</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Premium Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES & STRICT RESET
+           ========================================= */
+        :root {
+            --dark: #080808; /* Slightly lighter black for cinematic feel */
+            --light: #f4f4f5;
+            --accent: #ffffff; /* Stark white accent for this page */
+            --gray: #161616;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden !important; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        section { position: relative; width: 100%; overflow: hidden; }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* =========================================
+           MAGIC CURSOR (Stays active over modals!)
+           ========================================= */
+        .cursor { 
+            position: fixed; top: 0; left: 0; width: 20px; height: 20px; 
+            background: var(--light); border-radius: 50%; pointer-events: none; 
+            z-index: 999999; /* Extreme Z-index to stay above modals */
+            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; 
+            mix-blend-mode: difference; 
+        }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--light); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        .cursor.view-mode::after { content: 'VIEW'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10px; font-weight: 800; color: var(--light); letter-spacing: 1px; }
+        @media (max-width: 768px) { .cursor { display: none !important; } * { cursor: auto !important; } }
+
+        /* =========================================
+           NAVBAR & MOBILE-OPTIMIZED MENU
+           ========================================= */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5%; z-index: 10000; background: transparent; mix-blend-mode: difference; }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(8,8,8,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5% 5vh 5%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5% 10vh 5%; } .menu-item { padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .menu-item-title span { font-size: 1.2rem !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } .dropdown a i { font-size: 1.8rem !important; color: #555; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: #555; }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: #888; opacity: 0; transform: translateX(-10px); transition: 0.3s; }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+        .dropdown a:hover i { opacity: 1; transform: translateX(0); color: var(--light); }
+
+        /* =========================================
+           UNIQUE: GLASSMORPHIC IMAGE MODAL
+           ========================================= */
+        .lab-modal {
+            position: fixed; inset: 0; width: 100%; height: 100vh;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
+            z-index: 100000; /* Below cursor (999999) but above nav (10000) */
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: 0.5s ease;
+        }
+        .lab-modal.active { opacity: 1; pointer-events: all; }
+        
+        .modal-content-wrapper {
+            width: 90%; max-width: 1000px; max-height: 85vh;
+            display: flex; flex-direction: column; gap: 1rem;
+            transform: scale(0.95) translateY(30px); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .lab-modal.active .modal-content-wrapper { transform: scale(1) translateY(0); }
+        
+        .modal-img { width: 100%; height: 60vh; object-fit: cover; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .modal-caption { display: flex; justify-content: space-between; align-items: center; font-family: 'Syne', sans-serif; font-size: clamp(1.2rem, 3vw, 2rem); }
+        .modal-tag { font-family: 'Inter', sans-serif; font-size: 1rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+
+        .close-modal-btn {
+            position: absolute; top: 30px; right: 5%; width: 60px; height: 60px;
+            border-radius: 50%; background: var(--light); color: var(--dark);
+            border: none; font-size: 1.5rem; display: flex; align-items: center; justify-content: center;
+            z-index: 10; transition: transform 0.3s;
+        }
+        .close-modal-btn:hover { transform: scale(1.1); }
+
+        @media (max-width: 768px) {
+            .modal-content-wrapper { width: 95%; max-height: 90vh; }
+            .modal-img { height: 50vh; }
+            .modal-caption { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .close-modal-btn { top: 15px; width: 45px; height: 45px; font-size: 1.2rem; }
+        }
+
+        /* =========================================
+           UNIQUE S01: CINEMATIC HERO
+           ========================================= */
+        #lab-hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: flex-end;
+            padding: 10vh 5%;
+        }
+        .hero-bg-img {
+            position: absolute; inset: 0; width: 100%; height: 120%; object-fit: cover;
+            z-index: -2; opacity: 0; transform: scale(1.2); /* Animated via JS */
+        }
+        .hero-gradient {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(8,8,8,1) 0%, rgba(8,8,8,0.4) 50%, rgba(8,8,8,0.1) 100%);
+            z-index: -1;
+        }
+        .lab-hero-title {
+            font-size: clamp(3.5rem, 10vw, 10rem); font-weight: 800; line-height: 0.9;
+            text-transform: uppercase; max-width: 1200px;
+        }
+        .lab-hero-title .line { display: block; overflow: hidden; }
+        .lab-hero-title .word { display: inline-block; transform: translateY(110%); }
+        .lab-hero-desc {
+            margin-top: 2rem; font-size: clamp(1rem, 2vw, 1.5rem); color: #ccc;
+            max-width: 600px; opacity: 0;
+        }
+
+        /* =========================================
+           UNIQUE S02: THE CULTURE GRID
+           ========================================= */
+        #lab-culture { padding: 15vh 5%; background: var(--dark); }
+        .culture-header { font-size: clamp(2.5rem, 6vw, 4rem); margin-bottom: 8vh; }
+        
+        .culture-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+        }
+        .culture-item {
+            position: relative; border-radius: 12px; overflow: hidden;
+            height: clamp(300px, 40vh, 500px); opacity: 0; transform: translateY(50px);
+        }
+        /* Masonry offset for middle item */
+        .culture-item:nth-child(2) { transform: translateY(100px); }
+        
+        .culture-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); filter: grayscale(50%); }
+        .culture-item:hover img { transform: scale(1.05); filter: grayscale(0%); }
+        
+        .culture-overlay {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.4); opacity: 0;
+            display: flex; align-items: center; justify-content: center; transition: 0.4s;
+        }
+        .culture-item:hover .culture-overlay { opacity: 1; }
+        .culture-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--light); color: var(--dark); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transform: scale(0.5); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .culture-item:hover .culture-icon { transform: scale(1); }
+
+        @media (max-width: 900px) {
+            .culture-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .culture-item { height: 50vh; transform: translateY(0) !important; opacity: 1; }
+            .culture-item img { filter: grayscale(0%); }
+        }
+
+        /* =========================================
+           UNIQUE S03: BACKGROUND RIBBON
+           ========================================= */
+        #lab-ribbon {
+            height: 80vh; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; margin-top: 10vh;
+        }
+        .ribbon-bg {
+            position: absolute; inset: 0; width: 100%; height: 130%; object-fit: cover;
+            z-index: -2; opacity: 0.6; /* Parallax target */
+        }
+        .ribbon-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: -1; }
+        
+        .ribbon-text-container { width: 100%; overflow: hidden; transform: rotate(-2deg); }
+        .ribbon-track { display: flex; white-space: nowrap; width: max-content; }
+        .ribbon-text {
+            font-size: clamp(4rem, 12vw, 10rem); font-family: 'Syne', sans-serif; font-weight: 800;
+            color: var(--light); text-transform: uppercase; padding-right: 2rem;
+            -webkit-text-stroke: 2px var(--light); color: transparent; /* Outline effect */
+        }
+
+        /* =========================================
+           UNIQUE S04: GLOBAL FOOTPRINT
+           ========================================= */
+        #lab-locations { padding: 15vh 5%; background: var(--dark); }
+        .loc-header { font-size: clamp(2.5rem, 6vw, 4rem); margin-bottom: 8vh; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2rem; }
+        
+        .loc-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 3rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+        }
+        .loc-row:hover { padding-left: 2%; padding-right: 2%; background: rgba(255,255,255,0.02); }
+        
+        .loc-city { font-size: clamp(2rem, 5vw, 4rem); font-family: 'Syne', sans-serif; font-weight: 700; color: var(--light); }
+        .loc-address { color: #888; font-size: clamp(1rem, 1.5vw, 1.2rem); max-width: 300px; }
+        .loc-time { font-family: 'Space Mono', monospace; font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--light); background: #222; padding: 10px 20px; border-radius: 50px; }
+
+        @media (max-width: 768px) {
+            .loc-row { flex-direction: column; align-items: flex-start; gap: 1.5rem; padding: 2rem 0; }
+            .loc-row:hover { padding-left: 0; padding-right: 0; background: transparent; }
+            .loc-address { max-width: 100%; }
+        }
+
+        /* =========================================
+           UNIQUE S05: STUDIO FOOTER
+           ========================================= */
+        #lab-footer {
+            height: 70vh; background: var(--light); color: var(--dark);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 0 5%;
+        }
+        .footer-title { font-size: clamp(3rem, 10vw, 8rem); font-weight: 800; line-height: 0.9; margin-bottom: 3rem; text-transform: uppercase; }
+        .magnetic-btn {
+            background: var(--dark); color: var(--light); font-size: 1.2rem; font-weight: 600;
+            padding: 1.5rem 4rem; border-radius: 100px; text-decoration: none; text-transform: uppercase;
+            display: inline-flex; align-items: center; gap: 10px; transition: 0.3s;
+        }
+        .magnetic-btn:hover { transform: scale(1.05); }
+
+    </style>
+</head>
+<body>
+
+    <!-- MAGIC CURSOR (Active above Modals) -->
+    <div class="cursor"></div>
+
+    <!-- GLASSMORPHIC IMAGE MODAL -->
+    <div class="lab-modal" id="lab-modal" data-lenis-prevent>
+        <button class="close-modal-btn magnetic" data-strength="30"><i class="ph ph-x"></i></button>
+        <div class="modal-content-wrapper">
+            <img src="" class="modal-img" id="modal-img" alt="Studio Culture">
+            <div class="modal-caption">
+                <span id="modal-title">Creative Sync</span>
+                <span class="modal-tag" id="modal-tag">HQ / London</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU -->
+    <div class="menu-overlay"><div class="menu-container" id="menu-grid"></div></div>
+
+    <main>
+
+        <!-- S01: CINEMATIC HERO (BACKGROUND INCLUDED) -->
+        <section id="lab-hero">
+            <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2564&auto=format&fit=crop" class="hero-bg-img" alt="Studio Office">
+            <div class="hero-gradient"></div>
+            
+            <h1 class="lab-hero-title">
+                <span class="line"><span class="word">WHERE</span></span><br>
+                <span class="line"><span class="word">MAGIC</span></span><br>
+                <span class="line"><span class="word">HAPPENS</span></span>
+            </h1>
+            <p class="lab-hero-desc">Take a look inside our global studios. A collective of designers, engineers, and artists redefining the internet.</p>
+        </section>
+
+        <!-- S02: CULTURE GRID (MODAL TRIGGERS) -->
+        <section id="lab-culture">
+            <h2 class="display-font culture-header">THE CULTURE</h2>
+            
+            <div class="culture-grid">
+                <!-- Item 1 -->
+                <div class="culture-item trigger-modal" 
+                     data-img="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop"
+                     data-title="Creative Sync" data-tag="London HQ">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop" alt="Culture">
+                    <div class="culture-overlay"><div class="culture-icon"><i class="ph ph-arrows-out"></i></div></div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="culture-item trigger-modal" 
+                     data-img="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1200&auto=format&fit=crop"
+                     data-title="Focus Mode" data-tag="Remote / Global">
+                    <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop" alt="Culture">
+                    <div class="culture-overlay"><div class="culture-icon"><i class="ph ph-arrows-out"></i></div></div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="culture-item trigger-modal" 
+                     data-img="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&auto=format&fit=crop"
+                     data-title="Strategy Session" data-tag="New York">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop" alt="Culture">
+                    <div class="culture-overlay"><div class="culture-icon"><i class="ph ph-arrows-out"></i></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S03: BACKGROUND RIBBON PARALLAX -->
+        <section id="lab-ribbon">
+            <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop" class="ribbon-bg" alt="Studio Architecture">
+            <div class="ribbon-overlay"></div>
+            
+            <div class="ribbon-text-container">
+                <div class="ribbon-track">
+                    <div class="ribbon-text">NO EGOS • JUST CRAFT • NO EGOS • JUST CRAFT •</div>
+                    <div class="ribbon-text">NO EGOS • JUST CRAFT • NO EGOS • JUST CRAFT •</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S04: GLOBAL FOOTPRINT -->
+        <section id="lab-locations">
+            <h2 class="display-font loc-header">GLOBAL FOOTPRINT</h2>
+            
+            <div class="loc-row">
+                <div class="loc-city">London</div>
+                <div class="loc-address">142 Shoreditch High St<br>Hackney, E1 6JE</div>
+                <div class="loc-time" data-timezone="Europe/London">00:00 AM</div>
+            </div>
+            
+            <div class="loc-row">
+                <div class="loc-city">New York</div>
+                <div class="loc-address">450 West 14th St<br>Meatpacking, NY 10014</div>
+                <div class="loc-time" data-timezone="America/New_York">00:00 AM</div>
+            </div>
+            
+            <div class="loc-row">
+                <div class="loc-city">Tokyo</div>
+                <div class="loc-address">2-chōme-11-3 Meguro<br>Meguro City, 153-0063</div>
+                <div class="loc-time" data-timezone="Asia/Tokyo">00:00 AM</div>
+            </div>
+        </section>
+
+        <!-- S05: STUDIO FOOTER -->
+        <section id="lab-footer">
+            <h2 class="display-font footer-title">JOIN THE TEAM</h2>
+            <a href="#" class="magnetic-btn magnetic" data-strength="30">View Careers <i class="ph ph-arrow-right"></i></a>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. Lenis Smooth Scroll
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. Cursor & Magnetic (ACTIVE ON MODALS)
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            // Note: Listener is on document, so cursor tracks everywhere!
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+            
+            // Basic Hover elements
+            document.querySelectorAll('a, button, .menu-item-title, .loc-row').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+
+            // "VIEW" text on grid images
+            document.querySelectorAll('.trigger-modal').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered', 'view-mode'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered', 'view-mode'));
+            });
+
+            // Magnetic Physics
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    gsap.to(el, { x: ((e.clientX - rect.left) / rect.width - 0.5) * strength, y: ((e.clientY - rect.top) / rect.height - 0.5) * strength, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        }
+
+        // 3. Menu Routing Data
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetUrl = link.getAttribute('href');
+                if(targetUrl !== '#') {
+                    e.preventDefault();
+                    toggleMenu();
+                    setTimeout(() => { 
+                        if (targetUrl.startsWith('#') || targetUrl.includes('.html#')) {
+                            const id = targetUrl.split('#')[1];
+                            const element = document.getElementById(id);
+                            if(element) lenis.scrollTo(element, { duration: 1.5 });
+                            else window.location.href = targetUrl;
+                        } else { window.location.href = targetUrl; }
+                    }, 800);
+                }
+            });
+        });
+
+        // 4. STUDIO MAGIC: The Cinematic Hero Background & Reveal
+        const heroTl = gsap.timeline({ delay: 0.2 });
+        // Fade and scale down background image beautifully
+        heroTl.to(".hero-bg-img", { opacity: 1, scale: 1, duration: 2, ease: "power3.out" });
+        heroTl.to(".lab-hero-title .word", { y: "0%", duration: 1.2, stagger: 0.15, ease: "power4.out" }, "-=1.5");
+        heroTl.to(".lab-hero-desc", { opacity: 1, y: -10, duration: 1 }, "-=1");
+
+        // 5. STUDIO MAGIC: Culture Grid Fade In
+        gsap.utils.toArray('.culture-item').forEach(item => {
+            gsap.to(item, {
+                opacity: 1, y: 0, duration: 1, ease: "power3.out",
+                scrollTrigger: { trigger: item, start: "top 85%" }
+            });
+        });
+
+        // 6. STUDIO MAGIC: The Glass Modal (Cursor stays active!)
+        const modal = document.getElementById('lab-modal');
+        const mImg = document.getElementById('modal-img');
+        const mTitle = document.getElementById('modal-title');
+        const mTag = document.getElementById('modal-tag');
+
+        document.querySelectorAll('.trigger-modal').forEach(item => {
+            item.addEventListener('click', () => {
+                mImg.src = item.getAttribute('data-img');
+                mTitle.innerText = item.getAttribute('data-title');
+                mTag.innerText = item.getAttribute('data-tag');
+                
+                modal.classList.add('active');
+                lenis.stop(); // Stops scroll, but custom cursor still works!
+                
+                // If on desktop, reset cursor style since we clicked
+                if(window.innerWidth > 768) {
+                    cursor.classList.remove('view-mode');
+                }
+            });
+        });
+
+        document.querySelector('.close-modal-btn').addEventListener('click', () => {
+            modal.classList.remove('active');
+            lenis.start();
+        });
+
+        // 7. STUDIO MAGIC: Parallax Ribbon Overlay
+        gsap.to(".ribbon-bg", {
+            yPercent: 30, // Moves image down as you scroll past
+            ease: "none",
+            scrollTrigger: { trigger: "#lab-ribbon", start: "top bottom", end: "bottom top", scrub: true }
+        });
+        // Infinite scrolling text marquee
+        gsap.to(".ribbon-track", {
+            xPercent: -50, ease: "none", duration: 10, repeat: -1
+        });
+
+        // 8. STUDIO MAGIC: Live Global Time Clocks
+        const updateClocks = () => {
+            const timeElements = document.querySelectorAll('.loc-time');
+            timeElements.forEach(el => {
+                const tz = el.getAttribute('data-timezone');
+                const time = new Date().toLocaleTimeString('en-US', {
+                    timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit'
+                });
+                el.innerText = time;
+            });
+        };
+        setInterval(updateClocks, 1000);
+        updateClocks(); // Initial call
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

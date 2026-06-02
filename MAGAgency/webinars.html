@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MΛGAgency | Events Webinars</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --dark:#05070b;
+      --light:#f4f4f5;
+      --accent:#7b61ff;
+      --accent-2:#00d4ff;
+      --accent-3:#ff5f9e;
+      --gold:#ffd166;
+      --gray:#11151c;
+      --nav-height:70px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;cursor:none;}
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--light);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+    h1,h2,h3,h4,h5,h6,.display-font{font-family:'Syne',sans-serif;}
+    .mono{font-family:'JetBrains Mono',monospace;}
+
+    html.lenis{height:auto;}
+    .lenis.lenis-smooth{scroll-behavior:auto !important;}
+
+    .cursor{
+      position:fixed;top:0;left:0;width:20px;height:20px;border-radius:50%;
+      background:var(--light);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);
+      transition:width .3s,height .3s,background .3s,border .3s;
+      mix-blend-mode:difference;
+    }
+    .cursor.hovered{
+      width:80px;height:80px;background:transparent;border:1px solid var(--accent-2);
+      mix-blend-mode:normal;backdrop-filter:grayscale(1);
+    }
+    .cursor.view-mode::after{
+      content:'WATCH';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      font-size:10px;font-weight:600;color:var(--light);font-family:'JetBrains Mono';letter-spacing:1px;
+    }
+    @media (max-width:768px){
+      .cursor{display:none;}
+      *{cursor:auto !important;}
+    }
+
+    nav{
+      position:fixed;top:0;left:0;width:100%;height:var(--nav-height);
+      display:flex;justify-content:space-between;align-items:center;padding:0 5vw;
+      z-index:10000;background:rgba(5,7,11,.78);backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(123,97,255,.15);
+    }
+    .nav-brand{
+      font-size:1.3rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;
+      color:var(--light);text-decoration:none;
+    }
+    .menu-btn{
+      display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--light);
+      font-weight:600;text-transform:uppercase;font-size:.9rem;
+    }
+    .hamburger{width:35px;height:8px;position:relative;}
+    .hamburger span{
+      position:absolute;width:100%;height:2px;background:var(--light);transition:.4s;
+    }
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){bottom:0;}
+    .menu-btn.active .hamburger span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);background:var(--accent-2);
+    }
+    .menu-btn.active .hamburger span:nth-child(2){
+      transform:translateY(-3px) rotate(-45deg);background:var(--accent-2);
+    }
+
+    .menu-overlay{
+      position:fixed;top:0;left:0;width:100vw;height:100vh;
+      background:rgba(5,7,11,.98);backdrop-filter:blur(10px);z-index:9999;display:flex;
+      padding-top:calc(var(--nav-height) + 3vh);
+      clip-path:polygon(0 0,100% 0,100% 0,0 0);
+      overflow-y:auto;
+    }
+    .menu-container{
+      width:100%;padding:0 5vw 5vh 5vw;display:grid;grid-template-columns:repeat(4,1fr);
+      gap:2rem 2.5rem;align-content:start;
+    }
+    @media (max-width:1200px){.menu-container{grid-template-columns:repeat(3,1fr);}}
+    @media (max-width:768px){
+      .menu-container{grid-template-columns:1fr;gap:.5rem;padding:2vh 5vw 10vh 5vw;}
+      .menu-item{border-bottom:1px solid rgba(255,255,255,.15);padding:1.5rem 0;}
+      .menu-item-title{font-size:2rem !important;font-weight:800 !important;}
+      .dropdown a{font-size:1.3rem !important;padding:.8rem 0;}
+    }
+    .menu-item{border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:1rem;}
+    .menu-item-title{
+      font-size:clamp(1.3rem,2.5vw,2rem);font-weight:700;display:flex;justify-content:space-between;
+      align-items:center;opacity:0;transform:translateY(20px);
+    }
+    .menu-item-title span{
+      font-size:1rem;font-family:'Inter',sans-serif;font-weight:400;color:var(--accent);
+    }
+    .dropdown{height:0;overflow:hidden;transition:height .4s ease;}
+    .dropdown-inner{padding-top:1rem;display:flex;flex-direction:column;gap:.8rem;}
+    .dropdown a{
+      color:#aaa;text-decoration:none;font-size:1.1rem;display:flex;align-items:center;gap:10px;transition:.3s;
+    }
+    .dropdown a i{font-size:1.4rem;color:var(--accent);}
+    .dropdown a:hover{color:var(--light);padding-left:10px;}
+
+    section{
+      position:relative;width:100vw;min-height:100vh;overflow:hidden;
+    }
+    .section-bg{
+      position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;
+    }
+    .section-overlay{
+      position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;background:rgba(5,7,11,.58);
+    }
+    .section-content{
+      position:relative;z-index:2;width:100%;height:100%;padding:calc(var(--nav-height) + 4vh) 5vw 8vh 5vw;
+      display:flex;
+    }
+
+    /* HERO */
+    #s01-hero .section-overlay{
+      background:linear-gradient(180deg, rgba(5,7,11,.08) 0%, rgba(5,7,11,.88) 100%);
+    }
+    #s01-hero .section-content{
+      flex-direction:column;justify-content:center;align-items:flex-start;
+    }
+    .hero-eyebrow{
+      color:var(--gold);font-family:'JetBrains Mono';font-size:.95rem;letter-spacing:4px;text-transform:uppercase;
+      margin-bottom:1.4rem;
+    }
+    .hero-title{
+      font-size:clamp(3.4rem,10vw,9rem);line-height:.88;text-transform:uppercase;font-weight:800;
+      max-width:1100px;
+    }
+    .hero-title .line{display:block;overflow:hidden;}
+    .hero-title .word{display:inline-block;transform:translateY(110%);}
+    .hero-title .outline{color:transparent;-webkit-text-stroke:2px var(--light);}
+    .hero-sub{
+      margin-top:1.6rem;max-width:720px;color:#b5bdd0;font-size:clamp(1rem,2vw,1.18rem);line-height:1.75;
+    }
+    .hero-pills{
+      margin-top:2.3rem;display:flex;flex-wrap:wrap;gap:1rem;
+    }
+    .hero-pill{
+      padding:.85rem 1.05rem;border-radius:999px;background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(12px);
+      font-family:'JetBrains Mono';font-size:.84rem;
+    }
+
+    /* UNIQUE SECTION A */
+    #s02-letter-a{
+      background:#06080d;
+      min-height:150vh;
+    }
+    .a-stage{
+      position:sticky;
+      top:0;
+      width:100%;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      z-index:2;
+    }
+    .a-bg-grid{
+      position:absolute;inset:0;
+      background:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size:40px 40px;
+      opacity:.5;
+    }
+    .big-a-wrap{
+      position:relative;
+      width:min(85vw,900px);
+      height:min(78vh,780px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .big-a{
+      position:relative;
+      width:100%;
+      height:100%;
+      clip-path:polygon(50% 0%, 100% 100%, 82% 100%, 68% 68%, 32% 68%, 18% 100%, 0% 100%);
+      background:linear-gradient(180deg, rgba(123,97,255,.22), rgba(0,212,255,.12));
+      border:1px solid rgba(255,255,255,.1);
+      backdrop-filter:blur(20px);
+      box-shadow:0 0 60px rgba(123,97,255,.12), inset 0 0 60px rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+    .a-inner-line{
+      position:absolute;left:50%;top:12%;transform:translateX(-50%);
+      width:8px;height:76%;
+      background:linear-gradient(180deg, rgba(255,255,255,.4), transparent);
+      opacity:.15;
+      filter:blur(1px);
+    }
+    .a-crossbar{
+      position:absolute;
+      left:50%;
+      top:52%;
+      transform:translate(-50%,-50%);
+      width:34%;
+      height:18px;
+      border-radius:999px;
+      background:linear-gradient(90deg, var(--accent-3), var(--accent-2));
+      box-shadow:0 0 30px rgba(0,212,255,.25);
+      z-index:3;
+    }
+
+    .a-card{
+      position:absolute;
+      width:210px;
+      background:rgba(17,20,28,.82);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:1rem;
+      backdrop-filter:blur(16px);
+      box-shadow:0 20px 40px rgba(0,0,0,.28);
+      transition:.35s;
+    }
+    .a-card:hover{
+      transform:scale(1.05);
+      border-color:rgba(0,212,255,.28);
+    }
+    .a-card .mini{
+      color:var(--accent-2);
+      font-family:'JetBrains Mono';
+      font-size:.74rem;
+      margin-bottom:.4rem;
+    }
+    .a-card h4{
+      font-size:1rem;
+      line-height:1.2;
+      margin-bottom:.5rem;
+    }
+    .a-card p{
+      font-size:.88rem;
+      color:#aeb6c8;
+      line-height:1.5;
+    }
+
+    .a-card.c1{top:8%;left:-2%;}
+    .a-card.c2{top:8%;right:-2%;}
+    .a-card.c3{bottom:12%;left:6%;}
+    .a-card.c4{bottom:12%;right:6%;}
+    .a-card.c5{
+      top:50%;left:50%;transform:translate(-50%,-50%);
+      width:250px;text-align:center;z-index:5;
+    }
+    .a-card.c5:hover{transform:translate(-50%,-50%) scale(1.05);}
+
+    .a-scroll-copy{
+      position:absolute;
+      left:5vw;
+      bottom:8vh;
+      max-width:420px;
+      z-index:5;
+    }
+    .a-scroll-copy h2{
+      font-size:clamp(2.5rem,5vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+    .a-scroll-copy p{
+      color:#aab2c4;
+      line-height:1.7;
+    }
+
+    @media (max-width:1024px){
+      #s02-letter-a{min-height:180vh;}
+      .big-a-wrap{width:min(90vw,700px);height:min(64vh,620px);}
+      .a-card{width:170px;}
+      .a-card.c5{width:220px;}
+    }
+    @media (max-width:768px){
+      #s02-letter-a{min-height:200vh;}
+      .a-stage{align-items:flex-start;padding-top:16vh;}
+      .big-a-wrap{width:92vw;height:52vh;}
+      .a-card{
+        width:150px;padding:.8rem;
+      }
+      .a-card h4{font-size:.9rem;}
+      .a-card p{font-size:.8rem;}
+      .a-card.c1{top:-3%;left:0%;}
+      .a-card.c2{top:-3%;right:0%;}
+      .a-card.c3{bottom:-6%;left:3%;}
+      .a-card.c4{bottom:-6%;right:3%;}
+      .a-card.c5{width:180px;}
+      .a-scroll-copy{
+        position:relative;
+        left:auto;bottom:auto;
+        margin:70vh 5vw 0 5vw;
+        max-width:none;
+      }
+    }
+
+    /* S03 SIGNAL GRID */
+    #s03-signals{
+      background:#07080c;
+    }
+    .signals-wrap{
+      width:100%;display:flex;flex-direction:column;justify-content:center;
+    }
+    .signals-head{
+      display:flex;justify-content:space-between;align-items:end;gap:2rem;flex-wrap:wrap;margin-bottom:4vh;
+    }
+    .signals-head h2{
+      font-size:clamp(2.7rem,6vw,5.8rem);line-height:.92;
+    }
+    .signals-head p{
+      max-width:520px;color:#a9b0c0;line-height:1.75;
+    }
+    .signals-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,260px);gap:1rem;
+    }
+    .signal-box{
+      position:relative;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.06);
+      background:#12161d;transition:.4s;
+    }
+    .signal-box:hover{
+      transform:translateY(-10px);border-color:rgba(123,97,255,.3);box-shadow:0 20px 50px rgba(0,0,0,.3);
+    }
+    .signal-box img{
+      width:100%;height:100%;object-fit:cover;filter:brightness(.72) grayscale(10%);transition:.45s;
+    }
+    .signal-box:hover img{filter:brightness(.95) grayscale(0);}
+    .signal-box::after{
+      content:'';position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,.92), rgba(0,0,0,.1));
+    }
+    .signal-content{
+      position:absolute;left:1.2rem;right:1.2rem;bottom:1.2rem;z-index:3;
+    }
+    .signal-content .mini{
+      color:var(--accent-2);font-family:'JetBrains Mono';font-size:.78rem;margin-bottom:.45rem;
+    }
+    .signal-content h3{
+      font-size:1.15rem;line-height:1.18;
+    }
+    .signal-box.big{grid-column:span 2;grid-row:span 2;}
+    .signal-box.wide{grid-column:span 2;}
+    @media (max-width:1024px){
+      .signals-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:auto;}
+      .signal-box.big,.signal-box.wide{grid-column:span 1;grid-row:span 1;min-height:260px;}
+    }
+    @media (max-width:768px){
+      .signals-grid{grid-template-columns:1fr;}
+    }
+
+    /* S04 DIAL */
+    #s04-dial{
+      background:#06070b;
+    }
+    .dial-copy{
+      position:absolute;left:5vw;top:50%;transform:translateY(-50%);z-index:4;max-width:430px;
+    }
+    .dial-copy h2{
+      font-size:clamp(2.8rem,5vw,5.8rem);line-height:.94;margin-bottom:1rem;
+    }
+    .dial-copy p{color:#aab1c1;line-height:1.75;}
+    .dial-stage{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;
+    }
+    .dial-ring{
+      position:relative;width:680px;height:680px;border-radius:50%;
+      border:1px dashed rgba(255,255,255,.14);
+      animation:spinSlow 28s linear infinite;
+    }
+    .dial-ring::before{
+      content:'';position:absolute;inset:90px;border-radius:50%;
+      border:1px dashed rgba(123,97,255,.18);
+    }
+    .dial-center{
+      position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      width:220px;height:220px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, rgba(123,97,255,.28), rgba(0,212,255,.12));
+      border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(18px);
+      display:flex;align-items:center;justify-content:center;text-align:center;
+      box-shadow:0 0 40px rgba(123,97,255,.15);
+    }
+    .dial-center h3{font-size:1.3rem;line-height:1.1;}
+    .dial-center p{margin-top:.4rem;font-size:.78rem;font-family:'JetBrains Mono';color:#d7dcf4;}
+    .dial-node{
+      position:absolute;width:180px;padding:1rem;border-radius:16px;background:rgba(17,20,27,.78);
+      border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(15px);transform:translate(-50%,-50%);
+      box-shadow:0 14px 30px rgba(0,0,0,.25);
+    }
+    .dial-node .mini{
+      color:var(--gold);font-family:'JetBrains Mono';font-size:.74rem;margin-bottom:.35rem;
+    }
+    .dial-node h4{font-size:1rem;line-height:1.2;}
+    @keyframes spinSlow{
+      from{transform:rotate(0deg);}
+      to{transform:rotate(360deg);}
+    }
+    @media (max-width:1024px){
+      #s04-dial{min-height:145vh;}
+      .dial-copy{
+        position:relative;left:auto;top:auto;transform:none;padding:calc(var(--nav-height) + 4vh) 5vw 0 5vw;
+        max-width:100%;text-align:center;
+      }
+      .dial-stage{top:15vh;}
+      .dial-ring{width:520px;height:520px;}
+      .dial-ring::before{inset:70px;}
+      .dial-center{width:180px;height:180px;}
+      .dial-node{width:135px;padding:.8rem;}
+    }
+    @media (max-width:768px){
+      #s04-dial{min-height:155vh;}
+      .dial-ring{width:390px;height:390px;}
+      .dial-ring::before{inset:50px;}
+      .dial-center{width:130px;height:130px;}
+      .dial-node{width:110px;font-size:.75rem;}
+    }
+
+    /* S05 SESSIONS */
+    #s05-sessions{
+      background:#08090d;
+    }
+    .sessions-wrap{
+      width:100%;display:flex;flex-direction:column;justify-content:center;
+    }
+    .sessions-head{
+      display:flex;justify-content:space-between;align-items:end;gap:2rem;flex-wrap:wrap;margin-bottom:5vh;
+    }
+    .sessions-head h2{
+      font-size:clamp(2.6rem,6vw,5.5rem);line-height:.94;
+    }
+    .sessions-head p{
+      max-width:520px;color:#a8afbf;line-height:1.75;
+    }
+    .sessions-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;
+    }
+    .session-card{
+      background:#12161d;border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:1.4rem;
+      transition:.35s;position:relative;overflow:hidden;
+    }
+    .session-card::before{
+      content:'';position:absolute;inset:0;background:radial-gradient(circle at top right, rgba(255,95,158,.12), transparent 42%);
+      pointer-events:none;
+    }
+    .session-card:hover{
+      transform:translateY(-10px);border-color:rgba(255,95,158,.3);box-shadow:0 20px 50px rgba(0,0,0,.3);
+    }
+    .session-top{
+      display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;
+      color:var(--gold);font-family:'JetBrains Mono';font-size:.82rem;
+    }
+    .session-icon{
+      width:56px;height:56px;border-radius:14px;background:rgba(255,255,255,.05);
+      display:flex;align-items:center;justify-content:center;font-size:1.55rem;color:var(--accent-2);margin-bottom:1rem;
+    }
+    .session-card h3{
+      font-size:1.3rem;line-height:1.15;margin-bottom:.8rem;
+    }
+    .session-card p{
+      color:#a1a9bb;line-height:1.6;font-size:.95rem;
+    }
+    @media (max-width:1024px){.sessions-grid{grid-template-columns:repeat(2,1fr);}}
+    @media (max-width:768px){.sessions-grid{grid-template-columns:1fr;}}
+
+    /* FOOTER */
+    #s06-footer{background:#020304;}
+    #s06-footer .section-overlay{
+      background:linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,.45) 100%);
+    }
+    .footer-main{
+      position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;
+      padding:calc(var(--nav-height) + 2vh) 5vw 5vh 5vw;
+    }
+    .footer-title{
+      margin-top:auto;text-align:center;font-size:clamp(3rem,14vw,11rem);line-height:.8;font-weight:800;
+    }
+    .footer-title span{color:var(--accent-2);}
+    .footer-bottom{
+      display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap;
+      border-top:1px solid rgba(255,255,255,.1);padding-top:2rem;margin-top:auto;
+    }
+    .social-links{display:flex;gap:1rem;}
+    .social-btn{
+      width:60px;height:60px;border-radius:50%;border:1px solid rgba(255,255,255,.2);
+      display:flex;justify-content:center;align-items:center;color:var(--light);font-size:1.5rem;transition:.3s;
+    }
+    .social-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+  </style>
+</head>
+<body>
+  <div class="cursor"></div>
+
+  <nav>
+    <a href="#" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+    <button class="menu-btn magnetic" data-strength="30">
+      Menu
+      <div class="hamburger"><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <div class="menu-overlay">
+    <div class="menu-container" id="menu-grid"></div>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section id="s01-hero">
+      <img src="https://images.unsplash.com/photo-1591115765373-5207764f72e7?q=80&w=2200&auto=format&fit=crop" class="section-bg hero-bg" alt="Webinars Hero">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="hero-eyebrow gsap-up">► EVENTS / WEBINARS</div>
+
+        <h1 class="hero-title">
+          <span class="line"><span class="word gsap-word">DIGITAL</span></span>
+          <span class="line"><span class="word gsap-word outline">SESSIONS</span></span>
+        </h1>
+
+        <p class="hero-sub gsap-up">
+          A premium webinar system with cinematic broadcast staging, a custom A-shaped architecture section,
+          signal lanes, orbital timeline dial, and session formats built for high-end digital event experiences.
+        </p>
+
+        <div class="hero-pills">
+          <div class="hero-pill gsap-up hover-target">Live Broadcasts</div>
+          <div class="hero-pill gsap-up hover-target">Interactive Q&A</div>
+          <div class="hero-pill gsap-up hover-target">Replay Access</div>
+          <div class="hero-pill gsap-up hover-target">Global Remote Attendees</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- UNIQUE A SECTION -->
+    <section id="s02-letter-a">
+      <div class="section-overlay" style="background:radial-gradient(circle at center, rgba(123,97,255,.08) 0%, rgba(5,7,11,.92) 70%);"></div>
+
+      <div class="a-stage">
+        <div class="a-bg-grid"></div>
+
+        <div class="big-a-wrap">
+          <div class="big-a" id="bigA">
+            <div class="a-inner-line"></div>
+            <div class="a-crossbar"></div>
+          </div>
+
+          <article class="a-card c1 view-target">
+            <div class="mini">A / AUDIENCE</div>
+            <h4 class="display-font">Global Access</h4>
+            <p>Worldwide attendance without location barriers.</p>
+          </article>
+
+          <article class="a-card c2 view-target">
+            <div class="mini">A / AUTOMATION</div>
+            <h4 class="display-font">Smart Delivery</h4>
+            <p>Reminders, follow-ups, and replay systems automated.</p>
+          </article>
+
+          <article class="a-card c3 view-target">
+            <div class="mini">A / ANALYTICS</div>
+            <h4 class="display-font">Session Intelligence</h4>
+            <p>Track attendance, drop-off, engagement, and replay value.</p>
+          </article>
+
+          <article class="a-card c4 view-target">
+            <div class="mini">A / ARCHIVE</div>
+            <h4 class="display-font">Replay Layer</h4>
+            <p>Every session becomes long-tail educational content.</p>
+          </article>
+
+          <article class="a-card c5 view-target">
+            <div class="mini">A / ARCHITECTURE</div>
+            <h4 class="display-font">The Webinar Framework</h4>
+            <p>This section is built around a giant letter A — designed to mean Audience, Access, Analytics, Automation, and Archive.</p>
+          </article>
+        </div>
+
+        <div class="a-scroll-copy">
+          <h2 class="display-font">A Is The Core.</h2>
+          <p>
+            You asked for something unique in the letter A in the middle without empty wasted space — so this full-page section is built around a giant structural A.
+            Each surrounding card plugs into the A-framework of a modern webinar system.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIGNAL GRID -->
+    <section id="s03-signals">
+      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.05;" alt="Signal Grid Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="signals-wrap">
+          <div class="signals-head">
+            <h2 class="display-font">Signal<br>Streams.</h2>
+            <p>
+              A modular webinar overview grid showcasing session categories like product, brand, AI, leadership, and creative systems — each as its own visual broadcast lane.
+            </p>
+          </div>
+
+          <div class="signals-grid">
+            <article class="signal-box big view-target">
+              <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1400&auto=format&fit=crop" alt="Big Signal">
+              <div class="signal-content">
+                <div class="mini">AI / PRODUCT</div>
+                <h3 class="display-font">AI Product Design Deep Dive</h3>
+              </div>
+            </article>
+
+            <article class="signal-box wide view-target">
+              <img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=1400&auto=format&fit=crop" alt="Wide Signal">
+              <div class="signal-content">
+                <div class="mini">TECH / WEBGL</div>
+                <h3 class="display-font">Building Immersive Interfaces at Scale</h3>
+              </div>
+            </article>
+
+            <article class="signal-box view-target">
+              <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1000&auto=format&fit=crop" alt="Signal 3">
+              <div class="signal-content">
+                <div class="mini">LEADERSHIP</div>
+                <h3 class="display-font">Executive Fireside</h3>
+              </div>
+            </article>
+
+            <article class="signal-box view-target">
+              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1000&auto=format&fit=crop" alt="Signal 4">
+              <div class="signal-content">
+                <div class="mini">BRAND</div>
+                <h3 class="display-font">Narrative Systems</h3>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIAL -->
+    <section id="s04-dial">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.08;" alt="Dial Background">
+      <div class="section-overlay"></div>
+
+      <div class="dial-copy">
+        <div class="hero-eyebrow">► ORBITAL SESSION DIAL</div>
+        <h2 class="display-font">Program<br>Timeline.</h2>
+        <p>
+          Instead of a boring agenda table, the session timeline appears as an orbiting dial — keynote, workshops, Q&A, demos, and networking all rotating around a live webinar core.
+        </p>
+      </div>
+
+      <div class="dial-stage">
+        <div class="dial-ring">
+          <div class="dial-center hover-target">
+            <div>
+              <h3 class="display-font">Live<br>Program</h3>
+              <p>STREAM CORE</p>
+            </div>
+          </div>
+
+          <div class="dial-node view-target" style="top:12%; left:50%;">
+            <div class="mini">10:00 UTC</div>
+            <h4 class="display-font">Opening Keynote</h4>
+          </div>
+
+          <div class="dial-node view-target" style="top:28%; left:84%;">
+            <div class="mini">11:30 UTC</div>
+            <h4 class="display-font">Product Session</h4>
+          </div>
+
+          <div class="dial-node view-target" style="top:70%; left:78%;">
+            <div class="mini">13:00 UTC</div>
+            <h4 class="display-font">Live Demo Lab</h4>
+          </div>
+
+          <div class="dial-node view-target" style="top:84%; left:38%;">
+            <div class="mini">14:00 UTC</div>
+            <h4 class="display-font">Open Q&A</h4>
+          </div>
+
+          <div class="dial-node view-target" style="top:42%; left:10%;">
+            <div class="mini">15:00 UTC</div>
+            <h4 class="display-font">Networking Room</h4>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SESSIONS -->
+    <section id="s05-sessions">
+      <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.07;" alt="Sessions Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="sessions-wrap">
+          <div class="sessions-head">
+            <h2 class="display-font">Session<br>Formats.</h2>
+            <p>
+              Different webinar formats for different moments — keynotes, panel discussions, breakout rooms, demos, and interactive Q&A environments.
+            </p>
+          </div>
+
+          <div class="sessions-grid">
+            <article class="session-card view-target">
+              <div class="session-top"><span>FORMAT</span><span>KEYNOTE</span></div>
+              <div class="session-icon"><i class="ph ph-presentation-chart"></i></div>
+              <h3 class="display-font">Opening Keynotes</h3>
+              <p>Big-picture talks to frame the session theme, align the audience, and establish strategic direction.</p>
+            </article>
+
+            <article class="session-card view-target">
+              <div class="session-top"><span>FORMAT</span><span>PANEL</span></div>
+              <div class="session-icon"><i class="ph ph-users-three"></i></div>
+              <h3 class="display-font">Expert Panels</h3>
+              <p>Moderated discussion formats bringing multiple voices into one shared topic and conversation flow.</p>
+            </article>
+
+            <article class="session-card view-target">
+              <div class="session-top"><span>FORMAT</span><span>DEMO</span></div>
+              <div class="session-icon"><i class="ph ph-monitor-play"></i></div>
+              <h3 class="display-font">Live Demos</h3>
+              <p>Product showcases, prototype walkthroughs, and build sessions demonstrating ideas in action.</p>
+            </article>
+
+            <article class="session-card view-target">
+              <div class="session-top"><span>FORMAT</span><span>BREAKOUT</span></div>
+              <div class="session-icon"><i class="ph ph-squares-four"></i></div>
+              <h3 class="display-font">Breakout Rooms</h3>
+              <p>Small group discussion spaces for focused topics, shared learning, and deeper interaction.</p>
+            </article>
+
+            <article class="session-card view-target">
+              <div class="session-top"><span>FORMAT</span><span>Q&A</span></div>
+              <div class="session-icon"><i class="ph ph-question"></i></div>
+              <h3 class="display-font">Audience Q&A</h3>
+              <p>Interactive response sessions designed to make digital events feel direct, personal, and participatory.</p>
+            </article>
+
+            <article class="session-card view-target">
+              <div class="session-top"><span>FORMAT</span><span>REPLAY</span></div>
+              <div class="session-icon"><i class="ph ph-arrow-counter-clockwise"></i></div>
+              <h3 class="display-font">On-Demand Replay</h3>
+              <p>Replay-first access windows to extend event lifespan and support asynchronous audience participation.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section id="s06-footer">
+      <img src="https://images.unsplash.com/photo-1591115765373-5207764f72e7?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="filter:brightness(.42) hue-rotate(10deg);" alt="Footer Background">
+      <div class="section-overlay"></div>
+
+      <div class="footer-main">
+        <h2 class="footer-title display-font">STREAM.<br><span>LIVE.</span></h2>
+
+        <div class="footer-bottom">
+          <div class="mono" style="color:#919aae;">
+            <p>MΛGIC AGENCY // WEBINAR EVENTS</p>
+            <p style="margin-top:6px;">PREMIUM DIGITAL SESSION EXPERIENCE</p>
+          </div>
+
+          <div class="social-links">
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-monitor-play"></i></a>
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-video-camera"></i></a>
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-broadcast"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+  <script>
+    // LENIS
+    const lenis = new Lenis({ duration: 1.5, smooth: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+    gsap.registerPlugin(ScrollTrigger);
+
+    // CURSOR
+    const cursor = document.querySelector('.cursor');
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+      });
+
+      document.querySelectorAll('a, button, .hover-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+
+      document.querySelectorAll('.view-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered','view-mode'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered','view-mode'));
+      });
+    }
+
+    // MAGNETIC
+    const attachMagnetic = () => {
+      if (window.innerWidth <= 768) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const strength = el.dataset.strength || 20;
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+          gsap.to(el, { x, y, duration: 0.3, ease: "power2.out" });
+        });
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+      });
+    };
+
+    // MENU DATA EXACT
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+    const menuGrid = document.getElementById('menu-grid');
+    menuData.forEach(item => {
+      let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+      menuGrid.innerHTML += `
+        <div class="menu-item">
+          <div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div>
+          <div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div>
+        </div>
+      `;
+    });
+
+    document.querySelectorAll('.menu-item-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const dropdown = title.nextElementSibling;
+        const inner = dropdown.querySelector('.dropdown-inner');
+        document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+        dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+      });
+    });
+
+    const menuBtn = document.querySelector('.menu-btn');
+    let menuOpen = false;
+    const menuTl = gsap.timeline({ paused: true })
+      .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+      .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+    const toggleMenu = () => {
+      menuOpen = !menuOpen;
+      menuBtn.classList.toggle('active');
+      if (menuOpen) {
+        lenis.stop();
+        menuTl.play();
+      } else {
+        lenis.start();
+        document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px');
+        menuTl.reverse();
+      }
+    };
+    menuBtn.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute('href');
+        toggleMenu();
+        setTimeout(() => {
+          if (targetUrl.startsWith('#')) lenis.scrollTo(targetUrl, { duration: 1.5 });
+          else window.location.href = targetUrl;
+        }, 800);
+      });
+    });
+
+    // HERO
+    gsap.to(".gsap-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.2,
+      ease: "power4.out",
+      delay: 0.2
+    });
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      delay: 0.8,
+      stagger: 0.1,
+      ease: "power3.out"
+    });
+    gsap.to(".hero-bg", {
+      y: "18%",
+      scrollTrigger: {
+        trigger: "#s01-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // A SECTION MAGIC
+    gsap.to("#bigA", {
+      rotate: 8,
+      scale: 1.06,
+      scrollTrigger: {
+        trigger: "#s02-letter-a",
+        start: "top center",
+        end: "bottom center",
+        scrub: true
+      }
+    });
+
+    gsap.utils.toArray('.a-card').forEach((card, i) => {
+      gsap.from(card, {
+        opacity: 0,
+        scale: 0.8,
+        y: 40,
+        duration: 1,
+        delay: i * 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s02-letter-a",
+          start: "top 60%"
+        }
+      });
+    });
+
+    // SIGNAL GRID ENTRY
+    gsap.utils.toArray('.signal-box').forEach((box, i) => {
+      gsap.from(box, {
+        opacity: 0,
+        y: 70,
+        duration: 1,
+        delay: i * 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s03-signals",
+          start: "top 72%"
+        }
+      });
+    });
+
+    // DIAL PARALLAX
+    gsap.to(".dial-ring", {
+      rotation: 25,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#s04-dial",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // SESSION ENTRY
+    gsap.utils.toArray('.session-card').forEach((card, i) => {
+      gsap.from(card, {
+        opacity: 0,
+        y: 70,
+        duration: 1,
+        delay: i * 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s05-sessions",
+          start: "top 70%"
+        }
+      });
+    });
+
+    attachMagnetic();
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

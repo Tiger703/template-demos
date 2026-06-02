@@ -1,0 +1,2534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MΛGAgency | Support / API Docs</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --dark:#06080d;
+      --light:#f4f4f5;
+      --accent:#6cf1ff;
+      --accent-2:#8d7cff;
+      --accent-3:#7dff9b;
+      --accent-4:#ffb86b;
+      --danger:#ff6b6b;
+      --gray:#10141a;
+      --nav-height:70px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      cursor:none;
+    }
+
+    html.lenis{height:auto;}
+    .lenis.lenis-smooth{scroll-behavior:auto !important;}
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--light);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    h1,h2,h3,h4,h5,h6,.display-font{font-family:'Syne',sans-serif;}
+    .mono{font-family:'JetBrains Mono',monospace;}
+    a{text-decoration:none;color:inherit;}
+
+    section{
+      position:relative;
+      width:100vw;
+      min-height:100vh;
+      overflow:hidden;
+    }
+
+    .section-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:0;
+    }
+
+    .section-overlay{
+      position:absolute;
+      inset:0;
+      z-index:1;
+    }
+
+    .section-inner{
+      position:relative;
+      z-index:2;
+      width:100%;
+      min-height:100vh;
+      padding:calc(var(--nav-height) + 4vh) 5vw 6vh 5vw;
+    }
+
+    .glass{
+      background:rgba(14,18,24,.5);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 20px 50px rgba(0,0,0,.4);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid rgba(108,241,255,.24);
+      color:var(--accent);
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:.84rem;
+      font-family:'JetBrains Mono',monospace;
+      width:max-content;
+      margin-bottom:1.2rem;
+    }
+
+    .pulse{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--accent);
+      animation:pulseDot 1.2s infinite;
+    }
+
+    @keyframes pulseDot{
+      0%{transform:scale(1);opacity:1;}
+      50%{transform:scale(.55);opacity:.45;}
+      100%{transform:scale(1);opacity:1;}
+    }
+
+    /* ===============================
+       CURSOR
+       =============================== */
+    .cursor{
+      position:fixed;
+      top:0;
+      left:0;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:var(--accent);
+      pointer-events:none;
+      z-index:99999;
+      transform:translate(-50%,-50%);
+      transition:width .3s,height .3s,background .3s,border .3s;
+      mix-blend-mode:screen;
+    }
+
+    .cursor.hovered{
+      width:78px;
+      height:78px;
+      background:transparent;
+      border:1px solid var(--accent);
+      mix-blend-mode:normal;
+      backdrop-filter:blur(6px);
+    }
+
+    .cursor.docs-mode::after{
+      content:'DOCS';
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      font-size:10px;
+      color:var(--accent);
+      font-family:'JetBrains Mono',monospace;
+      font-weight:700;
+      letter-spacing:1px;
+    }
+
+    @media(max-width:768px){
+      .cursor{display:none;}
+      *{cursor:auto !important;}
+    }
+
+    /* ===============================
+       NAV
+       =============================== */
+    nav{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:var(--nav-height);
+      padding:0 5vw;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:10000;
+      background:rgba(6,8,13,.74);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(108,241,255,.14);
+    }
+
+    .nav-brand{
+      font-size:1.3rem;
+      font-weight:800;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+
+    .menu-btn{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:none;
+      border:none;
+      color:var(--light);
+      font-weight:600;
+      text-transform:uppercase;
+      font-size:.9rem;
+    }
+
+    .hamburger{
+      width:35px;
+      height:8px;
+      position:relative;
+    }
+
+    .hamburger span{
+      position:absolute;
+      width:100%;
+      height:2px;
+      background:var(--light);
+      transition:.4s;
+      left:0;
+    }
+
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){bottom:0;}
+
+    .menu-btn.active .hamburger span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);
+      background:#111;
+    }
+
+    .menu-btn.active .hamburger span:nth-child(2){
+      transform:translateY(-3px) rotate(-45deg);
+      background:#111;
+    }
+
+    /* ===============================
+       MENU OVERLAY FIXED
+       =============================== */
+    .menu-overlay{
+      position:fixed;
+      inset:0;
+      background:var(--accent);
+      z-index:9999;
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transform:translateY(-100%);
+      overflow-y:auto;
+      padding-top:calc(var(--nav-height) + 3vh);
+    }
+
+    .menu-container{
+      width:100%;
+      padding:0 5vw 5vh 5vw;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:2rem 2.5rem;
+      align-content:start;
+    }
+
+    .menu-item{
+      border-bottom:1px solid rgba(0,0,0,.12);
+      padding-bottom:1rem;
+    }
+
+    .menu-item-title{
+      font-size:clamp(1.3rem,2.5vw,2rem);
+      font-weight:700;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:#101010;
+      opacity:0;
+      transform:translateY(20px);
+      cursor:pointer;
+    }
+
+    .menu-item-title span{
+      font-size:1rem;
+      font-family:'Inter',sans-serif;
+      font-weight:500;
+      color:#101010;
+    }
+
+    .dropdown{
+      height:0;
+      overflow:hidden;
+      transition:height .35s ease;
+    }
+
+    .dropdown-inner{
+      padding-top:1rem;
+      display:flex;
+      flex-direction:column;
+      gap:.8rem;
+    }
+
+    .dropdown a{
+      color:#1f1f1f;
+      font-size:1.05rem;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      transition:.3s;
+      font-weight:500;
+    }
+
+    .dropdown a i{
+      font-size:1.2rem;
+      color:#111;
+    }
+
+    .dropdown a:hover{padding-left:10px;}
+
+    @media(max-width:1200px){
+      .menu-container{grid-template-columns:repeat(3,1fr);}
+    }
+
+    @media(max-width:768px){
+      .menu-container{
+        grid-template-columns:1fr;
+        gap:.5rem;
+        padding:2vh 5vw 10vh 5vw;
+      }
+
+      .menu-item{
+        border-bottom:1px solid rgba(0,0,0,.15);
+        padding:1.5rem 0;
+      }
+
+      .menu-item-title{
+        font-size:2rem !important;
+        font-weight:800 !important;
+      }
+
+      .dropdown a{
+        font-size:1.2rem !important;
+        padding:.8rem 0;
+      }
+    }
+
+    /* ===============================
+       HERO
+       =============================== */
+    #docs-hero .section-overlay{
+      background:
+        linear-gradient(90deg,rgba(6,8,13,.92) 0%, rgba(6,8,13,.48) 48%, rgba(6,8,13,.84) 100%);
+    }
+
+    .hero-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      align-items:center;
+      gap:4vw;
+    }
+
+    .hero-title{
+      font-size:clamp(3.5rem,10vw,8rem);
+      line-height:.9;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .hero-title .line{
+      display:block;
+      overflow:hidden;
+    }
+
+    .hero-title .word{
+      display:inline-block;
+      transform:translateY(110%);
+    }
+
+    .hero-title .outline{
+      color:transparent;
+      -webkit-text-stroke:2px var(--light);
+    }
+
+    .hero-desc{
+      margin-top:1.4rem;
+      max-width:560px;
+      color:#c4cad2;
+      line-height:1.75;
+    }
+
+    .hero-meta{
+      margin-top:2rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:1.2rem 2rem;
+      color:#9ca5af;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.88rem;
+    }
+
+    .terminal-wrap{
+      display:flex;
+      justify-content:center;
+      perspective:1200px;
+    }
+
+    .terminal-card{
+      width:min(620px,100%);
+      min-height:68vh;
+      border-radius:28px;
+      padding:1.1rem;
+      overflow:hidden;
+      position:relative;
+      transform-style:preserve-3d;
+      transition:transform .12s;
+    }
+
+    .terminal-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      padding-bottom:1rem;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      margin-bottom:1rem;
+      flex-wrap:wrap;
+    }
+
+    .terminal-dots{
+      display:flex;
+      gap:8px;
+    }
+
+    .terminal-dots span{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:#2d3340;
+    }
+
+    .terminal-dots span:nth-child(1){background:var(--accent);}
+    .terminal-dots span:nth-child(2){background:var(--accent-2);}
+    .terminal-dots span:nth-child(3){background:var(--accent-4);}
+
+    .terminal-head .mono{
+      color:#9ba8b5;
+      font-size:.78rem;
+    }
+
+    .endpoint-banner{
+      padding:1rem;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      margin-bottom:1rem;
+    }
+
+    .endpoint-banner .mono{
+      color:var(--accent);
+      font-size:.76rem;
+      display:block;
+      margin-bottom:.5rem;
+    }
+
+    .endpoint-line{
+      display:flex;
+      align-items:center;
+      gap:.8rem;
+      flex-wrap:wrap;
+      font-family:'JetBrains Mono',monospace;
+      font-size:1rem;
+      color:var(--light);
+      word-break:break-word;
+    }
+
+    .method-pill{
+      padding:.35rem .65rem;
+      border-radius:999px;
+      background:rgba(125,255,155,.16);
+      border:1px solid rgba(125,255,155,.28);
+      color:var(--accent-3);
+      font-size:.78rem;
+      font-weight:700;
+      letter-spacing:.5px;
+    }
+
+    .typed-surface{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:1rem;
+      margin-top:1rem;
+    }
+
+    .typed-box{
+      padding:1rem;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      min-height:180px;
+    }
+
+    .typed-box .mono{
+      color:var(--accent-2);
+      font-size:.76rem;
+      display:block;
+      margin-bottom:.55rem;
+    }
+
+    .typed-box pre{
+      color:#d9e0e8;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.82rem;
+      line-height:1.6;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .hero-mini-stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+      margin-top:1rem;
+    }
+
+    .hero-mini{
+      padding:.95rem;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .hero-mini .label{
+      color:#9ca7b4;
+      font-size:.74rem;
+      text-transform:uppercase;
+      margin-bottom:.35rem;
+    }
+
+    .hero-mini .value{
+      font-family:'JetBrains Mono',monospace;
+      font-size:1.1rem;
+      color:var(--light);
+      font-weight:700;
+    }
+
+    @media(max-width:1024px){
+      .hero-layout{
+        grid-template-columns:1fr;
+        text-align:center;
+      }
+      .hero-left{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+      }
+      .hero-desc{margin-inline:auto;}
+    }
+
+    @media(max-width:768px){
+      .typed-surface{grid-template-columns:1fr;}
+      .hero-mini-stats{grid-template-columns:1fr;}
+    }
+
+    /* ===============================
+       REQUEST BUILDER
+       =============================== */
+    #request-builder .section-overlay{
+      background:linear-gradient(180deg,rgba(6,8,13,.82),rgba(6,8,13,.95));
+    }
+
+    .builder-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:.84fr 1.16fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .builder-left h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .builder-left p{
+      color:#c2c9d1;
+      line-height:1.75;
+      margin-bottom:1.5rem;
+      max-width:500px;
+    }
+
+    .builder-panel{
+      padding:1.2rem;
+      border-radius:24px;
+    }
+
+    .method-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.8rem;
+      margin-bottom:1rem;
+    }
+
+    .method-btn{
+      padding:.75rem 1rem;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      color:#d3d9df;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.82rem;
+      transition:.3s;
+    }
+
+    .method-btn.active,
+    .method-btn:hover{
+      background:rgba(108,241,255,.08);
+      border-color:rgba(108,241,255,.3);
+      color:var(--light);
+    }
+
+    .endpoint-list{
+      display:grid;
+      gap:.8rem;
+      margin-top:1rem;
+    }
+
+    .endpoint-item{
+      padding:1rem 1.1rem;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      transition:.3s;
+    }
+
+    .endpoint-item.active,
+    .endpoint-item:hover{
+      transform:translateX(8px);
+      border-color:rgba(108,241,255,.28);
+      background:rgba(108,241,255,.06);
+    }
+
+    .endpoint-item .mono{
+      display:block;
+      color:var(--accent-4);
+      font-size:.74rem;
+      margin-bottom:.35rem;
+    }
+
+    .endpoint-item h3{
+      font-size:1rem;
+      margin-bottom:.25rem;
+    }
+
+    .endpoint-item p{
+      color:#b8c0ca;
+      font-size:.86rem;
+      line-height:1.45;
+    }
+
+    .builder-right{
+      border-radius:24px;
+      padding:1.2rem;
+      display:grid;
+      gap:1rem;
+    }
+
+    .request-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+
+    .request-url{
+      font-family:'JetBrains Mono',monospace;
+      color:var(--light);
+      font-size:1rem;
+      word-break:break-word;
+    }
+
+    .status-chip{
+      padding:.45rem .7rem;
+      border-radius:999px;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.76rem;
+      background:rgba(125,255,155,.12);
+      border:1px solid rgba(125,255,155,.28);
+      color:var(--accent-3);
+    }
+
+    .request-meta{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+    }
+
+    .meta-box{
+      padding:1rem;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .meta-box .label{
+      color:#9ca7b4;
+      font-size:.74rem;
+      text-transform:uppercase;
+      margin-bottom:.35rem;
+    }
+
+    .meta-box .value{
+      font-family:'JetBrains Mono',monospace;
+      color:var(--light);
+      font-size:1.05rem;
+      font-weight:700;
+    }
+
+    .response-panel{
+      min-height:320px;
+      border-radius:20px;
+      padding:1rem;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      overflow:auto;
+    }
+
+    .response-panel pre{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.82rem;
+      line-height:1.65;
+      color:#dde4ea;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    @media(max-width:1024px){
+      .builder-layout{
+        grid-template-columns:1fr;
+      }
+      .builder-left{
+        text-align:center;
+      }
+      .builder-left p{margin-inline:auto;}
+    }
+
+    @media(max-width:768px){
+      .request-meta{grid-template-columns:1fr;}
+    }
+
+    /* ===============================
+       PROTOCOL MAP
+       =============================== */
+    #protocol-map .section-overlay{
+      background:radial-gradient(circle at center,rgba(6,8,13,.48),rgba(6,8,13,.94));
+    }
+
+    .protocol-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:2rem;
+    }
+
+    .protocol-head{
+      text-align:center;
+      max-width:860px;
+      margin:0 auto;
+    }
+
+    .protocol-head h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .protocol-head p{
+      color:#c0c7cf;
+      line-height:1.75;
+    }
+
+    .protocol-stage{
+      position:relative;
+      width:100%;
+      height:62vh;
+      border-radius:28px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(12,15,20,.35);
+      backdrop-filter:blur(12px);
+    }
+
+    .protocol-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:1;
+      pointer-events:none;
+    }
+
+    .protocol-line{
+      stroke:rgba(108,241,255,.18);
+      stroke-width:2.5;
+      fill:none;
+      stroke-linecap:round;
+      transition:.35s;
+    }
+
+    .protocol-line.active{
+      stroke:rgba(108,241,255,.75);
+      filter:drop-shadow(0 0 10px rgba(108,241,255,.35));
+    }
+
+    .protocol-center{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      width:320px;
+      max-width:78vw;
+      padding:1.2rem;
+      border-radius:24px;
+      z-index:3;
+      text-align:left;
+    }
+
+    .protocol-center .mono{
+      color:var(--accent-2);
+      font-size:.78rem;
+      display:block;
+      margin-bottom:.5rem;
+    }
+
+    .protocol-center h3{
+      font-size:1.6rem;
+      margin-bottom:.7rem;
+      line-height:1.1;
+    }
+
+    .protocol-center p{
+      color:#c8cfd7;
+      line-height:1.6;
+      margin-bottom:1rem;
+      font-size:.92rem;
+    }
+
+    .protocol-meta{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:.8rem;
+    }
+
+    .protocol-meta .box{
+      padding:.8rem;
+      border-radius:14px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .protocol-meta .label{
+      color:#98a5b2;
+      font-size:.7rem;
+      text-transform:uppercase;
+      margin-bottom:.25rem;
+    }
+
+    .protocol-meta .value{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.92rem;
+      color:var(--light);
+      font-weight:700;
+    }
+
+    .protocol-node{
+      position:absolute;
+      width:130px;
+      height:130px;
+      clip-path:polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:1rem;
+      transition:.35s;
+      z-index:2;
+      position:absolute;
+    }
+
+    .protocol-node::after{
+      content:'';
+      position:absolute;
+      inset:1px;
+      clip-path:inherit;
+      background:rgba(14,18,24,.88);
+      z-index:-1;
+    }
+
+    .protocol-node:hover,
+    .protocol-node.active{
+      transform:scale(1.06);
+      border-color:rgba(108,241,255,.32);
+      box-shadow:0 0 26px rgba(108,241,255,.15);
+    }
+
+    .protocol-node .inner{
+      position:relative;
+      z-index:1;
+    }
+
+    .protocol-node .mono{
+      display:block;
+      color:var(--accent-2);
+      font-size:.68rem;
+      margin-bottom:.25rem;
+    }
+
+    .protocol-node strong{
+      font-size:.92rem;
+      line-height:1.25;
+      display:block;
+    }
+
+    .pn1{left:10%;top:16%;}
+    .pn2{left:30%;top:10%;}
+    .pn3{right:30%;top:10%;}
+    .pn4{right:10%;top:16%;}
+    .pn5{left:18%;bottom:12%;}
+    .pn6{right:18%;bottom:12%;}
+
+    @media(max-width:1024px){
+      .protocol-stage{
+        height:auto;
+        min-height:860px;
+      }
+    }
+
+    @media(max-width:768px){
+      .protocol-stage{
+        height:auto;
+        min-height:auto;
+        padding:1rem;
+        display:grid;
+        gap:1rem;
+      }
+
+      .protocol-svg{display:none;}
+
+      .protocol-center{
+        position:relative;
+        top:auto;
+        left:auto;
+        transform:none;
+        width:100%;
+        max-width:none;
+        order:-1;
+      }
+
+      .protocol-meta{grid-template-columns:1fr;}
+
+      .protocol-node{
+        position:relative;
+        left:auto !important;
+        right:auto !important;
+        top:auto !important;
+        bottom:auto !important;
+        width:100%;
+        max-width:none;
+        clip-path:none;
+        height:auto;
+        border-radius:18px;
+      }
+
+      .protocol-node::after{
+        clip-path:none;
+        border-radius:17px;
+      }
+    }
+
+    /* ===============================
+       DIAGNOSTIC WATERFALL
+       =============================== */
+    #diagnostic-waterfall .section-overlay{
+      background:linear-gradient(180deg,rgba(6,8,13,.84),rgba(6,8,13,.95));
+    }
+
+    .diag-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:.82fr 1.18fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .diag-left h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .diag-left p{
+      color:#c2c9d1;
+      line-height:1.75;
+      max-width:500px;
+      margin-bottom:1.5rem;
+    }
+
+    .gauge-row{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:1rem;
+      max-width:460px;
+    }
+
+    .gauge-card{
+      padding:1rem;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      text-align:center;
+    }
+
+    .gauge{
+      --g:180deg;
+      width:130px;
+      height:130px;
+      border-radius:50%;
+      margin:0 auto 1rem;
+      position:relative;
+      background:
+        conic-gradient(var(--accent-2) 0deg, var(--accent) var(--g), rgba(255,255,255,.08) var(--g), rgba(255,255,255,.08) 360deg);
+    }
+
+    .gauge::before{
+      content:'';
+      position:absolute;
+      inset:14px;
+      border-radius:50%;
+      background:rgba(7,10,14,.96);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .gauge-center{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      z-index:2;
+    }
+
+    .gauge-center strong{
+      font-family:'JetBrains Mono',monospace;
+      font-size:1.35rem;
+    }
+
+    .gauge-center span{
+      color:#9ba7b4;
+      font-size:.72rem;
+      text-transform:uppercase;
+    }
+
+    .gauge-card h3{
+      font-size:1rem;
+      margin-bottom:.35rem;
+    }
+
+    .gauge-card p{
+      color:#b7c0ca;
+      font-size:.86rem;
+      line-height:1.45;
+    }
+
+    .diag-board{
+      padding:1.2rem;
+      border-radius:24px;
+    }
+
+    .diag-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      flex-wrap:wrap;
+      margin-bottom:1rem;
+    }
+
+    .diag-head .mono{
+      color:var(--accent-2);
+      font-size:.78rem;
+    }
+
+    .waterfall{
+      display:grid;
+      gap:.9rem;
+    }
+
+    .wf-row{
+      display:grid;
+      grid-template-columns:130px 1fr 70px;
+      gap:.8rem;
+      align-items:center;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.76rem;
+      color:#b7c0ca;
+    }
+
+    .wf-track{
+      height:18px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .wf-fill{
+      display:block;
+      height:100%;
+      width:20%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    }
+
+    .wf-fill.alt{background:linear-gradient(90deg,var(--accent-4),var(--accent));}
+    .wf-fill.green{background:linear-gradient(90deg,var(--accent-4),var(--accent-3));}
+
+    .diag-log{
+      margin-top:1.2rem;
+      border-radius:18px;
+      padding:1rem;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      max-height:180px;
+      overflow:auto;
+    }
+
+    .diag-log::-webkit-scrollbar{width:6px;}
+    .diag-log::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:999px;}
+
+    .log-line{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.78rem;
+      color:#b7c0ca;
+      padding:.35rem 0;
+      border-bottom:1px solid rgba(255,255,255,.04);
+    }
+
+    .log-line:last-child{border-bottom:none;}
+
+    @media(max-width:1024px){
+      .diag-layout{
+        grid-template-columns:1fr;
+      }
+      .diag-left{
+        text-align:center;
+      }
+      .diag-left p,
+      .gauge-row{
+        margin-inline:auto;
+      }
+    }
+
+    @media(max-width:768px){
+      .gauge-row{grid-template-columns:1fr;}
+      .wf-row{
+        grid-template-columns:90px 1fr 54px;
+        font-size:.68rem;
+      }
+    }
+
+    /* ===============================
+       FOOTER / LOG RIVER
+       =============================== */
+    #support-footer .section-overlay{
+      background:linear-gradient(to top,rgba(0,0,0,.96),rgba(0,0,0,.45));
+    }
+
+    .footer-shell{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .footer-left h2{
+      font-size:clamp(3.5rem,11vw,10rem);
+      line-height:.82;
+      text-transform:uppercase;
+      font-weight:800;
+      margin-bottom:1rem;
+    }
+
+    .footer-left h2 span{
+      color:var(--accent);
+      text-shadow:0 0 30px rgba(108,241,255,.22);
+    }
+
+    .footer-left p{
+      max-width:520px;
+      color:#c2c9d1;
+      line-height:1.75;
+      margin-bottom:2rem;
+    }
+
+    .footer-cta-row{
+      display:flex;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+
+    .footer-btn{
+      padding:1rem 1.2rem;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.03);
+      transition:.35s;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.82rem;
+    }
+
+    .footer-btn:hover{
+      background:rgba(108,241,255,.08);
+      border-color:rgba(108,241,255,.28);
+      transform:translateY(-4px);
+    }
+
+    .footer-right{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+      height:68vh;
+    }
+
+    .river{
+      border-radius:20px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      position:relative;
+    }
+
+    .river-track{
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      gap:.8rem;
+      padding:1rem;
+    }
+
+    .river-card{
+      padding:.85rem;
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .river-card .mono{
+      color:var(--accent-2);
+      font-size:.72rem;
+      display:block;
+      margin-bottom:.25rem;
+    }
+
+    .river-card p{
+      color:#bbc3cc;
+      font-size:.84rem;
+      line-height:1.45;
+    }
+
+    @media(max-width:1024px){
+      .footer-shell{
+        grid-template-columns:1fr;
+      }
+      .footer-left{
+        text-align:center;
+      }
+      .footer-left p{
+        margin-inline:auto;
+      }
+      .footer-cta-row{
+        justify-content:center;
+      }
+    }
+
+    @media(max-width:768px){
+      .footer-right{
+        grid-template-columns:1fr;
+        height:auto;
+      }
+      .river{
+        min-height:220px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor"></div>
+
+  <nav>
+    <a href="#" class="nav-brand magnetic hover-target" data-strength="20">MΛGIC.</a>
+    <button class="menu-btn magnetic hover-target" data-strength="30">
+      Menu
+      <div class="hamburger"><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <div class="menu-overlay">
+    <div class="menu-container" id="menu-grid"></div>
+  </div>
+
+  <main id="api-docs-page">
+
+    <!-- HERO -->
+    <section id="docs-hero">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2400&auto=format&fit=crop" alt="API docs hero background" class="section-bg hero-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="hero-layout">
+          <div class="hero-left">
+            <div class="pill gsap-up"><span class="pulse"></span> DEVELOPER SUPPORT LAYER</div>
+
+            <h1 class="hero-title">
+              <span class="line"><span class="word hero-word">API</span></span>
+              <span class="line"><span class="word hero-word outline">DOCS</span></span>
+            </h1>
+
+            <p class="hero-desc gsap-up">
+              Request builders, endpoint maps, live response panels, and diagnostic flows — designed as a premium full-screen documentation environment instead of a flat docs page.
+            </p>
+
+            <div class="hero-meta gsap-up">
+              <span>REST + WEBHOOKS + AUTH</span>
+              <span>SEARCHABLE ENDPOINTS</span>
+              <span>LIVE PAYLOAD PREVIEWS</span>
+            </div>
+          </div>
+
+          <div class="terminal-wrap gsap-up">
+            <div class="terminal-card glass hover-target" id="terminalCard">
+              <div class="terminal-head">
+                <div class="terminal-dots">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="mono">API // SUPPORT SURFACE</div>
+              </div>
+
+              <div class="endpoint-banner">
+                <span class="mono">Current endpoint</span>
+                <div class="endpoint-line">
+                  <span class="method-pill" id="heroMethodPill">GET</span>
+                  <span id="heroRouteText">/v1/projects</span>
+                </div>
+              </div>
+
+              <div class="typed-surface">
+                <div class="typed-box">
+                  <span class="mono">Request</span>
+                  <pre id="heroRequestText">curl -X GET https://api.magic.agency/v1/projects</pre>
+                </div>
+                <div class="typed-box">
+                  <span class="mono">Response</span>
+                  <pre id="heroResponseText">{
+  "status": 200,
+  "count": 12,
+  "data": [...]
+}</pre>
+                </div>
+              </div>
+
+              <div class="hero-mini-stats">
+                <div class="hero-mini">
+                  <div class="label">Latency</div>
+                  <div class="value" id="heroLatency">142ms</div>
+                </div>
+                <div class="hero-mini">
+                  <div class="label">Rate Limit</div>
+                  <div class="value" id="heroRateLimit">500/min</div>
+                </div>
+                <div class="hero-mini">
+                  <div class="label">Status</div>
+                  <div class="value" id="heroStatus">200 OK</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REQUEST BUILDER -->
+    <section id="request-builder">
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2400&auto=format&fit=crop" alt="Request builder background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="builder-layout">
+          <div class="builder-left">
+            <div class="pill gsap-fade"><span class="pulse"></span> REQUEST BUILDER LAB</div>
+            <h2 class="gsap-fade">Test the<br>endpoint logic.</h2>
+            <p class="gsap-fade">
+              Choose a method. Switch an endpoint. Watch the response panel, status code, and timing update in real time — like a premium interactive API console.
+            </p>
+
+            <div class="builder-panel glass">
+              <div class="method-row">
+                <button class="method-btn active hover-target" data-method="GET">GET</button>
+                <button class="method-btn hover-target" data-method="POST">POST</button>
+                <button class="method-btn hover-target" data-method="PUT">PUT</button>
+                <button class="method-btn hover-target" data-method="DELETE">DELETE</button>
+              </div>
+
+              <div class="endpoint-list">
+                <article class="endpoint-item active hover-target" data-endpoint="projects">
+                  <span class="mono">/v1/projects</span>
+                  <h3>Projects</h3>
+                  <p>List, create, update, and archive product projects.</p>
+                </article>
+
+                <article class="endpoint-item hover-target" data-endpoint="users">
+                  <span class="mono">/v1/users</span>
+                  <h3>Users</h3>
+                  <p>Retrieve profiles, manage membership, and change roles.</p>
+                </article>
+
+                <article class="endpoint-item hover-target" data-endpoint="webhooks">
+                  <span class="mono">/v1/webhooks</span>
+                  <h3>Webhooks</h3>
+                  <p>Register destinations, validate signatures, and inspect deliveries.</p>
+                </article>
+
+                <article class="endpoint-item hover-target" data-endpoint="tokens">
+                  <span class="mono">/v1/auth/tokens</span>
+                  <h3>Auth Tokens</h3>
+                  <p>Issue, rotate, and revoke scoped programmatic credentials.</p>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <div class="builder-right glass" id="builderPanel">
+            <div class="request-head">
+              <div class="request-url"><span id="builderMethod">GET</span> <span id="builderRoute">/v1/projects</span></div>
+              <div class="status-chip" id="builderStatusChip">200 OK</div>
+            </div>
+
+            <div class="request-meta">
+              <div class="meta-box">
+                <div class="label">Latency</div>
+                <div class="value" id="builderLatency">142ms</div>
+              </div>
+              <div class="meta-box">
+                <div class="label">Auth</div>
+                <div class="value" id="builderAuth">Bearer token</div>
+              </div>
+              <div class="meta-box">
+                <div class="label">Rate limit</div>
+                <div class="value" id="builderRate">500/min</div>
+              </div>
+            </div>
+
+            <div class="response-panel">
+              <pre id="builderResponse"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROTOCOL MAP -->
+    <section id="protocol-map">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2400&auto=format&fit=crop" alt="Protocol map background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="protocol-layout">
+          <div class="protocol-head">
+            <div class="pill"><span class="pulse"></span> PROTOCOL MAP</div>
+            <h2>Six domains.<br>One schema core.</h2>
+            <p>
+              Click any protocol zone to inspect how authentication, payloads, limits, and response patterns differ across the API.
+            </p>
+          </div>
+
+          <div class="protocol-stage">
+            <svg class="protocol-svg" viewBox="0 0 1000 600" preserveAspectRatio="none">
+              <path id="pl1" class="protocol-line" d="M220 140 Q350 200 500 300"></path>
+              <path id="pl2" class="protocol-line" d="M380 100 Q450 180 500 300"></path>
+              <path id="pl3" class="protocol-line" d="M620 100 Q560 180 500 300"></path>
+              <path id="pl4" class="protocol-line" d="M780 140 Q650 200 500 300"></path>
+              <path id="pl5" class="protocol-line" d="M280 500 Q390 390 500 300"></path>
+              <path id="pl6" class="protocol-line" d="M720 500 Q610 390 500 300"></path>
+            </svg>
+
+            <button class="protocol-node pn1 active hover-target" data-protocol="auth">
+              <div class="inner">
+                <span class="mono">DOMAIN 01</span>
+                <strong>Auth</strong>
+              </div>
+            </button>
+
+            <button class="protocol-node pn2 hover-target" data-protocol="projects">
+              <div class="inner">
+                <span class="mono">DOMAIN 02</span>
+                <strong>Projects</strong>
+              </div>
+            </button>
+
+            <button class="protocol-node pn3 hover-target" data-protocol="users">
+              <div class="inner">
+                <span class="mono">DOMAIN 03</span>
+                <strong>Users</strong>
+              </div>
+            </button>
+
+            <button class="protocol-node pn4 hover-target" data-protocol="webhooks">
+              <div class="inner">
+                <span class="mono">DOMAIN 04</span>
+                <strong>Webhooks</strong>
+              </div>
+            </button>
+
+            <button class="protocol-node pn5 hover-target" data-protocol="analytics">
+              <div class="inner">
+                <span class="mono">DOMAIN 05</span>
+                <strong>Analytics</strong>
+              </div>
+            </button>
+
+            <button class="protocol-node pn6 hover-target" data-protocol="billing">
+              <div class="inner">
+                <span class="mono">DOMAIN 06</span>
+                <strong>Billing</strong>
+              </div>
+            </button>
+
+            <div class="protocol-center glass" id="protocolCenter">
+              <span class="mono" id="protocolLabel">AUTH DOMAIN</span>
+              <h3 id="protocolTitle">Bearer token authentication.</h3>
+              <p id="protocolDesc">Use scoped bearer tokens with optional workspace restriction. Rotate tokens regularly and prefer least-privilege scopes.</p>
+
+              <div class="protocol-meta">
+                <div class="box">
+                  <div class="label">Method</div>
+                  <div class="value" id="protocolMethod">POST</div>
+                </div>
+                <div class="box">
+                  <div class="label">Limit</div>
+                  <div class="value" id="protocolLimit">60/min</div>
+                </div>
+                <div class="box">
+                  <div class="label">Version</div>
+                  <div class="value" id="protocolVersion">v1</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIAGNOSTIC WATERFALL -->
+    <section id="diagnostic-waterfall">
+      <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2400&auto=format&fit=crop" alt="Diagnostics background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="diag-layout">
+          <div class="diag-left">
+            <div class="pill gsap-fade"><span class="pulse"></span> DIAGNOSTIC WATERFALL</div>
+            <h2 class="gsap-fade">See where<br>requests slow down.</h2>
+            <p class="gsap-fade">
+              This section visualizes the request path as a latency waterfall, paired with health gauges and a running debug log — giving developers a fast operational picture.
+            </p>
+
+            <div class="gauge-row">
+              <div class="gauge-card">
+                <div class="gauge" id="gauge1" style="--g:260deg;">
+                  <div class="gauge-center">
+                    <strong id="gauge1Val">72%</strong>
+                    <span>cache hit</span>
+                  </div>
+                </div>
+                <h3>Cache efficiency</h3>
+                <p>How often responses resolve before reaching core services.</p>
+              </div>
+
+              <div class="gauge-card">
+                <div class="gauge" id="gauge2" style="--g:320deg;">
+                  <div class="gauge-center">
+                    <strong id="gauge2Val">89%</strong>
+                    <span>success</span>
+                  </div>
+                </div>
+                <h3>Stability rate</h3>
+                <p>Healthy request completions across the current release cycle.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="diag-board glass">
+            <div class="diag-head">
+              <h3>Request timeline</h3>
+              <div class="mono">TRACE / req_8f24a1 / LIVE</div>
+            </div>
+
+            <div class="waterfall">
+              <div class="wf-row">
+                <span>DNS</span>
+                <div class="wf-track"><i class="wf-fill green" id="wf1"></i></div>
+                <span id="wf1v">18ms</span>
+              </div>
+              <div class="wf-row">
+                <span>TLS</span>
+                <div class="wf-track"><i class="wf-fill alt" id="wf2"></i></div>
+                <span id="wf2v">44ms</span>
+              </div>
+              <div class="wf-row">
+                <span>Auth</span>
+                <div class="wf-track"><i class="wf-fill" id="wf3"></i></div>
+                <span id="wf3v">26ms</span>
+              </div>
+              <div class="wf-row">
+                <span>App</span>
+                <div class="wf-track"><i class="wf-fill alt" id="wf4"></i></div>
+                <span id="wf4v">68ms</span>
+              </div>
+              <div class="wf-row">
+                <span>DB</span>
+                <div class="wf-track"><i class="wf-fill" id="wf5"></i></div>
+                <span id="wf5v">84ms</span>
+              </div>
+              <div class="wf-row">
+                <span>Render</span>
+                <div class="wf-track"><i class="wf-fill green" id="wf6"></i></div>
+                <span id="wf6v">21ms</span>
+              </div>
+            </div>
+
+            <div class="diag-log" id="diagLog">
+              <div class="log-line">[200] token scope validated for workspace_18</div>
+              <div class="log-line">[cache] response miss / querying project index</div>
+              <div class="log-line">[db] hydrated 12 project rows in 84ms</div>
+              <div class="log-line">[render] payload serialized successfully</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section id="support-footer">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2400&auto=format&fit=crop" alt="Footer background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="footer-shell">
+          <div class="footer-left">
+            <div class="pill"><span class="pulse"></span> SHIP WITH CLARITY</div>
+            <h2>READ.<br><span>BUILD.</span></h2>
+            <p>
+              Your docs should do more than explain — they should unblock, accelerate, and reduce uncertainty across every integration.
+            </p>
+
+            <div class="footer-cta-row">
+              <a href="#" class="footer-btn hover-target">OPEN REFERENCE</a>
+              <a href="#" class="footer-btn hover-target">VIEW STATUS</a>
+              <a href="#" class="footer-btn hover-target">CONTACT SUPPORT</a>
+            </div>
+          </div>
+
+          <div class="footer-right">
+            <div class="river"><div class="river-track" id="river1"></div></div>
+            <div class="river"><div class="river-track" id="river2"></div></div>
+            <div class="river"><div class="river-track" id="river3"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+  <script>
+    // =========================================
+    // LENIS
+    // =========================================
+    const lenis = new Lenis({ duration: 1.5, smooth: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    // =========================================
+    // CURSOR
+    // =========================================
+    const cursor = document.querySelector('.cursor');
+
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
+      });
+
+      document.querySelectorAll('a, button, .hover-target, .route-item, .lab-result, .protocol-node').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+
+      document.querySelectorAll('.lab-result, .route-item, .quick-card, .protocol-node').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('docs-mode', 'hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('docs-mode', 'hovered'));
+      });
+    }
+
+    // =========================================
+    // MAGNETIC
+    // =========================================
+    function attachMagnetic(){
+      if (window.innerWidth <= 768) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const strength = el.dataset.strength || 20;
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+          gsap.to(el, { x, y, duration: 0.3, ease: "power2.out" });
+        });
+
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+      });
+    }
+
+    // =========================================
+    // MENU FIXED
+    // =========================================
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+    const menuGrid = document.getElementById('menu-grid');
+    menuData.forEach(item => {
+      const linksHTML = item.links.map(link =>
+        `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`
+      ).join('');
+
+      menuGrid.innerHTML += `
+        <div class="menu-item">
+          <div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div>
+          <div class="dropdown">
+            <div class="dropdown-inner">${linksHTML}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    document.querySelectorAll('.menu-item-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const dropdown = title.nextElementSibling;
+        const inner = dropdown.querySelector('.dropdown-inner');
+
+        document.querySelectorAll('.dropdown').forEach(drop => {
+          if (drop !== dropdown) drop.style.height = '0px';
+        });
+
+        dropdown.style.height = dropdown.clientHeight === 0 ? `${inner.scrollHeight}px` : '0px';
+      });
+    });
+
+    const menuBtn = document.querySelector('.menu-btn');
+    const menuOverlay = document.querySelector('.menu-overlay');
+    let menuOpen = false;
+
+    const menuTl = gsap.timeline({
+      paused:true,
+      onStart: () => {
+        menuOverlay.style.visibility = 'visible';
+        menuOverlay.style.pointerEvents = 'auto';
+      },
+      onReverseComplete: () => {
+        menuOverlay.style.visibility = 'hidden';
+        menuOverlay.style.pointerEvents = 'none';
+      }
+    });
+
+    menuTl
+      .to(menuOverlay, {
+        opacity:1,
+        y:0,
+        duration:0.75,
+        ease:"power4.inOut",
+        onStart: () => {
+          gsap.set(menuOverlay, { y: "-100%" });
+        }
+      })
+      .to('.menu-item-title', {
+        y:0,
+        opacity:1,
+        duration:0.45,
+        stagger:0.04,
+        ease:"power3.out"
+      }, "-=0.35");
+
+    function toggleMenu(){
+      menuOpen = !menuOpen;
+      menuBtn.classList.toggle('active');
+
+      if(menuOpen){
+        lenis.stop();
+        menuTl.play(0);
+      }else{
+        lenis.start();
+        document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px');
+        menuTl.reverse();
+      }
+    }
+
+    menuBtn.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute('href');
+
+        if(menuOpen) toggleMenu();
+
+        setTimeout(() => {
+          if(targetUrl.startsWith('#')){
+            const target = document.querySelector(targetUrl);
+            if(target) lenis.scrollTo(targetUrl, { duration: 1.2 });
+          } else {
+            window.location.href = targetUrl;
+          }
+        }, 700);
+      });
+    });
+
+    // =========================================
+    // HERO REVEAL
+    // =========================================
+    gsap.to(".hero-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.18,
+      ease: "power4.out",
+      delay: 0.2
+    });
+
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 35,
+      duration: 1,
+      stagger: 0.12,
+      delay: 0.85,
+      ease: "power3.out"
+    });
+
+    gsap.to(".hero-bg", {
+      y: "18%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#docs-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // =========================================
+    // HERO TILT
+    // =========================================
+    const terminalCard = document.getElementById('terminalCard');
+    if(terminalCard && window.innerWidth > 768){
+      terminalCard.addEventListener('mousemove', (e) => {
+        const rect = terminalCard.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+
+        gsap.to(terminalCard, {
+          rotationY: x * 8,
+          rotationX: -y * 8,
+          duration: 0.45,
+          ease: "power2.out"
+        });
+      });
+
+      terminalCard.addEventListener('mouseleave', () => {
+        gsap.to(terminalCard, {
+          rotationY: 0,
+          rotationX: 0,
+          duration: 1,
+          ease: "elastic.out(1, 0.3)"
+        });
+      });
+    }
+
+    // =========================================
+    // HERO ROTATOR
+    // =========================================
+    const heroExamples = [
+      {
+        method: 'GET',
+        route: '/v1/projects',
+        req: 'curl -X GET https://api.magic.agency/v1/projects',
+        res: `{
+  "status": 200,
+  "count": 12,
+  "data": [{ "id": "proj_1", "name": "Nebula" }]
+}`,
+        latency: '142ms',
+        limit: '500/min',
+        status: '200 OK'
+      },
+      {
+        method: 'POST',
+        route: '/v1/webhooks',
+        req: `curl -X POST https://api.magic.agency/v1/webhooks
+-d '{ "target": "https://client.app/hook" }'`,
+        res: `{
+  "status": 201,
+  "id": "wh_82e9",
+  "verified": true
+}`,
+        latency: '188ms',
+        limit: '120/min',
+        status: '201 CREATED'
+      },
+      {
+        method: 'GET',
+        route: '/v1/auth/tokens',
+        req: 'curl -X GET https://api.magic.agency/v1/auth/tokens',
+        res: `{
+  "status": 200,
+  "active": 4,
+  "scopes": ["projects:read", "users:read"]
+}`,
+        latency: '96ms',
+        limit: '240/min',
+        status: '200 OK'
+      }
+    ];
+
+    let heroExampleIndex = 0;
+
+    function rotateHeroExample(){
+      heroExampleIndex = (heroExampleIndex + 1) % heroExamples.length;
+      const ex = heroExamples[heroExampleIndex];
+
+      gsap.to([
+        '#heroMethodPill','#heroRouteText','#heroRequestText','#heroResponseText',
+        '#heroLatency','#heroRateLimit','#heroStatus'
+      ], {
+        opacity: 0,
+        y: 8,
+        duration: 0.18,
+        stagger: 0.02,
+        onComplete: () => {
+          document.getElementById('heroMethodPill').textContent = ex.method;
+          document.getElementById('heroRouteText').textContent = ex.route;
+          document.getElementById('heroRequestText').textContent = ex.req;
+          document.getElementById('heroResponseText').textContent = ex.res;
+          document.getElementById('heroLatency').textContent = ex.latency;
+          document.getElementById('heroRateLimit').textContent = ex.limit;
+          document.getElementById('heroStatus').textContent = ex.status;
+
+          gsap.to([
+            '#heroMethodPill','#heroRouteText','#heroRequestText','#heroResponseText',
+            '#heroLatency','#heroRateLimit','#heroStatus'
+          ], {
+            opacity: 1,
+            y: 0,
+            duration: 0.28,
+            stagger: 0.02
+          });
+        }
+      });
+    }
+    setInterval(rotateHeroExample, 2500);
+
+    // =========================================
+    // REQUEST BUILDER
+    // =========================================
+    const builderData = {
+      projects: {
+        GET: {
+          route: '/v1/projects',
+          status: '200 OK',
+          latency: '142ms',
+          auth: 'Bearer token',
+          rate: '500/min',
+          response: `{
+  "status": 200,
+  "count": 12,
+  "data": [
+    { "id": "proj_1", "name": "Nebula", "status": "active" },
+    { "id": "proj_2", "name": "Atlas", "status": "draft" }
+  ]
+}`
+        },
+        POST: {
+          route: '/v1/projects',
+          status: '201 CREATED',
+          latency: '188ms',
+          auth: 'Bearer token',
+          rate: '120/min',
+          response: `{
+  "status": 201,
+  "id": "proj_94aa",
+  "name": "New Project",
+  "status": "active"
+}`
+        },
+        PUT: {
+          route: '/v1/projects/:id',
+          status: '200 OK',
+          latency: '171ms',
+          auth: 'Bearer token',
+          rate: '180/min',
+          response: `{
+  "status": 200,
+  "id": "proj_1",
+  "updated": true,
+  "changes": ["name", "status"]
+}`
+        },
+        DELETE: {
+          route: '/v1/projects/:id',
+          status: '204 NO CONTENT',
+          latency: '121ms',
+          auth: 'Bearer token',
+          rate: '60/min',
+          response: `{
+  "status": 204,
+  "deleted": true
+}`
+        }
+      },
+      users: {
+        GET: {
+          route: '/v1/users',
+          status: '200 OK',
+          latency: '108ms',
+          auth: 'Bearer token',
+          rate: '500/min',
+          response: `{
+  "status": 200,
+  "count": 42,
+  "data": [
+    { "id": "usr_8", "role": "admin" },
+    { "id": "usr_9", "role": "member" }
+  ]
+}`
+        },
+        POST: {
+          route: '/v1/users',
+          status: '201 CREATED',
+          latency: '146ms',
+          auth: 'Bearer token',
+          rate: '100/min',
+          response: `{
+  "status": 201,
+  "id": "usr_4ce",
+  "invited": true
+}`
+        },
+        PUT: {
+          route: '/v1/users/:id',
+          status: '200 OK',
+          latency: '124ms',
+          auth: 'Bearer token',
+          rate: '160/min',
+          response: `{
+  "status": 200,
+  "id": "usr_8",
+  "role": "editor",
+  "updated": true
+}`
+        },
+        DELETE: {
+          route: '/v1/users/:id',
+          status: '204 NO CONTENT',
+          latency: '116ms',
+          auth: 'Bearer token',
+          rate: '80/min',
+          response: `{
+  "status": 204,
+  "removed": true
+}`
+        }
+      },
+      webhooks: {
+        GET: {
+          route: '/v1/webhooks',
+          status: '200 OK',
+          latency: '98ms',
+          auth: 'Bearer token',
+          rate: '300/min',
+          response: `{
+  "status": 200,
+  "data": [
+    { "id": "wh_1", "target": "https://client.app/hook" }
+  ]
+}`
+        },
+        POST: {
+          route: '/v1/webhooks',
+          status: '201 CREATED',
+          latency: '204ms',
+          auth: 'Bearer token',
+          rate: '90/min',
+          response: `{
+  "status": 201,
+  "id": "wh_77d",
+  "signature": "enabled",
+  "verified": true
+}`
+        },
+        PUT: {
+          route: '/v1/webhooks/:id',
+          status: '200 OK',
+          latency: '165ms',
+          auth: 'Bearer token',
+          rate: '90/min',
+          response: `{
+  "status": 200,
+  "id": "wh_77d",
+  "target": "https://new-endpoint.app/webhook",
+  "updated": true
+}`
+        },
+        DELETE: {
+          route: '/v1/webhooks/:id',
+          status: '204 NO CONTENT',
+          latency: '109ms',
+          auth: 'Bearer token',
+          rate: '60/min',
+          response: `{
+  "status": 204,
+  "disabled": true
+}`
+        }
+      },
+      tokens: {
+        GET: {
+          route: '/v1/auth/tokens',
+          status: '200 OK',
+          latency: '91ms',
+          auth: 'Bearer token',
+          rate: '120/min',
+          response: `{
+  "status": 200,
+  "active": 4,
+  "data": [
+    { "id": "tok_1", "scope": "projects:read" }
+  ]
+}`
+        },
+        POST: {
+          route: '/v1/auth/tokens',
+          status: '201 CREATED',
+          latency: '132ms',
+          auth: 'Bearer token',
+          rate: '60/min',
+          response: `{
+  "status": 201,
+  "id": "tok_12f",
+  "scope": "projects:write"
+}`
+        },
+        PUT: {
+          route: '/v1/auth/tokens/:id',
+          status: '200 OK',
+          latency: '118ms',
+          auth: 'Bearer token',
+          rate: '60/min',
+          response: `{
+  "status": 200,
+  "id": "tok_12f",
+  "rotated": true
+}`
+        },
+        DELETE: {
+          route: '/v1/auth/tokens/:id',
+          status: '204 NO CONTENT',
+          latency: '97ms',
+          auth: 'Bearer token',
+          rate: '60/min',
+          response: `{
+  "status": 204,
+  "revoked": true
+}`
+        }
+      }
+    };
+
+    let currentMethod = 'GET';
+    let currentEndpoint = 'projects';
+
+    function updateBuilder(){
+      const data = builderData[currentEndpoint][currentMethod];
+      gsap.to('#builderPanel', {
+        opacity: 0,
+        y: 8,
+        duration: 0.18,
+        onComplete: () => {
+          document.getElementById('builderMethod').textContent = currentMethod;
+          document.getElementById('builderRoute').textContent = data.route;
+          document.getElementById('builderStatusChip').textContent = data.status;
+          document.getElementById('builderLatency').textContent = data.latency;
+          document.getElementById('builderAuth').textContent = data.auth;
+          document.getElementById('builderRate').textContent = data.rate;
+          document.getElementById('builderResponse').textContent = data.response;
+          gsap.to('#builderPanel', { opacity: 1, y: 0, duration: 0.28 });
+        }
+      });
+    }
+
+    document.querySelectorAll('.method-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMethod = btn.dataset.method;
+        updateBuilder();
+      });
+    });
+
+    document.querySelectorAll('.endpoint-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.endpoint-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        currentEndpoint = item.dataset.endpoint;
+        updateBuilder();
+      });
+    });
+
+    updateBuilder();
+
+    // =========================================
+    // PROTOCOL MAP
+    // =========================================
+    const protocolData = {
+      auth: {
+        label: 'AUTH DOMAIN',
+        title: 'Bearer token authentication.',
+        desc: 'Use scoped bearer tokens with optional workspace restriction. Rotate tokens regularly and prefer least-privilege scopes.',
+        method: 'POST',
+        limit: '60/min',
+        version: 'v1',
+        line: 'pl1'
+      },
+      projects: {
+        label: 'PROJECTS DOMAIN',
+        title: 'Project lifecycle management.',
+        desc: 'List, create, update, and archive projects with role-sensitive mutations and workspace-level visibility.',
+        method: 'GET',
+        limit: '500/min',
+        version: 'v1',
+        line: 'pl2'
+      },
+      users: {
+        label: 'USERS DOMAIN',
+        title: 'Membership and roles.',
+        desc: 'Access team members, invite collaborators, update roles, and manage workspace user state.',
+        method: 'GET',
+        limit: '500/min',
+        version: 'v1',
+        line: 'pl3'
+      },
+      webhooks: {
+        label: 'WEBHOOKS DOMAIN',
+        title: 'Event-driven delivery.',
+        desc: 'Register destinations, validate signatures, replay events, and inspect failed deliveries safely.',
+        method: 'POST',
+        limit: '120/min',
+        version: 'v1',
+        line: 'pl4'
+      },
+      analytics: {
+        label: 'ANALYTICS DOMAIN',
+        title: 'Telemetry and reporting feeds.',
+        desc: 'Query usage, export metrics, and inspect aggregated event streams for product analytics.',
+        method: 'GET',
+        limit: '240/min',
+        version: 'v1',
+        line: 'pl5'
+      },
+      billing: {
+        label: 'BILLING DOMAIN',
+        title: 'Plan and invoice operations.',
+        desc: 'Read invoices, inspect plans, preview renewals, and modify subscription-level billing state.',
+        method: 'GET',
+        limit: '180/min',
+        version: 'v1',
+        line: 'pl6'
+      }
+    };
+
+    function setProtocol(key){
+      const p = protocolData[key];
+      if(!p) return;
+
+      document.querySelectorAll('.protocol-node').forEach(n => n.classList.remove('active'));
+      document.querySelector(`[data-protocol="${key}"]`).classList.add('active');
+
+      document.querySelectorAll('.protocol-line').forEach(line => line.classList.remove('active'));
+      document.getElementById(p.line).classList.add('active');
+
+      gsap.to('#protocolCenter', {
+        opacity: 0,
+        y: 8,
+        duration: 0.18,
+        onComplete: () => {
+          document.getElementById('protocolLabel').textContent = p.label;
+          document.getElementById('protocolTitle').textContent = p.title;
+          document.getElementById('protocolDesc').textContent = p.desc;
+          document.getElementById('protocolMethod').textContent = p.method;
+          document.getElementById('protocolLimit').textContent = p.limit;
+          document.getElementById('protocolVersion').textContent = p.version;
+          gsap.to('#protocolCenter', { opacity: 1, y: 0, duration: 0.28 });
+        }
+      });
+    }
+
+    document.querySelectorAll('.protocol-node').forEach(node => {
+      node.addEventListener('click', () => setProtocol(node.dataset.protocol));
+      if(window.innerWidth > 768){
+        node.addEventListener('mouseenter', () => setProtocol(node.dataset.protocol));
+      }
+    });
+
+    setProtocol('auth');
+
+    // =========================================
+    // DIAGNOSTIC WATERFALL
+    // =========================================
+    const wfEls = [
+      { bar:'wf1', val:'wf1v' },
+      { bar:'wf2', val:'wf2v' },
+      { bar:'wf3', val:'wf3v' },
+      { bar:'wf4', val:'wf4v' },
+      { bar:'wf5', val:'wf5v' },
+      { bar:'wf6', val:'wf6v' }
+    ];
+
+    function updateDiagnostics(){
+      const ranges = [
+        [10,40],[20,80],[18,50],[40,100],[60,130],[10,35]
+      ];
+
+      wfEls.forEach((wf, i) => {
+        const min = ranges[i][0];
+        const max = ranges[i][1];
+        const value = Math.floor(Math.random() * (max - min + 1)) + min;
+        document.getElementById(wf.val).textContent = `${value}ms`;
+        gsap.to(`#${wf.bar}`, {
+          width: `${Math.min(100, value)}%`,
+          duration: 0.8,
+          ease: "power2.out"
+        });
+      });
+
+      const cache = 65 + Math.floor(Math.random() * 18);
+      const stable = 84 + Math.floor(Math.random() * 12);
+
+      document.getElementById('gauge1Val').textContent = `${cache}%`;
+      document.getElementById('gauge2Val').textContent = `${stable}%`;
+      document.getElementById('gauge1').style.setProperty('--g', `${cache * 3.6}deg`);
+      document.getElementById('gauge2').style.setProperty('--g', `${stable * 3.6}deg`);
+
+      const log = document.getElementById('diagLog');
+      const lines = [
+        `[200] token scope validated for workspace_${10 + Math.floor(Math.random()*90)}`,
+        `[cache] ${Math.random() > 0.5 ? 'response hit' : 'response miss'} / segment ${Math.floor(Math.random()*8)}`,
+        `[db] hydrated ${3 + Math.floor(Math.random()*25)} rows in ${40 + Math.floor(Math.random()*80)}ms`,
+        `[render] payload serialized successfully`,
+        `[webhook] signature verification ${Math.random() > 0.2 ? 'passed' : 'retried'}`,
+        `[auth] session context refreshed`
+      ];
+
+      const div = document.createElement('div');
+      div.className = 'log-line';
+      div.textContent = lines[Math.floor(Math.random() * lines.length)];
+      log.prepend(div);
+
+      while(log.children.length > 7){
+        log.removeChild(log.lastChild);
+      }
+
+      gsap.from(div, {
+        opacity: 0,
+        y: 10,
+        duration: 0.4,
+        ease: "power2.out"
+      });
+    }
+    updateDiagnostics();
+    setInterval(updateDiagnostics, 2200);
+
+    // =========================================
+    // FOOTER RIVERS
+    // =========================================
+    const riverData = [
+      { category:'AUTH', title:'Token scopes updated', desc:'Permission boundaries recalculated for all active keys.' },
+      { category:'WEBHOOK', title:'Signature check passed', desc:'Inbound delivery verified and replay marked complete.' },
+      { category:'BILLING', title:'Invoice export completed', desc:'Tax-compliant invoice package generated successfully.' },
+      { category:'USERS', title:'Role sync finished', desc:'Workspace membership map updated with latest assignments.' },
+      { category:'PROJECTS', title:'Archive action queued', desc:'Project state transition scheduled for safe execution.' },
+      { category:'STATUS', title:'System remains healthy', desc:'No active incidents across public API regions.' }
+    ];
+
+    function buildRiver(trackId, offset){
+      const track = document.getElementById(trackId);
+      const items = [...riverData.slice(offset), ...riverData.slice(0, offset), ...riverData.slice(offset), ...riverData.slice(0, offset)];
+      items.forEach(item => {
+        const el = document.createElement('article');
+        el.className = 'river-card';
+        el.innerHTML = `
+          <span class="mono">${item.category}</span>
+          <p>${item.title}</p>
+          <p style="margin-top:4px;color:#94a1ae;">${item.desc}</p>
+        `;
+        track.appendChild(el);
+      });
+    }
+
+    buildRiver('river1', 0);
+    buildRiver('river2', 2);
+    buildRiver('river3', 4);
+
+    if(window.innerWidth > 768){
+      gsap.to('#river1', { yPercent: -50, duration: 18, repeat: -1, ease: 'none' });
+      gsap.to('#river2', { yPercent: -50, duration: 22, repeat: -1, ease: 'none' });
+      gsap.to('#river3', { yPercent: -50, duration: 16, repeat: -1, ease: 'none' });
+    }
+
+    // =========================================
+    // INIT
+    // =========================================
+    attachMagnetic();
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Branding</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    
+    <!-- Premium Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES & STRICT RESET
+           ========================================= */
+        :root {
+            --dark: #0a0510; /* Deep plum/black for elegance */
+            --light: #fdfaf6; /* Warm off-white */
+            --accent: #ff2a5f; /* Vibrant Coral/Magenta */
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden !important; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); -webkit-font-smoothing: antialiased; }
+        
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        .serif-font { font-family: 'Playfair Display', serif; font-style: italic; }
+        
+        section { position: relative; width: 100%; overflow: hidden; }
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* Subtle film grain overlay for print/branding feel */
+        .film-grain {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 99998; opacity: 0.04;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+        }
+
+        /* =========================================
+           MAGIC CURSOR
+           ========================================= */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; mix-blend-mode: difference; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--accent); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        @media (max-width: 768px) { .cursor { display: none !important; } * { cursor: auto !important; } }
+
+        /* =========================================
+           NAVBAR & MOBILE-OPTIMIZED MENU
+           ========================================= */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5%; z-index: 10000; background: transparent; mix-blend-mode: difference; }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(10,5,16,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5% 5vh 5%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5% 10vh 5%; } .menu-item { padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .menu-item-title span { font-size: 1.2rem !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } .dropdown a i { font-size: 1.8rem !important; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); opacity: 0; transform: translateX(-10px); transition: 0.3s; }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+        .dropdown a:hover i { opacity: 1; transform: translateX(0); }
+
+        /* =========================================
+           UNIQUE S01: TEXT-MASK HERO
+           ========================================= */
+        #brand-hero {
+            height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--light); color: var(--dark); overflow: hidden; text-align: center;
+        }
+        
+        .mask-text-wrapper { position: relative; display: inline-block; }
+        
+        /* The text clips the background image */
+        .mask-text {
+            font-size: clamp(4rem, 18vw, 18rem); font-family: 'Syne', sans-serif; font-weight: 800;
+            line-height: 0.8; text-transform: uppercase;
+            background: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2000&auto=format&fit=crop') center/cover;
+            -webkit-background-clip: text; color: transparent; background-clip: text;
+            transform: scale(2); opacity: 0; /* JS scales this down to 1 */
+        }
+        
+        .brand-hero-sub {
+            margin-top: 2rem; font-size: clamp(1rem, 2.5vw, 1.5rem); font-weight: 500;
+            max-width: 600px; color: var(--dark); opacity: 0;
+        }
+
+        /* =========================================
+           UNIQUE S02: ENDLESS ASSET ROWS (HORIZONTAL)
+           ========================================= */
+        #brand-rows {
+            padding: 10vh 0; background: var(--dark); display: flex; flex-direction: column; gap: 2rem;
+            overflow: hidden;
+        }
+        
+        .asset-row { display: flex; gap: 2rem; width: max-content; }
+        /* Row 1 moves left, Row 2 moves right */
+        .row-left { transform: translateX(0); }
+        .row-right { transform: translateX(-20%); }
+        
+        .asset-img {
+            width: clamp(250px, 30vw, 400px); height: clamp(300px, 40vh, 500px);
+            border-radius: 12px; object-fit: cover; filter: grayscale(50%);
+            transition: filter 0.4s;
+        }
+        .asset-img:hover { filter: grayscale(0%); }
+
+        @media (max-width: 768px) {
+            #brand-rows { gap: 1rem; }
+            .asset-row { gap: 1rem; }
+        }
+
+        /* =========================================
+           UNIQUE S03: SLOT MACHINE KEYWORD PIN
+           ========================================= */
+        #brand-slot {
+            height: 100vh; background: var(--accent); color: var(--light);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 0 5%;
+        }
+        .slot-static { font-size: clamp(2rem, 5vw, 4rem); font-weight: 600; margin-bottom: 1rem; }
+        
+        /* The container masking the rolling words */
+        .slot-mask {
+            height: clamp(5rem, 15vw, 12rem); overflow: hidden; position: relative;
+            width: 100%; display: flex; justify-content: center;
+        }
+        .slot-words {
+            display: flex; flex-direction: column; align-items: center;
+            /* JS will translate this Y on scroll */
+        }
+        .slot-word {
+            font-size: clamp(4rem, 15vw, 12rem); font-family: 'Syne', sans-serif; font-weight: 800;
+            line-height: clamp(5rem, 15vw, 12rem); text-transform: uppercase; color: var(--dark);
+        }
+
+        /* =========================================
+           UNIQUE S04: DYNAMIC BRAND GUIDELINE GRID
+           ========================================= */
+        #brand-guideline { padding: 15vh 5%; background: var(--light); color: var(--dark); }
+        .guide-header { font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 8vh; }
+        
+        .guide-container {
+            display: flex; gap: 1rem; height: 60vh; width: 100%; max-width: 1200px; margin: 0 auto;
+        }
+        
+        .guide-col {
+            flex: 1; border-radius: 20px; overflow: hidden; position: relative;
+            transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer;
+            display: flex; align-items: flex-end; padding: 2rem; color: var(--light);
+        }
+        
+        /* The colors represent brand palette */
+        .gc-1 { background: #0a0510; }
+        .gc-2 { background: #ff2a5f; }
+        .gc-3 { background: #ff8c42; }
+        .gc-4 { background: #4a00e0; }
+
+        .guide-col:hover { flex: 4; }
+        
+        .guide-content { opacity: 0; transform: translateY(20px); transition: 0.4s; width: 100%; white-space: nowrap; }
+        .guide-col:hover .guide-content { opacity: 1; transform: translateY(0); transition-delay: 0.2s; }
+        
+        .guide-title { font-size: 2rem; font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 0.5rem; }
+        .guide-hex { font-family: 'Space Mono', monospace; font-size: 1rem; opacity: 0.8; }
+        .guide-icon { position: absolute; top: 2rem; right: 2rem; font-size: 2rem; opacity: 0; transition: 0.4s; }
+        .guide-col:hover .guide-icon { opacity: 1; }
+
+        @media (max-width: 768px) {
+            .guide-container { flex-direction: column; height: 100vh; }
+            .guide-content { opacity: 1; transform: none; white-space: normal; }
+            .guide-col { padding: 1.5rem; flex: 1 !important; align-items: flex-start; justify-content: flex-end; }
+            .guide-title { font-size: 1.5rem; }
+        }
+
+        /* =========================================
+           UNIQUE S05: EDITORIAL FOOTER
+           ========================================= */
+        #brand-cta {
+            height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 5%; position: relative;
+        }
+        .cta-bg {
+            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2;
+        }
+        .cta-overlay {
+            position: absolute; inset: 0; background: rgba(10,5,16,0.7); z-index: -1;
+        }
+        
+        .cta-title { font-size: clamp(3rem, 10vw, 8rem); font-weight: 800; margin-bottom: 3rem; text-transform: uppercase; color: var(--light); }
+        .cta-title .serif-font { color: var(--accent); }
+        
+        .brand-btn {
+            background: var(--light); color: var(--dark); font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700;
+            padding: 1.5rem 4rem; border-radius: 100px; text-transform: uppercase; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 10px; position: relative; overflow: hidden; transition: 0.4s;
+            border: 2px solid var(--light);
+        }
+        .brand-btn::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--accent); z-index: -1; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .brand-btn:hover { color: var(--light); border-color: var(--accent); }
+        .brand-btn:hover::before { transform: translateY(0); }
+
+    </style>
+</head>
+<body>
+
+    <!-- FILM GRAIN OVERLAY -->
+    <div class="film-grain"></div>
+
+    <!-- MAGIC CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU -->
+    <div class="menu-overlay"><div class="menu-container" id="menu-grid"></div></div>
+
+    <main>
+
+        <!-- S01: TEXT-MASK HERO -->
+        <section id="brand-hero">
+            <div class="mask-text-wrapper">
+                <h1 class="mask-text">IDENTITY</h1>
+            </div>
+            <p class="brand-hero-sub">We craft visual ecosystems. Logos, typography, and color palettes that make your brand immortal in the minds of your audience.</p>
+        </section>
+
+        <!-- S02: ENDLESS ASSET ROWS -->
+        <section id="brand-rows">
+            <!-- Row 1 (Moves Left) -->
+            <div class="asset-row row-left">
+                <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=800&auto=format&fit=crop" class="asset-img">
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop" class="asset-img">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" class="asset-img">
+                <img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=800&auto=format&fit=crop" class="asset-img">
+                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop" class="asset-img">
+            </div>
+            
+            <!-- Row 2 (Moves Right) -->
+            <div class="asset-row row-right">
+                <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop" class="asset-img">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop" class="asset-img">
+                <img src="https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=800&auto=format&fit=crop" class="asset-img">
+                <img src="https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=800&auto=format&fit=crop" class="asset-img">
+                <img src="https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=800&auto=format&fit=crop" class="asset-img">
+            </div>
+        </section>
+
+        <!-- S03: SLOT MACHINE KEYWORD PIN -->
+        <section id="brand-slot">
+            <div class="slot-static">WE ENGINEER THE</div>
+            <div class="slot-mask">
+                <div class="slot-words">
+                    <div class="slot-word">CULTURE</div>
+                    <div class="slot-word">EMOTION</div>
+                    <div class="slot-word">FUTURE</div>
+                    <div class="slot-word">SOUL</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S04: DYNAMIC BRAND GUIDELINE GRID -->
+        <section id="brand-guideline">
+            <h2 class="display-font guide-header">THE ARCHITECTURE</h2>
+            
+            <div class="guide-container">
+                
+                <div class="guide-col gc-1">
+                    <i class="ph ph-text-aa guide-icon"></i>
+                    <div class="guide-content">
+                        <div class="guide-title">Typography</div>
+                        <div class="guide-hex">Syne / Inter</div>
+                    </div>
+                </div>
+
+                <div class="guide-col gc-2">
+                    <i class="ph ph-drop guide-icon"></i>
+                    <div class="guide-content">
+                        <div class="guide-title">Primary Accent</div>
+                        <div class="guide-hex">#FF2A5F</div>
+                    </div>
+                </div>
+
+                <div class="guide-col gc-3">
+                    <i class="ph ph-swatches guide-icon"></i>
+                    <div class="guide-content">
+                        <div class="guide-title">Secondary Tone</div>
+                        <div class="guide-hex">#FF8C42</div>
+                    </div>
+                </div>
+
+                <div class="guide-col gc-4">
+                    <i class="ph ph-aperture guide-icon"></i>
+                    <div class="guide-content">
+                        <div class="guide-title">Deep Contrast</div>
+                        <div class="guide-hex">#4A00E0</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- S05: EDITORIAL FOOTER -->
+        <section id="brand-cta">
+            <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2000&auto=format&fit=crop" class="cta-bg" alt="Studio">
+            <div class="cta-overlay"></div>
+            
+            <h2 class="display-font cta-title">BE <span class="serif-font">UNFORGETTABLE</span></h2>
+            <a href="#" class="brand-btn magnetic" data-strength="30">Establish Your Brand <i class="ph ph-arrow-right"></i></a>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. Lenis Smooth Scroll
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. Cursor & Magnetic (Desktop Only)
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+            
+            document.querySelectorAll('a, button, .menu-item-title, .guide-col').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    gsap.to(el, { x: ((e.clientX - rect.left) / rect.width - 0.5) * strength, y: ((e.clientY - rect.top) / rect.height - 0.5) * strength, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        }
+
+        // 3. Menu Data & Routing
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetUrl = link.getAttribute('href');
+                if(targetUrl !== '#') {
+                    e.preventDefault();
+                    toggleMenu();
+                    setTimeout(() => { 
+                        if (targetUrl.startsWith('#') || targetUrl.includes('.html#')) {
+                            const id = targetUrl.split('#')[1];
+                            const element = document.getElementById(id);
+                            if(element) lenis.scrollTo(element, { duration: 1.5 });
+                            else window.location.href = targetUrl;
+                        } else { window.location.href = targetUrl; }
+                    }, 800);
+                }
+            });
+        });
+
+        // 4. BRANDING MAGIC: Text Mask Hero
+        const heroTl = gsap.timeline({ delay: 0.2 });
+        // Scale the giant text down to size, making the image inside it visible
+        heroTl.to(".mask-text", { opacity: 1, scale: 1, duration: 1.5, ease: "power3.out" })
+              .to(".brand-hero-sub", { opacity: 1, y: -10, duration: 1 }, "-=0.8");
+
+        // 5. BRANDING MAGIC: Endless Asset Rows
+        // Row 1 moves left
+        gsap.to(".row-left", {
+            x: () => -(document.querySelector('.row-left').scrollWidth - window.innerWidth),
+            ease: "none",
+            scrollTrigger: { trigger: "#brand-rows", start: "top bottom", end: "bottom top", scrub: 1 }
+        });
+        // Row 2 moves right (Starts offset negatively in CSS)
+        gsap.to(".row-right", {
+            x: 0,
+            ease: "none",
+            scrollTrigger: { trigger: "#brand-rows", start: "top bottom", end: "bottom top", scrub: 1 }
+        });
+
+        // 6. BRANDING MAGIC: Slot Machine Word Scroll
+        const slotWords = document.querySelector('.slot-words');
+        const wordHeight = document.querySelector('.slot-word').offsetHeight;
+        const totalWords = document.querySelectorAll('.slot-word').length;
+        
+        gsap.to(slotWords, {
+            y: -(wordHeight * (totalWords - 1)), // Scroll through the words
+            ease: "none",
+            scrollTrigger: {
+                trigger: "#brand-slot",
+                start: "center center",
+                end: "+=150%", // Pin for a while to let user scroll through the words
+                pin: true,
+                scrub: true
+            }
+        });
+
+        // 7. BRANDING MAGIC: Footer Image Parallax
+        gsap.to(".cta-bg", {
+            yPercent: 30,
+            ease: "none",
+            scrollTrigger: { trigger: "#brand-cta", start: "top bottom", end: "bottom top", scrub: true }
+        });
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Image Magics</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES (Electric Orange Theme)
+           ========================================= */
+        :root {
+            --dark: #050505;
+            --light: #f4f4f5;
+            --accent: #FF4400; /* Electric Orange */
+            --gray: #111;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Lenis Fix */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* MAGIC CURSOR */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s; mix-blend-mode: screen; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--accent); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        @media (max-width: 768px) { .cursor { display: none; } * { cursor: auto !important; } }
+
+        /* NAV & MENU */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5vw; z-index: 10000; background: rgba(5, 5, 5, 0.5); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 68, 0, 0.15); }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); background: var(--accent); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); background: var(--accent); }
+        
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5,5,5,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5vw 5vh 5vw; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5vw 10vh 5vw; } .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; color: var(--accent); }
+
+        /* =========================================
+           GLOBAL SECTION STYLES
+           ========================================= */
+        section { position: relative; width: 100vw; min-height: 100vh; overflow: hidden; }
+        .section-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+        .section-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,5,5,0.6); z-index: 1; }
+        .section-content { position: relative; z-index: 2; width: 100%; height: 100%; display: flex; padding: 10vh 5vw; }
+
+        /* =========================================
+           S01: HERO SECTION
+           ========================================= */
+        #s01-hero { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        #s01-hero .section-bg { transform: scale(1.1); } /* For GSAP Parallax */
+        .hero-title { font-size: clamp(3.5rem, 15vw, 12rem); font-weight: 800; line-height: 0.9; text-transform: uppercase; z-index: 2; position: relative; }
+        .hero-title .word { display: inline-block; transform: translateY(110%); }
+        .hero-title span.outline { color: transparent; -webkit-text-stroke: 2px var(--light); }
+
+        /* =========================================
+           S02: MAGIC 1 - THE X-RAY SPOTLIGHT
+           ========================================= */
+        #s02-xray { 
+            --x: 50%;
+            --y: 50%;
+            --radius: 0px; /* Controlled by JS */
+            background: var(--dark);
+        }
+        /* Base Black and white image */
+        .xray-bw { filter: grayscale(100%) contrast(1.2); opacity: 0.5; }
+        
+        /* Overlapping Colored image masked by circle */
+        .xray-color {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;
+            clip-path: circle(var(--radius) at var(--x) var(--y));
+            transition: clip-path 0.1s ease-out; /* Smooth follow */
+        }
+        
+        .xray-text { 
+            position: absolute; top: 50%; left: 5vw; transform: translateY(-50%); z-index: 2; pointer-events: none; 
+        }
+        .xray-text h2 { font-size: clamp(2.5rem, 8vw, 6rem); color: var(--light); text-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .xray-text span { color: var(--accent); }
+
+        @media (max-width: 768px) {
+            /* On mobile, just show the color image slowly appearing as you scroll */
+            #s02-xray { --radius: 100% !important; }
+            .xray-color { clip-path: inset(0 0 0 0); opacity: 0; transition: opacity 1s; }
+            .xray-color.mobile-visible { opacity: 1; }
+        }
+
+        /* =========================================
+           S03: MAGIC 2 - PINNED PARALLAX STACK
+           ========================================= */
+        #s03-stack { background: #000; }
+        #s03-stack .section-overlay { background: linear-gradient(to right, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 100%); }
+        
+        .stack-container { display: flex; width: 100%; height: 100%; align-items: center; justify-content: space-between; }
+        
+        .stack-left { width: 40%; padding-right: 5vw; z-index: 3; }
+        .stack-left h2 { font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 1rem; }
+        
+        .stack-right { width: 60%; height: 80vh; position: relative; perspective: 1000px; }
+        
+        .stack-img-wrapper {
+            position: absolute; top: 0; right: 0; width: 100%; height: 100%;
+            border-radius: 20px; overflow: hidden;
+            box-shadow: -20px 20px 50px rgba(0,0,0,0.8);
+            transform-origin: bottom right;
+            border: 1px solid rgba(255, 68, 0, 0.2);
+            /* Initial state for GSAP */
+            transform: translateY(150%) rotate(10deg);
+        }
+        .stack-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        
+        @media (max-width: 768px) {
+            .stack-container { flex-direction: column; justify-content: center; gap: 2rem; }
+            .stack-left { width: 100%; padding: 0; text-align: center; }
+            .stack-right { width: 100%; height: 50vh; }
+        }
+
+        /* =========================================
+           S04: MAGIC 3 - HOVER FOLLOW IMAGES
+           ========================================= */
+        #s04-follow { background: #111; display: flex; align-items: center; justify-content: center; }
+        #s04-follow .section-overlay { background: rgba(5,5,5,0.85); }
+        
+        .follow-list { position: relative; z-index: 3; list-style: none; width: 100%; text-align: center; }
+        .follow-item {
+            font-size: clamp(3rem, 8vw, 7rem); font-family: 'Syne', sans-serif; font-weight: 800;
+            text-transform: uppercase; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+            margin: 0; transition: 0.4s; position: relative;
+        }
+        .follow-item:hover { color: var(--light); -webkit-text-stroke: 1px var(--light); }
+        
+        /* The images that will follow the cursor */
+        .follow-img {
+            position: fixed; /* Fixed to viewport to follow mouse */
+            top: 0; left: 0; width: 350px; height: 450px; object-fit: cover;
+            border-radius: 10px; pointer-events: none; z-index: 2;
+            opacity: 0; transform: scale(0.5) translate(-50%, -50%); /* Center on cursor */
+        }
+
+        @media (max-width: 768px) {
+            /* On mobile, disable the hover follow, just show images next to text */
+            .follow-item { color: var(--light); -webkit-text-stroke: 0; margin-bottom: 2rem; font-size: 3rem; }
+            .follow-img { position: relative; opacity: 1; transform: scale(1) translate(0,0); width: 100%; height: 200px; margin-top: 1rem; display: none; }
+            .follow-item.mobile-active .follow-img { display: block; }
+        }
+
+        /* =========================================
+           S05: FOOTER (Full Page)
+           ========================================= */
+        #s05-footer { display: flex; flex-direction: column; justify-content: space-between; padding: var(--nav-height) 5vw 5vh 5vw; background: #020202; }
+        #s05-footer .section-overlay { background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 100%); }
+        
+        .footer-top { position: relative; z-index: 2; text-align: center; margin-top: auto; }
+        .footer-huge { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 15vw, 12rem); font-weight: 800; line-height: 0.8; color: var(--light); }
+        .footer-huge span { color: var(--accent); }
+        
+        .footer-bottom { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; }
+        .social-links { display: flex; gap: 1rem; }
+        .social-btn { width: 60px; height: 60px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; color: var(--light); font-size: 1.5rem; transition: 0.3s; }
+        .social-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--dark); }
+        
+        @media (max-width: 768px) { .footer-bottom { flex-direction: column; align-items: center; gap: 2rem; } }
+    </style>
+</head>
+<body>
+
+    <div class="cursor"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="#" class="nav-brand hover-target">MΛGIC.</a>
+        <button class="menu-btn hover-target">
+            Menu
+            <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <div class="menu-overlay">
+        <div class="menu-container" id="menu-grid"></div>
+    </div>
+
+    <!-- ==========================================
+         MAIN SCROLL JOURNEY (UNIQUE FULL PAGE SECTIONS)
+         ========================================== -->
+    <main>
+        
+        <!-- S01: HERO SECTION -->
+        <section id="s01-hero">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" class="section-bg hero-parallax" alt="Hero">
+            <div class="section-overlay" style="background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);"></div>
+            
+            <h1 class="hero-title">
+                <span class="line" style="overflow: hidden;"><span class="word gsap-word outline">IMAGE</span></span><br>
+                <span class="line" style="overflow: hidden;"><span class="word gsap-word">MAGICS</span></span>
+            </h1>
+        </section>
+
+        <!-- S02: MAGIC 1 - X-RAY SPOTLIGHT -->
+        <section id="s02-xray">
+            <!-- Background 1: Black and White -->
+            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2000&auto=format&fit=crop" class="section-bg xray-bw" alt="BW Background">
+            
+            <!-- Background 2: Full Color (Masked by CSS circle) -->
+            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2000&auto=format&fit=crop" class="xray-color" alt="Color Background">
+            
+            <div class="xray-text">
+                <h2 class="display-font">Interactive<br><span>Lenses.</span></h2>
+            </div>
+        </section>
+
+        <!-- S03: MAGIC 2 - PINNED PARALLAX STACK -->
+        <section id="s03-stack">
+            <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2000&auto=format&fit=crop" class="section-bg" alt="Stack Background">
+            <div class="section-overlay"></div>
+
+            <div class="section-content">
+                <div class="stack-container">
+                    <div class="stack-left">
+                        <h2 class="display-font">Dynamic<br>Stacking.</h2>
+                        <p style="color: #aaa; line-height: 1.6;">As you scroll, this section pins to the viewport. Images slide in with heavy Z-axis rotation, layering over one another to build a premium gallery experience without ever leaving the page.</p>
+                    </div>
+                    
+                    <div class="stack-right">
+                        <!-- Images to be stacked via GSAP -->
+                        <div class="stack-img-wrapper gsap-stack-img"><img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop" alt="Img 1"></div>
+                        <div class="stack-img-wrapper gsap-stack-img"><img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=1000&auto=format&fit=crop" alt="Img 2"></div>
+                        <div class="stack-img-wrapper gsap-stack-img"><img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop" alt="Img 3"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S04: MAGIC 3 - HOVER FOLLOW -->
+        <section id="s04-follow">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2000&auto=format&fit=crop" class="section-bg" alt="Hover Background">
+            <div class="section-overlay"></div>
+
+            <!-- Floating Images (Hidden by default, track mouse) -->
+            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop" class="follow-img" id="img-1">
+            <img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=800&auto=format&fit=crop" class="follow-img" id="img-2">
+            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop" class="follow-img" id="img-3">
+
+            <div class="section-content" style="align-items: center;">
+                <ul class="follow-list">
+                    <li class="follow-item" data-img="img-1">Architecture</li>
+                    <li class="follow-item" data-img="img-2">Cybernetics</li>
+                    <li class="follow-item" data-img="img-3">Abstract Art</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- S05: FULL PAGE FOOTER -->
+        <section id="s05-footer">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" class="section-bg" style="filter: hue-rotate(180deg);" alt="Footer Background">
+            <div class="section-overlay"></div>
+
+            <div class="footer-top">
+                <h2 class="footer-huge">THE<br><span>END.</span></h2>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="mono" style="color: #888;">
+                    <p>MΛGIC AGENCY // 2024</p>
+                    <p style="margin-top: 5px;">ALL RIGHTS RESERVED.</p>
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-btn hover-target"><i class="ph ph-instagram-logo"></i></a>
+                    <a href="#" class="social-btn hover-target"><i class="ph ph-twitter-logo"></i></a>
+                    <a href="#" class="social-btn hover-target"><i class="ph ph-dribbble-logo"></i></a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. LENIS (Smooth Scrolling)
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. MAGIC CURSOR
+        const cursor = document.querySelector('.cursor');
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { 
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                gsap.to(cursor, { x: mouseX, y: mouseY, duration: 0.1 }); 
+            });
+            
+            document.querySelectorAll('a, button, .hover-target, .follow-item').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+        }
+
+        // 3. EXACT MENU ARRAY
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+        
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetUrl = link.getAttribute('href');
+                toggleMenu();
+                setTimeout(() => {
+                    if (targetUrl.startsWith('#')) { lenis.scrollTo(targetUrl, { duration: 1.5 }); }
+                    else { window.location.href = targetUrl; }
+                }, 800);
+            });
+        });
+
+        // ==========================================
+        // PAGE GSAP & IMAGE MAGICS
+        // ==========================================
+
+        // S01: Hero Entry & Parallax
+        gsap.to(".gsap-word", { y: "0%", duration: 1.2, stagger: 0.2, ease: "power4.out", delay: 0.2 });
+        gsap.to(".hero-parallax", { y: "30%", scrollTrigger: { trigger: "#s01-hero", start: "top top", end: "bottom top", scrub: true }});
+
+        // S02: MAGIC 1 - X-RAY SPOTLIGHT
+        const xraySection = document.getElementById('s02-xray');
+        if (window.innerWidth > 768) {
+            // Desktop: Follow mouse
+            xraySection.addEventListener('mousemove', (e) => {
+                // Calculate position relative to section
+                const rect = xraySection.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Update CSS variables for the clip-path circle
+                xraySection.style.setProperty('--x', `${x}px`);
+                xraySection.style.setProperty('--y', `${y}px`);
+            });
+            
+            // Expand circle on enter, shrink on leave
+            xraySection.addEventListener('mouseenter', () => { xraySection.style.setProperty('--radius', '300px'); });
+            xraySection.addEventListener('mouseleave', () => { xraySection.style.setProperty('--radius', '0px'); });
+        } else {
+            // Mobile fallback: Just fade it in on scroll
+            ScrollTrigger.create({
+                trigger: xraySection,
+                start: "top 50%",
+                onEnter: () => document.querySelector('.xray-color').classList.add('mobile-visible')
+            });
+        }
+
+        // S03: MAGIC 2 - PINNED IMAGE STACK
+        let stackTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#s03-stack",
+                start: "top top",
+                end: "+=200%", // Pin for 200% of viewport height
+                pin: true,
+                scrub: 1
+            }
+        });
+
+        const stackImages = gsap.utils.toArray('.gsap-stack-img');
+        stackImages.forEach((img, i) => {
+            // Slide in from bottom right, rotating into place
+            stackTl.to(img, {
+                y: 0,
+                rotation: 0,
+                duration: 1,
+                ease: "power2.out"
+            }, i * 0.5); // Stagger them
+        });
+
+        // S04: MAGIC 3 - HOVER FOLLOW IMAGES
+        if (window.innerWidth > 768) {
+            const listItems = document.querySelectorAll('.follow-item');
+            
+            listItems.forEach(item => {
+                const imgId = item.getAttribute('data-img');
+                const img = document.getElementById(imgId);
+                
+                item.addEventListener('mouseenter', () => {
+                    // Pop image in
+                    gsap.to(img, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.7, 0.3)" });
+                });
+                
+                item.addEventListener('mousemove', (e) => {
+                    // Make image follow cursor instantly
+                    gsap.to(img, { x: e.clientX, y: e.clientY, duration: 0.6, ease: "power3.out" });
+                });
+                
+                item.addEventListener('mouseleave', () => {
+                    // Shrink and fade out
+                    gsap.to(img, { opacity: 0, scale: 0.5, duration: 0.3, ease: "power2.in" });
+                });
+            });
+        } else {
+            // Mobile Fallback: Tap to show image inline
+            document.querySelectorAll('.follow-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    item.classList.toggle('mobile-active');
+                });
+            });
+        }
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

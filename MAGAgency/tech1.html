@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MΛGAgency | Partners / Tech</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --dark:#05070c;
+      --light:#f4f4f5;
+      --accent:#58d6ff;
+      --accent-2:#8d7cff;
+      --accent-3:#63ffd2;
+      --gold:#d9c07a;
+      --gray:#0f141c;
+      --nav-height:70px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      cursor:none;
+    }
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--light);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    h1,h2,h3,h4,h5,h6,.display-font{
+      font-family:'Syne',sans-serif;
+    }
+
+    .mono{
+      font-family:'JetBrains Mono',monospace;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    section{
+      position:relative;
+      width:100vw;
+      min-height:100vh;
+      overflow:hidden;
+    }
+
+    html.lenis{height:auto;}
+    .lenis.lenis-smooth{scroll-behavior:auto !important;}
+
+    /* =========================================
+       CURSOR
+       ========================================= */
+    .cursor{
+      position:fixed;
+      top:0;
+      left:0;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:var(--accent-3);
+      pointer-events:none;
+      z-index:99999;
+      transform:translate(-50%,-50%);
+      transition:width .3s,height .3s,background .3s,border .3s;
+      mix-blend-mode:screen;
+    }
+
+    .cursor.hovered{
+      width:78px;
+      height:78px;
+      background:transparent;
+      border:1px solid var(--accent-3);
+      mix-blend-mode:normal;
+      backdrop-filter:blur(6px);
+    }
+
+    .cursor.tech-mode::after{
+      content:'SYNC';
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      font-size:10px;
+      color:var(--accent-3);
+      font-family:'JetBrains Mono',monospace;
+      font-weight:700;
+      letter-spacing:1px;
+    }
+
+    @media(max-width:768px){
+      .cursor{display:none;}
+      *{cursor:auto !important;}
+    }
+
+    /* =========================================
+       NAV
+       ========================================= */
+    nav{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:var(--nav-height);
+      padding:0 5vw;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:10000;
+      background:rgba(5,7,12,.72);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(88,214,255,.14);
+    }
+
+    .nav-brand{
+      font-size:1.3rem;
+      font-weight:800;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+
+    .menu-btn{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:none;
+      border:none;
+      color:var(--light);
+      font-weight:600;
+      text-transform:uppercase;
+      font-size:.9rem;
+    }
+
+    .hamburger{
+      width:35px;
+      height:8px;
+      position:relative;
+    }
+
+    .hamburger span{
+      position:absolute;
+      width:100%;
+      height:2px;
+      background:var(--light);
+      transition:.4s;
+    }
+
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){bottom:0;}
+
+    .menu-btn.active .hamburger span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);
+      background:var(--dark);
+    }
+
+    .menu-btn.active .hamburger span:nth-child(2){
+      transform:translateY(-3px) rotate(-45deg);
+      background:var(--dark);
+    }
+
+    /* =========================================
+       MENU OVERLAY
+       ========================================= */
+    .menu-overlay{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100vw;
+      height:100vh;
+      background:var(--accent);
+      z-index:9999;
+      display:flex;
+      padding-top:calc(var(--nav-height) + 3vh);
+      clip-path:polygon(0 0,100% 0,100% 0,0 0);
+      overflow-y:auto;
+    }
+
+    .menu-container{
+      width:100%;
+      padding:0 5vw 5vh 5vw;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:2rem 2.5rem;
+      align-content:start;
+    }
+
+    @media(max-width:1200px){
+      .menu-container{grid-template-columns:repeat(3,1fr);}
+    }
+
+    @media(max-width:768px){
+      .menu-container{
+        grid-template-columns:1fr;
+        gap:.5rem;
+        padding:2vh 5vw 10vh 5vw;
+      }
+      .menu-item{
+        border-bottom:1px solid rgba(0,0,0,.15);
+        padding:1.5rem 0;
+      }
+      .menu-item-title{
+        font-size:2rem !important;
+        font-weight:800 !important;
+      }
+      .dropdown a{
+        font-size:1.25rem !important;
+        padding:.8rem 0;
+      }
+    }
+
+    .menu-item{
+      border-bottom:1px solid rgba(0,0,0,.12);
+      padding-bottom:1rem;
+    }
+
+    .menu-item-title{
+      font-size:clamp(1.3rem,2.5vw,2rem);
+      font-weight:700;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:var(--dark);
+      opacity:0;
+      transform:translateY(20px);
+    }
+
+    .menu-item-title span{
+      font-size:1rem;
+      font-family:'Inter',sans-serif;
+      font-weight:500;
+      color:var(--dark);
+    }
+
+    .dropdown{
+      height:0;
+      overflow:hidden;
+      transition:height .4s ease;
+    }
+
+    .dropdown-inner{
+      padding-top:1rem;
+      display:flex;
+      flex-direction:column;
+      gap:.8rem;
+    }
+
+    .dropdown a{
+      color:#1f1f1f;
+      font-size:1.05rem;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      transition:.3s;
+      font-weight:500;
+    }
+
+    .dropdown a i{
+      font-size:1.2rem;
+      color:var(--dark);
+    }
+
+    .dropdown a:hover{
+      padding-left:10px;
+    }
+
+    /* =========================================
+       GLOBAL
+       ========================================= */
+    .section-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:0;
+    }
+
+    .section-overlay{
+      position:absolute;
+      inset:0;
+      z-index:1;
+    }
+
+    .section-inner{
+      position:relative;
+      z-index:2;
+      width:100%;
+      min-height:100vh;
+      padding:calc(var(--nav-height) + 4vh) 5vw 6vh 5vw;
+    }
+
+    .glass{
+      background:rgba(14,18,26,.45);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 20px 50px rgba(0,0,0,.38);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid rgba(99,255,210,.25);
+      color:var(--accent-3);
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:.85rem;
+      font-family:'JetBrains Mono',monospace;
+      width:max-content;
+      margin-bottom:1.2rem;
+    }
+
+    .pulse{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--accent-3);
+      animation:pulseDot 1.2s infinite;
+    }
+
+    @keyframes pulseDot{
+      0%{transform:scale(1);opacity:1;}
+      50%{transform:scale(.55);opacity:.45;}
+      100%{transform:scale(1);opacity:1;}
+    }
+
+    /* =========================================
+       HERO
+       ========================================= */
+    #s10-tech-hero .section-overlay{
+      background:
+        linear-gradient(90deg,rgba(5,7,12,.92) 0%, rgba(5,7,12,.45) 48%, rgba(5,7,12,.84) 100%);
+    }
+
+    .hero-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      align-items:center;
+      gap:4vw;
+    }
+
+    .hero-title{
+      font-size:clamp(3.4rem,10vw,8rem);
+      line-height:.9;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .hero-title .line{
+      display:block;
+      overflow:hidden;
+    }
+
+    .hero-title .word{
+      display:inline-block;
+      transform:translateY(110%);
+    }
+
+    .hero-title .outline{
+      color:transparent;
+      -webkit-text-stroke:2px var(--light);
+    }
+
+    .hero-desc{
+      margin-top:1.4rem;
+      max-width:560px;
+      color:#c0c6cf;
+      line-height:1.75;
+    }
+
+    .hero-meta{
+      margin-top:2rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:1.2rem 2rem;
+      color:#98a4b2;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.88rem;
+    }
+
+    .module-wrap{
+      display:flex;
+      justify-content:center;
+      perspective:1300px;
+    }
+
+    .module-card{
+      width:min(560px,100%);
+      min-height:66vh;
+      border-radius:24px;
+      overflow:hidden;
+      position:relative;
+      transform-style:preserve-3d;
+      transition:transform .12s;
+    }
+
+    .module-card img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      filter:brightness(.72) contrast(1.05);
+    }
+
+    .module-card::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top,rgba(5,7,12,.96),rgba(5,7,12,.16));
+    }
+
+    .module-content{
+      position:absolute;
+      left:1.5rem;
+      right:1.5rem;
+      bottom:1.5rem;
+      z-index:2;
+      transform:translateZ(60px);
+    }
+
+    .module-content .mono{
+      color:var(--accent-3);
+      font-size:.82rem;
+      margin-bottom:.65rem;
+      display:block;
+    }
+
+    .module-content h3{
+      font-size:2rem;
+      margin-bottom:.75rem;
+      line-height:1.06;
+    }
+
+    .module-content p{
+      color:#c8ced6;
+      line-height:1.55;
+      max-width:430px;
+    }
+
+    .module-chip{
+      position:absolute;
+      z-index:3;
+      padding:.85rem 1rem;
+      border-radius:16px;
+      background:rgba(10,14,18,.78);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      transform:translateZ(80px);
+      box-shadow:0 18px 32px rgba(0,0,0,.25);
+    }
+
+    .module-chip .mono{
+      color:#9ab0c9;
+      font-size:.72rem;
+      display:block;
+      margin-bottom:.25rem;
+    }
+
+    .module-chip strong{
+      color:var(--light);
+      font-size:1.15rem;
+    }
+
+    .chip-a{top:8%;left:6%;}
+    .chip-b{top:15%;right:6%;}
+    .chip-c{bottom:22%;right:9%;}
+    .chip-d{bottom:13%;left:8%;}
+
+    .hero-strip{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:3;
+      background:rgba(88,214,255,.92);
+      color:#07131b;
+      padding:14px 0;
+      overflow:hidden;
+      white-space:nowrap;
+      border-top:1px solid rgba(0,0,0,.3);
+    }
+
+    .hero-strip-track{
+      display:flex;
+      width:max-content;
+      animation:strip 22s linear infinite;
+    }
+
+    .hero-strip-item{
+      display:flex;
+      align-items:center;
+      gap:24px;
+      padding:0 28px;
+      font-family:'JetBrains Mono',monospace;
+      font-weight:700;
+      font-size:.95rem;
+    }
+
+    @keyframes strip{
+      from{transform:translateX(0);}
+      to{transform:translateX(-50%);}
+    }
+
+    @media(max-width:1024px){
+      .hero-layout{
+        grid-template-columns:1fr;
+        text-align:center;
+      }
+      .hero-left{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+      }
+      .hero-desc{margin-inline:auto;}
+      .module-card{min-height:52vh;}
+    }
+
+    /* =========================================
+       SECTION 2 - SERVER RACK WALL
+       ========================================= */
+    #s10-racks .section-overlay{
+      background:linear-gradient(180deg,rgba(5,7,12,.82),rgba(5,7,12,.94));
+    }
+
+    .racks-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:2rem;
+    }
+
+    .racks-head{
+      text-align:center;
+      max-width:860px;
+      margin:0 auto;
+    }
+
+    .racks-head h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .racks-head p{
+      color:#c0c7cf;
+      line-height:1.75;
+    }
+
+    .rack-stage{
+      position:relative;
+      width:100%;
+      border-radius:26px;
+      padding:1.25rem;
+      overflow:hidden;
+    }
+
+    .scan-line{
+      position:absolute;
+      left:0;
+      width:100%;
+      height:120px;
+      background:linear-gradient(180deg,rgba(99,255,210,0),rgba(99,255,210,.14),rgba(99,255,210,0));
+      z-index:1;
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
+
+    .rack-grid{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+    }
+
+    .rack-unit{
+      min-height:220px;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      padding:1rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      position:relative;
+      overflow:hidden;
+      transition:.35s;
+    }
+
+    .rack-unit:hover{
+      transform:translateY(-8px);
+      border-color:rgba(88,214,255,.28);
+      box-shadow:0 18px 38px rgba(0,0,0,.28);
+    }
+
+    .rack-unit::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg,rgba(88,214,255,.14),transparent 70%);
+      opacity:0;
+      transition:.35s;
+    }
+
+    .rack-unit:hover::before{opacity:1;}
+
+    .rack-top,
+    .rack-bottom{
+      position:relative;
+      z-index:1;
+    }
+
+    .rack-top{
+      display:flex;
+      justify-content:space-between;
+      gap:1rem;
+      align-items:flex-start;
+    }
+
+    .rack-top .mono{
+      font-size:.72rem;
+      color:var(--accent-3);
+      display:block;
+      margin-bottom:.35rem;
+    }
+
+    .rack-top h3{
+      font-size:1.15rem;
+      line-height:1.2;
+    }
+
+    .rack-leds{
+      display:flex;
+      gap:6px;
+      align-items:center;
+    }
+
+    .rack-led{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:#2b3340;
+      transition:.25s;
+      box-shadow:none;
+    }
+
+    .rack-led.on{
+      background:var(--accent-3);
+      box-shadow:0 0 12px rgba(99,255,210,.8);
+    }
+
+    .rack-led.warn{
+      background:var(--gold);
+      box-shadow:0 0 12px rgba(217,192,122,.8);
+    }
+
+    .rack-led.alt{
+      background:var(--accent);
+      box-shadow:0 0 12px rgba(88,214,255,.75);
+    }
+
+    .rack-desc{
+      color:#b8c0ca;
+      line-height:1.55;
+      font-size:.9rem;
+      margin:1rem 0 1.2rem 0;
+    }
+
+    .rack-bars{
+      display:flex;
+      flex-direction:column;
+      gap:.65rem;
+    }
+
+    .rack-bar{
+      width:100%;
+      height:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      overflow:hidden;
+    }
+
+    .rack-fill{
+      display:block;
+      height:100%;
+      width:20%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-3));
+    }
+
+    @media(max-width:1024px){
+      .rack-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media(max-width:768px){
+      .rack-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    /* =========================================
+       SECTION 3 - PINNED BLUEPRINT
+       ========================================= */
+    #s10-blueprint{
+      min-height:420vh;
+    }
+
+    #s10-blueprint .section-overlay{
+      background:linear-gradient(180deg,rgba(5,7,12,.76),rgba(5,7,12,.94));
+    }
+
+    .blueprint-pin{
+      position:sticky;
+      top:0;
+      height:100vh;
+      display:grid;
+      grid-template-columns:.88fr 1.12fr;
+      gap:2rem;
+      align-items:center;
+      padding:calc(var(--nav-height) + 4vh) 5vw 6vh 5vw;
+      z-index:2;
+    }
+
+    .blueprint-left h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .blueprint-left p{
+      color:#c0c7cf;
+      line-height:1.75;
+      max-width:480px;
+      margin-bottom:1.5rem;
+    }
+
+    .blueprint-board{
+      border-radius:24px;
+      padding:1.2rem;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .blueprint-board svg{
+      width:100%;
+      height:300px;
+      display:block;
+    }
+
+    .bp-node{
+      fill:#63ffd2;
+      filter:drop-shadow(0 0 12px rgba(99,255,210,.6));
+    }
+
+    .bp-node.alt{
+      fill:#7c8cff;
+      filter:drop-shadow(0 0 12px rgba(124,140,255,.6));
+    }
+
+    .bp-line{
+      fill:none;
+      stroke:rgba(88,214,255,.95);
+      stroke-width:4;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .bp-code{
+      margin-top:1rem;
+      display:grid;
+      gap:.6rem;
+    }
+
+    .bp-code-line{
+      height:12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .bp-code-line i{
+      display:block;
+      height:100%;
+      width:40%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent-2),var(--accent-3));
+    }
+
+    .blueprint-right{
+      position:relative;
+      height:80vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .bp-stack{
+      position:relative;
+      width:100%;
+      height:100%;
+      max-width:640px;
+    }
+
+    .bp-card{
+      position:absolute;
+      inset:0;
+      border-radius:24px;
+      padding:1.5rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      opacity:0;
+      transform:translateY(60px) scale(.96);
+    }
+
+    .bp-card-top .mono{
+      color:var(--gold);
+      font-size:.78rem;
+      display:block;
+      margin-bottom:.7rem;
+    }
+
+    .bp-card-top h3{
+      font-size:2rem;
+      line-height:1.08;
+      margin-bottom:.9rem;
+    }
+
+    .bp-card-top p{
+      color:#c4cbd3;
+      line-height:1.65;
+      font-size:.96rem;
+      max-width:480px;
+    }
+
+    .bp-card-bottom{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.7rem;
+      padding-top:1rem;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    .bp-chip{
+      padding:.5rem .8rem;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.06);
+      font-family:'JetBrains Mono',monospace;
+      font-size:.76rem;
+      color:#9aa7b6;
+    }
+
+    @media(max-width:1024px){
+      #s10-blueprint{
+        min-height:auto;
+      }
+      .blueprint-pin{
+        position:relative;
+        height:auto;
+        grid-template-columns:1fr;
+      }
+      .blueprint-right{
+        height:auto;
+      }
+      .bp-stack{
+        height:auto;
+        display:grid;
+        gap:1rem;
+      }
+      .bp-card{
+        position:relative;
+        inset:auto;
+        opacity:1 !important;
+        transform:none !important;
+        min-height:340px;
+      }
+    }
+
+    /* =========================================
+       SECTION 4 - PARTNER SPECTRUM
+       ========================================= */
+    #s10-spectrum{
+      background:#05070c;
+    }
+
+    .spec-bg-wrap{
+      position:absolute;
+      inset:0;
+      z-index:0;
+    }
+
+    .spec-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      opacity:0;
+      transition:opacity .8s ease;
+      filter:brightness(.42) saturate(1.08);
+    }
+
+    .spec-bg.active{
+      opacity:1;
+    }
+
+    #s10-spectrum .section-overlay{
+      background:linear-gradient(90deg,rgba(5,7,12,.88) 0%, rgba(5,7,12,.45) 52%, rgba(5,7,12,.78) 100%);
+    }
+
+    .spec-layout{
+      min-height:calc(100vh - var(--nav-height));
+      display:grid;
+      grid-template-columns:.85fr 1.15fr;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .spec-left h2{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:.95;
+      margin-bottom:1rem;
+    }
+
+    .spec-left p{
+      max-width:500px;
+      color:#c0c7cf;
+      line-height:1.75;
+      margin-bottom:2rem;
+    }
+
+    .spec-tabs{
+      display:flex;
+      flex-direction:column;
+      gap:.8rem;
+      max-width:360px;
+    }
+
+    .spec-tab{
+      padding:1rem 1.1rem;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      color:#d3d8de;
+      text-align:left;
+      font-family:'Inter',sans-serif;
+      font-size:1rem;
+      transition:.3s;
+    }
+
+    .spec-tab.active,
+    .spec-tab:hover{
+      border-color:rgba(99,255,210,.35);
+      color:var(--light);
+      background:rgba(99,255,210,.08);
+    }
+
+    .spec-panel{
+      padding:1.4rem;
+      border-radius:24px;
+    }
+
+    .spec-panel .mono{
+      color:var(--accent-3);
+      font-size:.82rem;
+      display:block;
+      margin-bottom:.7rem;
+    }
+
+    .spec-panel h3{
+      font-size:2rem;
+      margin-bottom:.9rem;
+      line-height:1.08;
+    }
+
+    .spec-panel p{
+      color:#c8cfd7;
+      line-height:1.7;
+      margin-bottom:1.2rem;
+    }
+
+    .spec-metrics{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:1rem;
+      margin-top:1rem;
+      margin-bottom:1.2rem;
+    }
+
+    .spec-box{
+      padding:1rem;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .spec-box .label{
+      color:#98a3b0;
+      font-size:.74rem;
+      text-transform:uppercase;
+      margin-bottom:.4rem;
+    }
+
+    .spec-box .value{
+      font-family:'JetBrains Mono',monospace;
+      font-size:1.3rem;
+      color:var(--light);
+      font-weight:700;
+    }
+
+    .spec-bars{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:1rem;
+      align-items:end;
+      height:170px;
+      margin-top:1rem;
+    }
+
+    .spec-bar{
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      align-items:center;
+      gap:.65rem;
+    }
+
+    .spec-bar i{
+      display:block;
+      width:100%;
+      max-width:52px;
+      height:20%;
+      border-radius:16px 16px 0 0;
+      background:linear-gradient(180deg,var(--accent-2),var(--accent-3));
+      box-shadow:0 14px 30px rgba(99,255,210,.15);
+      transform-origin:bottom;
+    }
+
+    .spec-bar span{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.75rem;
+      color:#9ca7b4;
+      text-align:center;
+    }
+
+    @media(max-width:1024px){
+      .spec-layout{
+        grid-template-columns:1fr;
+      }
+      .spec-left{
+        text-align:center;
+      }
+      .spec-left p{
+        margin-inline:auto;
+      }
+      .spec-tabs{
+        max-width:100%;
+      }
+    }
+
+    @media(max-width:768px){
+      .spec-metrics{
+        grid-template-columns:repeat(2,1fr);
+      }
+      .spec-bars{
+        grid-template-columns:repeat(2,1fr);
+        height:auto;
+        gap:1.2rem;
+      }
+      .spec-bar{
+        height:140px;
+      }
+    }
+
+    /* =========================================
+       FOOTER
+       ========================================= */
+    #s12-contact .section-overlay{
+      background:linear-gradient(to top,rgba(0,0,0,.96),rgba(0,0,0,.45));
+    }
+
+    .footer-shell{
+      min-height:calc(100vh - var(--nav-height));
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .footer-big{
+      margin-top:auto;
+      text-align:center;
+    }
+
+    .footer-big h2{
+      font-size:clamp(3.5rem,14vw,12rem);
+      line-height:.82;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .footer-big h2 span{
+      color:var(--accent-3);
+      text-shadow:0 0 30px rgba(99,255,210,.22);
+    }
+
+    .footer-bottom{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:2rem;
+      padding-top:2rem;
+      border-top:1px solid rgba(255,255,255,.1);
+    }
+
+    .footer-bottom .mono{
+      color:#8f99a4;
+      line-height:1.7;
+      font-size:.88rem;
+    }
+
+    .socials{
+      display:flex;
+      gap:1rem;
+    }
+
+    .social-btn{
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.18);
+      font-size:1.4rem;
+      transition:.35s;
+    }
+
+    .social-btn:hover{
+      background:var(--accent-3);
+      color:var(--dark);
+      border-color:var(--accent-3);
+    }
+
+    @media(max-width:768px){
+      .footer-bottom{
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor"></div>
+
+  <nav>
+    <a href="#" class="nav-brand magnetic hover-target" data-strength="20">MΛGIC.</a>
+    <button class="menu-btn magnetic hover-target" data-strength="30">
+      Menu
+      <div class="hamburger"><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <div class="menu-overlay">
+    <div class="menu-container" id="menu-grid"></div>
+  </div>
+
+  <main id="partner-tech-page">
+
+    <!-- HERO -->
+    <section id="s10-tech-hero">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2400&auto=format&fit=crop" alt="Tech partner hero" class="section-bg hero-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="hero-layout">
+          <div class="hero-left">
+            <div class="pill gsap-up"><span class="pulse"></span> TECH PARTNER PROGRAM</div>
+
+            <h1 class="hero-title">
+              <span class="line"><span class="word hero-word">PARTNER</span></span>
+              <span class="line"><span class="word hero-word outline">TECH</span></span>
+            </h1>
+
+            <p class="hero-desc gsap-up">
+              Infrastructure, AI, cloud, data, and security partnerships reimagined as a premium ecosystem —
+              where integration, scale, and delivery move as one synchronized system.
+            </p>
+
+            <div class="hero-meta gsap-up">
+              <span>94 ACTIVE TECH ALLIANCES</span>
+              <span>18 INTEGRATION LAYERS</span>
+              <span>GLOBAL DELIVERY MATRIX</span>
+            </div>
+          </div>
+
+          <div class="module-wrap gsap-up">
+            <div class="module-card glass hover-target" id="moduleCard">
+              <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1400&auto=format&fit=crop" alt="Tech module">
+
+              <div class="module-chip chip-a">
+                <span class="mono">CLOUD</span>
+                <strong>32</strong>
+              </div>
+              <div class="module-chip chip-b">
+                <span class="mono">APIs</span>
+                <strong>148</strong>
+              </div>
+              <div class="module-chip chip-c">
+                <span class="mono">SECURITY</span>
+                <strong>24/7</strong>
+              </div>
+              <div class="module-chip chip-d">
+                <span class="mono">UPTIME</span>
+                <strong>99.98%</strong>
+              </div>
+
+              <div class="module-content">
+                <span class="mono">TECH ALLIANCE DOSSIER / 2024</span>
+                <h3>Built for interoperable scale.</h3>
+                <p>
+                  Cloud-native partnerships, platform integration, AI deployment, and resilient delivery systems for modern enterprise ecosystems.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-strip">
+        <div class="hero-strip-track">
+          <div class="hero-strip-item">
+            CLOUD PARTNERS <i class="ph ph-dot-outline-fill"></i>
+            AI TOOLCHAINS <i class="ph ph-dot-outline-fill"></i>
+            API INFRASTRUCTURE <i class="ph ph-dot-outline-fill"></i>
+            SECURITY NETWORKS <i class="ph ph-dot-outline-fill"></i>
+            DATA PLATFORMS <i class="ph ph-dot-outline-fill"></i>
+          </div>
+          <div class="hero-strip-item">
+            CLOUD PARTNERS <i class="ph ph-dot-outline-fill"></i>
+            AI TOOLCHAINS <i class="ph ph-dot-outline-fill"></i>
+            API INFRASTRUCTURE <i class="ph ph-dot-outline-fill"></i>
+            SECURITY NETWORKS <i class="ph ph-dot-outline-fill"></i>
+            DATA PLATFORMS <i class="ph ph-dot-outline-fill"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RACKS -->
+    <section id="s10-racks">
+      <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2400&auto=format&fit=crop" alt="Rack background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="racks-layout">
+          <div class="racks-head">
+            <div class="pill gsap-fade"><span class="pulse"></span> INFRASTRUCTURE WALL</div>
+            <h2 class="gsap-fade">Plug into<br>the stack.</h2>
+            <p class="gsap-fade">
+              A live rack-style control wall showing how our technology partners support deployment, observability, AI orchestration, security, data pipelines, and scale.
+            </p>
+          </div>
+
+          <div class="rack-stage glass gsap-fade">
+            <div class="scan-line" id="scanLine"></div>
+
+            <div class="rack-grid">
+              <article class="rack-unit hover-target tech-target">
+                <div class="rack-top">
+                  <div>
+                    <span class="mono">CLOUD LAYER</span>
+                    <h3>Compute Mesh</h3>
+                  </div>
+                  <div class="rack-leds">
+                    <i class="rack-led on"></i>
+                    <i class="rack-led alt"></i>
+                    <i class="rack-led"></i>
+                  </div>
+                </div>
+                <div class="rack-bottom">
+                  <p class="rack-desc">Distributed compute provisioning for globally synchronized product launches and enterprise traffic bursts.</p>
+                  <div class="rack-bars">
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="rack-unit hover-target tech-target">
+                <div class="rack-top">
+                  <div>
+                    <span class="mono">SECURITY LAYER</span>
+                    <h3>Identity Guard</h3>
+                  </div>
+                  <div class="rack-leds">
+                    <i class="rack-led warn"></i>
+                    <i class="rack-led on"></i>
+                    <i class="rack-led"></i>
+                  </div>
+                </div>
+                <div class="rack-bottom">
+                  <p class="rack-desc">Auth orchestration, zero-trust access, and policy controls embedded directly into partner delivery pipelines.</p>
+                  <div class="rack-bars">
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="rack-unit hover-target tech-target">
+                <div class="rack-top">
+                  <div>
+                    <span class="mono">DATA LAYER</span>
+                    <h3>Signal Lake</h3>
+                  </div>
+                  <div class="rack-leds">
+                    <i class="rack-led on"></i>
+                    <i class="rack-led on"></i>
+                    <i class="rack-led alt"></i>
+                  </div>
+                </div>
+                <div class="rack-bottom">
+                  <p class="rack-desc">Streaming analytics, cross-platform telemetry, and clean reporting for high-volume operational intelligence.</p>
+                  <div class="rack-bars">
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="rack-unit hover-target tech-target">
+                <div class="rack-top">
+                  <div>
+                    <span class="mono">AI LAYER</span>
+                    <h3>Inference Grid</h3>
+                  </div>
+                  <div class="rack-leds">
+                    <i class="rack-led alt"></i>
+                    <i class="rack-led on"></i>
+                    <i class="rack-led"></i>
+                  </div>
+                </div>
+                <div class="rack-bottom">
+                  <p class="rack-desc">Model routing, inference orchestration, and multimodal pipeline support for product-facing AI experiences.</p>
+                  <div class="rack-bars">
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="rack-unit hover-target tech-target">
+                <div class="rack-top">
+                  <div>
+                    <span class="mono">API LAYER</span>
+                    <h3>Gateway Relay</h3>
+                  </div>
+                  <div class="rack-leds">
+                    <i class="rack-led on"></i>
+                    <i class="rack-led alt"></i>
+                    <i class="rack-led on"></i>
+                  </div>
+                </div>
+                <div class="rack-bottom">
+                  <p class="rack-desc">Versioned service orchestration and partner handoffs across multi-region applications and product surfaces.</p>
+                  <div class="rack-bars">
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="rack-unit hover-target tech-target">
+                <div class="rack-top">
+                  <div>
+                    <span class="mono">OPS LAYER</span>
+                    <h3>Deploy Chain</h3>
+                  </div>
+                  <div class="rack-leds">
+                    <i class="rack-led on"></i>
+                    <i class="rack-led warn"></i>
+                    <i class="rack-led alt"></i>
+                  </div>
+                </div>
+                <div class="rack-bottom">
+                  <p class="rack-desc">CI/CD acceleration, environment parity, and release monitoring tuned for enterprise-grade launch reliability.</p>
+                  <div class="rack-bars">
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                    <div class="rack-bar"><i class="rack-fill"></i></div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLUEPRINT -->
+    <section id="s10-blueprint">
+      <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2400&auto=format&fit=crop" alt="Blueprint background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="blueprint-pin">
+        <div class="blueprint-left">
+          <div class="pill"><span class="pulse"></span> INTEGRATION BLUEPRINT</div>
+          <h2>Protocol to<br>production.</h2>
+          <p>
+            This pinned section maps how a tech partnership moves from discovery to secure deployment.
+            Scroll through the blueprint to see each stage unlock and wire itself into the system.
+          </p>
+
+          <div class="blueprint-board glass">
+            <svg viewBox="0 0 800 320" preserveAspectRatio="none">
+              <circle class="bp-node" cx="90" cy="160" r="9"></circle>
+              <circle class="bp-node alt" cx="250" cy="80" r="9"></circle>
+              <circle class="bp-node" cx="430" cy="120" r="9"></circle>
+              <circle class="bp-node alt" cx="610" cy="210" r="9"></circle>
+              <circle class="bp-node" cx="720" cy="110" r="9"></circle>
+
+              <path id="bpPath1" class="bp-line" d="M90 160 Q160 120 250 80"></path>
+              <path id="bpPath2" class="bp-line" d="M250 80 Q340 95 430 120"></path>
+              <path id="bpPath3" class="bp-line" d="M430 120 Q540 145 610 210"></path>
+              <path id="bpPath4" class="bp-line" d="M610 210 Q690 170 720 110"></path>
+            </svg>
+
+            <div class="bp-code">
+              <div class="bp-code-line"><i style="width:72%"></i></div>
+              <div class="bp-code-line"><i style="width:48%"></i></div>
+              <div class="bp-code-line"><i style="width:64%"></i></div>
+              <div class="bp-code-line"><i style="width:52%"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="blueprint-right">
+          <div class="bp-stack">
+            <article class="bp-card glass hover-target">
+              <div class="bp-card-top">
+                <span class="mono">STEP 01 / DISCOVERY LAYER</span>
+                <h3>Architecture alignment.</h3>
+                <p>
+                  We map stack constraints, shared ownership, environments, and handoff boundaries before a single line of product code is committed.
+                </p>
+              </div>
+              <div class="bp-card-bottom">
+                <span class="bp-chip">SCOPE</span>
+                <span class="bp-chip">OWNERSHIP</span>
+                <span class="bp-chip">STACK MAP</span>
+              </div>
+            </article>
+
+            <article class="bp-card glass hover-target">
+              <div class="bp-card-top">
+                <span class="mono">STEP 02 / API STITCHING</span>
+                <h3>Integration handshake.</h3>
+                <p>
+                  Service edges, auth boundaries, payload structure, and fallback logic are aligned so every layer speaks cleanly across partner systems.
+                </p>
+              </div>
+              <div class="bp-card-bottom">
+                <span class="bp-chip">AUTH</span>
+                <span class="bp-chip">PAYLOADS</span>
+                <span class="bp-chip">SCHEMA</span>
+              </div>
+            </article>
+
+            <article class="bp-card glass hover-target">
+              <div class="bp-card-top">
+                <span class="mono">STEP 03 / SECURITY WRAP</span>
+                <h3>Resilience and trust.</h3>
+                <p>
+                  Policies, observability, rate-limits, secrets, and validation layers are deployed to keep partner systems stable under load and secure in production.
+                </p>
+              </div>
+              <div class="bp-card-bottom">
+                <span class="bp-chip">POLICIES</span>
+                <span class="bp-chip">SECRETS</span>
+                <span class="bp-chip">OBSERVABILITY</span>
+              </div>
+            </article>
+
+            <article class="bp-card glass hover-target">
+              <div class="bp-card-top">
+                <span class="mono">STEP 04 / GLOBAL DEPLOY</span>
+                <h3>Scale without friction.</h3>
+                <p>
+                  The final layer expands into release orchestration, environment parity, rollback plans, and multi-region launch confidence across the entire partner ecosystem.
+                </p>
+              </div>
+              <div class="bp-card-bottom">
+                <span class="bp-chip">CI/CD</span>
+                <span class="bp-chip">REGIONS</span>
+                <span class="bp-chip">ROLLBACK</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPECTRUM -->
+    <section id="s10-spectrum">
+      <div class="spec-bg-wrap">
+        <img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=2400&auto=format&fit=crop" class="spec-bg active" id="specBg1" alt="Cloud bg">
+        <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2400&auto=format&fit=crop" class="spec-bg" id="specBg2" alt="AI bg">
+        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2400&auto=format&fit=crop" class="spec-bg" id="specBg3" alt="Security bg">
+        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2400&auto=format&fit=crop" class="spec-bg" id="specBg4" alt="Data bg">
+      </div>
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="spec-layout">
+          <div class="spec-left">
+            <div class="pill gsap-spec"><span class="pulse"></span> PARTNER SPECTRUM</div>
+            <h2 class="gsap-spec">Choose the<br>ecosystem.</h2>
+            <p class="gsap-spec">
+              Each technology lane has a different partnership model. Switch categories to see how delivery, setup, coverage, and system maturity reconfigure in real time.
+            </p>
+
+            <div class="spec-tabs">
+              <button class="spec-tab active hover-target" data-spec="1">Cloud Alliances</button>
+              <button class="spec-tab hover-target" data-spec="2">AI Toolchains</button>
+              <button class="spec-tab hover-target" data-spec="3">Cyber Infrastructure</button>
+              <button class="spec-tab hover-target" data-spec="4">Data Platforms</button>
+            </div>
+          </div>
+
+          <div class="spec-panel glass" id="specPanel">
+            <span class="mono" id="specLabel">CLOUD ALLIANCES</span>
+            <h3 id="specTitle">Enterprise-ready distributed delivery.</h3>
+            <p id="specDesc">
+              Built for globally distributed deployment pipelines where infrastructure resilience, performance tuning, and scaling confidence define the partnership.
+            </p>
+
+            <div class="spec-metrics">
+              <div class="spec-box">
+                <div class="label" id="mLabel1">Regions</div>
+                <div class="value" id="mVal1">32</div>
+              </div>
+              <div class="spec-box">
+                <div class="label" id="mLabel2">Partners</div>
+                <div class="value" id="mVal2">18</div>
+              </div>
+              <div class="spec-box">
+                <div class="label" id="mLabel3">Ramp</div>
+                <div class="value" id="mVal3">7d</div>
+              </div>
+              <div class="spec-box">
+                <div class="label" id="mLabel4">Uptime</div>
+                <div class="value" id="mVal4">99%</div>
+              </div>
+            </div>
+
+            <div class="spec-bars">
+              <div class="spec-bar">
+                <i id="bar1" style="height:78%"></i>
+                <span>Scale</span>
+              </div>
+              <div class="spec-bar">
+                <i id="bar2" style="height:66%"></i>
+                <span>Speed</span>
+              </div>
+              <div class="spec-bar">
+                <i id="bar3" style="height:88%"></i>
+                <span>Resilience</span>
+              </div>
+              <div class="spec-bar">
+                <i id="bar4" style="height:58%"></i>
+                <span>Complexity</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section id="s12-contact">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2400&auto=format&fit=crop" alt="Footer background" class="section-bg">
+      <div class="section-overlay"></div>
+
+      <div class="section-inner">
+        <div class="footer-shell">
+          <div class="footer-big">
+            <h2>STACK<br><span>TOGETHER.</span></h2>
+          </div>
+
+          <div class="footer-bottom">
+            <div class="mono">
+              <div>TECH PARTNERSHIP DESK // MΛGIC AGENCY</div>
+              <div>tech@magic.agency</div>
+              <div>GLOBAL TECH ALLIANCE SYSTEM // 2024</div>
+            </div>
+
+            <div class="socials">
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-linkedin-logo"></i></a>
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-cpu"></i></a>
+              <a href="#" class="social-btn magnetic hover-target" data-strength="40"><i class="ph ph-cloud"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+  <script>
+    // =========================================
+    // LENIS
+    // =========================================
+    const lenis = new Lenis({ duration: 1.5, smooth: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    // =========================================
+    // CURSOR
+    // =========================================
+    const cursor = document.querySelector('.cursor');
+
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, {
+          x: e.clientX,
+          y: e.clientY,
+          duration: 0.1,
+          ease: "power2.out"
+        });
+      });
+
+      document.querySelectorAll('a, button, .hover-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+
+      document.querySelectorAll('.tech-target, .const-node, .bp-card').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('tech-mode', 'hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('tech-mode', 'hovered'));
+      });
+    }
+
+    // =========================================
+    // MAGNETIC
+    // =========================================
+    function attachMagnetic(){
+      if (window.innerWidth <= 768) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const strength = el.dataset.strength || 20;
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+          gsap.to(el, { x, y, duration: 0.3, ease: "power2.out" });
+        });
+
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+      });
+    }
+
+    // =========================================
+    // MENU
+    // =========================================
+    const menuData = [
+      { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: '#s02-services'}] },
+      { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: '#s03-work'}] },
+      { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: '#s04-studio'}, {name: 'Awards', url: '#s04-studio'}, {name: 'Team', url: '#s04-studio'}] },
+      { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: '#s05-capabilities'}, {name: 'Branding', url: '#s05-capabilities'}, {name: 'SEO', url: '#s05-capabilities'}] },
+      { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: '#s06-industries'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+      { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'labs.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+      { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'insights.html'}, {name: 'Podcasts', url: 'podcasts.html'}, {name: 'News', url: 'news.html'}] },
+      { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'investors-reports.html'}, {name: 'Stocks', url: 'investors-stocks.html'}, {name: 'Governance', url: 'investors-governance.html'}] },
+      { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'partners-agencies.html'}, {name: 'Tech', url: 'partners-tech.html'}, {name: 'Affiliates', url: '#s10-spectrum'}] },
+      { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: '#s11-events'}, {name: 'Webinars', url: '#s11-events'}, {name: 'Conferences', url: '#s11-events'}] },
+      { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: '#s12-contact'}, {name: 'API Docs', url: '#s12-contact'}, {name: 'Status', url: '#s12-contact'}] },
+      { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: '#s12-contact'}, {name: 'Careers', url: '#s12-contact'}, {name: 'Locations', url: '#s12-contact'}] }
+    ];
+
+    const menuGrid = document.getElementById('menu-grid');
+    menuData.forEach(item => {
+      const linksHTML = item.links.map(link =>
+        `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`
+      ).join('');
+
+      menuGrid.innerHTML += `
+        <div class="menu-item">
+          <div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div>
+          <div class="dropdown">
+            <div class="dropdown-inner">${linksHTML}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    document.querySelectorAll('.menu-item-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const dropdown = title.nextElementSibling;
+        const inner = dropdown.querySelector('.dropdown-inner');
+        document.querySelectorAll('.dropdown').forEach(drop => {
+          if (drop !== dropdown) drop.style.height = '0px';
+        });
+        dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+      });
+    });
+
+    const menuBtn = document.querySelector('.menu-btn');
+    let menuOpen = false;
+
+    const menuTl = gsap.timeline({ paused: true })
+      .to('.menu-overlay', {
+        clipPath: 'polygon(0 0,100% 0,100% 100%,0 100%)',
+        duration: 0.8,
+        ease: "power4.inOut"
+      })
+      .to('.menu-item-title', {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.04,
+        ease: "power3.out"
+      }, "-=0.4");
+
+    function toggleMenu(){
+      menuOpen = !menuOpen;
+      menuBtn.classList.toggle('active');
+      if(menuOpen){
+        lenis.stop();
+        menuTl.play();
+      }else{
+        lenis.start();
+        document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px');
+        menuTl.reverse();
+      }
+    }
+
+    menuBtn.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute('href');
+        if(menuOpen) toggleMenu();
+
+        setTimeout(() => {
+          if(targetUrl.startsWith('#')){
+            const target = document.querySelector(targetUrl);
+            if(target) lenis.scrollTo(targetUrl, { duration: 1.5 });
+          }else{
+            window.location.href = targetUrl;
+          }
+        }, 800);
+      });
+    });
+
+    // =========================================
+    // HERO ANIMATION
+    // =========================================
+    gsap.to(".hero-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.18,
+      ease: "power4.out",
+      delay: 0.2
+    });
+
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 35,
+      duration: 1,
+      stagger: 0.12,
+      delay: 0.85,
+      ease: "power3.out"
+    });
+
+    gsap.to(".hero-bg", {
+      y: "18%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#s10-tech-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // =========================================
+    // HERO MODULE TILT
+    // =========================================
+    const moduleCard = document.getElementById('moduleCard');
+    const moduleChips = moduleCard ? moduleCard.querySelectorAll('.module-chip') : [];
+
+    if(moduleCard && window.innerWidth > 768){
+      moduleCard.addEventListener('mousemove', (e) => {
+        const rect = moduleCard.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+
+        gsap.to(moduleCard, {
+          rotationY: x * 8,
+          rotationX: -y * 8,
+          duration: 0.45,
+          ease: "power2.out"
+        });
+
+        moduleChips.forEach((chip, i) => {
+          gsap.to(chip, {
+            x: x * (10 + i * 5),
+            y: y * (-10 - i * 5),
+            duration: 0.45,
+            ease: "power2.out"
+          });
+        });
+      });
+
+      moduleCard.addEventListener('mouseleave', () => {
+        gsap.to(moduleCard, {
+          rotationY: 0,
+          rotationX: 0,
+          duration: 1,
+          ease: "elastic.out(1, 0.3)"
+        });
+        gsap.to(moduleChips, {
+          x: 0,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out"
+        });
+      });
+    }
+
+    moduleChips.forEach((chip, i) => {
+      gsap.to(chip, {
+        y: i % 2 === 0 ? -10 : 10,
+        duration: 2 + i * 0.25,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+    });
+
+    // =========================================
+    // GENERIC FADE
+    // =========================================
+    gsap.utils.toArray('.gsap-fade').forEach(el => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 70,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 85%"
+        }
+      });
+    });
+
+    gsap.utils.toArray('.gsap-spec').forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 55,
+        duration: 1,
+        delay: i * 0.12,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s10-spectrum",
+          start: "top 72%"
+        }
+      });
+    });
+
+    // =========================================
+    // RACK MAGIC
+    // =========================================
+    gsap.to("#scanLine", {
+      y: 500,
+      duration: 2.6,
+      ease: "none",
+      repeat: -1,
+      repeatDelay: 0.15
+    });
+
+    const rackUnits = document.querySelectorAll('.rack-unit');
+
+    function randomizeRacks(){
+      rackUnits.forEach(unit => {
+        const leds = unit.querySelectorAll('.rack-led');
+        leds.forEach(led => {
+          led.classList.remove('on','warn','alt');
+          const r = Math.random();
+          if(r > 0.78) led.classList.add('warn');
+          else if(r > 0.45) led.classList.add('alt');
+          else if(r > 0.15) led.classList.add('on');
+        });
+
+        unit.querySelectorAll('.rack-fill').forEach(fill => {
+          gsap.to(fill, {
+            width: `${20 + Math.random() * 75}%`,
+            duration: 1,
+            ease: "power2.out"
+          });
+        });
+      });
+    }
+    randomizeRacks();
+    setInterval(randomizeRacks, 2200);
+
+    // =========================================
+    // BLUEPRINT PINNED TIMELINE
+    // =========================================
+    const bpCards = gsap.utils.toArray('.bp-card');
+    const bpPaths = [
+      document.getElementById('bpPath1'),
+      document.getElementById('bpPath2'),
+      document.getElementById('bpPath3'),
+      document.getElementById('bpPath4')
+    ];
+
+    function prepPaths(){
+      bpPaths.forEach(path => {
+        const len = path.getTotalLength();
+        path.style.strokeDasharray = len;
+        path.style.strokeDashoffset = len;
+      });
+    }
+    prepPaths();
+
+    const bpMM = gsap.matchMedia();
+
+    bpMM.add("(min-width: 1025px)", () => {
+      gsap.set(bpCards, { autoAlpha: 0, y: 60, scale: 0.96 });
+      gsap.set(bpCards[0], { autoAlpha: 1, y: 0, scale: 1 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#s10-blueprint",
+          start: "top top",
+          end: "+=320%",
+          pin: true,
+          scrub: 1
+        }
+      });
+
+      tl.to(bpPaths[0], { strokeDashoffset: 0, duration: 1 }, 0)
+        .to(bpCards[0], { autoAlpha: 1, y: 0, scale: 1, duration: 1 }, 0)
+
+        .to(bpCards[0], { autoAlpha: 0.25, y: -30, scale: 0.95, duration: 1 }, 1)
+        .to(bpPaths[1], { strokeDashoffset: 0, duration: 1 }, 1)
+        .to(bpCards[1], { autoAlpha: 1, y: 0, scale: 1, duration: 1 }, 1)
+
+        .to(bpCards[1], { autoAlpha: 0.25, y: -30, scale: 0.95, duration: 1 }, 2)
+        .to(bpPaths[2], { strokeDashoffset: 0, duration: 1 }, 2)
+        .to(bpCards[2], { autoAlpha: 1, y: 0, scale: 1, duration: 1 }, 2)
+
+        .to(bpCards[2], { autoAlpha: 0.25, y: -30, scale: 0.95, duration: 1 }, 3)
+        .to(bpPaths[3], { strokeDashoffset: 0, duration: 1 }, 3)
+        .to(bpCards[3], { autoAlpha: 1, y: 0, scale: 1, duration: 1 }, 3);
+    });
+
+    bpMM.add("(max-width: 1024px)", () => {
+      bpPaths.forEach(path => path.style.strokeDashoffset = 0);
+      gsap.utils.toArray('.bp-card').forEach(card => {
+        gsap.from(card, {
+          opacity: 0,
+          y: 50,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 85%"
+          }
+        });
+      });
+    });
+
+    // =========================================
+    // SPECTRUM DATA + SWITCH
+    // =========================================
+    const spectrumData = {
+      1: {
+        bg: 'specBg1',
+        label: 'CLOUD ALLIANCES',
+        title: 'Enterprise-ready distributed delivery.',
+        desc: 'Built for globally distributed deployment pipelines where infrastructure resilience, performance tuning, and scaling confidence define the partnership.',
+        metrics: [
+          { label:'Regions', value:32, suffix:'' },
+          { label:'Partners', value:18, suffix:'' },
+          { label:'Ramp', value:7, suffix:'d' },
+          { label:'Uptime', value:99, suffix:'%' }
+        ],
+        bars: [78,66,88,58]
+      },
+      2: {
+        bg: 'specBg2',
+        label: 'AI TOOLCHAINS',
+        title: 'Inference, orchestration, and model deployment.',
+        desc: 'Designed for AI product alliances where multimodal workflows, inference routing, safety layers, and release iteration speed all need to align cleanly.',
+        metrics: [
+          { label:'Models', value:24, suffix:'' },
+          { label:'Pipelines', value:11, suffix:'' },
+          { label:'Ramp', value:5, suffix:'d' },
+          { label:'Latency', value:72, suffix:'ms' }
+        ],
+        bars: [92,74,68,82]
+      },
+      3: {
+        bg: 'specBg3',
+        label: 'CYBER INFRASTRUCTURE',
+        title: 'Trust systems for high-risk environments.',
+        desc: 'Security-first alliance structures for identity, threat controls, telemetry, and policy enforcement across distributed partner architectures.',
+        metrics: [
+          { label:'Controls', value:64, suffix:'' },
+          { label:'Zones', value:12, suffix:'' },
+          { label:'Audit', value:3, suffix:'d' },
+          { label:'Coverage', value:97, suffix:'%' }
+        ],
+        bars: [84,54,96,61]
+      },
+      4: {
+        bg: 'specBg4',
+        label: 'DATA PLATFORMS',
+        title: 'Decision systems powered by clean signal flow.',
+        desc: 'For data alliances that require telemetry integrity, warehouse visibility, dashboard governance, and performance-grade reporting across product layers.',
+        metrics: [
+          { label:'Streams', value:142, suffix:'' },
+          { label:'Warehouses', value:9, suffix:'' },
+          { label:'Ramp', value:6, suffix:'d' },
+          { label:'Integrity', value:98, suffix:'%' }
+        ],
+        bars: [72,88,64,90]
+      }
+    };
+
+    const specTabs = document.querySelectorAll('.spec-tab');
+    const specBgs = document.querySelectorAll('.spec-bg');
+
+    function animateValue(el, target, suffix){
+      const isTime = suffix === 'd' || suffix === 'ms' || suffix === '%';
+      const obj = { value: 0 };
+      gsap.to(obj, {
+        value: target,
+        duration: 0.9,
+        ease: "power2.out",
+        onUpdate: () => {
+          el.textContent = `${Math.round(obj.value)}${suffix}`;
+        }
+      });
+    }
+
+    function setSpectrum(id){
+      const data = spectrumData[id];
+      if(!data) return;
+
+      specTabs.forEach(tab => tab.classList.remove('active'));
+      document.querySelector(`.spec-tab[data-spec="${id}"]`).classList.add('active');
+
+      specBgs.forEach(bg => bg.classList.remove('active'));
+      document.getElementById(data.bg).classList.add('active');
+
+      gsap.to("#specPanel", {
+        opacity: 0,
+        y: 10,
+        duration: 0.18,
+        onComplete: () => {
+          document.getElementById('specLabel').textContent = data.label;
+          document.getElementById('specTitle').textContent = data.title;
+          document.getElementById('specDesc').textContent = data.desc;
+
+          document.getElementById('mLabel1').textContent = data.metrics[0].label;
+          document.getElementById('mLabel2').textContent = data.metrics[1].label;
+          document.getElementById('mLabel3').textContent = data.metrics[2].label;
+          document.getElementById('mLabel4').textContent = data.metrics[3].label;
+
+          animateValue(document.getElementById('mVal1'), data.metrics[0].value, data.metrics[0].suffix);
+          animateValue(document.getElementById('mVal2'), data.metrics[1].value, data.metrics[1].suffix);
+          animateValue(document.getElementById('mVal3'), data.metrics[2].value, data.metrics[2].suffix);
+          animateValue(document.getElementById('mVal4'), data.metrics[3].value, data.metrics[3].suffix);
+
+          gsap.to('#bar1', { height: `${data.bars[0]}%`, duration: 0.8, ease: "power3.out" });
+          gsap.to('#bar2', { height: `${data.bars[1]}%`, duration: 0.8, ease: "power3.out" });
+          gsap.to('#bar3', { height: `${data.bars[2]}%`, duration: 0.8, ease: "power3.out" });
+          gsap.to('#bar4', { height: `${data.bars[3]}%`, duration: 0.8, ease: "power3.out" });
+
+          gsap.to("#specPanel", { opacity: 1, y: 0, duration: 0.28 });
+        }
+      });
+    }
+
+    specTabs.forEach(tab => {
+      tab.addEventListener('click', () => setSpectrum(tab.dataset.spec));
+    });
+
+    setSpectrum(1);
+
+    // =========================================
+    // INIT
+    // =========================================
+    attachMagnetic();
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

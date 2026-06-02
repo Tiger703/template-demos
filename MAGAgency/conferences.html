@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MΛGAgency | Events Conferences</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --dark:#050607;
+      --light:#f4f4f5;
+      --accent:#ff7a00;
+      --accent-2:#ffd166;
+      --accent-3:#00d1ff;
+      --accent-4:#8b5cf6;
+      --gray:#121418;
+      --nav-height:70px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;cursor:none;}
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--light);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+    h1,h2,h3,h4,h5,h6,.display-font{font-family:'Syne',sans-serif;}
+    .mono{font-family:'JetBrains Mono',monospace;}
+
+    html.lenis{height:auto;}
+    .lenis.lenis-smooth{scroll-behavior:auto !important;}
+
+    .cursor{
+      position:fixed;top:0;left:0;width:20px;height:20px;border-radius:50%;
+      background:var(--light);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);
+      transition:width .3s,height .3s,background .3s,border .3s;
+      mix-blend-mode:difference;
+    }
+    .cursor.hovered{
+      width:80px;height:80px;background:transparent;border:1px solid var(--accent);
+      mix-blend-mode:normal;backdrop-filter:grayscale(1);
+    }
+    .cursor.view-mode::after{
+      content:'ENTER';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      font-size:10px;font-weight:600;color:var(--light);font-family:'JetBrains Mono';letter-spacing:1px;
+    }
+    @media (max-width:768px){
+      .cursor{display:none;}
+      *{cursor:auto !important;}
+    }
+
+    nav{
+      position:fixed;top:0;left:0;width:100%;height:var(--nav-height);
+      display:flex;justify-content:space-between;align-items:center;padding:0 5vw;
+      z-index:10000;background:rgba(5,6,7,.78);backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(255,122,0,.15);
+    }
+    .nav-brand{
+      font-size:1.3rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;
+      color:var(--light);text-decoration:none;
+    }
+    .menu-btn{
+      display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--light);
+      font-weight:600;text-transform:uppercase;font-size:.9rem;
+    }
+    .hamburger{width:35px;height:8px;position:relative;}
+    .hamburger span{
+      position:absolute;width:100%;height:2px;background:var(--light);transition:.4s;
+    }
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){bottom:0;}
+    .menu-btn.active .hamburger span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);background:var(--accent);
+    }
+    .menu-btn.active .hamburger span:nth-child(2){
+      transform:translateY(-3px) rotate(-45deg);background:var(--accent);
+    }
+
+    .menu-overlay{
+      position:fixed;top:0;left:0;width:100vw;height:100vh;
+      background:rgba(5,6,7,.98);backdrop-filter:blur(10px);z-index:9999;display:flex;
+      padding-top:calc(var(--nav-height) + 3vh);
+      clip-path:polygon(0 0,100% 0,100% 0,0 0);
+      overflow-y:auto;
+    }
+    .menu-container{
+      width:100%;padding:0 5vw 5vh 5vw;display:grid;grid-template-columns:repeat(4,1fr);
+      gap:2rem 2.5rem;align-content:start;
+    }
+    @media (max-width:1200px){.menu-container{grid-template-columns:repeat(3,1fr);}}
+    @media (max-width:768px){
+      .menu-container{grid-template-columns:1fr;gap:.5rem;padding:2vh 5vw 10vh 5vw;}
+      .menu-item{border-bottom:1px solid rgba(255,255,255,.15);padding:1.5rem 0;}
+      .menu-item-title{font-size:2rem !important;font-weight:800 !important;}
+      .dropdown a{font-size:1.3rem !important;padding:.8rem 0;}
+    }
+    .menu-item{border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:1rem;}
+    .menu-item-title{
+      font-size:clamp(1.3rem,2.5vw,2rem);font-weight:700;display:flex;justify-content:space-between;
+      align-items:center;opacity:0;transform:translateY(20px);
+    }
+    .menu-item-title span{
+      font-size:1rem;font-family:'Inter',sans-serif;font-weight:400;color:var(--accent);
+    }
+    .dropdown{height:0;overflow:hidden;transition:height .4s ease;}
+    .dropdown-inner{padding-top:1rem;display:flex;flex-direction:column;gap:.8rem;}
+    .dropdown a{
+      color:#aaa;text-decoration:none;font-size:1.1rem;display:flex;align-items:center;gap:10px;transition:.3s;
+    }
+    .dropdown a i{font-size:1.4rem;color:var(--accent);}
+    .dropdown a:hover{color:var(--light);padding-left:10px;}
+
+    section{
+      position:relative;width:100vw;min-height:100vh;overflow:hidden;
+    }
+    .section-bg{
+      position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;
+    }
+    .section-overlay{
+      position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;background:rgba(5,6,7,.58);
+    }
+    .section-content{
+      position:relative;z-index:2;width:100%;height:100%;padding:calc(var(--nav-height) + 4vh) 5vw 8vh 5vw;
+      display:flex;
+    }
+
+    /* HERO */
+    #s01-hero .section-overlay{
+      background:linear-gradient(180deg, rgba(5,6,7,.08) 0%, rgba(5,6,7,.9) 100%);
+    }
+    #s01-hero .section-content{
+      flex-direction:column;justify-content:center;align-items:flex-start;
+    }
+    .hero-eyebrow{
+      color:var(--accent-2);font-family:'JetBrains Mono';font-size:.95rem;letter-spacing:4px;text-transform:uppercase;
+      margin-bottom:1.4rem;
+    }
+    .hero-title{
+      font-size:clamp(3.5rem,10vw,9rem);line-height:.88;text-transform:uppercase;font-weight:800;
+      max-width:1100px;
+    }
+    .hero-title .line{display:block;overflow:hidden;}
+    .hero-title .word{display:inline-block;transform:translateY(110%);}
+    .hero-title .outline{color:transparent;-webkit-text-stroke:2px var(--light);}
+    .hero-sub{
+      margin-top:1.6rem;max-width:720px;color:#b5bdcc;font-size:clamp(1rem,2vw,1.18rem);line-height:1.75;
+    }
+    .hero-meta{
+      margin-top:2.4rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;width:min(100%,1020px);
+    }
+    .hero-card{
+      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:18px;
+      padding:1rem 1.1rem;backdrop-filter:blur(12px);
+    }
+    .hero-card .label{
+      color:#98a1b4;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;
+    }
+    .hero-card .value{
+      margin-top:.45rem;font-size:clamp(1.1rem,2.3vw,1.8rem);font-weight:700;
+    }
+    @media (max-width:1024px){.hero-meta{grid-template-columns:repeat(2,1fr);}}
+    @media (max-width:768px){.hero-meta{grid-template-columns:1fr;}}
+
+    /* S02 TOWER */
+    #s02-tower{
+      background:#06080c;
+    }
+    #s02-tower .section-overlay{
+      background:linear-gradient(90deg, rgba(5,6,7,.94) 0%, rgba(5,6,7,.55) 50%, rgba(5,6,7,.88) 100%);
+    }
+    #s02-tower .section-content{
+      align-items:center;justify-content:space-between;gap:2rem;
+    }
+    .tower-copy{
+      width:34%;display:flex;flex-direction:column;gap:1rem;
+    }
+    .tower-copy h2{
+      font-size:clamp(2.8rem,5vw,5.7rem);line-height:.95;
+    }
+    .tower-copy p{
+      color:#a9b1c0;line-height:1.75;max-width:430px;
+    }
+    .tower-stage{
+      width:60%;height:74vh;position:relative;display:flex;align-items:center;justify-content:center;
+      perspective:1400px;
+    }
+    .tower-card{
+      position:absolute;width:min(100%,600px);height:68vh;border-radius:24px;overflow:hidden;
+      background:#10141a;border:1px solid rgba(255,255,255,.08);box-shadow:0 30px 70px rgba(0,0,0,.38);
+      opacity:0;transform:translateY(120%) rotateX(-35deg) scale(.86);transform-origin:center bottom;
+    }
+    .tower-card img{
+      width:100%;height:42%;object-fit:cover;filter:brightness(.82) contrast(1.05);
+    }
+    .tower-body{padding:1.8rem;}
+    .tower-meta{
+      display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;
+      color:var(--accent-2);font-family:'JetBrains Mono';font-size:.82rem;
+    }
+    .tower-body h3{
+      font-size:clamp(1.8rem,3vw,2.6rem);line-height:1.08;margin-bottom:1rem;
+    }
+    .tower-body p{
+      color:#aab1c2;line-height:1.65;font-size:.98rem;
+    }
+    .tower-tags{
+      margin-top:1.2rem;display:flex;flex-wrap:wrap;gap:.6rem;
+    }
+    .tower-tags span{
+      padding:.45rem .8rem;border-radius:999px;background:rgba(255,122,0,.08);
+      border:1px solid rgba(255,122,0,.18);font-size:.8rem;color:#ffd9be;
+    }
+    @media (max-width:1024px){
+      #s02-tower .section-content{flex-direction:column;justify-content:center;}
+      .tower-copy,.tower-stage{width:100%;}
+      .tower-copy{text-align:center;}
+      .tower-copy p{margin:0 auto;}
+      .tower-stage{height:58vh;}
+      .tower-card{height:55vh;}
+    }
+
+    /* S03 CONFERENCE MAP */
+    #s03-map{
+      background:#06070a;
+    }
+    .map-copy{
+      position:absolute;left:5vw;top:50%;transform:translateY(-50%);z-index:4;max-width:430px;
+    }
+    .map-copy h2{
+      font-size:clamp(2.8rem,5vw,5.8rem);line-height:.94;margin-bottom:1rem;
+    }
+    .map-copy p{color:#aab1c1;line-height:1.75;}
+    .map-stage{
+      position:absolute;inset:0;z-index:2;
+    }
+    .map-center{
+      position:absolute;top:50%;left:62%;transform:translate(-50%,-50%);
+      width:230px;height:230px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, rgba(255,122,0,.25), rgba(0,209,255,.1));
+      border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;text-align:center;
+      backdrop-filter:blur(20px);box-shadow:0 0 40px rgba(255,122,0,.16);
+    }
+    .map-center h3{font-size:1.35rem;line-height:1.1;}
+    .map-center p{margin-top:.45rem;font-size:.78rem;font-family:'JetBrains Mono';color:#e0d8ca;}
+    .conf-dot{
+      position:absolute;width:16px;height:16px;border-radius:50%;background:var(--accent-2);
+      box-shadow:0 0 18px rgba(255,209,102,.6);transform:translate(-50%,-50%);
+    }
+    .conf-label{
+      position:absolute;min-width:170px;padding:1rem;background:rgba(17,20,27,.8);backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 14px 30px rgba(0,0,0,.24);
+      transform:translate(-50%,-50%);
+    }
+    .conf-label .mini{
+      color:var(--accent-3);font-family:'JetBrains Mono';font-size:.75rem;margin-bottom:.4rem;
+    }
+    .conf-label h4{font-size:1rem;line-height:1.2;}
+    .conf-line{
+      position:absolute;height:2px;transform-origin:left center;
+      background:linear-gradient(90deg, rgba(255,122,0,.55), rgba(0,209,255,.28));
+      z-index:1;
+    }
+    @media (max-width:1024px){
+      #s03-map{min-height:145vh;}
+      .map-copy{
+        position:relative;left:auto;top:auto;transform:none;padding:calc(var(--nav-height) + 4vh) 5vw 0 5vw;
+        max-width:100%;text-align:center;
+      }
+      .map-stage{top:15vh;}
+      .map-center{left:50%;width:180px;height:180px;}
+      .conf-label{min-width:130px;padding:.8rem;}
+    }
+    @media (max-width:768px){
+      #s03-map{min-height:155vh;}
+    }
+
+    /* S04 ORBITAL RINGS */
+    #s04-rings{
+      background:#07080c;
+    }
+    .rings-wrap{
+      width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;
+    }
+    .rings-copy{
+      position:absolute;left:5vw;top:50%;transform:translateY(-50%);z-index:4;max-width:420px;
+    }
+    .rings-copy h2{
+      font-size:clamp(2.8rem,5vw,5.8rem);line-height:.94;margin-bottom:1rem;
+    }
+    .rings-copy p{color:#aab1c1;line-height:1.75;}
+    .ring-system{
+      position:relative;width:760px;height:760px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .ring{
+      position:absolute;border:1px dashed rgba(255,255,255,.14);border-radius:50%;
+      animation:spin 26s linear infinite;
+    }
+    .ring.r1{width:260px;height:260px;}
+    .ring.r2{width:460px;height:460px;animation-duration:34s;animation-direction:reverse;}
+    .ring.r3{width:680px;height:680px;animation-duration:42s;}
+    .ring-center{
+      width:220px;height:220px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, rgba(123,97,255,.28), rgba(255,95,158,.12));
+      border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;text-align:center;
+      backdrop-filter:blur(18px);box-shadow:0 0 40px rgba(123,97,255,.14);
+      z-index:3;
+    }
+    .ring-center h3{font-size:1.35rem;line-height:1.1;}
+    .ring-center p{margin-top:.45rem;font-size:.78rem;font-family:'JetBrains Mono';color:#ddd8f1;}
+    .orbit-item{
+      position:absolute;min-width:180px;padding:1rem;background:rgba(17,20,27,.8);backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 14px 30px rgba(0,0,0,.25);
+      transform:translate(-50%,-50%);
+    }
+    .orbit-item .mini{
+      color:var(--gold);font-family:'JetBrains Mono';font-size:.75rem;margin-bottom:.4rem;
+    }
+    .orbit-item h4{font-size:1rem;line-height:1.2;}
+    @keyframes spin{
+      from{transform:rotate(0deg);}
+      to{transform:rotate(360deg);}
+    }
+    @media (max-width:1024px){
+      #s04-rings{min-height:145vh;}
+      .rings-copy{
+        position:relative;left:auto;top:auto;transform:none;padding:calc(var(--nav-height) + 4vh) 5vw 0 5vw;
+        max-width:100%;text-align:center;
+      }
+      .ring-system{width:520px;height:520px;}
+      .ring.r1{width:190px;height:190px;}
+      .ring.r2{width:330px;height:330px;}
+      .ring.r3{width:470px;height:470px;}
+      .ring-center{width:150px;height:150px;}
+      .orbit-item{min-width:120px;padding:.8rem;}
+    }
+    @media (max-width:768px){
+      #s04-rings{min-height:155vh;}
+      .ring-system{width:380px;height:380px;}
+      .ring.r1{width:150px;height:150px;}
+      .ring.r2{width:250px;height:250px;}
+      .ring.r3{width:340px;height:340px;}
+      .ring-center{width:115px;height:115px;}
+      .orbit-item{min-width:100px;font-size:.75rem;}
+    }
+
+    /* S05 TRACKS */
+    #s05-tracks{
+      background:#08090d;
+    }
+    .tracks-wrap{
+      width:100%;display:flex;flex-direction:column;justify-content:center;
+    }
+    .tracks-head{
+      display:flex;justify-content:space-between;align-items:end;gap:2rem;flex-wrap:wrap;margin-bottom:5vh;
+    }
+    .tracks-head h2{
+      font-size:clamp(2.6rem,6vw,5.5rem);line-height:.94;
+    }
+    .tracks-head p{
+      max-width:520px;color:#a8afbf;line-height:1.75;
+    }
+    .tracks-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;
+    }
+    .track-card{
+      background:#12161d;border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:1.4rem;
+      transition:.35s;position:relative;overflow:hidden;
+    }
+    .track-card::before{
+      content:'';position:absolute;inset:0;background:radial-gradient(circle at top right, rgba(0,209,255,.12), transparent 42%);
+      pointer-events:none;
+    }
+    .track-card:hover{
+      transform:translateY(-10px);border-color:rgba(0,209,255,.28);box-shadow:0 20px 50px rgba(0,0,0,.3);
+    }
+    .track-top{
+      display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;
+      color:var(--accent-2);font-family:'JetBrains Mono';font-size:.82rem;
+    }
+    .track-icon{
+      width:56px;height:56px;border-radius:14px;background:rgba(255,255,255,.05);
+      display:flex;align-items:center;justify-content:center;font-size:1.55rem;color:var(--accent);margin-bottom:1rem;
+    }
+    .track-card h3{
+      font-size:1.3rem;line-height:1.15;margin-bottom:.8rem;
+    }
+    .track-card p{
+      color:#a1a9bb;line-height:1.6;font-size:.95rem;
+    }
+    @media (max-width:1024px){.tracks-grid{grid-template-columns:repeat(2,1fr);}}
+    @media (max-width:768px){.tracks-grid{grid-template-columns:1fr;}}
+
+    /* FOOTER */
+    #s06-footer{background:#020304;}
+    #s06-footer .section-overlay{
+      background:linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,.45) 100%);
+    }
+    .footer-main{
+      position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;
+      padding:calc(var(--nav-height) + 2vh) 5vw 5vh 5vw;
+    }
+    .footer-title{
+      margin-top:auto;text-align:center;font-size:clamp(3rem,14vw,11rem);line-height:.8;font-weight:800;
+    }
+    .footer-title span{color:var(--accent);}
+    .footer-bottom{
+      display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap;
+      border-top:1px solid rgba(255,255,255,.1);padding-top:2rem;margin-top:auto;
+    }
+    .social-links{display:flex;gap:1rem;}
+    .social-btn{
+      width:60px;height:60px;border-radius:50%;border:1px solid rgba(255,255,255,.2);
+      display:flex;justify-content:center;align-items:center;color:var(--light);font-size:1.5rem;transition:.3s;
+    }
+    .social-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
+  </style>
+</head>
+<body>
+  <div class="cursor"></div>
+
+  <nav>
+    <a href="#" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+    <button class="menu-btn magnetic" data-strength="30">
+      Menu
+      <div class="hamburger"><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <div class="menu-overlay">
+    <div class="menu-container" id="menu-grid"></div>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section id="s01-hero">
+      <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2200&auto=format&fit=crop" class="section-bg hero-bg" alt="Conference Hero">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="hero-eyebrow gsap-up">► EVENTS / CONFERENCES</div>
+
+        <h1 class="hero-title">
+          <span class="line"><span class="word gsap-word">GLOBAL</span></span>
+          <span class="line"><span class="word gsap-word outline">SUMMITS</span></span>
+        </h1>
+
+        <p class="hero-sub gsap-up">
+          A full-page conference experience built like a premium event system — with stacked summit cards, a world conference map,
+          orbital program rings, and curated tracks for large-scale flagship gatherings.
+        </p>
+
+        <div class="hero-meta">
+          <div class="hero-card gsap-up hover-target">
+            <div class="label">Host Cities</div>
+            <div class="value">12</div>
+          </div>
+          <div class="hero-card gsap-up hover-target">
+            <div class="label">Speakers</div>
+            <div class="value">240+</div>
+          </div>
+          <div class="hero-card gsap-up hover-target">
+            <div class="label">Delegates</div>
+            <div class="value">18K</div>
+          </div>
+          <div class="hero-card gsap-up hover-target">
+            <div class="label">Tracks</div>
+            <div class="value">16</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOWER STACK -->
+    <section id="s02-tower">
+      <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.08;" alt="Tower Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="tower-copy">
+          <div class="hero-eyebrow">► SUMMIT STACK</div>
+          <h2 class="display-font">Flagship<br>Conferences.</h2>
+          <p>
+            Scroll through a towering stack of headline conferences. Each card unfolds like a premium event dossier — showing location, positioning, and program design at scale.
+          </p>
+        </div>
+
+        <div class="tower-stage">
+          <article class="tower-card gsap-tower-card view-target">
+            <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1400&auto=format&fit=crop" alt="Conference 1">
+            <div class="tower-body">
+              <div class="tower-meta"><span>PARIS / DESIGN FUTURES</span><span>FLAGSHIP</span></div>
+              <h3 class="display-font">Designing Systems for the Next Decade</h3>
+              <p>A global conference uniting product leaders, brand thinkers, and motion innovators around the future of digital systems.</p>
+              <div class="tower-tags"><span>Keynotes</span><span>Workshops</span><span>Networking</span></div>
+            </div>
+          </article>
+
+          <article class="tower-card gsap-tower-card view-target">
+            <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1400&auto=format&fit=crop" alt="Conference 2">
+            <div class="tower-body">
+              <div class="tower-meta"><span>NEW YORK / AI SUMMIT</span><span>GLOBAL</span></div>
+              <h3 class="display-font">Intelligence at Scale</h3>
+              <p>A major conference focused on applied AI, enterprise implementation, and the ethical architecture of emerging systems.</p>
+              <div class="tower-tags"><span>AI</span><span>Enterprise</span><span>Policy</span></div>
+            </div>
+          </article>
+
+          <article class="tower-card gsap-tower-card view-target">
+            <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1400&auto=format&fit=crop" alt="Conference 3">
+            <div class="tower-body">
+              <div class="tower-meta"><span>TOKYO / IMMERSIVE WEB</span><span>EXPERIENCE</span></div>
+              <h3 class="display-font">The Spatial Interface Congress</h3>
+              <p>A destination event for immersive design, WebGL, creative engineering, and digital experience architecture.</p>
+              <div class="tower-tags"><span>WebGL</span><span>3D</span><span>Interfaces</span></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFERENCE MAP -->
+    <section id="s03-map">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.08;" alt="Map Background">
+      <div class="section-overlay"></div>
+
+      <div class="map-copy">
+        <div class="hero-eyebrow">► WORLD CONFERENCE MAP</div>
+        <h2 class="display-font">Host<br>Destinations.</h2>
+        <p>
+          Cities appear as connected summit nodes around a central conference network. This section turns destination planning into a premium, living event system.
+        </p>
+      </div>
+
+      <div class="map-stage" id="conferenceMapStage">
+        <div class="map-center hover-target">
+          <div>
+            <h3 class="display-font">Summit<br>Hub</h3>
+            <p>GLOBAL EVENT GRID</p>
+          </div>
+        </div>
+
+        <div class="conf-dot" style="top:22%; left:28%;"></div>
+        <div class="conf-label view-target" style="top:17%; left:22%;">
+          <div class="mini">EUROPE</div>
+          <h4 class="display-font">Paris Design Forum</h4>
+        </div>
+
+        <div class="conf-dot" style="top:26%; left:76%;"></div>
+        <div class="conf-label view-target" style="top:21%; left:84%;">
+          <div class="mini">APAC</div>
+          <h4 class="display-font">Tokyo Spatial Congress</h4>
+        </div>
+
+        <div class="conf-dot" style="top:48%; left:18%;"></div>
+        <div class="conf-label view-target" style="top:54%; left:12%;">
+          <div class="mini">AMERICAS</div>
+          <h4 class="display-font">NYC AI Summit</h4>
+        </div>
+
+        <div class="conf-dot" style="top:74%; left:34%;"></div>
+        <div class="conf-label view-target" style="top:80%; left:26%;">
+          <div class="mini">LATAM</div>
+          <h4 class="display-font">São Paulo Future Forum</h4>
+        </div>
+
+        <div class="conf-dot" style="top:70%; left:78%;"></div>
+        <div class="conf-label view-target" style="top:76%; left:86%;">
+          <div class="mini">MEA</div>
+          <h4 class="display-font">Dubai Innovation Week</h4>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORBITAL RINGS -->
+    <section id="s04-rings">
+      <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.06;" alt="Rings Background">
+      <div class="section-overlay"></div>
+
+      <div class="rings-wrap">
+        <div class="rings-copy">
+          <div class="hero-eyebrow">► PROGRAM ORBIT</div>
+          <h2 class="display-font">Conference<br>Flow.</h2>
+          <p>
+            Large conferences are more than schedules — they are ecosystems. This orbit system shows keynote, workshops, expo, networking, and roundtables as moving program layers.
+          </p>
+        </div>
+
+        <div class="ring-system">
+          <div class="ring r1"></div>
+          <div class="ring r2"></div>
+          <div class="ring r3"></div>
+
+          <div class="ring-center hover-target">
+            <div>
+              <h3 class="display-font">Main<br>Stage</h3>
+              <p>PROGRAM CORE</p>
+            </div>
+          </div>
+
+          <div class="orbit-item view-target" style="top:12%; left:50%;">
+            <div class="mini">09:00</div>
+            <h4 class="display-font">Opening Keynote</h4>
+          </div>
+
+          <div class="orbit-item view-target" style="top:28%; left:84%;">
+            <div class="mini">11:00</div>
+            <h4 class="display-font">Innovation Track</h4>
+          </div>
+
+          <div class="orbit-item view-target" style="top:70%; left:78%;">
+            <div class="mini">13:30</div>
+            <h4 class="display-font">Workshop Labs</h4>
+          </div>
+
+          <div class="orbit-item view-target" style="top:84%; left:38%;">
+            <div class="mini">15:00</div>
+            <h4 class="display-font">Roundtables</h4>
+          </div>
+
+          <div class="orbit-item view-target" style="top:42%; left:10%;">
+            <div class="mini">17:00</div>
+            <h4 class="display-font">After Hours</h4>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRACKS -->
+    <section id="s05-tracks">
+      <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="opacity:.07;" alt="Tracks Background">
+      <div class="section-overlay"></div>
+
+      <div class="section-content">
+        <div class="tracks-wrap">
+          <div class="tracks-head">
+            <h2 class="display-font">Conference<br>Tracks.</h2>
+            <p>
+              A premium overview of track types — from innovation and leadership to design, technology, and founder-focused programming.
+            </p>
+          </div>
+
+          <div class="tracks-grid">
+            <article class="track-card view-target">
+              <div class="track-top"><span>TRACK</span><span>KEYNOTE</span></div>
+              <div class="track-icon"><i class="ph ph-presentation-chart"></i></div>
+              <h3 class="display-font">Main Keynote Track</h3>
+              <p>Big-stage talks built to define the strategic frame and create shared momentum for the conference.</p>
+            </article>
+
+            <article class="track-card view-target">
+              <div class="track-top"><span>TRACK</span><span>DESIGN</span></div>
+              <div class="track-icon"><i class="ph ph-palette"></i></div>
+              <h3 class="display-font">Design Futures</h3>
+              <p>Exploring systems, interfaces, identity, and narrative shaping inside modern digital ecosystems.</p>
+            </article>
+
+            <article class="track-card view-target">
+              <div class="track-top"><span>TRACK</span><span>TECH</span></div>
+              <div class="track-icon"><i class="ph ph-code"></i></div>
+              <h3 class="display-font">Engineering & Web</h3>
+              <p>WebGL, product engineering, platform architecture, performance, and emerging front-end systems.</p>
+            </article>
+
+            <article class="track-card view-target">
+              <div class="track-top"><span>TRACK</span><span>AI</span></div>
+              <div class="track-icon"><i class="ph ph-cpu"></i></div>
+              <h3 class="display-font">AI & Intelligence</h3>
+              <p>Applied AI, human-machine interaction, deployment thinking, and intelligent product design.</p>
+            </article>
+
+            <article class="track-card view-target">
+              <div class="track-top"><span>TRACK</span><span>FOUNDER</span></div>
+              <div class="track-icon"><i class="ph ph-briefcase"></i></div>
+              <h3 class="display-font">Founder Sessions</h3>
+              <p>Growth, category strategy, fundraising, positioning, and scaling discussions for leaders and operators.</p>
+            </article>
+
+            <article class="track-card view-target">
+              <div class="track-top"><span>TRACK</span><span>NETWORK</span></div>
+              <div class="track-icon"><i class="ph ph-users-three"></i></div>
+              <h3 class="display-font">Networking & Circles</h3>
+              <p>Curated spaces for peer connection, relationship building, collaboration, and community-led exchange.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section id="s06-footer">
+      <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2200&auto=format&fit=crop" class="section-bg" style="filter:brightness(.42) hue-rotate(-8deg);" alt="Footer Background">
+      <div class="section-overlay"></div>
+
+      <div class="footer-main">
+        <h2 class="footer-title display-font">GATHER.<br><span>BIG.</span></h2>
+
+        <div class="footer-bottom">
+          <div class="mono" style="color:#919aae;">
+            <p>MΛGIC AGENCY // CONFERENCE EVENTS</p>
+            <p style="margin-top:6px;">FLAGSHIP GATHERING EXPERIENCE</p>
+          </div>
+
+          <div class="social-links">
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-calendar-blank"></i></a>
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-globe-hemisphere-west"></i></a>
+            <a href="#" class="social-btn magnetic" data-strength="40"><i class="ph ph-users-three"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+  <script>
+    // LENIS
+    const lenis = new Lenis({ duration: 1.5, smooth: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+    gsap.registerPlugin(ScrollTrigger);
+
+    // CURSOR
+    const cursor = document.querySelector('.cursor');
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+      });
+
+      document.querySelectorAll('a, button, .hover-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+
+      document.querySelectorAll('.view-target').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovered','view-mode'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovered','view-mode'));
+      });
+    }
+
+    // MAGNETIC
+    const attachMagnetic = () => {
+      if (window.innerWidth <= 768) return;
+      document.querySelectorAll('.magnetic').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const strength = el.dataset.strength || 20;
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * strength;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * strength;
+          gsap.to(el, { x, y, duration: 0.3, ease: "power2.out" });
+        });
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        });
+      });
+    };
+
+    // MENU DATA EXACT
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+    const menuGrid = document.getElementById('menu-grid');
+    menuData.forEach(item => {
+      let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+      menuGrid.innerHTML += `
+        <div class="menu-item">
+          <div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div>
+          <div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div>
+        </div>
+      `;
+    });
+
+    document.querySelectorAll('.menu-item-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const dropdown = title.nextElementSibling;
+        const inner = dropdown.querySelector('.dropdown-inner');
+        document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+        dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+      });
+    });
+
+    const menuBtn = document.querySelector('.menu-btn');
+    let menuOpen = false;
+    const menuTl = gsap.timeline({ paused: true })
+      .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+      .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+    const toggleMenu = () => {
+      menuOpen = !menuOpen;
+      menuBtn.classList.toggle('active');
+      if (menuOpen) {
+        lenis.stop();
+        menuTl.play();
+      } else {
+        lenis.start();
+        document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px');
+        menuTl.reverse();
+      }
+    };
+    menuBtn.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute('href');
+        toggleMenu();
+        setTimeout(() => {
+          if (targetUrl.startsWith('#')) lenis.scrollTo(targetUrl, { duration: 1.5 });
+          else window.location.href = targetUrl;
+        }, 800);
+      });
+    });
+
+    // HERO
+    gsap.to(".gsap-word", {
+      y: "0%",
+      duration: 1.2,
+      stagger: 0.2,
+      ease: "power4.out",
+      delay: 0.2
+    });
+    gsap.from(".gsap-up", {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      delay: 0.8,
+      stagger: 0.1,
+      ease: "power3.out"
+    });
+    gsap.to(".hero-bg", {
+      y: "18%",
+      scrollTrigger: {
+        trigger: "#s01-hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // TOWER STACK
+    const towerCards = gsap.utils.toArray('.gsap-tower-card');
+    gsap.set(towerCards, { y: window.innerHeight, rotationX: -35, opacity: 0, scale: 0.86 });
+    gsap.set(towerCards[0], { y: 0, rotationX: 0, opacity: 1, scale: 1 });
+
+    const towerTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#s02-tower",
+        start: "top top",
+        end: "+=" + (towerCards.length * 120) + "%",
+        pin: true,
+        scrub: 1
+      }
+    });
+
+    towerCards.forEach((card, index) => {
+      if (index !== 0) {
+        towerTl.to(card, {
+          y: 0,
+          rotationX: 0,
+          opacity: 1,
+          scale: 1,
+          ease: "none",
+          duration: 1
+        }, index);
+
+        towerTl.to(towerCards[index - 1], {
+          scale: 0.92 - (0.04 * index),
+          y: -22 * index,
+          opacity: 0.45,
+          ease: "none",
+          duration: 1
+        }, index);
+      }
+    });
+
+    // CONFERENCE MAP LINES
+    function createConferenceLine(x1, y1, x2, y2, container){
+      const line = document.createElement('div');
+      line.className = 'conf-line';
+
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+      line.style.width = `${length}px`;
+      line.style.left = `${x1}px`;
+      line.style.top = `${y1}px`;
+      line.style.transform = `rotate(${angle}deg)`;
+      container.appendChild(line);
+    }
+
+    function setupConferenceMap(){
+      const stage = document.getElementById('conferenceMapStage');
+      stage.querySelectorAll('.conf-line').forEach(line => line.remove());
+
+      const center = stage.querySelector('.map-center');
+      const dots = [...stage.querySelectorAll('.conf-dot')];
+      if (!center || !dots.length) return;
+
+      const stageRect = stage.getBoundingClientRect();
+      const cRect = center.getBoundingClientRect();
+      const cx = cRect.left - stageRect.left + cRect.width / 2;
+      const cy = cRect.top - stageRect.top + cRect.height / 2;
+
+      dots.forEach(dot => {
+        const dRect = dot.getBoundingClientRect();
+        const dx = dRect.left - stageRect.left + dRect.width / 2;
+        const dy = dRect.top - stageRect.top + dRect.height / 2;
+        createConferenceLine(cx, cy, dx, dy, stage);
+      });
+    }
+    window.addEventListener('load', setupConferenceMap);
+    window.addEventListener('resize', setupConferenceMap);
+
+    // ORBITAL RINGS PARALLAX
+    gsap.to(".ring-system", {
+      rotation: 18,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#s04-rings",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // TRACKS ENTRY
+    gsap.utils.toArray('.track-card').forEach((card, i) => {
+      gsap.from(card, {
+        opacity: 0,
+        y: 70,
+        duration: 1,
+        delay: i * 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#s05-tracks",
+          start: "top 70%"
+        }
+      });
+    });
+
+    attachMagnetic();
+  </script>
+  <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

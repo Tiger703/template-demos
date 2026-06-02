@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | Live News Feed</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES (Volt Broadcast Theme)
+           ========================================= */
+        :root {
+            --dark: #050505;
+            --light: #f4f4f5;
+            --accent: #E5FF00; /* Neon Volt Yellow */
+            --gray: #111;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Lenis Fix */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* MAGIC CURSOR */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s; mix-blend-mode: difference; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--accent); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        @media (max-width: 768px) { .cursor { display: none; } * { cursor: auto !important; } }
+
+        /* NAV & MENU */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5vw; z-index: 10000; background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(229, 255, 0, 0.2); }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); background: var(--dark); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); background: var(--dark); }
+        .menu-btn.active { color: var(--dark); }
+        
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--accent); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5vw 5vh 5vw; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5vw 10vh 5vw; } .menu-item { border-bottom: 1px solid rgba(0,0,0,0.1); padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; color: var(--dark) !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; color: #333 !important; } }
+        .menu-item { border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); color: var(--dark); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--dark); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #333; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; font-weight: 500; }
+        .dropdown a i { font-size: 1.4rem; color: var(--dark); }
+        .dropdown a:hover { color: var(--dark); padding-left: 10px; font-weight: 700; }
+
+        /* =========================================
+           GLOBAL SECTION STYLES
+           ========================================= */
+        section { position: relative; width: 100vw; min-height: 100vh; overflow: hidden; }
+        .section-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+        .section-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,5,5,0.7); z-index: 1; }
+        .section-content { position: relative; z-index: 2; width: 100%; height: 100%; display: flex; padding: var(--nav-height) 5vw 0 5vw; }
+
+        /* =========================================
+           S01: HERO SECTION
+           ========================================= */
+        #s01-hero .section-bg { filter: grayscale(100%) brightness(0.6); }
+        #s01-hero .section-content { flex-direction: column; justify-content: center; }
+        
+        .live-badge { display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: var(--dark); padding: 5px 15px; border-radius: 50px; font-family: 'JetBrains Mono'; font-weight: 700; font-size: 0.9rem; width: max-content; margin-bottom: 2rem; }
+        .live-dot { width: 8px; height: 8px; background: var(--dark); border-radius: 50%; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .hero-title { font-size: clamp(4rem, 15vw, 12rem); font-weight: 800; line-height: 0.9; text-transform: uppercase; color: var(--light); }
+        .hero-title span { display: inline-block; overflow: hidden; }
+        .hero-title .word { display: inline-block; transform: translateY(110%); }
+        .hero-title .volt { color: transparent; -webkit-text-stroke: 2px var(--accent); }
+
+        #live-clock { font-size: clamp(1.5rem, 4vw, 3rem); font-family: 'JetBrains Mono'; color: var(--accent); margin-top: 2rem; font-weight: 300; }
+
+        /* Marquee Ticker at bottom of hero */
+        .marquee-container { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--accent); color: var(--dark); padding: 15px 0; z-index: 5; overflow: hidden; display: flex; white-space: nowrap; border-top: 1px solid #000; }
+        .marquee-track { display: flex; animation: marquee 20s linear infinite; }
+        .marquee-item { font-family: 'JetBrains Mono'; font-weight: 700; font-size: 1.1rem; padding: 0 30px; display: flex; align-items: center; gap: 30px; }
+        .marquee-item i { font-size: 1.5rem; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* =========================================
+           S02: MAGIC 3D ROLODEX STACK
+           ========================================= */
+        #s02-rolodex { background: var(--dark); padding: 0; }
+        .rolo-container { display: flex; width: 100%; height: 100vh; padding: var(--nav-height) 5vw 10vh 5vw; z-index: 2; position: relative; }
+        
+        .rolo-left { width: 40%; display: flex; flex-direction: column; justify-content: center; padding-right: 5vw; }
+        .rolo-left h2 { font-size: clamp(3rem, 6vw, 6rem); margin-bottom: 1rem; line-height: 1; }
+        .rolo-left p { color: #888; font-size: 1.1rem; line-height: 1.6; font-family: 'JetBrains Mono'; }
+
+        .rolo-right { width: 60%; position: relative; perspective: 1500px; display: flex; align-items: center; justify-content: center; }
+        
+        .news-card {
+            position: absolute;
+            width: 100%; max-width: 600px;
+            background: #111;
+            border: 1px solid rgba(229, 255, 0, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex; flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            transform-origin: center bottom;
+            /* Hidden state for GSAP */
+            opacity: 0;
+            transform: translateY(100%) rotateX(-45deg);
+        }
+        .news-card-img { width: 100%; height: 250px; object-fit: cover; filter: grayscale(100%); transition: 0.4s; }
+        .news-card:hover .news-card-img { filter: grayscale(0%); }
+        .news-card-body { padding: 2rem; }
+        .news-meta { color: var(--accent); font-family: 'JetBrains Mono'; font-size: 0.85rem; margin-bottom: 1rem; display: flex; justify-content: space-between; }
+        .news-card h3 { font-size: 1.8rem; margin-bottom: 1rem; }
+        .news-card p { color: #aaa; line-height: 1.5; font-size: 0.95rem; }
+
+        @media (max-width: 1024px) {
+            .rolo-container { flex-direction: column; align-items: center; }
+            .rolo-left { width: 100%; text-align: center; margin-bottom: 5vh; padding-right: 0; }
+            .rolo-right { width: 100%; height: 60vh; }
+            .news-card { max-width: 100%; }
+            .news-card-img { height: 180px; }
+        }
+
+        /* =========================================
+           S03: MAGIC IMAGE TRAIL
+           ========================================= */
+        #s03-trail { background: #000; display: flex; align-items: center; justify-content: center; text-align: center; cursor: crosshair; }
+        
+        .trail-text { z-index: 10; pointer-events: none; mix-blend-mode: difference; }
+        .trail-text h2 { font-size: clamp(3rem, 10vw, 8rem); color: var(--light); line-height: 0.9; }
+        .trail-text span { color: var(--accent); font-family: 'JetBrains Mono'; font-size: clamp(1rem, 2vw, 1.5rem); display: block; margin-top: 2rem; }
+
+        /* The spawned images */
+        .trail-img {
+            position: fixed;
+            top: 0; left: 0;
+            width: 300px; height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+            /* filter: grayscale(100%); */
+        }
+
+        /* Mobile fallback for Trail */
+        .mobile-trail-grid { display: none; }
+        @media (max-width: 768px) {
+            #s03-trail { align-items: flex-start; padding-top: 15vh; }
+            .trail-text { position: sticky; top: 15vh; margin-bottom: 5vh; }
+            .mobile-trail-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; width: 100%; padding: 0 5vw; z-index: 2; margin-top: 40vh; }
+            .mobile-trail-grid img { width: 100%; height: 300px; object-fit: cover; border-radius: 8px; border: 1px solid var(--accent); }
+        }
+
+        /* =========================================
+           S04: FOOTER (Full Page)
+           ========================================= */
+        #s04-footer { display: flex; flex-direction: column; justify-content: space-between; padding: var(--nav-height) 5vw 5vh 5vw; background: #020202; }
+        #s04-footer .section-overlay { background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 100%); }
+        
+        .footer-top { position: relative; z-index: 2; text-align: center; margin-top: auto; }
+        .footer-huge { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 15vw, 12rem); font-weight: 800; line-height: 0.8; color: var(--light); }
+        .footer-huge span { color: var(--accent); }
+        
+        .footer-bottom { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; }
+        .social-links { display: flex; gap: 1rem; }
+        .social-btn { width: 60px; height: 60px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; color: var(--light); font-size: 1.5rem; transition: 0.3s; }
+        .social-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--dark); }
+        
+        @media (max-width: 768px) { .footer-bottom { flex-direction: column; align-items: center; gap: 2rem; text-align: center; } }
+    </style>
+</head>
+<body>
+
+    <div class="cursor"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="#" class="nav-brand hover-target">MΛGIC.</a>
+        <button class="menu-btn hover-target">
+            Menu
+            <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU -->
+    <div class="menu-overlay">
+        <div class="menu-container" id="menu-grid"></div>
+    </div>
+
+    <main>
+        
+        <!-- S01: HERO SECTION -->
+        <section id="s01-hero">
+            <img src="https://images.unsplash.com/photo-1495020632543-98284712cead?q=80&w=2564&auto=format&fit=crop" class="section-bg hero-parallax" alt="News Room">
+            <div class="section-overlay"></div>
+            
+            <div class="section-content">
+                <div class="live-badge gsap-up"><span class="live-dot"></span> LIVE BROADCAST</div>
+                
+                <h1 class="hero-title">
+                    <span class="line"><span class="word gsap-word">THE</span></span><br>
+                    <span class="line"><span class="word gsap-word volt">WIRE.</span></span>
+                </h1>
+                
+                <!-- JS Live Clock -->
+                <div id="live-clock" class="gsap-up">00:00:00:000</div>
+            </div>
+
+            <!-- CSS Marquee Ticker -->
+            <div class="marquee-container">
+                <div class="marquee-track">
+                    <!-- Text 1 -->
+                    <div class="marquee-item">LATEST PRESS RELEASES <i class="ph-fill ph-lightning"></i> AGENCY WINS 5 AWWWARDS <i class="ph-fill ph-lightning"></i> NEW OFFICE OPENING IN TOKYO <i class="ph-fill ph-lightning"></i> Q3 FINANCIAL REPORT RELEASED <i class="ph-fill ph-lightning"></i></div>
+                    <!-- Duplicate for infinite loop -->
+                    <div class="marquee-item">LATEST PRESS RELEASES <i class="ph-fill ph-lightning"></i> AGENCY WINS 5 AWWWARDS <i class="ph-fill ph-lightning"></i> NEW OFFICE OPENING IN TOKYO <i class="ph-fill ph-lightning"></i> Q3 FINANCIAL REPORT RELEASED <i class="ph-fill ph-lightning"></i></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S02: MAGIC 3D ROLODEX -->
+        <section id="s02-rolodex">
+            <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2000&auto=format&fit=crop" class="section-bg" style="opacity: 0.2;" alt="Stack Background">
+            <div class="section-overlay" style="background: linear-gradient(to right, rgba(5,5,5,1) 0%, rgba(5,5,5,0.4) 100%);"></div>
+
+            <div class="rolo-container">
+                <div class="rolo-left">
+                    <h2 class="display-font">Breaking<br>Stories.</h2>
+                    <p>Scroll to flip through our latest corporate announcements and press features. Cards render via CSS 3D transforms tied to scroll velocity.</p>
+                </div>
+                
+                <div class="rolo-right">
+                    <!-- Cards to be stacked via GSAP -->
+                    <div class="news-card gsap-rolo-card hover-target">
+                        <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop" class="news-card-img" alt="News 1">
+                        <div class="news-card-body">
+                            <div class="news-meta"><span>PRESS RELEASE</span><span>MAR 12</span></div>
+                            <h3 class="display-font">Agency expands into Web3 architecture.</h3>
+                            <p>Announcing our new dedicated blockchain and dApp interface design division, spearheaded by industry veterans.</p>
+                        </div>
+                    </div>
+
+                    <div class="news-card gsap-rolo-card hover-target">
+                        <img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=1000&auto=format&fit=crop" class="news-card-img" alt="News 2">
+                        <div class="news-card-body">
+                            <div class="news-meta"><span>AWARDS</span><span>FEB 28</span></div>
+                            <h3 class="display-font">Triple Site of the Day.</h3>
+                            <p>Our recent work for global fin-tech leaders takes home top honors at Awwwards, FWA, and CSS Design Awards.</p>
+                        </div>
+                    </div>
+
+                    <div class="news-card gsap-rolo-card hover-target">
+                        <img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop" class="news-card-img" alt="News 3">
+                        <div class="news-card-body">
+                            <div class="news-meta"><span>CULTURE</span><span>FEB 15</span></div>
+                            <h3 class="display-font">The Future of Remote Work.</h3>
+                            <p>How we built a world-class creative team distributed across 15 time zones without losing our studio culture.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S03: MAGIC IMAGE TRAIL -->
+        <section id="s03-trail">
+            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2000&auto=format&fit=crop" class="section-bg" style="opacity: 0.3;" alt="Trail Background">
+            <div class="section-overlay"></div>
+
+            <div class="trail-text">
+                <h2 class="display-font">Explore<br>The Archive.</h2>
+                <span class="desktop-only">> MOVE CURSOR TO REVEAL</span>
+                <span class="mobile-only" style="display: none;">> SCROLL TO REVEAL</span>
+            </div>
+
+            <!-- Mobile Fallback Grid -->
+            <div class="mobile-trail-grid">
+                <img src="https://images.unsplash.com/photo-1600132806370-bf17e65e942f?q=80&w=600&auto=format&fit=crop">
+                <img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=600&auto=format&fit=crop">
+                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=600&auto=format&fit=crop">
+            </div>
+        </section>
+
+        <!-- S04: FULL PAGE FOOTER -->
+        <section id="s04-footer">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" class="section-bg" style="filter: hue-rotate(60deg) grayscale(80%);" alt="Footer Background">
+            <div class="section-overlay"></div>
+
+            <div class="footer-top">
+                <h2 class="footer-huge">STAY<br><span>UPDATED.</span></h2>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="mono" style="color: #888;">
+                    <p>MΛGIC AGENCY // PRESS & NEWS</p>
+                    <p style="margin-top: 5px;">LIVE BROADCAST ENDED.</p>
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-btn hover-target"><i class="ph ph-linkedin-logo"></i></a>
+                    <a href="#" class="social-btn hover-target"><i class="ph ph-twitter-logo"></i></a>
+                    <a href="#" class="social-btn hover-target"><i class="ph ph-instagram-logo"></i></a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. LENIS (Smooth Scrolling)
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. MAGIC CURSOR
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { 
+                gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); 
+            });
+            
+            document.querySelectorAll('a, button, .hover-target, .news-card').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+        }
+
+        // 3. EXACT MENU ARRAY
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+        
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetUrl = link.getAttribute('href');
+                toggleMenu();
+                setTimeout(() => {
+                    if (targetUrl.startsWith('#')) { lenis.scrollTo(targetUrl, { duration: 1.5 }); }
+                    else { window.location.href = targetUrl; }
+                }, 800);
+            });
+        });
+
+        // ==========================================
+        // PAGE GSAP & JS MAGICS
+        // ==========================================
+
+        // S01: Live Clock Magic
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            const ms = String(now.getMilliseconds()).padStart(3, '0');
+            document.getElementById('live-clock').innerText = `${h}:${m}:${s}:${ms}`;
+            requestAnimationFrame(updateClock);
+        }
+        updateClock();
+
+        // S01: Hero Animations
+        gsap.to(".gsap-word", { y: "0%", duration: 1.2, stagger: 0.2, ease: "power4.out", delay: 0.2 });
+        gsap.from(".gsap-up", { opacity: 0, y: 30, duration: 1, delay: 0.8, stagger: 0.2, ease: "power3.out" });
+        gsap.to(".hero-parallax", { y: "30%", scrollTrigger: { trigger: "#s01-hero", start: "top top", end: "bottom top", scrub: true }});
+
+        // S02: MAGIC 3D ROLODEX
+        let roloTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#s02-rolodex",
+                start: "top top",
+                end: "+=250%", // Pin for 250% of viewport height
+                pin: true,
+                scrub: 1
+            }
+        });
+
+        const roloCards = gsap.utils.toArray('.gsap-rolo-card');
+        roloCards.forEach((card, i) => {
+            // Fold in from bottom with 3D rotation
+            roloTl.to(card, {
+                y: 0,
+                rotationX: 0,
+                opacity: 1,
+                duration: 1,
+                ease: "power2.out"
+            }, i * 0.5); // Stagger
+            
+            // Push previous cards slightly back and fade
+            if (i > 0) {
+                for(let j = 0; j < i; j++) {
+                    roloTl.to(roloCards[j], {
+                        y: -20 * (i - j), // Move up
+                        scale: 1 - (0.05 * (i - j)), // Shrink
+                        opacity: 1 - (0.3 * (i - j)), // Fade
+                        duration: 1,
+                        ease: "power2.out"
+                    }, i * 0.5);
+                }
+            }
+        });
+
+        // S03: MAGIC IMAGE TRAIL
+        if (window.innerWidth > 768) {
+            const trailSection = document.getElementById('s03-trail');
+            
+            // Array of image URLs to spawn
+            const images = [
+                "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?q=80&w=800&auto=format&fit=crop",
+                "https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=800&auto=format&fit=crop",
+                "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop",
+                "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop",
+                "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=800&auto=format&fit=crop"
+            ];
+            
+            let globalIndex = 0;
+            let lastMousePos = { x: 0, y: 0 };
+            const threshold = 150; // Distance mouse must travel before spawning next image
+
+            trailSection.addEventListener('mousemove', (e) => {
+                const distance = Math.hypot(e.clientX - lastMousePos.x, e.clientY - lastMousePos.y);
+                
+                if (distance > threshold) {
+                    lastMousePos = { x: e.clientX, y: e.clientY };
+                    
+                    // Create Image Element
+                    const img = document.createElement('img');
+                    img.src = images[globalIndex % images.length];
+                    img.className = 'trail-img';
+                    
+                    // Set position exactly at mouse
+                    img.style.left = e.clientX + 'px';
+                    img.style.top = e.clientY + 'px';
+                    
+                    // Random slight rotation
+                    const rot = (Math.random() - 0.5) * 30;
+                    
+                    trailSection.appendChild(img);
+                    globalIndex++;
+
+                    // GSAP Animation: Pop in, drift down, fade out, then remove from DOM
+                    gsap.fromTo(img, 
+                        { opacity: 1, scale: 0.5, rotation: rot },
+                        { 
+                            opacity: 0, 
+                            scale: 1.2, 
+                            y: "+=150", // Drift down
+                            duration: 2, 
+                            ease: "power2.out",
+                            onComplete: () => { img.remove(); } // Clean up DOM
+                        }
+                    );
+                }
+            });
+        } else {
+            // Mobile adjustments
+            document.querySelector('.desktop-only').style.display = 'none';
+            document.querySelector('.mobile-only').style.display = 'block';
+        }
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>

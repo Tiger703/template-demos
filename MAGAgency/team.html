@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MΛGAgency | The Team</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Premium Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* =========================================
+           GLOBAL VARIABLES & STRICT RESET
+           ========================================= */
+        :root {
+            --dark: #0a0a0a;
+            --light: #f4f4f5;
+            --accent: #ff4b2b; /* Agency Orange */
+            --gray: #161616;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden !important; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--dark); color: var(--light); -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4, h5, h6, .display-font { font-family: 'Syne', sans-serif; }
+        section { position: relative; width: 100%; overflow: hidden; }
+        
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* =========================================
+           MAGIC CURSOR
+           ========================================= */
+        .cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--light); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border 0.3s; mix-blend-mode: difference; }
+        .cursor.hovered { width: 80px; height: 80px; background: transparent; border: 1px solid var(--light); mix-blend-mode: normal; backdrop-filter: grayscale(1); }
+        .cursor.drag-mode::after { content: 'DRAG'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10px; font-weight: 800; color: var(--light); letter-spacing: 1px; }
+        @media (max-width: 768px) { .cursor { display: none !important; } * { cursor: auto !important; } }
+
+        /* =========================================
+           NAVBAR & MOBILE-OPTIMIZED MENU
+           ========================================= */
+        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); display: flex; justify-content: space-between; align-items: center; padding: 0 5%; z-index: 10000; background: transparent; mix-blend-mode: difference; }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--light); text-decoration: none; }
+        .menu-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; color: var(--light); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        .hamburger { width: 35px; height: 8px; position: relative; }
+        .hamburger span { position: absolute; width: 100%; height: 2px; background: var(--light); transition: 0.4s; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { bottom: 0; }
+        .menu-btn.active .hamburger span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+        .menu-btn.active .hamburger span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(5,5,5,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; padding-top: calc(var(--nav-height) + 3vh); clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); overflow-y: auto; }
+        .menu-container { width: 100%; padding: 0 5% 5vh 5%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem 2.5rem; align-content: start; }
+        @media (max-width: 1200px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-container { grid-template-columns: 1fr; gap: 0.5rem; padding: 2vh 5% 10vh 5%; } .menu-item { padding: 1.5rem 0; } .menu-item-title { font-size: 2rem !important; font-weight: 800 !important; } .menu-item-title span { font-size: 1.2rem !important; } .dropdown a { font-size: 1.3rem !important; padding: 0.8rem 0; } .dropdown a i { font-size: 1.8rem !important; } }
+        .menu-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; }
+        .menu-item-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(20px); }
+        .menu-item-title span { font-size: 1rem; font-family: 'Inter', sans-serif; font-weight: 400; color: var(--accent); }
+        .dropdown { height: 0; overflow: hidden; transition: height 0.4s ease; }
+        .dropdown-inner { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .dropdown a { color: #aaa; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .dropdown a i { font-size: 1.4rem; color: var(--accent); opacity: 0; transform: translateX(-10px); transition: 0.3s; }
+        .dropdown a:hover { color: var(--light); padding-left: 10px; }
+        .dropdown a:hover i { opacity: 1; transform: translateX(0); }
+
+        /* =========================================
+           UNIQUE S01: EDITORIAL OVERLAP HERO
+           ========================================= */
+        #tm-hero {
+            height: 100vh; display: flex; align-items: flex-end; padding: 10vh 5%; position: relative;
+        }
+        .hero-img-container {
+            position: absolute; top: 0; right: 0; width: 70%; height: 90%;
+            border-bottom-left-radius: 40px; overflow: hidden; z-index: -2;
+            transform: scale(0.9); opacity: 0; /* JS Fade in */
+        }
+        .hero-bg {
+            width: 100%; height: 100%; object-fit: cover; filter: grayscale(50%);
+        }
+        .hero-overlay {
+            position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,0) 50%); z-index: -1;
+        }
+        
+        .tm-title-wrapper { z-index: 2; margin-bottom: 5vh; }
+        .tm-title {
+            font-size: clamp(4rem, 15vw, 14rem); font-weight: 800; line-height: 0.8;
+            text-transform: uppercase; color: var(--light); mix-blend-mode: difference;
+        }
+        .tm-title .line { display: block; overflow: hidden; }
+        .tm-title .word { display: inline-block; transform: translateY(110%); }
+        .tm-desc {
+            margin-top: 2rem; font-size: clamp(1rem, 2vw, 1.5rem); color: #ccc;
+            max-width: 400px; opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero-img-container { width: 100%; height: 100%; border-radius: 0; }
+            .tm-title-wrapper { margin-bottom: 0; }
+        }
+
+        /* =========================================
+           UNIQUE S02: MAGNET-PULL MASONRY GRID
+           ========================================= */
+        #tm-leadership { padding: 15vh 5%; background: var(--dark); }
+        .lead-header { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 8vh; }
+        
+        .lead-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; }
+        
+        .lead-card { display: flex; flex-direction: column; gap: 1.5rem; position: relative; }
+        /* Masonry offsets */
+        .lead-card:nth-child(2) { margin-top: 10vh; }
+        .lead-card:nth-child(3) { margin-top: 5vh; }
+        
+        .img-wrapper {
+            width: 100%; height: clamp(400px, 60vh, 600px); border-radius: 12px;
+            overflow: hidden; position: relative; background: #1a1a1a;
+        }
+        .pull-img {
+            width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%);
+            transition: filter 0.4s;
+            /* Will be magnetically pulled by JS on hover */
+        }
+        .img-wrapper:hover .pull-img { filter: grayscale(0%); }
+        
+        .lead-info { display: flex; flex-direction: column; gap: 0.5rem; }
+        .lead-name { font-size: clamp(1.5rem, 3vw, 2.5rem); font-family: 'Syne', sans-serif; font-weight: 700; }
+        .lead-role { color: var(--accent); font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
+        .lead-bio { color: #888; font-size: 0.95rem; line-height: 1.6; }
+
+        @media (max-width: 900px) {
+            .lead-grid { grid-template-columns: 1fr; gap: 5rem; }
+            .lead-card:nth-child(2), .lead-card:nth-child(3) { margin-top: 0; }
+            .img-wrapper { height: 60vh; }
+            .pull-img { filter: grayscale(0%); } /* Always colored on mobile */
+        }
+
+        /* =========================================
+           UNIQUE S03: HORIZONTAL ROSTER (STICKY)
+           ========================================= */
+        #tm-roster { background: var(--gray); overflow: hidden; height: 100vh; }
+        .roster-wrapper { display: flex; height: 100vh; width: max-content; align-items: center; padding-left: 5%; }
+        
+        .roster-intro {
+            width: clamp(300px, 40vw, 500px); margin-right: 5vw;
+        }
+        .roster-intro h2 { font-size: clamp(3rem, 6vw, 6rem); margin-bottom: 1rem; }
+        .roster-intro p { color: #aaa; font-size: 1.1rem; line-height: 1.6; }
+
+        .roster-card {
+            width: clamp(250px, 30vw, 350px); height: clamp(350px, 50vh, 500px);
+            margin-right: 3vw; position: relative; border-radius: 12px; overflow: hidden;
+            opacity: 0.8; transition: 0.4s;
+        }
+        .roster-card:hover { opacity: 1; transform: scale(1.05); }
+        .roster-card img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .roster-caption {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 2rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            color: var(--light); display: flex; flex-direction: column;
+        }
+        .r-name { font-size: 1.5rem; font-family: 'Syne', sans-serif; font-weight: 700; }
+        .r-role { font-size: 0.9rem; color: var(--accent); }
+
+        @media (max-width: 768px) {
+            #tm-roster { height: auto; padding: 10vh 5%; overflow: hidden; }
+            .roster-wrapper { flex-direction: column; width: 100%; height: auto; padding-left: 0; gap: 4rem; align-items: flex-start; }
+            .roster-intro { width: 100%; margin-right: 0; }
+            .roster-card { width: 100%; margin-right: 0; height: 60vh; opacity: 1; }
+        }
+
+        /* =========================================
+           UNIQUE S04: QUOTE PARALLAX (BG IMAGE 2)
+           ========================================= */
+        #tm-quote {
+            padding: 25vh 5%; min-height: 80vh; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; text-align: center;
+        }
+        .quote-bg {
+            position: absolute; top: -20%; left: 0; width: 100%; height: 140%;
+            object-fit: cover; z-index: -2; opacity: 0.3; filter: grayscale(100%);
+        }
+        .quote-overlay { position: absolute; inset: 0; background: rgba(10,10,10,0.7); z-index: -1; }
+        
+        .quote-text {
+            font-size: clamp(2rem, 5vw, 4rem); font-family: 'Syne', sans-serif; font-weight: 700;
+            line-height: 1.3; max-width: 1000px; color: var(--light);
+        }
+        .quote-author {
+            margin-top: 3rem; font-size: 1.2rem; font-weight: 600; color: var(--accent); letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        /* =========================================
+           UNIQUE S05: EDITORIAL FOOTER CTA
+           ========================================= */
+        #tm-cta {
+            height: 80vh; background: var(--dark); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 5%;
+        }
+        .cta-title { font-size: clamp(3rem, 10vw, 8rem); font-weight: 800; line-height: 0.9; margin-bottom: 4rem; text-transform: uppercase; }
+        
+        .cta-btn-group { display: flex; gap: 2rem; }
+        
+        .solid-btn {
+            background: var(--light); color: var(--dark); font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700;
+            padding: 1.5rem 3rem; border-radius: 100px; text-transform: uppercase; text-decoration: none; transition: 0.3s;
+        }
+        .solid-btn:hover { background: var(--accent); color: var(--light); transform: scale(1.05); }
+
+        .outline-btn {
+            background: transparent; color: var(--light); font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700;
+            padding: 1.5rem 3rem; border-radius: 100px; border: 2px solid rgba(255,255,255,0.2); text-transform: uppercase; text-decoration: none; transition: 0.3s;
+        }
+        .outline-btn:hover { border-color: var(--light); transform: scale(1.05); }
+
+        @media (max-width: 768px) {
+            .cta-btn-group { flex-direction: column; gap: 1rem; width: 100%; }
+            .solid-btn, .outline-btn { width: 100%; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- MAGIC CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="nav-brand magnetic" data-strength="20">MΛGIC.</a>
+        <button class="menu-btn magnetic" data-strength="30">
+            Menu <div class="hamburger"><span></span><span></span></div>
+        </button>
+    </nav>
+
+    <!-- MEGA MENU -->
+    <div class="menu-overlay"><div class="menu-container" id="menu-grid"></div></div>
+
+    <main>
+
+        <!-- S01: EDITORIAL OVERLAP HERO -->
+        <section id="tm-hero">
+            <div class="hero-img-container">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2000&auto=format&fit=crop" class="hero-bg" alt="Team Office">
+                <div class="hero-overlay"></div>
+            </div>
+            
+            <div class="tm-title-wrapper">
+                <h1 class="tm-title">
+                    <span class="line"><span class="word">THE</span></span><br>
+                    <span class="line"><span class="word">MINDS</span></span>
+                </h1>
+                <p class="tm-desc">A carefully curated collective of the world's most dangerous designers, engineers, and digital strategists.</p>
+            </div>
+        </section>
+
+        <!-- S02: MAGNET-PULL MASONRY GRID -->
+        <section id="tm-leadership">
+            <h2 class="display-font lead-header">LEADERSHIP</h2>
+            
+            <div class="lead-grid">
+                
+                <div class="lead-card">
+                    <div class="img-wrapper">
+                        <!-- JS Magnet applied to this image -->
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" class="pull-img" alt="CEO">
+                    </div>
+                    <div class="lead-info">
+                        <div class="lead-name">Elena Rostova</div>
+                        <div class="lead-role">Founder / CEO</div>
+                        <div class="lead-bio">Former design director at Apple. Obsessed with brutalist architecture and clean code.</div>
+                    </div>
+                </div>
+
+                <div class="lead-card">
+                    <div class="img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop" class="pull-img" alt="CTO">
+                    </div>
+                    <div class="lead-info">
+                        <div class="lead-name">Marcus Vance</div>
+                        <div class="lead-role">Chief Technology Officer</div>
+                        <div class="lead-bio">Architect of our WebGL engine. Writes shaders in his sleep.</div>
+                    </div>
+                </div>
+
+                <div class="lead-card">
+                    <div class="img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=800&auto=format&fit=crop" class="pull-img" alt="Design Director">
+                    </div>
+                    <div class="lead-info">
+                        <div class="lead-name">Sarah Jenkins</div>
+                        <div class="lead-role">Design Director</div>
+                        <div class="lead-bio">10+ years shaping the visual identities of Fortune 500 tech companies.</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- S03: HORIZONTAL ROSTER (STICKY) -->
+        <section id="tm-roster">
+            <div class="roster-wrapper">
+                
+                <div class="roster-intro">
+                    <h2 class="display-font">THE SQUAD</h2>
+                    <p>We keep our team small, elite, and agile. No bloat, no bureaucracy. Just absolute killers at what they do.</p>
+                </div>
+                
+                <div class="roster-card rosterElem">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop" alt="Team">
+                    <div class="roster-caption"><span class="r-name">David Cho</span><span class="r-role">Lead Motion Developer</span></div>
+                </div>
+                
+                <div class="roster-card rosterElem">
+                    <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=800&auto=format&fit=crop" alt="Team">
+                    <div class="roster-caption"><span class="r-name">Maya Patel</span><span class="r-role">Senior Product Designer</span></div>
+                </div>
+                
+                <div class="roster-card rosterElem">
+                    <img src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?q=80&w=800&auto=format&fit=crop" alt="Team">
+                    <div class="roster-caption"><span class="r-name">James Wilson</span><span class="r-role">Backend Architect</span></div>
+                </div>
+                
+                <div class="roster-card rosterElem">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800&auto=format&fit=crop" alt="Team">
+                    <div class="roster-caption"><span class="r-name">Anita Silva</span><span class="r-role">3D Generalist</span></div>
+                </div>
+
+                <div style="width: 10vw; height: 100%; flex-shrink: 0;"></div>
+            </div>
+        </section>
+
+        <!-- S04: QUOTE PARALLAX (BG IMAGE 2) -->
+        <section id="tm-quote">
+            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2000&auto=format&fit=crop" class="quote-bg" alt="Studio Abstract">
+            <div class="quote-overlay"></div>
+            
+            <div>
+                <div class="quote-text">"We don't hire employees. We hire absolute anomalies. People who look at the web and see a blank canvas for art."</div>
+                <div class="quote-author">— Elena Rostova, CEO</div>
+            </div>
+        </section>
+
+        <!-- S05: EDITORIAL FOOTER CTA -->
+        <section id="tm-cta">
+            <h2 class="display-font cta-title">JOIN THE ELITE</h2>
+            
+            <div class="cta-btn-group">
+                <a href="#" class="solid-btn magnetic" data-strength="20">View Careers</a>
+                <a href="#" class="outline-btn magnetic" data-strength="20">Start a Project</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script>
+        // 1. Lenis Smooth Scroll
+        const lenis = new Lenis({ duration: 1.5, smooth: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. Cursor & Magnetic (Desktop Only)
+        const cursor = document.querySelector('.cursor');
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => { gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 }); });
+            
+            document.querySelectorAll('a, button, .menu-item-title, .roster-card').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+            
+            document.querySelectorAll('.roster-card').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered', 'drag-mode'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered', 'drag-mode'));
+            });
+
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const strength = el.dataset.strength || 20;
+                    gsap.to(el, { x: ((e.clientX - rect.left) / rect.width - 0.5) * strength, y: ((e.clientY - rect.top) / rect.height - 0.5) * strength, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => { gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }); });
+            });
+        }
+
+        // 3. Menu Data & Routing
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
+
+        const menuGrid = document.getElementById('menu-grid');
+        menuData.forEach(item => {
+            let linksHTML = item.links.map(link => `<a href="${link.url}"><i class="ph ${item.icon}"></i> ${link.name}</a>`).join('');
+            menuGrid.innerHTML += `<div class="menu-item"><div class="menu-item-title display-font">${item.title} <span>${item.id}</span></div><div class="dropdown"><div class="dropdown-inner">${linksHTML}</div></div></div>`;
+        });
+
+        document.querySelectorAll('.menu-item-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const dropdown = title.nextElementSibling;
+                const inner = dropdown.querySelector('.dropdown-inner');
+                document.querySelectorAll('.dropdown').forEach(drop => { if (drop !== dropdown) drop.style.height = '0px'; });
+                dropdown.style.height = dropdown.clientHeight === 0 ? inner.clientHeight + 'px' : '0px';
+            });
+        });
+
+        const menuBtn = document.querySelector('.menu-btn');
+        let menuOpen = false;
+        const menuTl = gsap.timeline({ paused: true })
+            .to('.menu-overlay', { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.8, ease: "power4.inOut" })
+            .to('.menu-item-title', { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: "power3.out" }, "-=0.4");
+
+        const toggleMenu = () => {
+            menuOpen = !menuOpen;
+            menuBtn.classList.toggle('active');
+            if (menuOpen) { lenis.stop(); menuTl.play(); } else { lenis.start(); document.querySelectorAll('.dropdown').forEach(drop => drop.style.height = '0px'); menuTl.reverse(); }
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.dropdown a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetUrl = link.getAttribute('href');
+                if(targetUrl !== '#') {
+                    e.preventDefault();
+                    toggleMenu();
+                    setTimeout(() => { 
+                        if (targetUrl.startsWith('#') || targetUrl.includes('.html#')) {
+                            const id = targetUrl.split('#')[1];
+                            const element = document.getElementById(id);
+                            if(element) lenis.scrollTo(element, { duration: 1.5 });
+                            else window.location.href = targetUrl;
+                        } else { window.location.href = targetUrl; }
+                    }, 800);
+                }
+            });
+        });
+
+        // 4. TEAM MAGIC: Hero Animation
+        const heroTl = gsap.timeline({ delay: 0.2 });
+        heroTl.to(".hero-img-container", { scale: 1, opacity: 1, duration: 1.5, ease: "power3.out" })
+              .to(".tm-title .word", { y: "0%", duration: 1.2, stagger: 0.15, ease: "power4.out" }, "-=1")
+              .to(".tm-desc", { opacity: 1, y: -10, duration: 1 }, "-=0.8");
+
+        // 5. TEAM MAGIC: Magnet-Pull Image inside Grid (Desktop only)
+        if (window.innerWidth > 768) {
+            document.querySelectorAll('.img-wrapper').forEach(wrapper => {
+                const img = wrapper.querySelector('.pull-img');
+                
+                // Scale image slightly so there is room to move it
+                gsap.set(img, { scale: 1.15 });
+
+                wrapper.addEventListener('mousemove', (e) => {
+                    const rect = wrapper.getBoundingClientRect();
+                    // Calculate mouse position relative to center of the wrapper (-0.5 to 0.5)
+                    const x = (e.clientX - rect.left) / rect.width - 0.5;
+                    const y = (e.clientY - rect.top) / rect.height - 0.5;
+                    
+                    // Pull the image based on mouse position (strength of 30px)
+                    gsap.to(img, { x: x * 30, y: y * 30, duration: 0.4, ease: "power2.out" });
+                });
+
+                wrapper.addEventListener('mouseleave', () => {
+                    // Snap back to center
+                    gsap.to(img, { x: 0, y: 0, duration: 0.6, ease: "elastic.out(1, 0.3)" });
+                });
+            });
+        }
+
+        // 6. TEAM MAGIC: Horizontal Pinned Scroll
+        if (window.innerWidth > 768) {
+            const rosterWrapper = document.querySelector('.roster-wrapper');
+            gsap.to(rosterWrapper, {
+                x: () => -(rosterWrapper.scrollWidth - window.innerWidth),
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#tm-roster",
+                    start: "center center",
+                    end: () => "+=" + rosterWrapper.scrollWidth,
+                    pin: true,
+                    scrub: 1,
+                    invalidateOnRefresh: true
+                }
+            });
+        }
+
+        // 7. TEAM MAGIC: Quote Background Parallax
+        gsap.to(".quote-bg", {
+            yPercent: 30, // Parallax effect
+            ease: "none",
+            scrollTrigger: {
+                trigger: "#tm-quote",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+    </script>
+    <script>
+    /* BASIC PROTECTION */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+    if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && ["u","c","x","s","a"].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(e.key.toLowerCase()))
+    ) {
+        e.preventDefault();
+    }
+});
+
+
+
+/* DYNAMIC WATERMARK */
+setInterval(() => {
+    const mark = document.createElement("div");
+    mark.innerText = "intelli core solutions • Protected";
+
+    mark.style.position = "fixed";
+    mark.style.top = Math.random() * 90 + "%";
+    mark.style.left = Math.random() * 90 + "%";
+    mark.style.opacity = "0.08";
+    mark.style.fontSize = "18px";
+    mark.style.color = "#fff";
+    mark.style.pointerEvents = "none";
+    mark.style.zIndex = "9999";
+
+    document.body.appendChild(mark);
+
+    setTimeout(() => mark.remove(), 2000);
+}, 1200);
+
+
+
+/* BLUR WHEN USER SWITCHES TAB */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.style.filter = "blur(25px)";
+    } else {
+        document.body.style.filter = "blur(0)";
+    }
+});
+
+
+/* DEVTOOLS BLOCK */
+setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 120) {
+        document.body.innerHTML = `
+            <div style="color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-size:24px;">
+                ⚠️ Access Denied
+            </div>
+        `;
+    }
+}, 1000);
+
+
+
+/* SCREENSHOT BAIT OVERLAY */
+document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+        const overlay = document.createElement("div");
+        overlay.innerText = "⚠️ Screenshot Blocked";
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "black";
+        overlay.style.color = "white";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.fontSize = "30px";
+        overlay.style.zIndex = "10000";
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 1500);
+    }
+});
+</script>
+</body>
+</html>
