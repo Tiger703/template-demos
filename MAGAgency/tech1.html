@@ -1698,20 +1698,20 @@
     // =========================================
     // MENU
     // =========================================
-    const menuData = [
-      { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: '#s02-services'}] },
-      { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: '#s03-work'}] },
-      { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: '#s04-studio'}, {name: 'Awards', url: '#s04-studio'}, {name: 'Team', url: '#s04-studio'}] },
-      { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: '#s05-capabilities'}, {name: 'Branding', url: '#s05-capabilities'}, {name: 'SEO', url: '#s05-capabilities'}] },
-      { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: '#s06-industries'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
-      { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'labs.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
-      { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'insights.html'}, {name: 'Podcasts', url: 'podcasts.html'}, {name: 'News', url: 'news.html'}] },
-      { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'investors-reports.html'}, {name: 'Stocks', url: 'investors-stocks.html'}, {name: 'Governance', url: 'investors-governance.html'}] },
-      { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'partners-agencies.html'}, {name: 'Tech', url: 'partners-tech.html'}, {name: 'Affiliates', url: '#s10-spectrum'}] },
-      { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: '#s11-events'}, {name: 'Webinars', url: '#s11-events'}, {name: 'Conferences', url: '#s11-events'}] },
-      { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: '#s12-contact'}, {name: 'API Docs', url: '#s12-contact'}, {name: 'Status', url: '#s12-contact'}] },
-      { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: '#s12-contact'}, {name: 'Careers', url: '#s12-contact'}, {name: 'Locations', url: '#s12-contact'}] }
-    ];
+        const menuData = [
+            { id: '01', title: 'Services', icon: 'ph-paint-brush', links: [{name: 'Web Design', url: 'web-design.html'}, {name: 'Motion UI', url: 'motion-ui.html'}, {name: 'Backend', url: 'backend.html'}] },
+            { id: '02', title: 'Work', icon: 'ph-briefcase', links: [{name: 'Case Studies', url: 'case-studies.html'}, {name: 'Archives', url: 'archives.html'}, {name: 'Concepts', url: 'concepts.html'}] },
+            { id: '03', title: 'Studio', icon: 'ph-flask', links: [{name: 'Inside Lab', url: 'inside-lab.html'}, {name: 'Awards', url: 'awards.html'}, {name: 'Team', url: 'team.html'}] },
+            { id: '04', title: 'Capabilities', icon: 'ph-lightning', links: [{name: 'Strategy', url: 'strategy.html'}, {name: 'Branding', url: 'branding.html'}, {name: 'SEO', url: 'seo.html'}] },
+            { id: '05', title: 'Industries', icon: 'ph-buildings', links: [{name: 'Fashion', url: 'fashion.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Finance', url: 'finance.html'}] },
+            { id: '06', title: 'Labs', icon: 'ph-atom', links: [{name: 'WebGL', url: 'webgl.html'}, {name: 'Three.js', url: 'threejs.html'}, {name: 'Shaders', url: 'shaders.html'}] },
+            { id: '07', title: 'Insights', icon: 'ph-book-open', links: [{name: 'Articles', url: 'articles.html'}, {name: 'Podcasts', url: 'prodcasts.html'}, {name: 'News', url: 'news.html'}] },
+            { id: '08', title: 'Investors', icon: 'ph-chart-line-up', links: [{name: 'Reports', url: 'reports.html'}, {name: 'Stocks', url: 'stocks.html'}, {name: 'Governance', url: 'governance.html'}] },
+            { id: '09', title: 'Partners', icon: 'ph-handshake', links: [{name: 'Agencies', url: 'agencies.html'}, {name: 'Tech', url: 'tech.html'}, {name: 'Affiliates', url: 'affiliate.html'}] },
+            { id: '10', title: 'Events', icon: 'ph-calendar-blank', links: [{name: 'Meetups', url: 'meetups.html'}, {name: 'Webinars', url: 'webinars.html'}, {name: 'Conferences', url: 'conferences.html'}] },
+            { id: '11', title: 'Support', icon: 'ph-lifebuoy', links: [{name: 'Help Center', url: 'helpcenter.html'}, {name: 'API Docs', url: 'apidocs.html'}, {name: 'Status', url: 'status.html'}] },
+            { id: '12', title: 'Contact', icon: 'ph-paper-plane-tilt', links: [{name: 'Hire Us', url: 'hire.html'}, {name: 'Careers', url: 'career.html'}, {name: 'Locations', url: 'location.html'}] }
+        ];
 
     const menuGrid = document.getElementById('menu-grid');
     menuData.forEach(item => {
